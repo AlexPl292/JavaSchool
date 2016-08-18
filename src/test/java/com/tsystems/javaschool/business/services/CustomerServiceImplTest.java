@@ -1,5 +1,7 @@
 package com.tsystems.javaschool.business.services;
 
+import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
+import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Customer;
 import org.junit.Test;
 
@@ -8,9 +10,9 @@ import java.util.Date;
 /**
  * Created by alex on 17.08.16.
  */
-public class CustomerServiceTest {
+public class CustomerServiceImplTest {
 
-    CustomerService service = new CustomerService();
+    CustomerService service = new CustomerServiceImpl();
 
     @Test
     public void add() throws Exception {
@@ -19,13 +21,12 @@ public class CustomerServiceTest {
         customer.setDate_of_birth(new Date());
         customer.setEmail("test@test.ru");
         customer.setIs_blocked(0);
-        customer.setName("Martin");
-        customer.setSurname("Joy");
+        customer.setName("My");
+        customer.setSurname("God");
         customer.setPassport_data("789097980");
         customer.setPassword(5);
 
-        Customer newCustomer = service.add(customer);
-        System.out.println(newCustomer);
+        service.addCustomer(customer);
     }
 
 }
