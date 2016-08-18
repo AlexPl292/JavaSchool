@@ -15,34 +15,26 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "name", length = 45)
     private String name;
 
-    @Column(name = "surname", length = 45)
     private String surname;
 
-    @Column(name = "date_of_birth")
-    private Date day_of_birth;
+    private Date date_of_birth;
 
-    @Column(name = "passport_data")
     private String passport_data;
 
-    @Column(name = "address")
     private String address;
 
-    @Column(name = "email", length = 45)
     private String email;
 
-    @Column(name = "password")
     private int password;
 
-    @Column(name = "is_blocked")
     private int is_blocked;
 
-    public Customer(String name, String surname, Date day_of_birth, String passport_data, String address, String email, int password, int is_blocked) {
+    public Customer(String name, String surname, Date date_of_birth, String passport_data, String address, String email, int password, int is_blocked) {
         this.name = name;
         this.surname = surname;
-        this.day_of_birth = day_of_birth;
+        this.date_of_birth = date_of_birth;
         this.passport_data = passport_data;
         this.address = address;
         this.email = email;
@@ -76,12 +68,12 @@ public class Customer {
         this.surname = surname;
     }
 
-    public Date getDay_of_birth() {
-        return day_of_birth;
+    public Date getDate_of_birth() {
+        return date_of_birth;
     }
 
-    public void setDay_of_birth(Date day_of_birth) {
-        this.day_of_birth = day_of_birth;
+    public void setDate_of_birth(Date day_of_birth) {
+        this.date_of_birth = day_of_birth;
     }
 
     public String getPassport_data() {
@@ -130,7 +122,7 @@ public class Customer {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", day_of_birth=" + day_of_birth +
+                ", day_of_birth=" + date_of_birth +
                 ", passport_data='" + passport_data + '\'' +
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +

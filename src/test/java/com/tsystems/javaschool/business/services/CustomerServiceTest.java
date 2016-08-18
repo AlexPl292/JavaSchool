@@ -5,8 +5,6 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by alex on 17.08.16.
  */
@@ -18,7 +16,7 @@ public class CustomerServiceTest {
     public void add() throws Exception {
         Customer customer = new Customer();
         customer.setAddress("address");
-        customer.setDay_of_birth(new Date());
+        customer.setDate_of_birth(new Date());
         customer.setEmail("test@test.ru");
         customer.setIs_blocked(0);
         customer.setName("Martin");
