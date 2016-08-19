@@ -1,9 +1,10 @@
 package com.tsystems.javaschool.db.implemetations;
 
+import com.tsystems.javaschool.db.EMF;
 import com.tsystems.javaschool.db.interfaces.GenericDao;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
@@ -12,7 +13,7 @@ import java.lang.reflect.ParameterizedType;
  */
 public abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK>{
 
-    protected EntityManager em = Persistence.createEntityManagerFactory("JavaSchool").createEntityManager();
+    protected EntityManager em = EMF.createEntityManager();
 
     private Class type;
 
