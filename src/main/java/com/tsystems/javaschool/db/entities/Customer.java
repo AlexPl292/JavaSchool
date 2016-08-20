@@ -27,11 +27,13 @@ public class Customer {
 
     private String email;
 
-    private int password;
+    private String password;
+
+    private String salt;
 
     private int is_blocked;
 
-    public Customer(String name, String surname, Date date_of_birth, String passport_data, String address, String email, int password, int is_blocked) {
+    public Customer(String name, String surname, Date date_of_birth, String passport_data, String address, String email, String password, String salt, int is_blocked) {
         this.name = name;
         this.surname = surname;
         this.date_of_birth = date_of_birth;
@@ -39,6 +41,7 @@ public class Customer {
         this.address = address;
         this.email = email;
         this.password = password;
+        this.salt = salt;
         this.is_blocked = is_blocked;
     }
 
@@ -100,11 +103,11 @@ public class Customer {
         this.email = email;
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(int password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -114,6 +117,14 @@ public class Customer {
 
     public void setIs_blocked(int is_blocked) {
         this.is_blocked = is_blocked;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     @Override

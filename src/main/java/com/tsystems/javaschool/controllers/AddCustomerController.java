@@ -21,7 +21,7 @@ import java.util.TimeZone;
 @WebServlet("/add_customer")
 public class AddCustomerController extends HttpServlet{
 
-    CustomerService service = new CustomerServiceImpl();
+    private CustomerService service = new CustomerServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,7 +45,6 @@ public class AddCustomerController extends HttpServlet{
         newCustomer.setPassport_data(request.getParameter("passport"));
         newCustomer.setAddress(request.getParameter("address"));
         newCustomer.setEmail(request.getParameter("email"));
-        newCustomer.setPassword(123);
         newCustomer.setIs_blocked(0);
         service.addCustomer(newCustomer);
     }
