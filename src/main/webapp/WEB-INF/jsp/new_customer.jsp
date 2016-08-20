@@ -9,19 +9,10 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/bootstrap.min.css">
-    <title>New customer</title>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script>
-        $(document).on("submit", "#add_customer_form", function(event) {
-            var $form = $(this);
+    <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
+    <title>New customer</title>
 
-            $.post($form.attr("action"), $form.serialize(), function(response) {
-                // ...
-            });
-
-            event.preventDefault(); // Important! Prevents submitting the form.
-        });
-    </script>
 </head>
 <body>
 <form class="form-horizontal" id="add_customer_form" action='add_customer' method="POST">
@@ -69,6 +60,7 @@
             <label class="control-label" for="email">E-mail</label>
             <div class="controls">
                 <input type="text" id="email" name="email" placeholder="" class="input-xlarge">
+                <span id="validEmail"></span>
                 <p class="help-block">Please provide your E-mail</p>
             </div>
         </div>
