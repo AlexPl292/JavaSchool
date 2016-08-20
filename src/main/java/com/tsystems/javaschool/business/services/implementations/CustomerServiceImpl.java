@@ -10,7 +10,6 @@ import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 
 /**
  * Created by alex on 17.08.16.
@@ -19,13 +18,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     private CustomerDao customerDao = new CustomerDaoImpl();
 
+    @Override
     public void addCustomer(Customer customer) {
         String password = new PassGen(10).nextPassword();
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            // Nothing
+            e.printStackTrace();
         }
         assert md != null;
         md.update(password.getBytes());

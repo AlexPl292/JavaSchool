@@ -19,17 +19,19 @@ import java.util.TimeZone;
  * Created by alex on 19.08.16.
  */
 @WebServlet("/add_customer")
-public class AddCustomerController extends HttpServlet{
+public class AddCustomerController extends HttpServlet {
 
     private CustomerService service = new CustomerServiceImpl();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doPost(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         Customer newCustomer = new Customer();
         newCustomer.setName(request.getParameter("name"));
         newCustomer.setSurname(request.getParameter("surname"));
