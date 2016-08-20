@@ -13,11 +13,12 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by alex on 19.08.16.
  */
-@WebServlet("/addCustomer")
+@WebServlet("/add_customer")
 public class AddCustomerController extends HttpServlet{
 
     CustomerService service = new CustomerServiceImpl();
@@ -34,7 +35,9 @@ public class AddCustomerController extends HttpServlet{
         newCustomer.setSurname(request.getParameter("surname"));
         Date birthday;
         try {
-            birthday = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("birthday"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            birthday = sdf.parse(request.getParameter("birthday"));
         } catch (ParseException e) {
             birthday = new Date(0);
         }

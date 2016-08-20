@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by alex on 19.08.16.
  */
-@WebServlet("/")
+@WebServlet("/index")
 public class MainController extends HttpServlet{
 
     @Override
