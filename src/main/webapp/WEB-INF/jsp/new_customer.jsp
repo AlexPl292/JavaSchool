@@ -9,6 +9,7 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles.css">
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <title>New customer</title>
@@ -23,35 +24,35 @@
         <div class="control-group">
             <label class="control-label" for="name">Name</label>
             <div class="controls">
-                <input type="text" id="name" name="name" placeholder="" class="input-xlarge">
+                <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge">
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="surname">Surname</label>
             <div class="controls">
-                <input type="text" id="surname" name="surname" placeholder="" class="input-xlarge">
+                <input type="text" id="surname" name="surname" placeholder="" class="form-control input-xlarge">
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="birthday">Day of birth</label>
             <div class="controls">
-                <input type="date" id="birthday" name="birthday" placeholder="" class="input-xlarge">
+                <input type="date" id="birthday" name="birthday" placeholder="" class="form-control input-xlarge">
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="passport">Passport data</label>
             <div class="controls">
-                <input type="text" id="passport" name="passport" placeholder="" class="input-xlarge">
+                <input type="text" id="passport" name="passport" placeholder="" class="form-control input-xlarge">
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="address">Address</label>
             <div class="controls">
-                <input type="text" id="address" name="address" placeholder="" class="input-xlarge">
+                <input type="text" id="address" name="address" placeholder="" class="form-control input-xlarge">
             </div>
         </div>
 
@@ -59,9 +60,9 @@
             <!-- E-mail -->
             <label class="control-label" for="email">E-mail</label>
             <div class="controls">
-                <input type="text" id="email" name="email" placeholder="" class="input-xlarge">
+                <input type="text" id="email" name="email" placeholder="" class="form-control input-xlarge">
                 <span id="validEmail"></span>
-                <p class="help-block">Please provide your E-mail</p>
+                <p id="email_help" class="help-block">Please provide your E-mail</p>
             </div>
         </div>
 
