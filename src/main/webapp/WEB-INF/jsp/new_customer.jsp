@@ -60,7 +60,7 @@
             <!-- E-mail -->
             <label class="control-label" for="email">E-mail</label>
             <div class="controls">
-                <input type="text" id="email" name="email" placeholder="" class="form-control input-xlarge">
+                <input type="email" id="email" name="email" placeholder="" class="form-control input-xlarge">
                 <span id="validEmail"></span>
                 <p id="email_help" class="help-block">Please provide your E-mail</p>
             </div>

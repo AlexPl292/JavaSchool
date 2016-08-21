@@ -6,7 +6,7 @@ $(document).ready(function() {
     $('#add_customer_form').submit(function (event) {
         var $form = $(this);
 
-        var inputs = $(this).parent().find("input[type=text],input[type=date]");
+        var inputs = $(this).parent().find("input[type=text],input[type=date],input[type=email]");
         inputs.removeClass("warning");
 
         var empty = inputs.filter(function() {
@@ -17,17 +17,6 @@ $(document).ready(function() {
             event.preventDefault(); // Important! Prevents submitting the form.
             return false;
         }
-        var email = $("#email");
-        if (!isValidEmailAddress(email.val())) {
-            $("#email_help").text("Bad email!");
-            email.addClass("warning");
-            event.preventDefault(); // Important! Prevents submitting the form.
-            return false;
-        } else {
-            $("#email_help").text("Good email!");
-            email.removeClass("warning");
-        }
-
         $.post($form.attr("action"), $form.serialize(), function(response) {
 
         });
