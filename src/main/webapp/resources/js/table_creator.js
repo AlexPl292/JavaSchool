@@ -15,8 +15,10 @@ function paginationSet(pages_count, current) {
     var pages = pages_count > 3 ? 3 : pages_count;
     var $pagination = $('.pagination');
     $pagination.find("li:not(.last,.first)").remove();
-    $pagination.find(".first").removeClass("disabled");
-    $pagination.find(".last").removeClass("disabled");
+    var $first = $pagination.find(".first");
+    var $last = $pagination.find(".last");
+    $first.removeClass("disabled");
+    $last.removeClass("disabled");
 
     var $shown_pages = [];
     if (current === 1) {
@@ -34,24 +36,24 @@ function paginationSet(pages_count, current) {
     }
 
     for (var i = 0; i < pages; i++) {
-        $("<li class='page-item'><a class='page-link customers' href='#'></a></li>")
-            .insertBefore($pagination.find(".last"))
-            .find('a').text($shown_pages[i]).attr("name", $shown_pages[i]);
+        $("<li class='page-item'><a class='page-link customers' href='#' name='"+$shown_pages[i]+"'>"+$shown_pages[i]+"</a></li>")
+            .insertBefore($last);
     }
 
     if (current === 1) {
-        $pagination.find(".first").addClass("disabled");
+        $first.addClass("disabled");
     }
     if (current === pages_count) {
-        $pagination.find(".last").addClass("disabled");
+        $last.addClass("disabled");
     }
     $pagination.find("li a:contains('"+current+"')").parent().addClass("active");
 }
 
 function create_table(response) {
-    $("table#customers").find("tbody").children().remove();
+    var $customers = $("table#customers");
+    $customers.find("tbody").children().remove();
 
-    var properties = $("table#customers").find("thead th").map(function () {
+    var properties = $customers.find("thead th").map(function () {
         return this.abbr;
     }).get();
 
@@ -64,7 +66,7 @@ function create_table(response) {
             properties.forEach(function (item_prop) {
                 $tr.append($('<td>').text(item[item_prop]));
             });
-            $("#customers").find("tbody").append($tr);
+            $customers.find("tbody").append($tr);
         });
     })
 }

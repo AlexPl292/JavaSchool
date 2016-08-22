@@ -10,7 +10,7 @@
 <head>
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles.css">
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/jquery-3.1.0.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <title>New tariff</title>
 
