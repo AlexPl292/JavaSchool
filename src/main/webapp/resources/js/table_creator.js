@@ -57,8 +57,8 @@ function create_table(response) {
     $(function () {
         $.each(response.data, function (i, item) {
             var $tr = $('<tr>').append(
-                $('<td>').text(item[0]),
-                $('<td>').text(item[1])
+                $('<td>').text(item.name),
+                $('<td>').text(item.surname)
             );
             $("#customers").find("tbody").append($tr);
         });

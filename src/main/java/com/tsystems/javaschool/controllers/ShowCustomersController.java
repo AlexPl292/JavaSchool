@@ -1,5 +1,12 @@
 package com.tsystems.javaschool.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
+import com.tsystems.javaschool.business.services.interfaces.CustomerService;
+import com.tsystems.javaschool.db.entities.Customer;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +24,8 @@ import java.util.List;
 @WebServlet("/show_customers")
 public class ShowCustomersController extends HttpServlet{
 
+    CustomerService service = new CustomerServiceImpl();
+
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/jsp/show_customers.jsp").forward(req, resp);
@@ -25,17 +34,25 @@ public class ShowCustomersController extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String json;
+        List<Customer> cust;
+        JsonObject json = new JsonObject();
         if ("1".equals(request.getParameter("page"))) {
-            json = "{\"draw\":1, \"recordsTotal\": 14, \"data\":[[\"h\",\"e\"],[\"h\",\"e\"],[\"h\",\"e\"]]}";
+            cust = service.getNCustomers(10, 0);
+            json.addProperty("draw", 1);
         } else {
-            json = "{\"draw\":2, \"recordsTotal\": 14, \"data\":[[\"j\",\"h\"],[\"j\",\"h\"],[\"j\",\"l\"]]}";
+            cust = service.getNCustomers(10, 10);
+            json.addProperty("draw", 2);
         }
 
-            response.setContentType("application/json");
+        json.addProperty("recordsTotal", 18);
+        JsonElement element = new Gson().toJsonTree(cust);
+        json.add("data", element);
+
+
+        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        out.print(json);
+        out.print(json.toString());
         out.flush();
     }
 }

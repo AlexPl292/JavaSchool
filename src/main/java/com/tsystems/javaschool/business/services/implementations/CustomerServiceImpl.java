@@ -10,6 +10,7 @@ import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * Created by alex on 17.08.16.
@@ -37,5 +38,10 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setPassword(Hex.encodeHexString(md.digest()));
         customer.setSalt(salt);
         customerDao.create(customer);
+    }
+
+    @Override
+    public List<Customer> getNCustomers(int maxResult, int firstResult) {
+        return customerDao.selectFromTo(maxResult, firstResult);
     }
 }

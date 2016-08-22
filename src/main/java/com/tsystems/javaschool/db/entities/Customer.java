@@ -45,6 +45,13 @@ public class Customer {
         this.is_blocked = is_blocked;
     }
 
+    public Customer(String name, String surname, String email, int is_blocked) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.is_blocked = is_blocked;
+    }
+
     public Customer() {}
 
     public Integer getId() {
