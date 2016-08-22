@@ -44,4 +44,9 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> getNCustomers(int maxResult, int firstResult) {
         return customerDao.selectFromTo(maxResult, firstResult);
     }
+
+    @Override
+    public long countOfCustomers() {
+        return customerDao.countOfCustomers();
+    }
 }

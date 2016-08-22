@@ -16,4 +16,9 @@ public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implement
                 .setMaxResults(maxResults)
                 .getResultList();
     }
+
+    @Override
+    public long countOfCustomers() {
+        return (long) em.createQuery("SELECT count(c.id) FROM Customer c").getSingleResult();
+    }
 }

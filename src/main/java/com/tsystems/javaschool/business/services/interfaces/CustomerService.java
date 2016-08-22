@@ -11,4 +11,6 @@ public interface CustomerService {
     void addCustomer(Customer customer);
 
     List<Customer> getNCustomers(int maxResult, int firstResult);
+
+    long countOfCustomers();
 }

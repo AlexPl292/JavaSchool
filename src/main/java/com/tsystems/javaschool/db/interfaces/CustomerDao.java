@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface CustomerDao extends GenericDao<Customer, Integer>{
     List<Customer> selectFromTo(int from, int to);
+
+    long countOfCustomers();
 }

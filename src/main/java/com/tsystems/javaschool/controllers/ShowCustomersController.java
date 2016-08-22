@@ -34,17 +34,22 @@ public class ShowCustomersController extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        long recordsTotal = service.countOfCustomers();
         List<Customer> cust;
         JsonObject json = new JsonObject();
-        if ("1".equals(request.getParameter("page"))) {
-            cust = service.getNCustomers(10, 0);
-            json.addProperty("draw", 1);
+        String page = request.getParameter("page");
+        int draw;
+        if ("first".equals(page)) {
+            draw = 1;
+        } else if ("last".equals(page)) {
+            draw = (int) Math.ceil(recordsTotal / 10.0);
         } else {
-            cust = service.getNCustomers(10, 10);
-            json.addProperty("draw", 2);
+            draw = Integer.parseInt(page);
         }
+        cust = service.getNCustomers(10, (draw-1)*10);
 
-        json.addProperty("recordsTotal", 18);
+        json.addProperty("draw", draw);
+        json.addProperty("recordsTotal", recordsTotal);
         JsonElement element = new Gson().toJsonTree(cust);
         json.add("data", element);
 

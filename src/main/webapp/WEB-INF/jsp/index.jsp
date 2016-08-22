@@ -9,6 +9,7 @@
     <h1>Hello</h1>
     <jsp:include page="/WEB-INF/jsp/new_customer.jsp"/>
     <jsp:include page="/WEB-INF/jsp/new_tariff.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/show_customers.jsp"/>
 </div>
 </body>
 </html>
