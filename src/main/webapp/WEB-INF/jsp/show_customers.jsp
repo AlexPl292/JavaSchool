@@ -19,8 +19,9 @@
 <table id="customers" class="table table-striped">
     <thead>
     <tr>
-        <th>First name</th>
-        <th>Last name</th>
+        <th abbr="name">First name</th>
+        <th abbr="surname">Last name</th>
+        <th abbr="email">Email</th>
     </tr>
     </thead>
     <tbody>

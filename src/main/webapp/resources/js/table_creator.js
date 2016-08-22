@@ -51,15 +51,19 @@ function paginationSet(pages_count, current) {
 function create_table(response) {
     $("table#customers").find("tbody").children().remove();
 
+    var properties = $("table#customers").find("thead th").map(function () {
+        return this.abbr;
+    }).get();
+
     recordsTotal = response.recordsTotal;
     pages = Math.ceil(recordsTotal/10);
     paginationSet(pages, response.draw);
     $(function () {
         $.each(response.data, function (i, item) {
-            var $tr = $('<tr>').append(
-                $('<td>').text(item.name),
-                $('<td>').text(item.surname)
-            );
+            var $tr = $('<tr>');
+            properties.forEach(function (item_prop) {
+                $tr.append($('<td>').text(item[item_prop]));
+            });
             $("#customers").find("tbody").append($tr);
         });
     })
