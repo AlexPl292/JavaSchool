@@ -8,7 +8,7 @@
     <persistence-unit name="JavaSchool" transaction-type="RESOURCE_LOCAL">
 
         <properties>
-            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/eCare?noTimezoneConversionForDateType=true&amp;serverTimezone=UTC"/>
             <property name="hibernate.connection.username" value="ecare_user"/>
             <property name="hibernate.connection.password" value="keinerverstehtdeutsch"/>

@@ -2,7 +2,7 @@
  * Created by alex on 21.08.16.
  */
 
-function get_cust(page_number, callback) {
+function get_customers(page_number, callback) {
     $.ajax({
         type:'POST',
         url: "/show_customers",
@@ -49,9 +49,20 @@ function paginationSet(pages_count, current) {
     $pagination.find("li a:contains('"+current+"')").parent().addClass("active");
 }
 
+function init_table() {
+    var $customers = $("table#customers");
+    var fields_count = $customers.find("thead th").length;
+    for (var i = 0; i < 10; i++) {
+        var $tr = $('<tr> s');
+        for (var j = 0; j < fields_count; j++) {
+            $tr.append('<td>&nbsp;</td>');
+        }
+        $customers.find("tbody").append($tr);
+    }
+}
+
 function create_table(response) {
     var $customers = $("table#customers");
-    $customers.find("tbody").children().remove();
 
     var properties = $customers.find("thead th").map(function () {
         return this.abbr;
@@ -60,22 +71,28 @@ function create_table(response) {
     recordsTotal = response.recordsTotal;
     pages = Math.ceil(recordsTotal/10);
     paginationSet(pages, response.draw);
+
     $(function () {
-        $.each(response.data, function (i, item) {
-            var $tr = $('<tr>');
-            properties.forEach(function (item_prop) {
-                $tr.append($('<td>').text(item[item_prop]));
-            });
-            $customers.find("tbody").append($tr);
-        });
+        for (var i = 0; i < 10; i++) {
+            if (response.data[i] !== undefined) {
+                $.each(properties, function (j, item) {
+                    $customers.find("tbody tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").text(response.data[i][item]);
+                })
+            } else {
+                $.each(properties, function (j, item) {
+                    $customers.find("tbody tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").html('&nbsp;');
+                })
+            }
+        }
     })
 }
 
 $(document).ready(function() {
-    get_cust(1, create_table);
+    init_table();
+    get_customers(1, create_table);
 
     $(".pagination").on('click', '.page-link.customers', function (e) {
         e.preventDefault();
-        get_cust($(this).attr("name"), create_table);
+        get_customers($(this).attr("name"), create_table);
     });
 } );
