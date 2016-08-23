@@ -2,11 +2,11 @@
  * Created by alex on 21.08.16.
  */
 
-function get_data(url, page_number, callback) {
+function get_data(url, page_number, callback, updateCount) {
     $.ajax({
         type:'POST',
         url: url,
-        data: {"page":page_number},
+        data: {"page":page_number, "updateCount":updateCount},
         success: callback
     });
 }
@@ -62,13 +62,16 @@ function init_table($table) {
 }
 
 function fill_table($table, $pagination) {
+    var recordsTotal, pages;
     return function (response) {
         var properties = $table.find("thead th").map(function () {
             return this.abbr;
         }).get();
 
-        var recordsTotal = response.recordsTotal;
-        var pages = Math.ceil(recordsTotal / 10);
+        if (response.recordsTotal !== undefined) {
+            recordsTotal = response.recordsTotal;
+            pages = Math.ceil(recordsTotal / 10);
+        }
         paginationSet(pages, response.draw, $pagination);
 
         $(function () {
@@ -88,14 +91,16 @@ function fill_table($table, $pagination) {
 }
 
 
-function table_creator($pagination, $table, url) {
-    var _wrapper = fill_table($table, $pagination);
+function table_creator($context, url) {
+    var $pagination = $context.find(".pagination");
+    var $table = $context.find("table");
+    var fill_wrapper = fill_table($table, $pagination);
 
     init_table($table);
-    get_data(url, 1, _wrapper);
+    get_data(url, 1, fill_wrapper, true);
 
     $pagination.on('click', $pagination.find(".page-link"), function (e) {
         e.preventDefault();
-        get_data(url, e.target.name, _wrapper);
+        get_data(url, e.target.name, fill_wrapper, false);
     });
 }

@@ -14,36 +14,39 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/table_creator.js"></script>
     <script>
         $(document).ready(function () {
-            table_creator($('.pagination-tariffs'), $('#tariffs'), '/show_tariffs')
+//            table_creator($('.pagination-tariffs'), $('#tariffs'), '/show_tariffs')
+            table_creator($('#tariffs'), '/show_tariffs')
         })
     </script>
     <title>Show tariffs</title>
 </head>
 <body>
-<table id="tariffs" class="table table-striped">
-    <thead>
-    <tr>
-        <th abbr="name">Tariff name</th>
-        <th abbr="cost">cost</th>
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-<ul class="pagination pagination-tariffs">
-    <li class='page-item first'>
-        <a class='page-link tariffs' href='#' name="first">
-            <span aria-hidden='true'>&laquo;</span>
-            <span class='sr-only'>First</span>
-        </a>
-    </li>
-    <li class="page-item last">
-        <a class="page-link tariffs" href="#" aria-label="Last" name="last">
-            <span aria-hidden="true">&raquo;</span>
-            <span class="sr-only">Last</span>
-        </a>
-    </li>
-</ul>
+<div id="tariffs">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th abbr="name">Tariff name</th>
+            <th abbr="cost">cost</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <ul class="pagination">
+        <li class='page-item first'>
+            <a class='page-link' href='#' name="first">
+                <span aria-hidden='true'>&laquo;</span>
+                <span class='sr-only'>First</span>
+            </a>
+        </li>
+        <li class="page-item last">
+            <a class="page-link" href="#" aria-label="Last" name="last">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Last</span>
+            </a>
+        </li>
+    </ul>
+</div>
 </body>
 </html>
 
