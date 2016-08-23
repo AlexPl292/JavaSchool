@@ -1,9 +1,8 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%--
   Created by IntelliJ IDEA.
   User: alex
-  Date: 21.08.16
-  Time: 20:27
+  Date: 23.08.16
+  Time: 14:23
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -15,32 +14,31 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/table_creator.js"></script>
     <script>
         $(document).ready(function () {
-            table_creator($('.pagination-customers'), $('#customers'), '/show_customers')
+            table_creator($('.pagination-tariffs'), $('#tariffs'), '/show_tariffs')
         })
     </script>
-    <title>Show customers</title>
+    <title>Show tariffs</title>
 </head>
 <body>
-<table id="customers" class="table table-striped">
+<table id="tariffs" class="table table-striped">
     <thead>
     <tr>
-        <th abbr="name">First name</th>
-        <th abbr="surname">Last name</th>
-        <th abbr="email">Email</th>
+        <th abbr="name">Tariff name</th>
+        <th abbr="cost">cost</th>
     </tr>
     </thead>
     <tbody>
     </tbody>
 </table>
-<ul class="pagination pagination-customers">
+<ul class="pagination pagination-tariffs">
     <li class='page-item first'>
-        <a class='page-link customers' href='#' name="first">
+        <a class='page-link tariffs' href='#' name="first">
             <span aria-hidden='true'>&laquo;</span>
             <span class='sr-only'>First</span>
         </a>
     </li>
     <li class="page-item last">
-        <a class="page-link customers" href="#" aria-label="Last" name="last">
+        <a class="page-link tariffs" href="#" aria-label="Last" name="last">
             <span aria-hidden="true">&raquo;</span>
             <span class="sr-only">Last</span>
         </a>
@@ -48,3 +46,4 @@
 </ul>
 </body>
 </html>
+

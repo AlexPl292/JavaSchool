@@ -10,6 +10,7 @@
     <jsp:include page="/WEB-INF/jsp/new_customer.jsp"/>
     <jsp:include page="/WEB-INF/jsp/new_tariff.jsp"/>
     <jsp:include page="/WEB-INF/jsp/show_customers.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/show_tariffs.jsp"/>
 </div>
 </body>
 </html>

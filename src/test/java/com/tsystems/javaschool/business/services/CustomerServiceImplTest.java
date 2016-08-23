@@ -25,7 +25,7 @@ public class CustomerServiceImplTest {
         customer.setSurname("God");
         customer.setPassport_data("789097980");
 
-        service.addCustomer(customer);
+        service.addNew(customer);
     }
 
 }

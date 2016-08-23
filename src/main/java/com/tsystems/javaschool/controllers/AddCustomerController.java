@@ -48,6 +48,6 @@ public class AddCustomerController extends HttpServlet {
         newCustomer.setAddress(request.getParameter("address"));
         newCustomer.setEmail(request.getParameter("email"));
         newCustomer.setIs_blocked(0);
-        service.addCustomer(newCustomer);
+        service.addNew(newCustomer);
     }
 }

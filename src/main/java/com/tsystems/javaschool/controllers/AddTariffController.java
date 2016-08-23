@@ -34,6 +34,6 @@ public class AddTariffController extends HttpServlet{
         tariff.setCost(new BigDecimal(request.getParameter("cost")));
         tariff.setDescription(request.getParameter("description"));
 
-        service.addTariff(tariff);
+        service.addNew(tariff);
     }
 }

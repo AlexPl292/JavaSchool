@@ -2,23 +2,23 @@
  * Created by alex on 21.08.16.
  */
 
-function get_customers(page_number, callback) {
+function get_data(url, page_number, callback) {
     $.ajax({
         type:'POST',
-        url: "/show_customers",
+        url: url,
         data: {"page":page_number},
         success: callback
     });
 }
 
-function paginationSet(pages_count, current) {
-    var pages = pages_count > 3 ? 3 : pages_count;
-    var $pagination = $('.pagination');
+function paginationSet(pages_count, current, $pagination) {
+
     $pagination.find("li:not(.last,.first)").remove();
     var $first = $pagination.find(".first");
     var $last = $pagination.find(".last");
     $first.removeClass("disabled");
     $last.removeClass("disabled");
+    var pages = pages_count > 3 ? 3 : pages_count;
 
     var $shown_pages = [];
     if (current === 1) {
@@ -36,7 +36,7 @@ function paginationSet(pages_count, current) {
     }
 
     for (var i = 0; i < pages; i++) {
-        $("<li class='page-item'><a class='page-link customers' href='#' name='"+$shown_pages[i]+"'>"+$shown_pages[i]+"</a></li>")
+        $("<li class='page-item'><a class='page-link' href='#' name='" + $shown_pages[i] + "'>" + $shown_pages[i] + "</a></li>")
             .insertBefore($last);
     }
 
@@ -49,50 +49,53 @@ function paginationSet(pages_count, current) {
     $pagination.find("li a:contains('"+current+"')").parent().addClass("active");
 }
 
-function init_table() {
-    var $customers = $("table#customers");
-    var fields_count = $customers.find("thead th").length;
+function init_table($table) {
+
+    var fields_count = $table.find("thead th").length;
     for (var i = 0; i < 10; i++) {
-        var $tr = $('<tr> s');
+        var $tr = $('<tr>');
         for (var j = 0; j < fields_count; j++) {
             $tr.append('<td>&nbsp;</td>');
         }
-        $customers.find("tbody").append($tr);
+        $table.find("tbody").append($tr);
     }
 }
 
-function create_table(response) {
-    var $customers = $("table#customers");
+function fill_table($table, $pagination) {
+    return function (response) {
+        var properties = $table.find("thead th").map(function () {
+            return this.abbr;
+        }).get();
 
-    var properties = $customers.find("thead th").map(function () {
-        return this.abbr;
-    }).get();
+        var recordsTotal = response.recordsTotal;
+        var pages = Math.ceil(recordsTotal / 10);
+        paginationSet(pages, response.draw, $pagination);
 
-    recordsTotal = response.recordsTotal;
-    pages = Math.ceil(recordsTotal/10);
-    paginationSet(pages, response.draw);
-
-    $(function () {
-        for (var i = 0; i < 10; i++) {
-            if (response.data[i] !== undefined) {
-                $.each(properties, function (j, item) {
-                    $customers.find("tbody tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").text(response.data[i][item]);
-                })
-            } else {
-                $.each(properties, function (j, item) {
-                    $customers.find("tbody tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").html('&nbsp;');
-                })
+        $(function () {
+            for (var i = 0; i < 10; i++) {
+                if (response.data[i] !== undefined) {
+                    $.each(properties, function (j, item) {
+                        $table.find("tbody tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 1) + ")").text(response.data[i][item]);
+                    })
+                } else {
+                    $.each(properties, function (j, item) {
+                        $table.find("tbody tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 1) + ")").html('&nbsp;');
+                    })
+                }
             }
-        }
-    })
+        })
+    }
 }
 
-$(document).ready(function() {
-    init_table();
-    get_customers(1, create_table);
 
-    $(".pagination").on('click', '.page-link.customers', function (e) {
+function table_creator($pagination, $table, url) {
+    var _wrapper = fill_table($table, $pagination);
+
+    init_table($table);
+    get_data(url, 1, _wrapper);
+
+    $pagination.on('click', $pagination.find(".page-link"), function (e) {
         e.preventDefault();
-        get_customers($(this).attr("name"), create_table);
+        get_data(url, e.target.name, _wrapper);
     });
-} );
+}
