@@ -9,10 +9,22 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "Tariffs", schema = "eCare")
 public class Tariff {
+
+    // TODO add validation annotations
     private int id;
     private String name;
     private BigDecimal cost;
     private String description;
+
+
+    public Tariff() {
+    }
+
+    public Tariff(String name, BigDecimal cost, String description) {
+        this.name = name;
+        this.cost = cost;
+        this.description = description;
+    }
 
     @Id
     @Column(name = "id", nullable = false)
