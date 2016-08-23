@@ -20,7 +20,7 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerDao customerDao = new CustomerDaoImpl();
 
     @Override
-    public void addCustomer(Customer customer) {
+    public void addNew(Customer customer) {
         String password = new PassGen(10).nextPassword();
         MessageDigest md = null;
         try {
@@ -41,12 +41,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getNCustomers(int maxResult, int firstResult) {
+    public List<Customer> getNEntries(int maxResult, int firstResult) {
         return customerDao.selectFromTo(maxResult, firstResult);
     }
 
     @Override
-    public long countOfCustomers() {
+    public long countOfEntries() {
         return customerDao.countOfCustomers();
     }
 }
