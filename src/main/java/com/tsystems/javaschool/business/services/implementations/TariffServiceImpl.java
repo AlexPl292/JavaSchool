@@ -42,4 +42,14 @@ public class TariffServiceImpl implements TariffService{
             return countOfEntries();
         return tariffDao.countOfImportantSearch(searchQuery);
     }
+
+    @Override
+    public List<Tariff> loadAll() {
+        return tariffDao.getAll();
+    }
+
+    @Override
+    public Tariff loadByKey(Integer key) {
+        return tariffDao.read(key);
+    }
 }

@@ -18,12 +18,12 @@ public class CustomerServiceImplTest {
     public void add() throws Exception {
         Customer customer = new Customer();
         customer.setAddress("address");
-        customer.setDate_of_birth(new Date());
+        customer.setDateOfBirth(new Date());
         customer.setEmail("test@test.ru");
-        customer.setIs_blocked(0);
+        customer.setIsBlocked(0);
         customer.setName("My");
         customer.setSurname("God");
-        customer.setPassport_data("789097980");
+        customer.setPassportData("789097980");
 
         service.addNew(customer);
     }

@@ -11,7 +11,7 @@ import java.util.List;
 public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implements CustomerDao {
     @Override
     public List<Customer> selectFromTo(int maxResults, int firstResult) {
-        return em.createQuery("SELECT NEW Customer(c.name, c.surname, c.email, c.is_blocked) FROM Customer c", Customer.class)
+        return em.createQuery("SELECT NEW Customer(c.name, c.surname, c.email, c.isBlocked) FROM Customer c", Customer.class)
                 .setFirstResult(firstResult)
                 .setMaxResults(maxResults)
                 .getResultList();
@@ -26,14 +26,14 @@ public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implement
     public List<Customer> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere) {
         String[] wheres = importantWhere.split("\\s+");
         if (wheres.length == 1) {
-            String query = "SELECT NEW Customer(c.name, c.surname, c.email, c.is_blocked) FROM Customer c WHERE c.name LIKE :first OR c.surname LIKE :first";
+            String query = "SELECT NEW Customer(c.name, c.surname, c.email, c.isBlocked) FROM Customer c WHERE c.name LIKE :first OR c.surname LIKE :first";
             return em.createQuery(query, Customer.class)
                     .setParameter("first", "%"+wheres[0]+"%")
                     .setFirstResult(firstIndex)
                     .setMaxResults(maxEntries)
                     .getResultList();
         } else {
-            String query = "SELECT NEW Customer(c.name, c.surname, c.email, c.is_blocked) FROM Customer c " +
+            String query = "SELECT NEW Customer(c.name, c.surname, c.email, c.isBlocked) FROM Customer c " +
                     "WHERE c.name LIKE :first AND c.surname LIKE :second OR c.name LIKE :second AND c.surname LIKE :first";
             return em.createQuery(query, Customer.class)
                     .setParameter("first", "%"+wheres[0]+"%")
@@ -60,5 +60,11 @@ public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implement
                     .setParameter("second", "%"+wheres[1]+"%")
                     .getSingleResult();
         }
+    }
+
+    @Override
+    public List<Customer> getAll() {
+        return em.createQuery("SELECT NEW Customer(c.name, c.surname, c.email, c.isBlocked) FROM Customer c", Customer.class)
+                .getResultList();
     }
 }

@@ -63,4 +63,14 @@ public class CustomerServiceImpl implements CustomerService {
             return countOfEntries();
         return customerDao.countOfImportantSearch(searchQuery);
     }
+
+    @Override
+    public List<Customer> loadAll() {
+        return customerDao.getAll();
+    }
+
+    @Override
+    public Customer loadByKey(Integer key) {
+        return customerDao.read(key);
+    }
 }

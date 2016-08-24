@@ -23,4 +23,6 @@ public interface GenericDao <T, PK extends Serializable> {
     List<T> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere);
 
     long countOfImportantSearch(String importantWhere);
+
+    List<T> getAll();
 }

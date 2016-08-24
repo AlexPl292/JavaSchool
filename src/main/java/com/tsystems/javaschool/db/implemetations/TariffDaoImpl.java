@@ -11,7 +11,7 @@ import java.util.List;
 public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements TariffDao{
     @Override
     public List<Tariff> selectFromTo(int maxEntries, int firstIndex) {
-        return em.createQuery("SELECT NEW Tariff(c.name, c.cost, c.description) FROM Tariff c", Tariff.class)
+        return em.createQuery("SELECT NEW Tariff(c.id, c.name, c.cost, c.description) FROM Tariff c", Tariff.class)
                 .setFirstResult(firstIndex)
                 .setMaxResults(maxEntries)
                 .getResultList();
@@ -24,7 +24,7 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
 
     @Override
     public List<Tariff> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere) {
-        String query = "SELECT NEW Tariff(c.name, c.cost, c.description) FROM Tariff c WHERE c.name LIKE :first";
+        String query = "SELECT NEW Tariffc.id, (c.name, c.cost, c.description) FROM Tariff c WHERE c.name LIKE :first";
         return em.createQuery(query, Tariff.class)
                 .setParameter("first", "%"+importantWhere+"%")
                 .setFirstResult(firstIndex)
@@ -38,5 +38,11 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
         return (long) em.createQuery(query)
                 .setParameter("first", "%"+importantWhere+"%")
                 .getSingleResult();
+    }
+
+    @Override
+    public List<Tariff> getAll() {
+        return em.createQuery("SELECT NEW Tariff(c.id, c.name, c.cost, c.description) FROM Tariff c", Tariff.class)
+                .getResultList();
     }
 }
