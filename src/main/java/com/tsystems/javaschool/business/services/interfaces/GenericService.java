@@ -11,4 +11,8 @@ public interface GenericService<T> {
     List<T> getNEntries(int maxResult, int firstResult);
 
     long countOfEntries();
+
+    List<T> getNEntries(int maxEntries, int firstIndex, String searchQuery);
+
+    long countOfEntries(String searchQuery);
 }

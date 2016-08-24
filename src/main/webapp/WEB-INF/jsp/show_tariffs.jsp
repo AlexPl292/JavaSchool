@@ -22,6 +22,14 @@
 </head>
 <body>
 <div id="tariffs">
+    <div id="search-form" class="input-group stylish-input-group">
+        <input id="search_query" type="text" class="form-control"  placeholder="Search by tariff name" >
+        <span class="input-group-addon">
+            <button type="submit">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </span>
+    </div>
     <table class="table table-striped">
         <thead>
         <tr>

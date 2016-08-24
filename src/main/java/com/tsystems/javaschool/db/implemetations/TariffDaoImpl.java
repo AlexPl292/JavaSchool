@@ -21,4 +21,22 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
     public long countOfTariffs() {
         return (long) em.createQuery("SELECT count(c.id) FROM Tariff c").getSingleResult();
     }
+
+    @Override
+    public List<Tariff> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere) {
+        String query = "SELECT NEW Tariff(c.name, c.cost, c.description) FROM Tariff c WHERE c.name LIKE :first";
+        return em.createQuery(query, Tariff.class)
+                .setParameter("first", "%"+importantWhere+"%")
+                .setFirstResult(firstIndex)
+                .setMaxResults(maxEntries)
+                .getResultList();
+    }
+
+    @Override
+    public long countOfImportantSearch(String importantWhere) {
+        String query = "SELECT COUNT(c.id) FROM Tariff c WHERE c.name LIKE :first";
+        return (long) em.createQuery(query)
+                .setParameter("first", "%"+importantWhere+"%")
+                .getSingleResult();
+    }
 }

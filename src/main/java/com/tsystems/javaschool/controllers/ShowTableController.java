@@ -26,9 +26,16 @@ public class ShowTableController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        GenericService service;
 
+        GenericService service;
         String url = request.getServletPath();
+        Boolean updateCount = Boolean.valueOf(request.getParameter("updateCount"));
+        List entitiesList;
+        JsonObject json = new JsonObject();
+        String page = request.getParameter("page");
+        int draw = 1;
+        long recordsTotal = -1;
+        String searchQuery = request.getParameter("search");
 
         if ("/show_customers".equals(url)) {
             service = new CustomerServiceImpl();
@@ -38,28 +45,26 @@ public class ShowTableController extends HttpServlet {
             service = new CustomerServiceImpl();
         }
 
-        long recordsTotal = service.countOfEntries();
+        if (updateCount) {
+            recordsTotal = service.countOfEntries(searchQuery);
+            json.addProperty("recordsTotal", recordsTotal);
+        }
 
-        List entitiesList;
-        JsonObject json = new JsonObject();
-        String page = request.getParameter("page");
-        int draw;
 
         if ("first".equals(page)) {
             draw = 1;
         } else if ("last".equals(page)) {
+            if (recordsTotal == -1)
+                recordsTotal = service.countOfEntries(searchQuery);
             draw = (int) Math.ceil(recordsTotal / 10.0);
         } else {
-            if (page != null)
+            if (page != null) // TODO странная ошибка: иногда page приходит null. Более того, даже эта строчка не всегда помогает
                 draw = Integer.parseInt(page);
-            else
-                draw = 1; // TODO странная ошибка: иногда page приходит null. Более того, даже эта строчка не всегда помогает
         }
-        entitiesList = service.getNEntries(10, (draw - 1) * 10);
+        entitiesList = service.getNEntries(10, (draw - 1) * 10, searchQuery);
 
-        json.addProperty("draw", draw);
-        json.addProperty("recordsTotal", recordsTotal);
         JsonElement element = new Gson().toJsonTree(entitiesList);
+        json.addProperty("draw", draw);
         json.add("data", element);
 
 

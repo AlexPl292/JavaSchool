@@ -2,13 +2,16 @@
  * Created by alex on 21.08.16.
  */
 
-function get_data(url, page_number, callback, updateCount) {
-    $.ajax({
-        type:'POST',
-        url: url,
-        data: {"page":page_number, "updateCount":updateCount},
-        success: callback
-    });
+function get_data(url, search_input) {
+    return function (page_number, callback, updateCount) {
+        var search_query = search_input.val();
+        $.ajax({
+            type:'POST',
+            url: url,
+            data: {page:page_number, updateCount:updateCount, search:search_query},
+            success: callback
+        });
+    }
 }
 
 function paginationSet(pages_count, current, $pagination) {
@@ -22,7 +25,8 @@ function paginationSet(pages_count, current, $pagination) {
 
     var $shown_pages = [];
     if (current === 1) {
-        for (var i = 0; i<pages; i++) {
+        $shown_pages.push(1);
+        for (var i = 1; i<pages; i++) {
             $shown_pages.push(i+1);
         }
     } else if (current === pages_count) {
@@ -35,7 +39,7 @@ function paginationSet(pages_count, current, $pagination) {
         $shown_pages.push(current+1);
     }
 
-    for (var i = 0; i < pages; i++) {
+    for (var i = 0; i < $shown_pages.length; i++) {
         $("<li class='page-item'><a class='page-link' href='#' name='" + $shown_pages[i] + "'>" + $shown_pages[i] + "</a></li>")
             .insertBefore($last);
     }
@@ -43,7 +47,7 @@ function paginationSet(pages_count, current, $pagination) {
     if (current === 1) {
         $first.addClass("disabled");
     }
-    if (current === pages_count) {
+    if (current === pages_count || pages_count === 0) {
         $last.addClass("disabled");
     }
     $pagination.find("li a:contains('"+current+"')").parent().addClass("active");
@@ -95,12 +99,26 @@ function table_creator($context, url) {
     var $pagination = $context.find(".pagination");
     var $table = $context.find("table");
     var fill_wrapper = fill_table($table, $pagination);
+    var get_data_wrapper = get_data(url, $context.find('#search_query'));
+    var $search_input = $context.find("#search-form input");
+    var $search_submit = $context.find("#search-form button");
 
     init_table($table);
-    get_data(url, 1, fill_wrapper, true);
+    get_data_wrapper(1, fill_wrapper, true);
 
     $pagination.on('click', $pagination.find(".page-link"), function (e) {
         e.preventDefault();
-        get_data(url, e.target.name, fill_wrapper, false);
+        get_data_wrapper(e.target.name, fill_wrapper, false);
+    });
+
+    $search_input.keypress(function (e) {
+        if (e.which === 13) {
+            $search_submit.click();
+        }
+    });
+
+    $search_submit.click(function (e) {
+        get_data_wrapper(1, fill_wrapper, true);
+        e.preventDefault();
     });
 }

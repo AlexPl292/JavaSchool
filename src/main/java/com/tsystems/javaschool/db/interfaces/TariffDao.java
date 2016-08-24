@@ -11,4 +11,8 @@ public interface TariffDao extends GenericDao<Tariff, Integer>{
     List<Tariff> selectFromTo(int maxEntries, int firstIndex);
 
     long countOfTariffs();
+
+    List<Tariff> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere);
+
+    long countOfImportantSearch(String importantWhere);
 }

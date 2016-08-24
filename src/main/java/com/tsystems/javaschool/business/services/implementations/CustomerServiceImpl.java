@@ -49,4 +49,18 @@ public class CustomerServiceImpl implements CustomerService {
     public long countOfEntries() {
         return customerDao.countOfCustomers();
     }
+
+    @Override
+    public List<Customer> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
+        if ("".equals(searchQuery))
+            return getNEntries(maxEntries, firstIndex);
+        return customerDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+    }
+
+    @Override
+    public long countOfEntries(String searchQuery) {
+        if ("".equals(searchQuery))
+            return countOfEntries();
+        return customerDao.countOfImportantSearch(searchQuery);
+    }
 }

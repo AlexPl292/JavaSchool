@@ -28,4 +28,18 @@ public class TariffServiceImpl implements TariffService{
     public long countOfEntries() {
         return tariffDao.countOfTariffs();
     }
+
+    @Override
+    public List<Tariff> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
+        if ("".equals(searchQuery))
+            return getNEntries(maxEntries, firstIndex);
+        return tariffDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+    }
+
+    @Override
+    public long countOfEntries(String searchQuery) {
+        if ("".equals(searchQuery))
+            return countOfEntries();
+        return tariffDao.countOfImportantSearch(searchQuery);
+    }
 }
