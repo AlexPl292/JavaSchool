@@ -1,8 +1,13 @@
 package com.tsystems.javaschool.controllers;
 
+import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
+import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
+import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
+import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
+import com.tsystems.javaschool.db.entities.Tariff;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,11 +48,19 @@ public class AddCustomerController extends HttpServlet {
         } catch (ParseException e) {
             birthday = new Date(0);
         }
-        newCustomer.setDate_of_birth(birthday);
-        newCustomer.setPassport_data(request.getParameter("passport"));
+        newCustomer.setDateOfBirth(birthday);
+        newCustomer.setPassportData(request.getParameter("passport"));
         newCustomer.setAddress(request.getParameter("address"));
         newCustomer.setEmail(request.getParameter("email"));
-        newCustomer.setIs_blocked(0);
+        newCustomer.setIsBlocked(0);
         service.addNew(newCustomer);
+        Tariff tariff = new TariffServiceImpl().loadByKey(Integer.parseInt(request.getParameter("tariff")));
+        ContractService contractService = new ContractServiceImpl();
+        Contract contract = new Contract();
+        contract.setCustomer(newCustomer);
+        contract.setNumber(request.getParameter("number"));
+        contract.setTariff(tariff);
+        contract.setIsBlocked(0);
+        contractService.addNew(contract);
     }
 }

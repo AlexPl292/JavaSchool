@@ -14,7 +14,17 @@
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <title>New customer</title>
     <script>
+        function loadlist(selobj, url, nameattr, valattr) {
+            $(selobj).empty();
+            $.post(url, {page:-1, updateCount:false, search:""}, function (data) {
+                    $.each(data.data, function (i, obj) {
+                       $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
+                    })
+                } , 'json');
+        }
+
         $(document).ready(function() {
+            loadlist($("#tariff"), "/show_tariffs", "name", "id");
             $('#add_customer_form').submit(function (event) {
                 $form = $(this);
                 if (!valid_inputs($(this))) {
@@ -78,6 +88,21 @@
                 <input type="email" id="email" name="email" placeholder="" class="form-control input-xlarge required">
                 <span id="validEmail"></span>
                 <p id="email_help" class="help-block">Please provide your E-mail</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="tariff">tariff</label>
+            <div class="controls">
+                <select id="tariff" name="tariff" class="form-control">
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="number">Number</label>
+            <div class="controls">
+                <input type="text" id="number" name="number" placeholder="" class="form-control input-xlarge required">
             </div>
         </div>
 

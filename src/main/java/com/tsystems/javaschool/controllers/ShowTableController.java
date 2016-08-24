@@ -61,7 +61,10 @@ public class ShowTableController extends HttpServlet {
             if (page != null) // TODO странная ошибка: иногда page приходит null. Более того, даже эта строчка не всегда помогает
                 draw = Integer.parseInt(page);
         }
-        entitiesList = service.getNEntries(10, (draw - 1) * 10, searchQuery);
+        if ("-1".equals(page))
+            entitiesList = service.loadAll();
+        else
+            entitiesList = service.getNEntries(10, (draw - 1) * 10, searchQuery);
 
         JsonElement element = new Gson().toJsonTree(entitiesList);
         json.addProperty("draw", draw);
