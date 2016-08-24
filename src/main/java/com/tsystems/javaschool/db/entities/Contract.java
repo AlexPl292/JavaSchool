@@ -1,5 +1,7 @@
 package com.tsystems.javaschool.db.entities;
 
+import com.sun.xml.internal.ws.developer.UsesJAXBContext;
+
 import javax.persistence.*;
 
 /**
@@ -13,15 +15,30 @@ public class Contract {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
+    @Column(name = "number")
     private String number;
+    @Column(name = "is_blocked")
     private Integer isBlocked;
 
     @ManyToOne
+    @JoinColumn(name = "customer")
     private Customer customer;
 
     @ManyToOne
+    @JoinColumn(name = "tariff")
     private Tariff tariff;
+
+    public Contract() { }
+
+    public Contract(Integer id, String number, Customer customer, Tariff tariff, Integer isBlocked) {
+        this.id = id;
+        this.number = number;
+        this.isBlocked = isBlocked;
+        this.customer = customer;
+        this.tariff = tariff;
+    }
 
     public int getId() {
         return id;

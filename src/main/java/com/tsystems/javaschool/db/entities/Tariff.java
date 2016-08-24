@@ -20,7 +20,8 @@ public class Tariff {
     public Tariff() {
     }
 
-    public Tariff(String name, BigDecimal cost, String description) {
+    public Tariff(Integer id, String name, BigDecimal cost, String description) {
+        this.id = id;
         this.name = name;
         this.cost = cost;
         this.description = description;

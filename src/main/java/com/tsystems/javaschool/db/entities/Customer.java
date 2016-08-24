@@ -13,43 +13,53 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "surname")
     private String surname;
 
-    private Date date_of_birth;
+    @Column(name = "date_of_birth")
+    private Date dateOfBirth;
 
-    private String passport_data;
+    @Column(name = "passport_data")
+    private String passportData;
 
+    @Column(name = "address")
     private String address;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
     private String password;
 
+    @Column(name = "salt")
     private String salt;
 
-    private int is_blocked;
+    @Column(name = "is_blocked")
+    private int isBlocked;
 
-    public Customer(String name, String surname, Date date_of_birth, String passport_data, String address, String email, String password, String salt, int is_blocked) {
+    public Customer(String name, String surname, Date dateOfBirth, String passportData, String address, String email, String password, String salt, int isBlocked) {
         this.name = name;
         this.surname = surname;
-        this.date_of_birth = date_of_birth;
-        this.passport_data = passport_data;
+        this.dateOfBirth = dateOfBirth;
+        this.passportData = passportData;
         this.address = address;
         this.email = email;
         this.password = password;
         this.salt = salt;
-        this.is_blocked = is_blocked;
+        this.isBlocked = isBlocked;
     }
 
-    public Customer(String name, String surname, String email, int is_blocked) {
+    public Customer(String name, String surname, String email, int isBlocked) {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.is_blocked = is_blocked;
+        this.isBlocked = isBlocked;
     }
 
     public Customer() {}
@@ -78,20 +88,20 @@ public class Customer {
         this.surname = surname;
     }
 
-    public Date getDate_of_birth() {
-        return date_of_birth;
+    public Date getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setDate_of_birth(Date day_of_birth) {
-        this.date_of_birth = day_of_birth;
+    public void setDateOfBirth(Date day_of_birth) {
+        this.dateOfBirth = day_of_birth;
     }
 
-    public String getPassport_data() {
-        return passport_data;
+    public String getPassportData() {
+        return passportData;
     }
 
-    public void setPassport_data(String passport_data) {
-        this.passport_data = passport_data;
+    public void setPassportData(String passport_data) {
+        this.passportData = passport_data;
     }
 
     public String getAddress() {
@@ -118,12 +128,12 @@ public class Customer {
         this.password = password;
     }
 
-    public int getIs_blocked() {
-        return is_blocked;
+    public int getIsBlocked() {
+        return isBlocked;
     }
 
-    public void setIs_blocked(int is_blocked) {
-        this.is_blocked = is_blocked;
+    public void setIsBlocked(int is_blocked) {
+        this.isBlocked = is_blocked;
     }
 
     public String getSalt() {
@@ -140,12 +150,12 @@ public class Customer {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", day_of_birth=" + date_of_birth +
-                ", passport_data='" + passport_data + '\'' +
+                ", day_of_birth=" + dateOfBirth +
+                ", passport_data='" + passportData + '\'' +
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
                 ", password=" + password +
-                ", is_blocked=" + is_blocked +
+                ", is_blocked=" + isBlocked +
                 '}';
     }
 }
