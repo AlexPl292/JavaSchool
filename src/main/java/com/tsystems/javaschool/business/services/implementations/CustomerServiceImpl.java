@@ -47,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public long countOfEntries() {
-        return customerDao.countOfCustomers();
+        return customerDao.countOfEntities();
     }
 
     @Override

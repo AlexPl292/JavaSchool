@@ -18,7 +18,7 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
     }
 
     @Override
-    public long countOfTariffs() {
+    public long countOfEntities() {
         return (long) em.createQuery("SELECT count(c.id) FROM Tariff c").getSingleResult();
     }
 

@@ -18,7 +18,7 @@ public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implement
     }
 
     @Override
-    public long countOfCustomers() {
+    public long countOfEntities() {
         return (long) em.createQuery("SELECT count(c.id) FROM Customer c").getSingleResult();
     }
 

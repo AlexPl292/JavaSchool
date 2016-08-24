@@ -26,7 +26,7 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public long countOfEntries() {
-        return tariffDao.countOfTariffs();
+        return tariffDao.countOfEntities();
     }
 
     @Override
