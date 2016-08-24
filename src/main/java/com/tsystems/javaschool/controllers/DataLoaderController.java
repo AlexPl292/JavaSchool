@@ -20,7 +20,7 @@ import java.util.List;
  * Created by alex on 23.08.16.
  */
 @WebServlet({"/show_customers", "/show_tariffs"})
-public class ShowTableController extends HttpServlet {
+public class DataLoaderController extends HttpServlet {
 
 
     @Override
