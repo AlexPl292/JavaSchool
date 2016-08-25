@@ -3,6 +3,8 @@ package com.tsystems.javaschool.db.entities;
 import com.sun.xml.internal.ws.developer.UsesJAXBContext;
 
 import javax.persistence.*;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
@@ -30,6 +32,9 @@ public class Contract {
     @JoinColumn(name = "tariff")
     private Tariff tariff;
 
+    @ManyToMany(mappedBy = "contractsThoseUseOption")
+    private Set<Option> usedOptions;
+
     public Contract() { }
 
     public Contract(Integer id, String number, Customer customer, Tariff tariff, Integer isBlocked) {
@@ -44,7 +49,7 @@ public class Contract {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -80,15 +85,27 @@ public class Contract {
         this.tariff = tariff;
     }
 
+    public Set<Option> getUsedOptions() {
+        return usedOptions;
+    }
+
+    public void setUsedOptions(Set<Option> usedOptions) {
+        this.usedOptions = usedOptions;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Contract that = (Contract) o;
 
-        if (id != that.id) return false;
-        if (number != null ? !number.equals(that.number) : that.number != null) return false;
+        if (!Objects.equals(id, that.id))
+            return false;
+        if (number != null ? !number.equals(that.number) : that.number != null)
+            return false;
         return isBlocked != null ? isBlocked.equals(that.isBlocked) : that.isBlocked == null;
 
     }
