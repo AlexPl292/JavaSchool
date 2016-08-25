@@ -24,7 +24,7 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
 
     @Override
     public List<Tariff> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere) {
-        String query = "SELECT NEW Tariffc.id, (c.name, c.cost, c.description) FROM Tariff c WHERE c.name LIKE :first";
+        String query = "SELECT NEW Tariff(c.id, c.name, c.cost, c.description) FROM Tariff c WHERE c.name LIKE :first";
         return em.createQuery(query, Tariff.class)
                 .setParameter("first", "%"+importantWhere+"%")
                 .setFirstResult(firstIndex)

@@ -4,13 +4,7 @@
 
 function get_data(url, search_input) {
     return function (page_number, callback, updateCount) {
-        var search_query = search_input.val();
-        $.ajax({
-            type:'POST',
-            url: url,
-            data: {page:page_number, updateCount:updateCount, search:search_query},
-            success: callback
-        });
+        $.getJSON(url, {page:page_number, updateCount:updateCount, search:search_input.val()}, callback);
     }
 }
 

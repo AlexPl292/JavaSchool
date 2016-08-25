@@ -15,7 +15,6 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/table_creator.js"></script>
     <script>
         $(document).ready(function () {
-//            table_creator($('.pagination-customers'), $('#customers'), '/show_customers')
             table_creator($('#customers'), '/show_customers')
         })
     </script>

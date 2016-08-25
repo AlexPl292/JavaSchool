@@ -16,11 +16,11 @@
     <script>
         function loadlist(selobj, url, nameattr, valattr) {
             $(selobj).empty();
-            $.post(url, {page:-1, updateCount:false, search:""}, function (data) {
+            $.getJSON(url, {page:-1, updateCount:false, search:""}, function (data) {
                     $.each(data.data, function (i, obj) {
                        $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
                     })
-                } , 'json');
+                });
         }
 
         $(document).ready(function() {
