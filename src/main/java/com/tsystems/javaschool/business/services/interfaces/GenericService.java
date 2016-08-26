@@ -2,12 +2,13 @@ package com.tsystems.javaschool.business.services.interfaces;
 
 import com.tsystems.javaschool.db.interfaces.GenericDao;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by alex on 23.08.16.
  */
-public interface GenericService<T> {
+public interface GenericService<T, PK extends Serializable> {
     void addNew(T entity);
 
     List<T> getNEntries(int maxResult, int firstResult);
@@ -20,5 +21,5 @@ public interface GenericService<T> {
 
     List<T> loadAll();
 
-    T loadByKey(Integer key);
+    T loadByKey(PK key);
 }
