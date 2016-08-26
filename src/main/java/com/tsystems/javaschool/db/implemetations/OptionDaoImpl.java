@@ -14,26 +14,36 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
 
     @Override
     public List<Option> selectFromTo(int maxEntries, int firstIndex) {
-        return null;
+        return em.createQuery("SELECT c FROM Option c", Option.class)
+                .setFirstResult(firstIndex)
+                .setMaxResults(maxEntries)
+                .getResultList();
     }
 
     @Override
     public long countOfEntities() {
-        return 0;
+        return (long) em.createQuery("SELECT COUNT(c.id) FROM Option c").getSingleResult();
     }
 
     @Override
     public List<Option> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere) {
-        return null;
+        return em.createQuery("SELECT c FROM Option c WHERE c.name LIKE :first", Option.class)
+                .setParameter("first", "%"+importantWhere+"%")
+                .setFirstResult(firstIndex)
+                .setMaxResults(maxEntries)
+                .getResultList();
     }
 
     @Override
     public long countOfImportantSearch(String importantWhere) {
-        return 0;
+        return (long) em.createQuery("SELECT COUNT(c.id) FROM Option c WHERE c.name LIKE :first")
+                .setParameter("first", "%"+importantWhere+"%")
+                .getSingleResult();
     }
 
     @Override
     public List<Option> getAll() {
-        return null;
+        return em.createQuery("SELECT c FROM Option c", Option.class)
+                .getResultList();
     }
 }
