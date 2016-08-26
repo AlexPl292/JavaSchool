@@ -9,7 +9,7 @@ import java.util.List;
  * Created by alex on 23.08.16.
  */
 public interface GenericService<T, PK extends Serializable> {
-    void addNew(T entity);
+    T addNew(T entity);
 
     List<T> getNEntries(int maxResult, int firstResult);
 

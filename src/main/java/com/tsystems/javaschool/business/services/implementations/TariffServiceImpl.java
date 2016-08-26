@@ -15,8 +15,8 @@ public class TariffServiceImpl implements TariffService{
     private TariffDao tariffDao = new TariffDaoImpl();
 
     @Override
-    public void addNew(Tariff tariff) {
-        tariffDao.create(tariff);
+    public Tariff addNew(Tariff tariff) {
+        return tariffDao.create(tariff);
     }
 
     @Override

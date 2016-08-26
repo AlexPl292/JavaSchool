@@ -15,8 +15,8 @@ public class ContractServiceImpl implements ContractService{
     ContractDao contractDao = new ContractDaoImpl();
 
     @Override
-    public void addNew(Contract contract) {
-        contractDao.create(contract);
+    public Contract addNew(Contract contract) {
+        return contractDao.create(contract);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerDao customerDao = new CustomerDaoImpl();
 
     @Override
-    public void addNew(Customer customer) {
+    public Customer addNew(Customer customer) {
         String password = new PassGen(10).nextPassword();
         MessageDigest md = null;
         try {
@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
         Email.sendSimpleEmail(customer.getEmail(), password);
         customer.setPassword(Hex.encodeHexString(md.digest()));
         customer.setSalt(salt);
-        customerDao.create(customer);
+        return customerDao.create(customer);
     }
 
     @Override
