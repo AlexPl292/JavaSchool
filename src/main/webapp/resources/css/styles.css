@@ -14,3 +14,8 @@
     border:0;
     background:transparent;
 }
+.boxes {
+    height: 75px;
+    overflow: auto;
+    width: auto;
+}

@@ -10,11 +10,11 @@ import java.io.IOException;
 /**
  * Created by alex on 19.08.16.
  */
-@WebServlet("/index")
-public class MainController extends HttpServlet{
+@WebServlet("/options")
+public class MainController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/jsp/index.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/jsp/new_option.jsp").forward(req, resp);
     }
 }

@@ -16,7 +16,7 @@ import java.math.BigDecimal;
  * Created by alex on 21.08.16.
  */
 @WebServlet("/add_tariff")
-public class AddTariffController extends HttpServlet{
+public class AddTariffController extends HttpServlet {
 
     private TariffService service = new TariffServiceImpl();
 
