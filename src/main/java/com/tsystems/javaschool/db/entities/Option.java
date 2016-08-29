@@ -64,6 +64,13 @@ public class Option {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Contract> contractsThoseUseOption = new HashSet<>();
 
+    public Option(Integer id, String name, BigDecimal cost, BigDecimal connectCost, String description) {
+        this.id = id;
+        this.name = name;
+        this.cost = cost;
+        this.connectCost = connectCost;
+        this.description = description;
+    }
 
     public Option() {
         required = new HashSet<>();
