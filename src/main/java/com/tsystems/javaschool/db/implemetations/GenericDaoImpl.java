@@ -3,6 +3,7 @@ package com.tsystems.javaschool.db.implemetations;
 import com.tsystems.javaschool.db.EMF;
 import com.tsystems.javaschool.db.interfaces.GenericDao;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
@@ -48,5 +49,10 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
         em.getTransaction().begin();
         em.remove(em.getReference(type, id));
         em.getTransaction().commit();
+    }
+
+    @Override
+    public EntityGraph getEntityGraph() {
+        return em.createEntityGraph(type);
     }
 }

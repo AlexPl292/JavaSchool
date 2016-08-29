@@ -1,5 +1,6 @@
 package com.tsystems.javaschool.db.interfaces;
 
+import javax.persistence.EntityGraph;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface GenericDao <T, PK extends Serializable> {
     long countOfImportantSearch(String importantWhere);
 
     List<T> getAll();
+
+    EntityGraph getEntityGraph();
 }
