@@ -1,5 +1,7 @@
 package com.tsystems.javaschool.db.entities;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Set;
@@ -15,22 +17,27 @@ public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
+    @Expose
     private int id;
 
     @Basic
     @Column(name = "name", nullable = true, length = 45)
+    @Expose
     private String name;
 
     @Basic
     @Column(name = "cost", nullable = true, precision = 2)
+    @Expose
     private BigDecimal cost;
 
     @Basic
     @Column(name = "connect_cost", nullable = true, precision = 2)
+    @Expose
     private BigDecimal connectCost;
 
     @Basic
     @Column(name = "description", nullable = true, length = 255)
+    @Expose
     private String description;
 
     @JoinTable(name = "Required_option_relationships", joinColumns = {
