@@ -39,6 +39,8 @@ public class Option {
     })
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Option> required;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "required")
+    private Set<Option> requiredMe = new HashSet<>();
 
     @JoinTable(name = "Forbidden_option_relationships", joinColumns = {
         @JoinColumn(name = "id_first", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
@@ -143,6 +145,14 @@ public class Option {
 
     public void setContractsThoseUseOption(Set<Contract> contractsThoseUseOption) {
         this.contractsThoseUseOption = contractsThoseUseOption;
+    }
+
+    public Set<Option> getRequiredMe() {
+        return requiredMe;
+    }
+
+    public void setRequiredMe(Set<Option> requiredMe) {
+        this.requiredMe = requiredMe;
     }
 
     @Override
