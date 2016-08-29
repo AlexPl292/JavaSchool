@@ -2,6 +2,7 @@ package com.tsystems.javaschool.business.services.interfaces;
 
 import com.tsystems.javaschool.db.interfaces.GenericDao;
 
+import javax.persistence.EntityGraph;
 import java.io.Serializable;
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface GenericService<T, PK extends Serializable> {
     List<T> loadAll();
 
     T loadByKey(PK key);
+
+    EntityGraph getEntityGraph();
 }

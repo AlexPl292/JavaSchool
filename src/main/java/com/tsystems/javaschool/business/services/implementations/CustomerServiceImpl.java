@@ -8,6 +8,7 @@ import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
 import org.apache.commons.codec.binary.Hex;
 
+import javax.persistence.EntityGraph;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -72,5 +73,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer loadByKey(Integer key) {
         return customerDao.read(key);
+    }
+
+    @Override
+    public EntityGraph getEntityGraph() {
+        return customerDao.getEntityGraph();
     }
 }

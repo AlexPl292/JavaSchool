@@ -5,12 +5,14 @@ import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 
+import javax.persistence.EntityGraph;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 27.08.16.
  */
-public class OptionSeriveImpl implements OptionService{
+public class OptionServiceImpl implements OptionService{
 
     private OptionDao optionDao = new OptionDaoImpl();
     @Override
@@ -50,5 +52,15 @@ public class OptionSeriveImpl implements OptionService{
     @Override
     public Option loadByKey(Integer key) {
         return optionDao.read(key);
+    }
+
+    @Override
+    public EntityGraph getEntityGraph() {
+        return optionDao.getEntityGraph();
+    }
+
+    @Override
+    public Option loadWithDependecies(Integer key, Map<String, Object> hints) {
+        return optionDao.readWithDependencies(key, hints);
     }
 }

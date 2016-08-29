@@ -5,6 +5,7 @@ import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
 
+import javax.persistence.EntityGraph;
 import java.util.List;
 
 /**
@@ -51,5 +52,10 @@ public class TariffServiceImpl implements TariffService{
     @Override
     public Tariff loadByKey(Integer key) {
         return tariffDao.read(key);
+    }
+
+    @Override
+    public EntityGraph getEntityGraph() {
+        return tariffDao.getEntityGraph();
     }
 }

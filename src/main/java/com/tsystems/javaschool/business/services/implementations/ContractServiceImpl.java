@@ -5,6 +5,7 @@ import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
 
+import javax.persistence.EntityGraph;
 import java.util.List;
 
 /**
@@ -51,5 +52,10 @@ public class ContractServiceImpl implements ContractService{
     @Override
     public Contract loadByKey(Integer key) {
         return contractDao.read(key);
+    }
+
+    @Override
+    public EntityGraph getEntityGraph() {
+        return contractDao.getEntityGraph();
     }
 }
