@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
+import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.GenericService;
 
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by alex on 23.08.16.
  */
-@WebServlet({"/show_customers", "/show_tariffs"})
+@WebServlet({"/show_customers", "/show_tariffs", "/show_options"})
 public class DataLoaderController extends HttpServlet {
 
 
@@ -41,6 +42,8 @@ public class DataLoaderController extends HttpServlet {
             service = new CustomerServiceImpl();
         } else if ("/show_tariffs".equals(url)) {
             service = new TariffServiceImpl();
+        } else if ("/show_options".equals(url)) {
+            service = new OptionServiceImpl();
         } else {
             service = new CustomerServiceImpl();
         }
