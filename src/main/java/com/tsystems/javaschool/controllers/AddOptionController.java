@@ -40,17 +40,25 @@ public class AddOptionController extends HttpServlet {
         Set<Option> notRequiredFrom = new HashSet<>();
         Set<Option> notRequiredMe = new HashSet<>();
 
+        graph.addAttributeNodes("required", "forbidden", "requiredMe");
+        Map<String, Object> hints = new HashMap<>();
+        hints.put("javax.persistence.loadgraph", graph);
+
+        Option connectedToOption = service.loadWithDependecies(id, hints);
+
         if ("requiredFrom".equals(request.getParameter("type"))) {
-            graph.addAttributeNodes("required", "forbidden", "requiredMe");
-            Map<String, Object> hints = new HashMap<>();
-            hints.put("javax.persistence.loadgraph", graph);
-
-            Option connectedToOption = service.loadWithDependecies(id, hints);
-
             notForbidden = connectedToOption.getRequired();
-            notRequiredMe = notRequiredFrom = connectedToOption.getForbidden();
-
+            notRequiredMe = notRequiredFrom = connectedToOption.getForbidden();  // Look carefully! There are two operations
+        } else if ("requiredMe".equals(request.getParameter("type"))) {
+            notRequiredFrom = connectedToOption.getForbidden();
+            notForbidden = connectedToOption.getRequiredMe();
+            notForbidden.addAll(connectedToOption.getRequired());
+        } else {// "if forbiddenMe
+            notRequiredMe = connectedToOption.getRequired();
+            notRequiredFrom = connectedToOption.getRequiredMe();
+            notRequiredMe.addAll(connectedToOption.getRequiredMe());
         }
+
         JsonObject json = new JsonObject();
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         JsonElement elementNotForbidden = gson.toJsonTree(notForbidden);
