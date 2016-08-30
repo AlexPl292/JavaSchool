@@ -47,7 +47,11 @@ public class Option {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Option> required = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "required")
+    @JoinTable(name = "Required_option_relationships", joinColumns = { // By using 'mappedby' there dependencies
+            @JoinColumn(name = "id_second", referencedColumnName = "id")}, inverseJoinColumns = {  // will not persist
+            @JoinColumn(name = "id_first", referencedColumnName = "id")
+    })
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Option> requiredMe = new HashSet<>();
 
     @JoinTable(name = "Forbidden_option_relationships", joinColumns = {
