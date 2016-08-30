@@ -16,7 +16,7 @@
     <script>
         $(document).ready(function() {
             prepare();
-/*            $('#add_customer_form').submit(function (event) {
+            $('#add_option_form').submit(function (event) {
                 $form = $(this);
                 if (!valid_inputs($(this))) {
                     event.preventDefault();
@@ -27,7 +27,7 @@
 
                 });
                 return false;
-            });*/
+            });
         });
     </script>
     <title>New Option</title>

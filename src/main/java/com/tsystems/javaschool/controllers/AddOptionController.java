@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -64,5 +65,34 @@ public class AddOptionController extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.print(json.toString());
         out.flush();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Option newOption = new Option();
+        newOption.setName(request.getParameter("name"));
+        newOption.setCost(new BigDecimal(request.getParameter("cost")));
+        newOption.setConnectCost(new BigDecimal(request.getParameter("connect_cost")));
+        newOption.setDescription(request.getParameter("description"));
+
+        HashMap<String, String[]> dependencies = new HashMap<>();
+
+        String[] requiredFrom;
+        String[] requiredMe;
+        String[] forbiddenWith;
+        if ((requiredFrom = request.getParameterValues("requiredFrom")) == null)
+            requiredFrom = new String[0];
+        if ((requiredMe = request.getParameterValues("requiredMe")) == null)
+            requiredMe = new String[0];
+        if ((forbiddenWith = request.getParameterValues("forbiddenWith")) == null)
+            forbiddenWith = new String[0];
+
+
+        dependencies.put("requiredFrom", requiredFrom);
+        dependencies.put("requiredMe", requiredMe);
+        dependencies.put("forbiddenWith", forbiddenWith);
+
+        service.addWithDependencies(newOption, dependencies);
     }
 }

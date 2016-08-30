@@ -2,12 +2,12 @@
  * Created by alex on 28.08.16.
  */
 
-function loadlist(selobjs, url, nameattr, valattr) {
+function loadlist(selobjs, checkbox_names, url, nameattr, valattr) {
     $(selobjs).empty();
     $.getJSON(url, {page:-1, updateCount:false, search:""}, function (data) {
         $.each(selobjs, function (j, selobj) {
             $.each(data.data, function (i, obj) {
-                $(selobj).append($("<input />", {type:"checkbox", id:"rcb"+i, value:obj[valattr]}));
+                $(selobj).append($("<input />", {type:"checkbox", id:"rcb"+i, value:obj[valattr], name:checkbox_names[j]}));
                 $(selobj).append($("<label/>", {"for": "rcb"+i, text:obj[nameattr]}));
                 $(selobj).append($("<br/>"));
             })
@@ -96,7 +96,7 @@ function prepare() {
     var requiredFrom = $("#requiredFrom");
     var forbiddenWith = $("#forbiddenWith");
     var requiredMe = $("#requiredMe");
-    loadlist([requiredFrom, forbiddenWith, requiredMe], "/show_options", "name", "id");
+    loadlist([requiredFrom, forbiddenWith, requiredMe], ["requiredFrom", "forbiddenWith", "requiredMe"], "/show_options", "name", "id");
 
     $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom", state));
     $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden", state));

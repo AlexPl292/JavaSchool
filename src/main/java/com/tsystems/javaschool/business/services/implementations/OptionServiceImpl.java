@@ -6,6 +6,7 @@ import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 
 import javax.persistence.EntityGraph;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,5 +63,51 @@ public class OptionServiceImpl implements OptionService{
     @Override
     public Option loadWithDependecies(Integer key, Map<String, Object> hints) {
         return optionDao.readWithDependencies(key, hints);
+    }
+
+    @Override
+    public Option addWithDependencies(Option option, HashMap<String, String[]> dependencies) {
+        String[] requiredFrom = dependencies.get("requiredFrom");
+        String[] requiredMe = dependencies.get("requiredMe");
+        String[] forbiddenWith = dependencies.get("forbiddenWith");
+
+        EntityGraph<Option> graph = getEntityGraph();
+        graph.addAttributeNodes("required", "forbidden");
+        Map<String, Object> hints = new HashMap<>();
+        hints.put("javax.persistence.loadgraph", graph);
+
+        for (String reqF : requiredFrom) {
+            Integer reqFId = Integer.parseInt(reqF);
+
+            Option reqFOpt = optionDao.readWithDependencies(reqFId, hints);
+            option.addRequiredFromOptions(reqFOpt);
+            option.addRequiredFromOptions(reqFOpt.getRequired());
+            option.addForbiddenWithOptions(reqFOpt.getForbidden());
+        }
+
+        graph = getEntityGraph();
+        graph.addAttributeNodes("required", "forbidden");
+        hints.put("javax.persistence.loadgraph", graph);
+        for (String reqM : forbiddenWith) {
+            Integer forbId = Integer.parseInt(reqM);
+
+            Option forbOpt = optionDao.readWithDependencies(forbId, hints);
+            option.addForbiddenWithOptions(forbOpt);
+            option.addForbiddenWithOptions(forbOpt.getRequired());
+            option.addForbiddenWithOptions(forbOpt.getRequiredMe());
+        }
+
+        graph = getEntityGraph();
+        graph.addAttributeNodes("requiredMe");
+        hints.put("javax.persistence.loadgraph", graph);
+        for (String reqM : requiredMe) {
+            Integer reqMId = Integer.parseInt(reqM);
+
+            Option reqMOpt = optionDao.readWithDependencies(reqMId, hints);
+            option.addRequiredMeOptions(reqMOpt);
+            option.addRequiredMeOptions(reqMOpt.getRequiredMe());
+        }
+
+        return optionDao.create(option);
     }
 }

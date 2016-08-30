@@ -90,9 +90,31 @@ public class Option {
         contractsThoseUseOption = new HashSet<>();
     }
 
-    public void addToRequiredOptions(Option option) {
+    public void addRequiredFromOptions(Option option) {
         this.getRequired().add(option);
-        option.getRequired().add(this);
+    }
+
+    public void addRequiredMeOptions(Option option) {
+        this.getRequiredMe().add(option);
+    }
+
+    public void addForbiddenWithOptions(Option option) {
+        this.getForbidden().add(option);
+        option.getForbidden().add(this);
+    }
+
+    public void addRequiredFromOptions(Set<Option> options) {
+        this.getRequired().addAll(options);
+    }
+
+    public void addRequiredMeOptions(Set<Option> options) {
+        this.getRequiredMe().addAll(options);
+    }
+
+    public void addForbiddenWithOptions(Set<Option> options) {
+        this.getForbidden().addAll(options);
+        for (Option opt : options)
+           opt.getForbidden().add(this);
     }
 
     public int getId() {
