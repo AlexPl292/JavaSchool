@@ -1,7 +1,5 @@
 package com.tsystems.javaschool.db.entities;
 
-import com.sun.xml.internal.ws.developer.UsesJAXBContext;
-
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
