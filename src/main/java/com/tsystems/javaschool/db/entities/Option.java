@@ -65,7 +65,7 @@ public class Option {
             @JoinColumn(name = "option_id", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "tariff_id", referencedColumnName = "id", nullable = false)
     })
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Tariff> possibleTariffsOfOption = new HashSet<>();
 
     @JoinTable(name = "Used_options_of_tariff", joinColumns = {
@@ -228,5 +228,16 @@ public class Option {
         result = 31 * result + (connectCost != null ? connectCost.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Option{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cost=" + cost +
+                ", connectCost=" + connectCost +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.db.implemetations;
 
 import com.tsystems.javaschool.db.entities.Option;
+import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.interfaces.GenericDao;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 
@@ -52,5 +53,14 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
     @Override
     public Option readWithDependencies(Integer key, Map<String, Object> hints) {
         return em.find(Option.class, key, hints);
+    }
+
+    @Override
+    public List<Option> getOptionsOfTariffs(List<Integer> tariffs) {
+        return em.createQuery("SELECT distinct o FROM Option o JOIN o.possibleTariffsOfOption t WHERE t.id IN :tariffs GROUP BY o.id, o.name HAVING COUNT(t.id) = :size"
+                , Option.class)
+                .setParameter("tariffs", tariffs)
+                .setParameter("size", (long) tariffs.size())
+                .getResultList();
     }
 }
