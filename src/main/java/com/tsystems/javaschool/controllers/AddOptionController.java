@@ -38,7 +38,6 @@ public class AddOptionController extends HttpServlet {
         EntityGraph<Option> graph = service.getEntityGraph();
         Set<Option> notForbidden = new HashSet<>();
         Set<Option> notRequiredFrom = new HashSet<>();
-        Set<Option> notRequiredMe = new HashSet<>();
 
         graph.addAttributeNodes("required", "forbidden", "requiredMe");
         Map<String, Object> hints = new HashMap<>();
@@ -48,25 +47,19 @@ public class AddOptionController extends HttpServlet {
 
         if ("requiredFrom".equals(request.getParameter("type"))) {
             notForbidden = connectedToOption.getRequired();
-            notRequiredMe = notRequiredFrom = connectedToOption.getForbidden();  // Look carefully! There are two operations
-        } else if ("requiredMe".equals(request.getParameter("type"))) {
             notRequiredFrom = connectedToOption.getForbidden();
-            notForbidden = connectedToOption.getRequiredMe();
-            notForbidden.addAll(connectedToOption.getRequired());
-        } else {// "if forbiddenMe
-            notRequiredMe = connectedToOption.getRequired();
+            notForbidden.add(connectedToOption);  // Add ref to itself
+        } else {// "if forbidden
             notRequiredFrom = connectedToOption.getRequiredMe();
-            notRequiredMe.addAll(connectedToOption.getRequiredMe());
+            notRequiredFrom.add(connectedToOption);
         }
 
         JsonObject json = new JsonObject();
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         JsonElement elementNotForbidden = gson.toJsonTree(notForbidden);
         JsonElement elementNotRequiredFrom = gson.toJsonTree(notRequiredFrom);
-        JsonElement elementNotRequiredMe = gson.toJsonTree(notRequiredMe);
         json.add("not_forbidden", elementNotForbidden);
         json.add("not_required_from", elementNotRequiredFrom);
-        json.add("not_required_me", elementNotRequiredMe);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

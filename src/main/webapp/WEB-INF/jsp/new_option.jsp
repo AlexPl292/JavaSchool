@@ -73,12 +73,6 @@
         </div>
 
         <div class="control-group">
-            <label class="control-label" for="requiredMe">Required me</label>
-            <div id="requiredMe" class="boxes">
-            </div>
-        </div>
-
-        <div class="control-group">
             <label class="control-label" for="forbiddenWith">Forbidden with</label>
             <div id="forbiddenWith" class="boxes">
             </div>

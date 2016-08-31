@@ -15,90 +15,59 @@ function loadlist(selobjs, checkbox_names, url, nameattr, valattr) {
     });
 }
 
-function check_item(type, state) {
+function check_item(type) {
     return function () {
         var checked_val = parseInt($(this).val(), 10);
+        var disabledBy = checked_val + ':'+type;
+        var forbiddenWith = $('#forbiddenWith');
+        var requiredFrom = $('#requiredFrom');
         if ($(this).is(':checked')) {
             $.getJSON("/add_option", {type: type, data: checked_val}, function (e) {
-                if (!state.disablesIt.forbiddenWith.hasOwnProperty(checked_val)) {
-                    state.disablesIt.forbiddenWith[checked_val] = [];
-                }
-                if (!state.disablesIt.requiredFrom.hasOwnProperty(checked_val)) {
-                    state.disablesIt.requiredFrom[checked_val] = [];
-                }
-                if (!state.disablesIt.requiredMe.hasOwnProperty(checked_val)) {
-                    state.disablesIt.requiredMe[checked_val] = [];
-                }
-
+                var disableIt = $();
                 $(e.not_forbidden).each(function (i, obj) {
-                    $('#forbiddenWith').find("input[value=" + obj.id + "]").attr("disabled", true);
-
-                    state.disablesIt.forbiddenWith[checked_val].push(obj.id);
-                    if (!state.disabledBy.forbiddenWith.hasOwnProperty(obj.id)) {
-                        state.disabledBy.forbiddenWith[obj.id] = [checked_val];
-                    } else {
-                        state.disabledBy.forbiddenWith[obj.id].push(checked_val);
-                    }
+                    disableIt = $.merge(disableIt, forbiddenWith .find("input[value=" + obj.id + "]"));
                 });
                 $(e.not_required_from).each(function (i, obj) {
-                    $('#requiredFrom').find("input[value=" + obj.id + "]").attr("disabled", true);
+                    disableIt = $.merge(disableIt, requiredFrom.find("input[value=" + obj.id + "]"));
+                });
 
-                    state.disablesIt.requiredFrom[checked_val].push(obj.id);
-                    if (!state.disabledBy.requiredFrom.hasOwnProperty(obj.id)) {
-                        state.disabledBy.requiredFrom[obj.id] = [checked_val];
+                $(disableIt).attr("disabled", true);
+
+                $(disableIt).each(function (i, obj) {
+                    if ($(obj).data('disabledBy') === undefined) { // DisabledBy is not set (this checkbox is disabled first time
+                        $(obj).data('disabledBy', [disabledBy]);
                     } else {
-                        state.disabledBy.requiredFrom[obj.id].push(checked_val);
+                        $(obj).data('disabledBy').push(disabledBy);
                     }
                 });
-                $(e.not_required_me).each(function (i, obj) {
-                    $('#requiredMe').find("input[value=" + obj.id + "]").attr("disabled", true);
-
-                    state.disablesIt.requiredMe[checked_val].push(obj.id);
-                    if (!state.disabledBy.requiredMe.hasOwnProperty(obj.id)) {
-                        state.disabledBy.requiredMe[obj.id] = [checked_val];
-                    } else {
-                        state.disabledBy.requiredMe[obj.id].push(checked_val);
-                    }
-                });
-            })
+            });
         } else {
-            state.disablesIt.forbiddenWith[checked_val].forEach(function (id) {
-                var tmp = state.disabledBy.forbiddenWith[id];
-                tmp.splice($.inArray(checked_val, tmp), 1);
-                if (tmp.length === 0)
-                    $('#forbiddenWith').find("input[value=" + id + "]").removeAttr("disabled");
+            var undisable1 = forbiddenWith.find('input[type=checkbox]').filter(function () {
+                if ($.inArray(disabledBy, $(this).data('disabledBy')) !== -1) { // finding elements, which are disabled by this checkbox
+                    $(this).data("disabledBy").splice( $.inArray(disabledBy, $(this).data("disabledBy")), 1 );  //remove element from array
+                    return $(this).data("disabledBy").length === 0;
+                } else
+                    return false;
             });
-            delete state.disablesIt.forbiddenWith[checked_val];
-
-             state.disablesIt.requiredFrom[checked_val].forEach(function (id) {
-                var tmp = state.disabledBy.requiredFrom[id];
-                tmp.splice($.inArray(checked_val, tmp), 1);
-                if (tmp.length === 0)
-                    $('#requiredFrom').find("input[value=" + id + "]").removeAttr("disabled");
+            $(undisable1).prop('disabled', false);
+            
+            var undisable2 = requiredFrom.find('input[type=checkbox]').filter(function () {  // finding elements, which are disabled by this checkbox
+                if ($.inArray(disabledBy, $(this).data('disabledBy')) !== -1) {
+                    $(this).data("disabledBy").splice( $.inArray(disabledBy, $(this).data("disabledBy")), 1 );  //remove element from array
+                    return $(this).data("disabledBy").length === 0;
+                } else
+                    return false;
             });
-            delete state.disablesIt.requiredFrom[checked_val];
-
-             state.disablesIt.requiredMe[checked_val].forEach(function (id) {
-                var tmp = state.disabledBy.requiredMe[id];
-                tmp.splice($.inArray(checked_val, tmp), 1);
-                if (tmp.length === 0)
-                    $('#requiredMe').find("input[value=" + id + "]").removeAttr("disabled");
-            });
-            delete state.disablesIt.requiredMe[checked_val];
-
+            $(undisable2).prop('disabled', false);
         }
     }
 }
 
 function prepare() {
-    var state = {disabledBy:{forbiddenWith:{}, requiredFrom:{}, requiredMe:{}},
-        disablesIt:{forbiddenWith:{}, requiredFrom:{}, requiredMe:{}}}; //TODO тонкий момент с этой штукой
     var requiredFrom = $("#requiredFrom");
     var forbiddenWith = $("#forbiddenWith");
-    var requiredMe = $("#requiredMe");
-    loadlist([requiredFrom, forbiddenWith, requiredMe], ["requiredFrom", "forbiddenWith", "requiredMe"], "/show_options", "name", "id");
+    loadlist([requiredFrom, forbiddenWith], ["requiredFrom", "forbiddenWith"], "/show_options", "name", "id");
 
-    $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom", state));
-    $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden", state));
-    $(requiredMe).on('change', 'input[type=checkbox]', check_item("requiredMe", state));
+    $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
+    $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));
 }
