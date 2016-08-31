@@ -17,18 +17,20 @@ function loadlist(selobjs, checkbox_names, url, nameattr, valattr) {
 
 function check_item(type) {
     return function () {
+        var item = $(this);
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':'+type;
-        var forbiddenWith = $('#forbiddenWith');
-        var requiredFrom = $('#requiredFrom');
         if ($(this).is(':checked')) {
             $.getJSON("/add_option", {type: type, data: checked_val}, function (e) {
+                var disableItIds = [];
                 var disableIt = $();
                 $(e.not_forbidden).each(function (i, obj) {
-                    disableIt = $.merge(disableIt, forbiddenWith .find("input[value=" + obj.id + "]"));
+                    disableIt = $.merge(disableIt, $('#forbiddenWith').find("input[value=" + obj.id + "]"));
+                    disableItIds.push(obj.id+":"+"forbiddenWith");
                 });
                 $(e.not_required_from).each(function (i, obj) {
-                    disableIt = $.merge(disableIt, requiredFrom.find("input[value=" + obj.id + "]"));
+                    disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
+                    disableItIds.push(obj.id+":"+"requiredFrom");
                 });
 
                 $(disableIt).attr("disabled", true);
@@ -40,25 +42,19 @@ function check_item(type) {
                         $(obj).data('disabledBy').push(disabledBy);
                     }
                 });
+                $(item).data("disableIt", disableItIds);
             });
         } else {
-            var undisable1 = forbiddenWith.find('input[type=checkbox]').filter(function () {
-                if ($.inArray(disabledBy, $(this).data('disabledBy')) !== -1) { // finding elements, which are disabled by this checkbox
-                    $(this).data("disabledBy").splice( $.inArray(disabledBy, $(this).data("disabledBy")), 1 );  //remove element from array
-                    return $(this).data("disabledBy").length === 0;
-                } else
-                    return false;
+            var enable = $();
+            $($(this).data("disableIt")).each(function (i, obj) {
+                var finder = obj.split(":");
+                var maybeEnable = $('#'+finder[1]).find("input[value="+finder[0]+"]");
+                $(maybeEnable).data("disabledBy").splice($.inArray(obj, $(maybeEnable).data("disabledBy")), 1);
+                if ($(maybeEnable).data("disabledBy").length === 0)
+                    enable = $.merge(enable, maybeEnable);
             });
-            $(undisable1).prop('disabled', false);
-            
-            var undisable2 = requiredFrom.find('input[type=checkbox]').filter(function () {  // finding elements, which are disabled by this checkbox
-                if ($.inArray(disabledBy, $(this).data('disabledBy')) !== -1) {
-                    $(this).data("disabledBy").splice( $.inArray(disabledBy, $(this).data("disabledBy")), 1 );  //remove element from array
-                    return $(this).data("disabledBy").length === 0;
-                } else
-                    return false;
-            });
-            $(undisable2).prop('disabled', false);
+
+            $(enable).prop('disabled', false);
         }
     }
 }
