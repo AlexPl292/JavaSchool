@@ -15,7 +15,7 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/table_creator.js"></script>
     <script>
         $(document).ready(function () {
-            table_creator($('#customers'), '/show_customers')
+            table_creator($('#customers'), '/load_customers')
         })
     </script>
     <title>Show customers</title>

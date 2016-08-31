@@ -7,8 +7,8 @@ function loadlist(selobjs, checkbox_names, url, nameattr, valattr) {
     $.getJSON(url, {page:-1, updateCount:false, search:""}, function (data) {
         $.each(selobjs, function (j, selobj) {
             $.each(data.data, function (i, obj) {
-                $(selobj).append($("<input />", {type:"checkbox", id:"rcb"+i, value:obj[valattr], name:checkbox_names[j]}));
-                $(selobj).append($("<label/>", {"for": "rcb"+i, text:obj[nameattr]}));
+                $(selobj).append($("<input />", {type:"checkbox", id:checkbox_names[j]+i, value:obj[valattr], name:checkbox_names[j]}));
+                $(selobj).append($("<label/>", {"for": checkbox_names[j]+i, text:obj[nameattr]}));
                 $(selobj).append($("<br/>"));
             })
         })
@@ -62,7 +62,9 @@ function check_item(type) {
 function prepare() {
     var requiredFrom = $("#requiredFrom");
     var forbiddenWith = $("#forbiddenWith");
-    loadlist([requiredFrom, forbiddenWith], ["requiredFrom", "forbiddenWith"], "/show_options", "name", "id");
+    var forTariffs = $('#forTariffs');
+    loadlist([requiredFrom, forbiddenWith], ["requiredFrom", "forbiddenWith"], "/load_options", "name", "id");
+    loadlist([forTariffs], ["forTariffs"], "/load_tariffs", 'name', 'id');
 
     $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
     $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));

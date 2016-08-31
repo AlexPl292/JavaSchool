@@ -67,6 +67,12 @@
         </div>
 
         <div class="control-group">
+            <label class="control-label" for="forTariffs">Available for there tariffs:</label>
+            <div id="forTariffs" class="boxes">
+            </div>
+        </div>
+
+        <div class="control-group">
             <label class="control-label" for="requiredFrom">Required from</label>
             <div id="requiredFrom" class="boxes">
             </div>

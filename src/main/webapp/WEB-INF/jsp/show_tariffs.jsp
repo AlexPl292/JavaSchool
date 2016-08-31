@@ -14,7 +14,7 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/table_creator.js"></script>
     <script>
         $(document).ready(function () {
-            table_creator($('#tariffs'), '/show_tariffs')
+            table_creator($('#tariffs'), '/load_tariffs')
         })
     </script>
     <title>Show tariffs</title>
