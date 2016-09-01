@@ -17,7 +17,7 @@
         $(document).ready(function() {
             prepare();
             $('#add_option_form').submit(function (event) {
-                $form = $(this);
+                var $form = $(this);
                 if (!valid_inputs($(this))) {
                     event.preventDefault();
                     return false;

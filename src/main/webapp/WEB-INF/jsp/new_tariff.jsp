@@ -17,7 +17,7 @@
     <script>
         $(document).ready(function() {
             $('#add_tariff_form').submit(function (event) {
-                $form = $(this);
+                var $form = $(this);
                 if (!valid_inputs($(this))) {
                     event.preventDefault();
                     return false;

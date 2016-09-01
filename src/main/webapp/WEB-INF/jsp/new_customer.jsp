@@ -26,7 +26,7 @@
         $(document).ready(function() {
             loadlist($("#tariff"), "/load_tariffs", "name", "id");
             $('#add_customer_form').submit(function (event) {
-                $form = $(this);
+                var $form = $(this);
                 if (!valid_inputs($(this))) {
                     event.preventDefault();
                     return false;
