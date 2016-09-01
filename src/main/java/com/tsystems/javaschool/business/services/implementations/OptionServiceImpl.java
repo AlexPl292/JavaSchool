@@ -1,14 +1,15 @@
 package com.tsystems.javaschool.business.services.implementations;
 
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
+import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
+import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 
 import javax.persistence.EntityGraph;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by alex on 27.08.16.
@@ -66,7 +67,14 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
-    public Option addWithDependencies(Option option, HashMap<String, String[]> dependencies) {
+    public Option addWithDependencies(Option option, Map<String, String[]> dependencies) {
+
+        TariffService tariffService = new TariffServiceImpl();
+        Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs"))
+                .map(s -> tariffService.loadByKey(Integer.parseInt(s)))
+                .collect(Collectors.toSet());
+        option.setPossibleTariffsOfOption(tariffs);
+
         String[] requiredFrom = dependencies.get("requiredFrom");
         String[] requiredMe = dependencies.get("requiredMe");
         String[] forbiddenWith = dependencies.get("forbiddenWith");
@@ -109,5 +117,10 @@ public class OptionServiceImpl implements OptionService{
         }
 
         return optionDao.create(option);
+    }
+
+    @Override
+    public List<Option> loadOptionsByTariffs(List<Integer> tariffs) {
+        return optionDao.getOptionsOfTariffs(tariffs);
     }
 }

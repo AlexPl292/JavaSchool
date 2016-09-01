@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
+import com.tsystems.javaschool.db.entities.Tariff;
 
 import javax.persistence.EntityGraph;
 import javax.servlet.ServletException;
@@ -17,10 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by alex on 26.08.16.
@@ -82,17 +80,21 @@ public class AddOptionController extends HttpServlet {
         String[] requiredFrom;
         String[] requiredMe;
         String[] forbiddenWith;
+        String[] forTariffs;
         if ((requiredFrom = request.getParameterValues("requiredFrom")) == null)
             requiredFrom = new String[0];
         if ((requiredMe = request.getParameterValues("requiredMe")) == null)
             requiredMe = new String[0];
         if ((forbiddenWith = request.getParameterValues("forbiddenWith")) == null)
             forbiddenWith = new String[0];
-
+        if ((forTariffs = request.getParameterValues("forTariffs")) == null)
+            forbiddenWith = new String[0]; // TODO а вот тут должна быть ошибка
+        // Минимум одна опция должна быть выбрана
 
         dependencies.put("requiredFrom", requiredFrom);
         dependencies.put("requiredMe", requiredMe);
         dependencies.put("forbiddenWith", forbiddenWith);
+        dependencies.put("forTariffs", forTariffs);
 
         service.addWithDependencies(newOption, dependencies);
     }
