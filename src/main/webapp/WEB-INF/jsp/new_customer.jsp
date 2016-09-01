@@ -8,9 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles.css">
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <title>New customer</title>
     <script>

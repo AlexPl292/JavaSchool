@@ -19,6 +19,6 @@ public class MainController extends HttpServlet {
         if ("/options".equals(url))
             req.getRequestDispatcher("/WEB-INF/jsp/new_option.jsp").forward(req, resp);
         else
-            req.getRequestDispatcher("/WEB-INF/jsp/index.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/jsp/index2.jsp").forward(req, resp);
     }
 }
