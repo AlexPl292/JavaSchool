@@ -2,18 +2,19 @@
  * Created by alex on 28.08.16.
  */
 
-function loadlist(selobjs, checkbox_names, url, nameattr, valattr) {
-    $(selobjs).empty();
-    $.getJSON(url, {page:-1, updateCount:false, search:""}, function (data) {
+function create_boxes(selobjs) {
+    return function (data) {
         $.each(selobjs, function (j, selobj) {
+            var checkboxs_name = selobj.attr('id');
             $.each(data.data, function (i, obj) {
-                $(selobj).append($("<input />", {type:"checkbox", id:checkbox_names[j]+i, value:obj[valattr], name:checkbox_names[j]}));
-                $(selobj).append($("<label/>", {"for": checkbox_names[j]+i, text:obj[nameattr]}));
+                $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name}));
+                $(selobj).append($("<label/>", {"for": checkboxs_name+i, text:obj.name}));
                 $(selobj).append($("<br/>"));
             })
         })
-    });
+    }
 }
+
 
 function check_item(type) {
     return function () {
@@ -63,8 +64,16 @@ function prepare() {
     var requiredFrom = $("#requiredFrom");
     var forbiddenWith = $("#forbiddenWith");
     var forTariffs = $('#forTariffs');
-    loadlist([requiredFrom, forbiddenWith], ["requiredFrom", "forbiddenWith"], "/load_options", "name", "id");
-    loadlist([forTariffs], ["forTariffs"], "/load_tariffs", 'name', 'id');
+
+    forTariffs.empty();
+    $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes([forTariffs]));
+
+    $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
+        e.preventDefault();
+        requiredFrom.empty();
+        forbiddenWith.empty();
+        $.getJSON("/load_options_by_tariffs", $("#forTariffs").find("input").serialize(), create_boxes([requiredFrom, forbiddenWith]));
+    });
 
     $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
     $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));

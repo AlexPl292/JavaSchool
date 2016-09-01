@@ -23,8 +23,8 @@
                     return false;
                 }
 
-                $.post($form.attr("action"), $form.serialize(), function(response) {
-
+                $.post($form.attr("action"), $form.serialize(), function(response) { //TODO должен быть выбран хотя бы один тариф
+                    // TODO Заполнить все возвраты!
                 });
                 return false;
             });
