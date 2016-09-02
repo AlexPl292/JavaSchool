@@ -8,9 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles.css">
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/jquery-3.1.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.1.css">
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <script>
@@ -33,64 +31,94 @@
     <title>New Option</title>
 </head>
 <body>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Add new option</h1>
+    </div>
+</div>
 <form class="form-horizontal" id="add_option_form" action="add_option" method="POST">
-    <fieldset>
-        <div id="legend">
-            <legend class="">Add new option</legend>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="name">Name</label>
-            <div class="controls">
-                <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">New option data</div>
+                <div class="panel-body">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="name">Name</label>
+                                <div class="controls">
+                                    <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge required">
+                                </div>
+                            </div>
 
-        <div class="control-group">
-            <label class="control-label" for="cost">Cost</label>
-            <div class="controls">
-                <input type="text" id="cost" name="cost" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+                            <div class="control-group">
+                                <label class="control-label" for="cost">Cost</label>
+                                <div class="controls">
+                                    <input type="text" id="cost" name="cost" placeholder="" class="form-control input-xlarge required">
+                                </div>
+                            </div>
 
-        <div class="control-group">
-            <label class="control-label" for="connect_cost">Connect cost</label>
-            <div class="controls">
-                <input type="text" id="connect_cost" name="connect_cost" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+                            <div class="control-group">
+                                <label class="control-label" for="connect_cost">Connect cost</label>
+                                <div class="controls">
+                                    <input type="text" id="connect_cost" name="connect_cost" placeholder="" class="form-control input-xlarge required">
+                                </div>
+                            </div>
 
-        <div class="control-group">
-            <label class="control-label" for="description">Description</label>
-            <div class="controls">
-                <textarea id="description" name="description" placeholder="" class="form-control textarea-xlarge required"></textarea>
+                            <div class="control-group">
+                                <label class="control-label" for="description">Description</label>
+                                <div class="controls">
+                                    <textarea id="description" name="description" placeholder="" class="form-control textarea-xlarge required"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="control-group">
-            <label class="control-label" for="forTariffs">Available for there tariffs:</label>
-            <div id="forTariffs" class="boxes">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Available for there tariffs</div>
+                <div class="panel-body boxes">
+                        <div id="forTariffs"> </div>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Required from</div>
+                <div class="panel-body boxes">
+                    <div id="requiredFrom"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="control-group">
-            <label class="control-label" for="requiredFrom">Required from</label>
-            <div id="requiredFrom" class="boxes">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Incompatible with</div>
+                <div class="panel-body boxes">
+                    <div id="forbiddenWith"> </div>
+                </div>
             </div>
         </div>
-
-        <div class="control-group">
-            <label class="control-label" for="forbiddenWith">Forbidden with</label>
-            <div id="forbiddenWith" class="boxes">
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-body">
+                <div class="form-group">
+                    <!-- Button -->
+                    <div class="controls">
+                        <input type="submit" class="btn btn-success"/>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="control-group">
-            <!-- Button -->
-            <div class="controls">
-                <input type="submit" class="btn btn-success"/>
-            </div>
-        </div>
-    </fieldset>
+    </div>
 </form>
 </body>
 </html>

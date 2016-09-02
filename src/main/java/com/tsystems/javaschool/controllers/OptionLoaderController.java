@@ -9,6 +9,7 @@ import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 
+import javax.persistence.EntityGraph;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,14 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Created by alex on 01.09.16.
  */
-@WebServlet("/load_options_by_tariffs")
+@WebServlet("/load_options")
 public class OptionLoaderController extends HttpServlet{
 
     OptionService service = new OptionServiceImpl();
@@ -32,13 +32,45 @@ public class OptionLoaderController extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<Integer> tariffs = Arrays.stream(request.getParameterValues("forTariffs")).map(Integer::parseInt).collect(Collectors.toList());
-        List<Option> options = service.loadOptionsByTariffs(tariffs);
-
         JsonObject json = new JsonObject();
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        JsonElement element = gson.toJsonTree(options);
-        json.add("data", element);
+        Boolean disabling = Boolean.valueOf(request.getParameter("disabling"));
+        if (!disabling) {
+            List<Integer> tariffs = Arrays.stream(request.getParameterValues("forTariffs")).map(Integer::parseInt).collect(Collectors.toList());
+            List<Option> options = service.loadOptionsByTariffs(tariffs);
+
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            JsonElement element = gson.toJsonTree(options);
+            json.add("data", element);
+
+        } else {
+            Integer id = Integer.parseInt(request.getParameter("data"));
+
+            EntityGraph<Option> graph = service.getEntityGraph();
+            Set<Option> notForbidden = new HashSet<>();
+            Set<Option> notRequiredFrom = new HashSet<>();
+
+            graph.addAttributeNodes("required", "forbidden", "requiredMe");
+            Map<String, Object> hints = new HashMap<>();
+            hints.put("javax.persistence.loadgraph", graph);
+
+            Option connectedToOption = service.loadWithDependecies(id, hints);
+
+            if ("requiredFrom".equals(request.getParameter("type"))) {
+                notForbidden = connectedToOption.getRequired();
+                notRequiredFrom = connectedToOption.getForbidden();
+                notForbidden.add(connectedToOption);  // Add ref to itself
+            } else {// "if forbidden
+                notRequiredFrom = connectedToOption.getRequiredMe();
+                notRequiredFrom.add(connectedToOption);
+            }
+
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            JsonElement elementNotForbidden = gson.toJsonTree(notForbidden);
+            JsonElement elementNotRequiredFrom = gson.toJsonTree(notRequiredFrom);
+            json.add("not_forbidden", elementNotForbidden);
+            json.add("not_required_from", elementNotRequiredFrom);
+
+        }
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

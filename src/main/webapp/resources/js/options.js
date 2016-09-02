@@ -22,7 +22,7 @@ function check_item(type) {
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':'+type;
         if ($(this).is(':checked')) {
-            $.getJSON("/add_option", {type: type, data: checked_val}, function (e) {
+            $.getJSON("/load_options", {disabling: true, type: type, data: checked_val}, function (e) {
                 var disableItIds = [];
                 var disableIt = $();
                 $(e.not_forbidden).each(function (i, obj) {
@@ -72,7 +72,9 @@ function prepare() {
         e.preventDefault();
         requiredFrom.empty();
         forbiddenWith.empty();
-        $.getJSON("/load_options_by_tariffs", $("#forTariffs").find("input").serialize(), create_boxes([requiredFrom, forbiddenWith]));
+        var data = $("#forTariffs").find("input").serialize();
+        data["disabling"] = false;
+        $.getJSON("/load_options", data, create_boxes([requiredFrom, forbiddenWith]));
     });
 
     $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));

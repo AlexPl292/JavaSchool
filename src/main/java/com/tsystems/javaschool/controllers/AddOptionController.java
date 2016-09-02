@@ -31,39 +31,7 @@ public class AddOptionController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer id = Integer.parseInt(request.getParameter("data"));
-
-        EntityGraph<Option> graph = service.getEntityGraph();
-        Set<Option> notForbidden = new HashSet<>();
-        Set<Option> notRequiredFrom = new HashSet<>();
-
-        graph.addAttributeNodes("required", "forbidden", "requiredMe");
-        Map<String, Object> hints = new HashMap<>();
-        hints.put("javax.persistence.loadgraph", graph);
-
-        Option connectedToOption = service.loadWithDependecies(id, hints);
-
-        if ("requiredFrom".equals(request.getParameter("type"))) {
-            notForbidden = connectedToOption.getRequired();
-            notRequiredFrom = connectedToOption.getForbidden();
-            notForbidden.add(connectedToOption);  // Add ref to itself
-        } else {// "if forbidden
-            notRequiredFrom = connectedToOption.getRequiredMe();
-            notRequiredFrom.add(connectedToOption);
-        }
-
-        JsonObject json = new JsonObject();
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        JsonElement elementNotForbidden = gson.toJsonTree(notForbidden);
-        JsonElement elementNotRequiredFrom = gson.toJsonTree(notRequiredFrom);
-        json.add("not_forbidden", elementNotForbidden);
-        json.add("not_required_from", elementNotRequiredFrom);
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        request.getRequestDispatcher("/index").forward(request, response);
     }
 
     @Override

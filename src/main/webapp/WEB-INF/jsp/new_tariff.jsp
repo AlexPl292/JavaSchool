@@ -8,9 +8,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles.css">
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/jquery-3.1.0.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <title>New tariff</title>
 
@@ -32,39 +29,55 @@
     </script>
 </head>
 <body>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Add new tariff</h1>
+    </div>
+</div>
 <form class="form-horizontal" id="add_tariff_form" action='add_tariff' method="POST">
-    <fieldset>
-        <div id="legend">
-            <legend class="">Add new tariff</legend>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="name">Name</label>
-            <div class="controls">
-                <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">New tariff data</div>
+                <div class="panel-body">
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="name">Name</label>
+                            <div class="controls">
+                                <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge required">
+                            </div>
+                        </div>
 
-        <div class="control-group">
-            <label class="control-label" for="cost">Cost</label>
-            <div class="controls">
-                <input type="text" id="cost" name="cost" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="cost">Cost</label>
+                            <div class="controls">
+                                <input type="text" id="cost" name="cost" placeholder="" class="form-control input-xlarge required">
+                            </div>
+                        </div>
 
-        <div class="control-group">
-            <label class="control-label" for="description">Description</label>
-            <div class="controls">
-                <textarea id="description" name="description" placeholder="" class="form-control textarea-xlarge required"></textarea>
+                        <div class="control-group">
+                            <label class="control-label" for="description">Description</label>
+                            <div class="controls">
+                                <textarea id="description" name="description" placeholder="" class="form-control textarea-xlarge required"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
             </div>
         </div>
-
-        <div class="control-group">
-            <!-- Button -->
-            <div class="controls">
-                <input type="submit" class="btn btn-success"/>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-body">
+                <div class="form-group">
+                    <!-- Button -->
+                    <div class="controls">
+                        <input type="submit" class="btn btn-success"/>
+                    </div>
+                </div>
             </div>
         </div>
-    </fieldset>
+    </div>
 </form>
 </body>
 </html>

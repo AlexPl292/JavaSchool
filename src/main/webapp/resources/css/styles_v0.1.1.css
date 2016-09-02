@@ -1,0 +1,5 @@
+.boxes {
+    height: 150px;
+    overflow: auto;
+    width: auto;
+}

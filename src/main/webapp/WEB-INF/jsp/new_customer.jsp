@@ -8,7 +8,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles.css">
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <title>New customer</title>
     <script>
@@ -39,78 +38,103 @@
     </script>
 </head>
 <body>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Add new customer</h1>
+    </div>
+</div>
 <form class="form-horizontal" id="add_customer_form" action='add_customer' method="POST">
-    <fieldset>
-        <div id="legend">
-            <legend class="">Add new customer</legend>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="name">Name</label>
-            <div class="controls">
-                <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">New customer data</div>
+                <div class="panel-body">
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="name">Name</label>
+                            <div class="controls">
+                                <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge required">
+                            </div>
+                        </div>
 
-        <div class="control-group">
-            <label class="control-label" for="surname">Surname</label>
-            <div class="controls">
-                <input type="text" id="surname" name="surname" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="surname">Surname</label>
+                            <div class="controls">
+                                <input type="text" id="surname" name="surname" placeholder="" class="form-control input-xlarge required">
+                            </div>
+                        </div>
 
-        <div class="control-group">
-            <label class="control-label" for="birthday">Day of birth</label>
-            <div class="controls">
-                <input type="date" id="birthday" name="birthday" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="birthday">Day of birth</label>
+                            <div class="controls">
+                                <input type="date" id="birthday" name="birthday" placeholder="" class="form-control input-xlarge required">
+                            </div>
+                        </div>
 
-        <div class="control-group">
-            <label class="control-label" for="passport">Passport data</label>
-            <div class="controls">
-                <input type="text" id="passport" name="passport" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="passport">Passport data</label>
+                            <div class="controls">
+                                <input type="text" id="passport" name="passport" placeholder="" class="form-control input-xlarge required">
+                            </div>
+                        </div>
 
-        <div class="control-group">
-            <label class="control-label" for="address">Address</label>
-            <div class="controls">
-                <input type="text" id="address" name="address" placeholder="" class="form-control input-xlarge required">
-            </div>
-        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="address">Address</label>
+                            <div class="controls">
+                                <input type="text" id="address" name="address" placeholder="" class="form-control input-xlarge required">
+                            </div>
+                        </div>
 
-        <div class="control-group">
-            <!-- E-mail -->
-            <label class="control-label" for="email">E-mail</label>
-            <div class="controls">
-                <input type="email" id="email" name="email" placeholder="" class="form-control input-xlarge required">
-                <span id="validEmail"></span>
-                <p id="email_help" class="help-block">Please provide your E-mail</p>
+                        <div class="control-group">
+                            <!-- E-mail -->
+                            <label class="control-label" for="email">E-mail</label>
+                            <div class="controls">
+                                <input type="email" id="email" name="email" placeholder="" class="form-control input-xlarge required">
+                                <span id="validEmail"></span>
+                                <p id="email_help" class="help-block">Please provide your E-mail</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">New contract data</div>
+                <div class="panel-body">
+                    <div class="control-group">
+                        <label class="control-label" for="tariff">tariff</label>
+                        <div class="controls">
+                            <select id="tariff" name="tariff" class="form-control">
+                            </select>
+                        </div>
+                    </div>
 
-        <div class="control-group">
-            <label class="control-label" for="tariff">tariff</label>
-            <div class="controls">
-                <select id="tariff" name="tariff" class="form-control">
-                </select>
-            </div>
-        </div>
+                    <div class="control-group">
+                        <label class="control-label" for="number">Number</label>
+                        <div class="controls">
+                            <input type="text" id="number" name="number" placeholder="" class="form-control input-xlarge required">
+                        </div>
+                    </div>
 
-        <div class="control-group">
-            <label class="control-label" for="number">Number</label>
-            <div class="controls">
-                <input type="text" id="number" name="number" placeholder="" class="form-control input-xlarge required">
+                </div>
             </div>
         </div>
-
-        <div class="control-group">
-            <!-- Button -->
-            <div class="controls">
-                <input type="submit" class="btn btn-success"/>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-body">
+                <div class="form-group">
+                    <!-- Button -->
+                    <div class="controls">
+                        <input type="submit" class="btn btn-success"/>
+                    </div>
+                </div>
             </div>
         </div>
-    </fieldset>
+    </div>
 </form>
 </body>
 </html>
