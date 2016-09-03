@@ -8,8 +8,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
+<%--    <script src="<%=application.getContextPath() %>/resources/js/jquery.validate.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>--%>
     <script src="<%=application.getContextPath() %>/resources/js/bootstrap-formhelpers-phone.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/notify.min.js"></script>
     <title>New customer</title>
     <script>
         function loadlist(selobj, url, nameattr, valattr) {
@@ -23,16 +25,21 @@
 
         $(document).ready(function() {
             loadlist($("#tariff"), "/load_tariffs", "name", "id");
-            $('#add_customer_form').submit(function (event) {
+            $('#add_customer_form').submit(function (e) {
+                e.preventDefault();
                 var $form = $(this);
-                if (!valid_inputs($(this))) {
-                    event.preventDefault();
-                    return false;
-                }
 
                 $.post($form.attr("action"), $form.serialize(), function(response) {
-
-                });
+                    if (response.success) {
+                        $('input[type=submit]').notify("success", {position:"right", className:"success"});
+                        $form[0].reset();
+                    } else {
+                        $('input[type=submit]').notify("Errors! See above", {position:"right", className:"error"});
+                        $.each(response.errors, function(prop, val) {
+                            $.notify("Error in: "+prop+"\n"+val, {position:"top right", className:"error"});
+                        });
+                    }
+                }, 'json');
                 return false;
             });
         });

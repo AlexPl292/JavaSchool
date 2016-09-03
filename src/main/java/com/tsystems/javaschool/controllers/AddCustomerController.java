@@ -1,5 +1,8 @@
 package com.tsystems.javaschool.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
@@ -8,6 +11,7 @@ import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.entities.Tariff;
+import com.tsystems.javaschool.util.Validator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,9 +19,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -37,30 +44,83 @@ public class AddCustomerController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Customer newCustomer = new Customer();
-        newCustomer.setName(request.getParameter("name"));
-        newCustomer.setSurname(request.getParameter("surname"));
-        Date birthday;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            birthday = sdf.parse(request.getParameter("birthday"));
-        } catch (ParseException e) {
-            birthday = new Date(0);
+
+        Map<String, String> errors = new HashMap<>();
+        JsonObject json = new JsonObject();
+
+        String name = request.getParameter("name");
+        String surname = request.getParameter("surname");
+        String birthdayStr = request.getParameter("birthday");
+        String passport = request.getParameter("passport");
+        String address = request.getParameter("address");
+        String email = request.getParameter("email");
+        String number = request.getParameter("number");
+
+        // Validation
+        String tmpError;
+        if ((tmpError = Validator.name(name)) != null)
+            errors.put("name", tmpError);
+        if ((tmpError = Validator.name(surname)) != null)
+            errors.put("surname", tmpError);
+        if ((tmpError = Validator.dateOlderThen18(birthdayStr)) != null)
+            errors.put("birthday", tmpError);
+        if (address == null)
+            errors.put("address", "Address is null");
+        if (passport == null)
+            errors.put("passport", "Passport is null");
+        if ((tmpError = Validator.phone(email)) != null)
+            errors.put("email", tmpError);
+        if ((tmpError = Validator.phone(number)) != null)
+            errors.put("number", tmpError);
+
+        if (errors.isEmpty()) {
+
+            Customer newCustomer = new Customer();
+            newCustomer.setName(name);
+            newCustomer.setSurname(surname);
+            Date birthday;
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                birthday = sdf.parse(birthdayStr);
+            } catch (ParseException e) {
+                birthday = new Date(0);
+            }
+            newCustomer.setDateOfBirth(birthday);
+            newCustomer.setPassportData(passport);
+            newCustomer.setAddress(address);
+            newCustomer.setEmail(email);
+            newCustomer.setIsBlocked(0);
+            Customer resCust = service.addNew(newCustomer);
+            if (resCust.getId() == null)
+                errors.put("DB", "Something is wrong");
+
+            //TODO validate here
+            Tariff tariff = new TariffServiceImpl().loadByKey(Integer.parseInt(request.getParameter("tariff")));
+
+            ContractService contractService = new ContractServiceImpl();
+            Contract contract = new Contract();
+            contract.setCustomer(newCustomer);
+            contract.setNumber(number);
+            contract.setTariff(tariff);
+            contract.setIsBlocked(0);
+            Contract resContr = contractService.addNew(contract);
+            if (resContr.getId() == null)
+                errors.put("DB", "Something is wrong");
         }
-        newCustomer.setDateOfBirth(birthday);
-        newCustomer.setPassportData(request.getParameter("passport"));
-        newCustomer.setAddress(request.getParameter("address"));
-        newCustomer.setEmail(request.getParameter("email"));
-        newCustomer.setIsBlocked(0);
-        service.addNew(newCustomer);
-        Tariff tariff = new TariffServiceImpl().loadByKey(Integer.parseInt(request.getParameter("tariff")));
-        ContractService contractService = new ContractServiceImpl();
-        Contract contract = new Contract();
-        contract.setCustomer(newCustomer);
-        contract.setNumber(request.getParameter("number"));
-        contract.setTariff(tariff);
-        contract.setIsBlocked(0);
-        contractService.addNew(contract);
+        if (!errors.isEmpty()) {
+            JsonElement element = new Gson().toJsonTree(errors);
+            json.addProperty("success", false);
+            json.add("errors", element);
+        } else {
+            json.addProperty("success", true);
+        }
+
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        out.print(json.toString());
+        out.flush();
     }
 }

@@ -26,9 +26,9 @@
 
     <script>
         $(function () {
-            $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+/*            $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
                 options.async = true;
-            });
+            });*/
 
             $.get('/load_content', {"path":window.location.pathname}, function (data) {
                 $('#content').html(data);

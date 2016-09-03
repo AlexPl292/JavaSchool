@@ -43,7 +43,7 @@ public class Contract {
         this.tariff = tariff;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
