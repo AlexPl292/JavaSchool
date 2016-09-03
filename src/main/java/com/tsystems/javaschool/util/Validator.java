@@ -68,7 +68,7 @@ public class Validator {
 
     /**
      * Check if date is valid and older then 18 years
-     * @param data cost for validating
+     * @param data date for validating
      * @return error message or null, if date is valid
      */
     public static String dateOlderThen18(String data) {
@@ -85,6 +85,20 @@ public class Validator {
         LocalDate today = LocalDate.now();
         if (date.isAfter(today.minusYears(18)))
             return "Date is not older then 18 years";
+
+        return null;
+    }
+
+    /**
+     * Check if phone number is valid
+     * @param number phone number for validating
+     * @return error message or null, if phone number is valid
+     */
+    public static String phone(String number) {
+        if (null == number)
+            return "Number is empty";
+        if (!number.matches("\\+\\d+ \\(\\d{3}\\) \\d{3}-\\d{4}"))
+            return "Wrong format";
 
         return null;
     }
