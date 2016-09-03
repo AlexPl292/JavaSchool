@@ -36,7 +36,7 @@
                     } else {
                         $('input[type=submit]').notify("Errors! See above", {position:"right", className:"error"});
                         $.each(response.errors, function(prop, val) {
-                            $.notify("Error in: "+prop+"\n"+val, {position:"top right", className:"error"});
+                            $form.find('[name='+prop+']').notify("Error:"+val, {position:"top center", className:"error"});
                         });
                     }
                 }, 'json');
