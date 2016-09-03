@@ -12,7 +12,9 @@ import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.util.Validator;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -95,11 +98,11 @@ public class AddCustomerController extends HttpServlet {
             newCustomer.setAddress(address);
             newCustomer.setEmail(email);
             newCustomer.setIsBlocked(0);
-            try {
+/*            try {
                 service.addNew(newCustomer);
             } catch (Exception e) {
                 errors.put("General", e.getMessage());
-            }
+            }*/
 
             //TODO validate here
             Tariff tariff = new TariffServiceImpl().loadByKey(Integer.parseInt(request.getParameter("tariff")));
@@ -110,10 +113,16 @@ public class AddCustomerController extends HttpServlet {
             contract.setNumber(number);
             contract.setTariff(tariff);
             contract.setIsBlocked(0);
-            try {
+/*            try {
                 contractService.addNew(contract);
             } catch (Exception e) {
                 errors.put("General", e.getMessage());
+            }*/
+            try {
+                service.createCustomerAndContract(newCustomer, contract);
+            } catch (RollbackException e) {
+                Throwable th = ExceptionUtils.getRootCause(e);
+                errors.put("General", th.getMessage());
             }
         }
         if (!errors.isEmpty()) {

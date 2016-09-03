@@ -1,16 +1,23 @@
 package com.tsystems.javaschool.business.services.implementations;
 
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
+import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
+import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.CustomerDaoImpl;
+import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.CustomerDao;
+import com.tsystems.javaschool.db.interfaces.GenericDao;
 import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
 import org.apache.commons.codec.binary.Hex;
 
 import javax.persistence.EntityGraph;
+import javax.persistence.EntityTransaction;
+import javax.persistence.RollbackException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
@@ -78,5 +85,16 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public EntityGraph getEntityGraph() {
         return customerDao.getEntityGraph();
+    }
+
+    @Override
+    public void createCustomerAndContract(Customer customer, Contract contract) {
+        EntityTransaction transaction = GenericDao.getTransaction();
+        ContractDao contractDao = new ContractDaoImpl();
+
+        transaction.begin();
+        customerDao.create(customer);
+        contractDao.create(contract);
+        transaction.commit();
     }
 }

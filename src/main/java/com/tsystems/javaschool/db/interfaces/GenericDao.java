@@ -1,6 +1,10 @@
 package com.tsystems.javaschool.db.interfaces;
 
+import com.tsystems.javaschool.db.EMF;
+
 import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +13,8 @@ import java.util.List;
  */
 public interface GenericDao <T, PK extends Serializable> {
 
+    EntityManager em = EMF.createEntityManager();
+
     T create(T newInstance);
 
     T read(PK id);
@@ -16,6 +22,10 @@ public interface GenericDao <T, PK extends Serializable> {
     T update(T transientObject);
 
     void delete(PK id);
+
+    static EntityTransaction getTransaction() {
+        return em.getTransaction();
+    }
 
     List<T> selectFromTo(int maxEntries, int firstIndex);
 

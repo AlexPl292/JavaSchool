@@ -5,6 +5,7 @@ import com.tsystems.javaschool.db.interfaces.GenericDao;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -13,8 +14,6 @@ import java.lang.reflect.ParameterizedType;
  * Created by alex on 18.08.16.
  */
 public abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK>{
-
-    protected EntityManager em = EMF.createEntityManager();
 
     private Class type;
 
@@ -25,9 +24,7 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
 
     @Override
     public T create(T newInstance) {
-        em.getTransaction().begin();
         em.persist(newInstance);
-        em.getTransaction().commit();
         return newInstance;
     }
 
@@ -38,17 +35,13 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
 
     @Override
     public T update(T transientObject) {
-        em.getTransaction().begin();
         em.merge(transientObject);
-        em.getTransaction().commit();
         return transientObject;
     }
 
     @Override
     public void delete(PK id) {
-        em.getTransaction().begin();
         em.remove(em.getReference(type, id));
-        em.getTransaction().commit();
     }
 
     @Override
