@@ -36,7 +36,14 @@
                     } else {
                         $('input[type=submit]').notify("Errors! See above", {position:"right", className:"error"});
                         $.each(response.errors, function(prop, val) {
-                            $form.find('[name='+prop+']').notify("Error:"+val, {position:"top center", className:"error"});
+                            if (prop === "General") {
+                                $.notify("Error:\n" + val, {position: "top right", className: "error"});
+                            } else {
+                                $form.find('[name=' + prop + ']').notify("Error:" + val, {
+                                    position: "top center",
+                                    className: "error"
+                                });
+                            }
                         });
                     }
                 }, 'json');

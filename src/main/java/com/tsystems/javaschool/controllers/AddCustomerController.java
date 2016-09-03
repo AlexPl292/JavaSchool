@@ -68,7 +68,7 @@ public class AddCustomerController extends HttpServlet {
             errors.put("address", "Address is null");
         if (passport == null)
             errors.put("passport", "Passport is null");
-        if ((tmpError = Validator.phone(email)) != null)
+        if ((tmpError = Validator.email(email)) != null)
             errors.put("email", tmpError);
         if ((tmpError = Validator.phone(number)) != null)
             errors.put("number", tmpError);
@@ -91,9 +91,11 @@ public class AddCustomerController extends HttpServlet {
             newCustomer.setAddress(address);
             newCustomer.setEmail(email);
             newCustomer.setIsBlocked(0);
-            Customer resCust = service.addNew(newCustomer);
-            if (resCust.getId() == null)
-                errors.put("DB", "Something is wrong");
+            try {
+                service.addNew(newCustomer);
+            } catch (Exception e) {
+                errors.put("General", e.getMessage());
+            }
 
             //TODO validate here
             Tariff tariff = new TariffServiceImpl().loadByKey(Integer.parseInt(request.getParameter("tariff")));
@@ -104,9 +106,11 @@ public class AddCustomerController extends HttpServlet {
             contract.setNumber(number);
             contract.setTariff(tariff);
             contract.setIsBlocked(0);
-            Contract resContr = contractService.addNew(contract);
-            if (resContr.getId() == null)
-                errors.put("DB", "Something is wrong");
+            try {
+                contractService.addNew(contract);
+            } catch (Exception e) {
+                errors.put("General", e.getMessage());
+            }
         }
         if (!errors.isEmpty()) {
             JsonElement element = new Gson().toJsonTree(errors);
