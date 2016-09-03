@@ -3,3 +3,7 @@
     overflow: auto;
     width: auto;
 }
+
+textarea {
+    resize: vertical;
+}

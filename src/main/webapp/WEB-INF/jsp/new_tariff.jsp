@@ -44,21 +44,22 @@
                         <div class="control-group">
                             <label class="control-label" for="name">Name</label>
                             <div class="controls">
-                                <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge required">
+                                <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge">
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="cost">Cost</label>
-                            <div class="controls">
-                                <input type="text" id="cost" name="cost" placeholder="" class="form-control input-xlarge required">
+                            <div class="controls input-group">
+                                <span class="input-group-addon"><i class="fa fa-rub"></i> </span>
+                                <input type="text" id="cost" name="cost" placeholder="" class="form-control input-xlarge">
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="description">Description</label>
                             <div class="controls">
-                                <textarea id="description" name="description" placeholder="" class="form-control textarea-xlarge required"></textarea>
+                                <textarea id="description" name="description" placeholder="" class="form-control textarea-xlarge"></textarea>
                             </div>
                         </div>
                     </fieldset>

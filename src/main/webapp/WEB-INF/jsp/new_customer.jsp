@@ -9,6 +9,7 @@
 <html>
 <head>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/bootstrap-formhelpers-phone.js"></script>
     <title>New customer</title>
     <script>
         function loadlist(selobj, url, nameattr, valattr) {
@@ -50,38 +51,50 @@
                 <div class="panel-heading">New customer data</div>
                 <div class="panel-body">
                     <fieldset>
-                        <div class="control-group">
-                            <label class="control-label" for="name">Name</label>
-                            <div class="controls">
-                                <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge required">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="control-group">
+                                    <label class="control-label" for="name">Name</label>
+                                    <div class="controls">
+                                        <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="control-group">
-                            <label class="control-label" for="surname">Surname</label>
-                            <div class="controls">
-                                <input type="text" id="surname" name="surname" placeholder="" class="form-control input-xlarge required">
+                            <div class="col-lg-6">
+                                <div class="control-group">
+                                    <label class="control-label" for="surname">Surname</label>
+                                    <div class="controls">
+                                        <input type="text" id="surname" name="surname" placeholder="" class="form-control input-xlarge">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="birthday">Day of birth</label>
                             <div class="controls">
-                                <input type="date" id="birthday" name="birthday" placeholder="" class="form-control input-xlarge required">
+                                <input type="date" id="birthday" name="birthday" placeholder="" class="form-control input-xlarge">
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label" for="passport">Passport data</label>
-                            <div class="controls">
-                                <input type="text" id="passport" name="passport" placeholder="" class="form-control input-xlarge required">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="control-group">
+                                    <label class="control-label" for="passport">Passport data</label>
+                                    <div class="controls">
+                                        <textarea id="passport" name="passport" placeholder="" class="form-control textarea-xlarge"></textarea>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="control-group">
-                            <label class="control-label" for="address">Address</label>
-                            <div class="controls">
-                                <input type="text" id="address" name="address" placeholder="" class="form-control input-xlarge required">
+                            <div class="col-lg-6">
+                                <div class="control-group">
+                                    <label class="control-label" for="address">Address</label>
+                                    <div class="controls">
+                                        <textarea id="address" name="address" placeholder="" class="form-control textarea-xlarge"></textarea>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -89,9 +102,8 @@
                             <!-- E-mail -->
                             <label class="control-label" for="email">E-mail</label>
                             <div class="controls">
-                                <input type="email" id="email" name="email" placeholder="" class="form-control input-xlarge required">
+                                <input type="email" id="email" name="email" placeholder="" class="form-control input-xlarge">
                                 <span id="validEmail"></span>
-                                <p id="email_help" class="help-block">Please provide your E-mail</p>
                             </div>
                         </div>
                     </fieldset>
@@ -115,7 +127,7 @@
                     <div class="control-group">
                         <label class="control-label" for="number">Number</label>
                         <div class="controls">
-                            <input type="text" id="number" name="number" placeholder="" class="form-control input-xlarge required">
+                            <input type="text" id="number" name="number" placeholder="" class="form-control input-xlarge bfh-phone" data-format="+7 (ddd) ddd-dddd">
                         </div>
                     </div>
 
