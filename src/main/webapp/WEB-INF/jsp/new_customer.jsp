@@ -28,10 +28,11 @@
             $('#add_customer_form').submit(function (e) {
                 e.preventDefault();
                 var $form = $(this);
+                $('input[type=submit]').notify("Sending data..", {position:"right", className:"success"});
 
                 $.post($form.attr("action"), $form.serialize(), function(response) {
                     if (response.success) {
-                        $('input[type=submit]').notify("success", {position:"right", className:"success"});
+                        $('input[type=submit]').notify("Success!", {position:"right", className:"success"});
                         $form[0].reset();
                     } else {
                         $('input[type=submit]').notify("Errors! See above", {position:"right", className:"error"});
@@ -46,7 +47,9 @@
                             }
                         });
                     }
+                    $form.find(":input").prop("disabled", false);
                 }, 'json');
+                $form.find(":input").prop("disabled", true);
                 return false;
             });
         });
@@ -85,16 +88,15 @@
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label" for="birthday">Day of birth</label>
-                            <div class="controls input-group">
-                                <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
-                                <input type="date" id="birthday" name="birthday" placeholder="" class="form-control input-xlarge">
-                            </div>
-                        </div>
-
                         <div class="row">
                             <div class="col-lg-6">
+                                <div class="control-group">
+                                    <label class="control-label" for="passport_number">Passport number</label>
+                                    <div class="controls">
+                                        <input type="text" id="passport_number" name="passport_number" placeholder="" class="form-control input-xlarge">
+                                        <span class="help-block">Enter number without spaces</span>
+                                    </div>
+                                </div>
                                 <div class="control-group">
                                     <label class="control-label" for="passport">Passport data</label>
                                     <div class="controls">
@@ -104,6 +106,15 @@
                             </div>
 
                             <div class="col-lg-6">
+                                <div class="control-group">
+                                    <label class="control-label" for="birthday">Day of birth</label>
+                                    <div class="controls input-group">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+                                        <input type="date" id="birthday" name="birthday" placeholder="" class="form-control input-xlarge">
+                                    </div>
+                                    <span class="help-block">New customer should be 18 years of age or older</span>
+                                </div>
+
                                 <div class="control-group">
                                     <label class="control-label" for="address">Address</label>
                                     <div class="controls">

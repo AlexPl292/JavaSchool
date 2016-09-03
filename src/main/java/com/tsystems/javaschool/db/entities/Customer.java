@@ -25,6 +25,9 @@ public class Customer {
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
+    @Column(name = "passport_number")
+    private String passportNumber;
+
     @Column(name = "passport_data")
     private String passportData;
 
@@ -43,10 +46,11 @@ public class Customer {
     @Column(name = "is_blocked")
     private int isBlocked;
 
-    public Customer(String name, String surname, Date dateOfBirth, String passportData, String address, String email, String password, String salt, int isBlocked) {
+    public Customer(String name, String surname, Date dateOfBirth, String passportNumber, String passportData, String address, String email, String password, String salt, int isBlocked) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
+        this.passportNumber = passportNumber;
         this.passportData = passportData;
         this.address = address;
         this.email = email;
@@ -144,6 +148,14 @@ public class Customer {
         this.salt = salt;
     }
 
+    public String getPassportNumber() {
+        return passportNumber;
+    }
+
+    public void setPassportNumber(String passportNumber) {
+        this.passportNumber = passportNumber;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -152,9 +164,9 @@ public class Customer {
                 ", surname='" + surname + '\'' +
                 ", day_of_birth=" + dateOfBirth +
                 ", passport_data='" + passportData + '\'' +
+                ", passport_number='" + passportNumber + '\'' +
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
-                ", password=" + password +
                 ", is_blocked=" + isBlocked +
                 '}';
     }

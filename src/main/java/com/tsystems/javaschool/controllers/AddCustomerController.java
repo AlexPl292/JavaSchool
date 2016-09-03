@@ -51,6 +51,7 @@ public class AddCustomerController extends HttpServlet {
         String name = request.getParameter("name");
         String surname = request.getParameter("surname");
         String birthdayStr = request.getParameter("birthday");
+        String passportNumber = request.getParameter("passport_number");
         String passport = request.getParameter("passport");
         String address = request.getParameter("address");
         String email = request.getParameter("email");
@@ -72,6 +73,8 @@ public class AddCustomerController extends HttpServlet {
             errors.put("email", tmpError);
         if ((tmpError = Validator.phone(number)) != null)
             errors.put("number", tmpError);
+        if ((tmpError = Validator.noSpaces(passportNumber)) != null)
+            errors.put("passport_number", tmpError);
 
         if (errors.isEmpty()) {
 
@@ -87,6 +90,7 @@ public class AddCustomerController extends HttpServlet {
                 birthday = new Date(0);
             }
             newCustomer.setDateOfBirth(birthday);
+            newCustomer.setPassportNumber(passportNumber);
             newCustomer.setPassportData(passport);
             newCustomer.setAddress(address);
             newCustomer.setEmail(email);
