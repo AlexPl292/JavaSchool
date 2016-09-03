@@ -73,7 +73,8 @@
 
                         <div class="control-group">
                             <label class="control-label" for="birthday">Day of birth</label>
-                            <div class="controls">
+                            <div class="controls input-group">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
                                 <input type="date" id="birthday" name="birthday" placeholder="" class="form-control input-xlarge">
                             </div>
                         </div>
@@ -101,7 +102,8 @@
                         <div class="control-group">
                             <!-- E-mail -->
                             <label class="control-label" for="email">E-mail</label>
-                            <div class="controls">
+                            <div class="controls input-group">
+                                <span class="input-group-addon"><i class="fa fa-at"></i> </span>
                                 <input type="email" id="email" name="email" placeholder="" class="form-control input-xlarge">
                                 <span id="validEmail"></span>
                             </div>
@@ -126,7 +128,8 @@
 
                     <div class="control-group">
                         <label class="control-label" for="number">Number</label>
-                        <div class="controls">
+                        <div class="controls input-group">
+                            <span class="input-group-addon"><i class="fa fa-phone"></i> </span>
                             <input type="text" id="number" name="number" placeholder="" class="form-control input-xlarge bfh-phone" data-format="+7 (ddd) ddd-dddd">
                         </div>
                     </div>
