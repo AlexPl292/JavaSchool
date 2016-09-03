@@ -1,16 +1,25 @@
 package com.tsystems.javaschool.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
+import com.tsystems.javaschool.util.Validator;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by alex on 21.08.16.
@@ -29,11 +38,44 @@ public class AddTariffController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Tariff tariff = new Tariff();
-        tariff.setName(request.getParameter("name"));
-        tariff.setCost(new BigDecimal(request.getParameter("cost")));
-        tariff.setDescription(request.getParameter("description"));
+        Map<String, String> errors = new HashMap<>();
+        JsonObject json = new JsonObject();
 
-        service.addNew(tariff);
+        String name = request.getParameter("name");
+        String cost = request.getParameter("cost");
+        String desc = request.getParameter("description");
+
+        String tmpError;
+        if ((tmpError = Validator.name(name)) != null)
+            errors.put("name", tmpError);
+        if ((tmpError = Validator.cost(cost)) != null)
+            errors.put("cost", tmpError);
+
+        if (errors.isEmpty()) {
+            Tariff tariff = new Tariff();
+            tariff.setName(name);
+            tariff.setCost(new BigDecimal(cost));
+            tariff.setDescription(desc);
+            try {
+                service.addNew(tariff);
+            } catch (RollbackException e) {
+                Throwable th = ExceptionUtils.getRootCause(e);
+                errors.put("General", th.getMessage());
+            }
+        }
+        if (!errors.isEmpty()) {
+            JsonElement element = new Gson().toJsonTree(errors);
+            json.addProperty("success", false);
+            json.add("errors", element);
+        } else {
+            json.addProperty("success", true);
+        }
+
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        out.print(json.toString());
+        out.flush();
     }
 }

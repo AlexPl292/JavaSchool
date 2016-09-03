@@ -5,9 +5,11 @@ import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
+import com.tsystems.javaschool.db.interfaces.GenericDao;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 
 import javax.persistence.EntityGraph;
+import javax.persistence.EntityTransaction;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,8 +70,10 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public Option addWithDependencies(Option option, Map<String, String[]> dependencies) {
-
+        EntityTransaction transaction = GenericDao.getTransaction();
         TariffService tariffService = new TariffServiceImpl();
+
+        transaction.begin();
         Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs"))
                 .map(s -> tariffService.loadByKey(Integer.parseInt(s)))
                 .collect(Collectors.toSet());
@@ -116,7 +120,9 @@ public class OptionServiceImpl implements OptionService{
             option.addRequiredMeOptions(reqMOpt.getRequiredMe());
         }
 
-        return optionDao.create(option);
+        option = optionDao.create(option);
+        transaction.commit();
+        return option;
     }
 
     @Override

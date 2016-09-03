@@ -3,9 +3,11 @@ package com.tsystems.javaschool.business.services.implementations;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
+import com.tsystems.javaschool.db.interfaces.GenericDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
 
 import javax.persistence.EntityGraph;
+import javax.persistence.EntityTransaction;
 import java.util.List;
 
 /**
@@ -17,7 +19,11 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public Tariff addNew(Tariff tariff) {
-        return tariffDao.create(tariff);
+        EntityTransaction transaction = GenericDao.getTransaction();
+        transaction.begin();
+        Tariff newTariff = tariffDao.create(tariff);
+        transaction.commit();
+        return newTariff;
     }
 
     @Override

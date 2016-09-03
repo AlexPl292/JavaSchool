@@ -98,26 +98,14 @@ public class AddCustomerController extends HttpServlet {
             newCustomer.setAddress(address);
             newCustomer.setEmail(email);
             newCustomer.setIsBlocked(0);
-/*            try {
-                service.addNew(newCustomer);
-            } catch (Exception e) {
-                errors.put("General", e.getMessage());
-            }*/
 
-            //TODO validate here
             Tariff tariff = new TariffServiceImpl().loadByKey(Integer.parseInt(request.getParameter("tariff")));
 
-            ContractService contractService = new ContractServiceImpl();
             Contract contract = new Contract();
             contract.setCustomer(newCustomer);
             contract.setNumber(number);
             contract.setTariff(tariff);
             contract.setIsBlocked(0);
-/*            try {
-                contractService.addNew(contract);
-            } catch (Exception e) {
-                errors.put("General", e.getMessage());
-            }*/
             try {
                 service.createCustomerAndContract(newCustomer, contract);
             } catch (RollbackException e) {

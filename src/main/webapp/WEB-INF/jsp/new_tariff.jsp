@@ -8,21 +8,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <script src="<%=application.getContextPath() %>/resources/js/notify.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <title>New tariff</title>
 
     <script>
         $(document).ready(function() {
             $('#add_tariff_form').submit(function (event) {
+                event.preventDefault();
                 var $form = $(this);
-                if (!valid_inputs($(this))) {
-                    event.preventDefault();
-                    return false;
-                }
+                $('input[type=submit]').notify("Sending data..", {position:"right", className:"success"});
 
-                $.post($form.attr("action"), $form.serialize(), function(response) {
-
-                });
+                $.post($form.attr("action"), $form.serialize(), response_validate($form), 'json');
+                $form.find(":input").prop("disabled", true);
                 return false;
             });
         });

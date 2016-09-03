@@ -12,6 +12,7 @@
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>--%>
     <script src="<%=application.getContextPath() %>/resources/js/bootstrap-formhelpers-phone.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/notify.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <title>New customer</title>
     <script>
         function loadlist(selobj, url, nameattr, valattr) {
@@ -30,25 +31,7 @@
                 var $form = $(this);
                 $('input[type=submit]').notify("Sending data..", {position:"right", className:"success"});
 
-                $.post($form.attr("action"), $form.serialize(), function(response) {
-                    if (response.success) {
-                        $('input[type=submit]').notify("Success!", {position:"right", className:"success"});
-                        $form[0].reset();
-                    } else {
-                        $('input[type=submit]').notify("Errors! See above", {position:"right", className:"error"});
-                        $.each(response.errors, function(prop, val) {
-                            if (prop === "General") {
-                                $.notify("Error:\n" + val, {position: "top right", className: "error"});
-                            } else {
-                                $form.find('[name=' + prop + ']').notify("Error:" + val, {
-                                    position: "top center",
-                                    className: "error"
-                                });
-                            }
-                        });
-                    }
-                    $form.find(":input").prop("disabled", false);
-                }, 'json');
+                $.post($form.attr("action"), $form.serialize(), response_validate($form), 'json');
                 $form.find(":input").prop("disabled", true);
                 return false;
             });
