@@ -40,7 +40,8 @@
                         <thead>
                         <tr>
                             <th abbr="name">Tariff name</th>
-                            <th abbr="cost">cost</th>
+                            <th abbr="cost">Cost</th>
+                            <th abbr="description">Description</th>
                         </tr>
                         </thead>
                         <tbody>
