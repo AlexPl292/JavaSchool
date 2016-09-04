@@ -49,10 +49,9 @@ $.validator.setDefaults({
 function response_validate($form) {
     return function (response) {
         if (response.success) {
-            $form.find('input[type=submit]').notify("Success!", {position: "right", className: "success"});
+            $.notify("Success!", {position: "right", className: "success"});
             $form[0].reset();
         } else {
-            $form.find('input[type=submit]').notify("Errors! See above", {position: "right", className: "error"});
             $.each(response.errors, function (prop, val) {
                 $.notify("Error: in "+prop+"\n" + val, {position: "top right", className: "error"});
             });
@@ -63,7 +62,7 @@ function response_validate($form) {
 
 function submitting(form, e) {
     e.preventDefault();
-    $('input[type=submit]').notify("Sending data..", {position:"right", className:"success"});
+    $.notify("Sending data..", {position:"right", className:"success"});
 
     $.post($(form).attr("action"), $(form).serialize(), response_validate($(form)));
     $(form).find(":input").prop("disabled", true);
