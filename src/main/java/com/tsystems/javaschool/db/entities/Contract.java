@@ -1,5 +1,7 @@
 package com.tsystems.javaschool.db.entities;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
@@ -16,18 +18,23 @@ public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
+    @Expose
     private Integer id;
     @Column(name = "number")
+    @Expose
     private String number;
     @Column(name = "is_blocked")
+    @Expose
     private Integer isBlocked;
 
     @ManyToOne
     @JoinColumn(name = "customer")
+    @Expose
     private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "tariff")
+    @Expose
     private Tariff tariff;
 
     @JoinTable(name = "Used_options_of_tariff", joinColumns = {

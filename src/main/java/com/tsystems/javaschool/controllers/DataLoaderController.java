@@ -1,8 +1,10 @@
 package com.tsystems.javaschool.controllers;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
@@ -20,7 +22,7 @@ import java.util.List;
 /**
  * Created by alex on 23.08.16.
  */
-@WebServlet({"/load_customers", "/load_tariffs", "/load_options_table"})
+@WebServlet({"/load_customers", "/load_tariffs", "/load_options_table", "/load_contracts"})
 public class DataLoaderController extends HttpServlet {
 
 
@@ -44,6 +46,8 @@ public class DataLoaderController extends HttpServlet {
             service = new TariffServiceImpl();
         } else if ("/load_options_table".equals(url)) {
             service = new OptionServiceImpl();
+        } else if ("/load_contracts".equals(url)) {
+            service = new ContractServiceImpl();
         } else {
             service = new CustomerServiceImpl();
         }
@@ -69,7 +73,8 @@ public class DataLoaderController extends HttpServlet {
         else
             entitiesList = service.getNEntries(10, (draw - 1) * 10, searchQuery);
 
-        JsonElement element = new Gson().toJsonTree(entitiesList);
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        JsonElement element = gson.toJsonTree(entitiesList);
         json.addProperty("draw", draw);
         json.add("data", element);
 

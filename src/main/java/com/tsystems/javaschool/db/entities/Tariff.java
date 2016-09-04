@@ -1,5 +1,7 @@
 package com.tsystems.javaschool.db.entities;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Set;
@@ -16,18 +18,22 @@ public class Tariff {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Expose
     private int id;
 
     @Basic
     @Column(name = "name", nullable = true, length = 45)
+    @Expose
     private String name;
 
     @Basic
     @Column(name = "cost", nullable = true, precision = 2)
+    @Expose
     private BigDecimal cost;
 
     @Basic
     @Column(name = "description", nullable = true, length = 255)
+    @Expose
     private String description;
 
     @JoinTable(name = "Possible_options_of_tariffs", joinColumns = {

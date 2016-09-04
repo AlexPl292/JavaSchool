@@ -76,7 +76,12 @@ function fill_table($table, $pagination) {
             for (var i = 0; i < 10; i++) {
                 if (response.data[i] !== undefined) {
                     $.each(properties, function (j, item) {
-                        $table.find("tbody tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 1) + ")").text(response.data[i][item]);
+                        if (item.indexOf(".") === -1) {
+                            $table.find("tbody tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 1) + ")").text(response.data[i][item]);
+                        } else {
+                            var items = item.split(".");
+                            $table.find("tbody tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 1) + ")").text(response.data[i][items[0]][items[1]]);
+                        }
                     })
                 } else {
                     $.each(properties, function (j, item) {

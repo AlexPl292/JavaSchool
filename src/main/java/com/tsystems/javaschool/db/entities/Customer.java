@@ -1,5 +1,7 @@
 package com.tsystems.javaschool.db.entities;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -14,36 +16,47 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
+    @Expose
     private Integer id;
 
     @Column(name = "name")
+    @Expose
     private String name;
 
     @Column(name = "surname")
+    @Expose
     private String surname;
 
     @Column(name = "date_of_birth")
+    @Expose
     private Date dateOfBirth;
 
     @Column(name = "passport_number")
+    @Expose
     private String passportNumber;
 
     @Column(name = "passport_data")
+    @Expose
     private String passportData;
 
     @Column(name = "address")
+    @Expose
     private String address;
 
     @Column(name = "email")
+    @Expose
     private String email;
 
     @Column(name = "password")
+    @Expose
     private String password;
 
     @Column(name = "salt")
+    @Expose
     private String salt;
 
     @Column(name = "is_blocked")
+    @Expose
     private int isBlocked;
 
     public Customer(String name, String surname, Date dateOfBirth, String passportNumber, String passportData, String address, String email, String password, String salt, int isBlocked) {

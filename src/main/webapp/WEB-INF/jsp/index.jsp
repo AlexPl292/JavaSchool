@@ -113,6 +113,15 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
+                        <a href="#"><i class="fa fa-credit-card fa-fw"></i> Contracts<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/show_contracts">Show all contracts</a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
