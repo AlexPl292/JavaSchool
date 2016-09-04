@@ -64,7 +64,7 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
-    public Option loadWithDependecies(Integer key, Map<String, Object> hints) {
+    public Option loadWithDependencies(Integer key, Map<String, Object> hints) {
         return optionDao.readWithDependencies(key, hints);
     }
 

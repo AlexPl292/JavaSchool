@@ -4,6 +4,7 @@ import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 21.08.16.
@@ -44,5 +45,10 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
     public List<Tariff> getAll() {
         return em.createQuery("SELECT NEW Tariff(c.id, c.name, c.cost, c.description) FROM Tariff c", Tariff.class)
                 .getResultList();
+    }
+
+    @Override
+    public Tariff readWithDependencies(Integer key, Map<String, Object> hints) {
+        return em.find(Tariff.class, key, hints);
     }
 }

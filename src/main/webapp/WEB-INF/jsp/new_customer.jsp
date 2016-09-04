@@ -18,14 +18,33 @@
         function loadlist(selobj, url, nameattr, valattr) {
             $(selobj).empty();
             $.getJSON(url, {page:-1, updateCount:false, search:""}, function (data) {
-                    $.each(data.data, function (i, obj) {
-                       $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
-                    })
+                $.each(data.data, function (i, obj) {
+                   $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
                 });
+                $(selobj).change();
+            });
+        }
+
+        function create_boxes(selobj) {
+            return function (data) {
+                $(selobj).empty();
+                var checkboxs_name = selobj.attr('id');
+                $.each(data.data, function (i, obj) {
+                    $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name}));
+                    $(selobj).append($("<label/>", {"for": checkboxs_name+i, text:obj.name}));
+                    $(selobj).append($("<br/>"));
+                })
+            }
         }
 
         $(function() {
-            loadlist($("#tariff"), "/load_tariffs", "name", "id");
+            var $tariff = $("#tariff");
+
+            $tariff.change(function (e) {
+                e.preventDefault();
+                $.getJSON("/load_options", {loadtype: "possibleOfTariff", tariff_id:$(this).val()}, create_boxes($('#options')));
+            });
+            loadlist($tariff, "/load_tariffs", "name", "id");
 
         });
     </script>
@@ -123,6 +142,13 @@
                         <div class="controls">
                             <select id="tariff" name="tariff" class="form-control">
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="tariff">Options</label>
+                        <div class="controls">
+                            <div id="options" class="boxes"></div>
                         </div>
                     </div>
 

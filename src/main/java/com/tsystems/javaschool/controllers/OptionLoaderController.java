@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
+import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
+import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 
@@ -33,16 +35,8 @@ public class OptionLoaderController extends HttpServlet{
             throws ServletException, IOException {
 
         JsonObject json = new JsonObject();
-        Boolean disabling = Boolean.valueOf(request.getParameter("disabling"));
-        if (!disabling) {
-            List<Integer> tariffs = Arrays.stream(request.getParameterValues("forTariffs")).map(Integer::parseInt).collect(Collectors.toList());
-            List<Option> options = service.loadOptionsByTariffs(tariffs);
-
-            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            JsonElement element = gson.toJsonTree(options);
-            json.add("data", element);
-
-        } else {
+        String type = request.getParameter("loadtype");
+        if ("toDisable".equals(type)) {
             Integer id = Integer.parseInt(request.getParameter("data"));
 
             EntityGraph<Option> graph = service.getEntityGraph();
@@ -53,7 +47,7 @@ public class OptionLoaderController extends HttpServlet{
             Map<String, Object> hints = new HashMap<>();
             hints.put("javax.persistence.loadgraph", graph);
 
-            Option connectedToOption = service.loadWithDependecies(id, hints);
+            Option connectedToOption = service.loadWithDependencies(id, hints);
 
             if ("requiredFrom".equals(request.getParameter("type"))) {
                 notForbidden = connectedToOption.getRequired();
@@ -69,7 +63,27 @@ public class OptionLoaderController extends HttpServlet{
             JsonElement elementNotRequiredFrom = gson.toJsonTree(notRequiredFrom);
             json.add("not_forbidden", elementNotForbidden);
             json.add("not_required_from", elementNotRequiredFrom);
+        }else if ("possibleOfTariff".equals(type)) {
+            Integer tariffId = Integer.parseInt(request.getParameter("tariff_id"));
+            TariffService tariffService = new TariffServiceImpl();
+            EntityGraph<Option> graph = tariffService.getEntityGraph();
 
+            graph.addAttributeNodes("possibleOptions");
+            Map<String, Object> hints = new HashMap<>();
+            hints.put("javax.persistence.loadgraph", graph);
+
+            Tariff tariff = tariffService.loadByKey(tariffId, hints);
+
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            JsonElement element = gson.toJsonTree(tariff.getPossibleOptions());
+            json.add("data", element);
+        } else {
+            List<Integer> tariffs = Arrays.stream(request.getParameterValues("forTariffs")).map(Integer::parseInt).collect(Collectors.toList());
+            List<Option> options = service.loadOptionsByTariffs(tariffs);
+
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            JsonElement element = gson.toJsonTree(options);
+            json.add("data", element);
         }
 
         response.setContentType("application/json");

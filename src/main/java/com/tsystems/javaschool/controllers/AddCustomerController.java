@@ -25,10 +25,8 @@ import java.io.PrintWriter;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by alex on 19.08.16.
@@ -106,6 +104,9 @@ public class AddCustomerController extends HttpServlet {
             contract.setNumber(number);
             contract.setTariff(tariff);
             contract.setIsBlocked(0);
+
+            List<Integer> options = Arrays.stream(request.getParameterValues("options")).map(Integer::parseInt).collect(Collectors.toList());
+            contract = new ContractServiceImpl().addOptions(contract, options);
             try {
                 service.createCustomerAndContract(newCustomer, contract);
             } catch (RollbackException e) {

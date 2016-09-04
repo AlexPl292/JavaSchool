@@ -29,7 +29,8 @@ $(function() {
             number: {
                 required: true,
                 phone: true
-            }
+            },
+            options: "required"
         },
         messages: {
             name: {
@@ -55,7 +56,8 @@ $(function() {
             number: {
                 required: "Please enter phone number",
                 phone: "Wrong phone number format"
-            }
+            },
+            options: "Choose options"
         }
     })
 });

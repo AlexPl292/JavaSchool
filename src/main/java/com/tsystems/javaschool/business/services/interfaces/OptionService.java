@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public interface OptionService extends GenericService<Option, Integer> {
 
-    Option loadWithDependecies(Integer key, Map<String, Object> hints);
+    Option loadWithDependencies(Integer key, Map<String, Object> hints);
 
     Option addWithDependencies(Option option, Map<String, String[]> dependencies);
 

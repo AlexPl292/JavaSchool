@@ -22,8 +22,7 @@ function check_item(type) {
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':'+type;
         if ($(this).is(':checked')) {
-            $.notify("Load options...", {position: "top right"});
-            $.getJSON("/load_options", {disabling: true, type: type, data: checked_val}, function (e) {
+            $.getJSON("/load_options", {"loadtype": "toDisable", type: type, data: checked_val}, function (e) {
                 var disableItIds = [];
                 var disableIt = $();
                 $(e.not_forbidden).each(function (i, obj) {
@@ -45,7 +44,6 @@ function check_item(type) {
                     }
                 });
                 $(item).data("disableIt", disableItIds);
-                $.notify("Options are here!");
             });
         } else {
             var enable = $();
@@ -70,13 +68,14 @@ function prepare() {
     forTariffs.empty();
     $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes([forTariffs]));
 
+    // TODO add disablind or notifications
     $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
         e.preventDefault();
         requiredFrom.empty();
         forbiddenWith.empty();
-        var data = $("#forTariffs").find("input").serialize();
-        data["disabling"] = false;
-        $.getJSON("/load_options", data, create_boxes([requiredFrom, forbiddenWith]));
+        var data = $("#forTariffs").find("input").serializeArray();
+        data.push({"loadtype": "newOptionDependency"});
+        $.getJSON("/load_options", $.param(data), create_boxes([requiredFrom, forbiddenWith]));
     });
 
     $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
