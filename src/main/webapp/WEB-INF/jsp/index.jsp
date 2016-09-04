@@ -12,17 +12,17 @@
 <html>
 <head>
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/metisMenu.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/sb-admin-2.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/metisMenu/css/metisMenu.min.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/font-awesome/css/font-awesome.min.css">
 
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.4.css">
 
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/jquery-3.1.0.min.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/metisMenu.min.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/sb-admin-2.min.js"></script>
+    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/jquery/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/metisMenu/js/metisMenu.min.js"></script>
+    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
 
     <script>
         $(function () {

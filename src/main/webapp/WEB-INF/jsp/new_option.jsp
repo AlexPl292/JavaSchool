@@ -8,8 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <script src="<%=application.getContextPath() %>/resources/js/notify.min.js"></script>
-    <script src="<%=application.getContextPath() %>/resources/js/jquery.validate.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/option_validate_rules.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>

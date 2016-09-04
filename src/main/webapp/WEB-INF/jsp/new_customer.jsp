@@ -8,9 +8,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <script src="<%=application.getContextPath() %>/resources/js/bootstrap-formhelpers-phone.js"></script>
-    <script src="<%=application.getContextPath() %>/resources/js/notify.min.js"></script>
-    <script src="<%=application.getContextPath() %>/resources/js/jquery.validate.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/vendor/formhelpers/js/bootstrap-formhelpers-phone.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/customer_validate_rules.js"></script>
     <title>New customer</title>
