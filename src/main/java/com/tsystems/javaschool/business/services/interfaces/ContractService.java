@@ -8,5 +8,5 @@ import java.util.List;
  * Created by alex on 24.08.16.
  */
 public interface ContractService extends GenericService<Contract, Integer>{
-    Contract addOptions(Contract contract, List<Integer> optionIds);
+    Contract addNew(Contract contract, List<Integer> optionIds);
 }

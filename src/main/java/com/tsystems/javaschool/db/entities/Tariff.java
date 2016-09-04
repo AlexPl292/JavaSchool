@@ -30,7 +30,11 @@ public class Tariff {
     @Column(name = "description", nullable = true, length = 255)
     private String description;
 
-    @ManyToMany(mappedBy = "possibleTariffsOfOption")
+    @JoinTable(name = "Possible_options_of_tariffs", joinColumns = {
+            @JoinColumn(name = "tariff_id", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "option_id", referencedColumnName = "id", nullable = false)
+    })
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Option> possibleOptions;
 
 

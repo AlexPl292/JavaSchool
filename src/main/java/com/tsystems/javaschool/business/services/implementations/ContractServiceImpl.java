@@ -68,8 +68,8 @@ public class ContractServiceImpl implements ContractService{
         return contractDao.getEntityGraph();
     }
 
-    @Override
-    public Contract addOptions(Contract contract, List<Integer> optionIds) {
+/*    @Override
+    public Contract addOptionsByIds(Contract contract, List<Integer> optionIds) {
         OptionDao optionDao = new OptionDaoImpl();
         Set<Option> options = new HashSet<>();
         EntityTransaction transaction = GenericDao.getTransaction();
@@ -79,6 +79,20 @@ public class ContractServiceImpl implements ContractService{
         }
         contract.setUsedOptions(options);
         transaction.commit();
+        return contract;
+    }*/
+
+    @Override
+    public Contract addNew(Contract contract, List<Integer> optionsIds) {
+        EntityTransaction transaction = GenericDao.getTransaction();
+        OptionService optionService = new OptionServiceImpl();
+        boolean insideOtherTransaction = transaction.isActive();
+        if (!insideOtherTransaction)
+            transaction.begin();
+        contract.setUsedOptions(optionService.loadOptionsByIds(optionsIds));
+        contractDao.create(contract);
+        if (!insideOtherTransaction)
+            transaction.commit();
         return contract;
     }
 }

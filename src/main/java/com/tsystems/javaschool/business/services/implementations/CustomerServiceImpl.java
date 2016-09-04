@@ -1,5 +1,6 @@
 package com.tsystems.javaschool.business.services.implementations;
 
+import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
@@ -88,13 +89,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void createCustomerAndContract(Customer customer, Contract contract) {
+    public void createCustomerAndContract(Customer customer, Contract contract, List<Integer> contractOptionsIds) {
         EntityTransaction transaction = GenericDao.getTransaction();
-        ContractDao contractDao = new ContractDaoImpl();
+        ContractService contractService = new ContractServiceImpl();
 
         transaction.begin();
         customerDao.create(customer);
-        contractDao.create(contract);
+        contractService.addNew(contract, contractOptionsIds);
         transaction.commit();
     }
 }

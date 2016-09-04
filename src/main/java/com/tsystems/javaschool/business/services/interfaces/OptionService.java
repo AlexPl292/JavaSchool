@@ -7,6 +7,7 @@ import com.tsystems.javaschool.db.interfaces.GenericDao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by alex on 27.08.16.
@@ -18,4 +19,6 @@ public interface OptionService extends GenericService<Option, Integer> {
     Option addWithDependencies(Option option, Map<String, String[]> dependencies);
 
     List<Option> loadOptionsByTariffs(List<Integer> tariffs);
+
+    Set<Option> loadOptionsByIds(List<Integer> ids);
 }

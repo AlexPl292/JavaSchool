@@ -13,6 +13,23 @@
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/tariff_validate_rules.js"></script>
     <title>New tariff</title>
+    <script>
+        function create_boxes(selobj) {
+            return function (data) {
+                $(selobj).empty();
+                var checkboxs_name = selobj.attr('id');
+                $.each(data.data, function (i, obj) {
+                    $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name}));
+                    $(selobj).append($("<label/>", {"for": checkboxs_name+i, text:obj.name}));
+                    $(selobj).append($("<br/>"));
+                })
+            }
+        }
+
+        $(function() {
+            $.getJSON("/load_options_table", {}, create_boxes($('#options')));
+        });
+    </script>
 </head>
 <body>
 <div class="row">
@@ -55,11 +72,28 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">New tariff data</div>
+                <div class="panel-body">
+                    <div class="control-group">
+                        <label class="control-label" for="options">Options</label>
+                        <div class="controls">
+                            <div id="options" class="boxes"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
             <div class="panel-body">
                 <div class="form-group">
+                    <div class="panel-body">
                     <!-- Button -->
-                    <div class="controls">
-                        <input type="submit" class="btn btn-success"/>
+                        <div class="controls">
+                            <input type="submit" class="btn btn-success"/>
+                        </div>
                     </div>
                 </div>
             </div>

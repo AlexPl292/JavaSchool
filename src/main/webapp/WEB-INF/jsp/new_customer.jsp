@@ -146,7 +146,7 @@
                     </div>
 
                     <div class="control-group">
-                        <label class="control-label" for="tariff">Options</label>
+                        <label class="control-label" for="options">Options</label>
                         <div class="controls">
                             <div id="options" class="boxes"></div>
                         </div>

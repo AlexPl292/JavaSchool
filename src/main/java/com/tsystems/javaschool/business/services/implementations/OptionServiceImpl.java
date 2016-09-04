@@ -129,4 +129,9 @@ public class OptionServiceImpl implements OptionService{
     public List<Option> loadOptionsByTariffs(List<Integer> tariffs) {
         return optionDao.getOptionsOfTariffs(tariffs);
     }
+
+    @Override
+    public Set<Option> loadOptionsByIds(List<Integer> ids) {
+        return ids.stream().map(optionDao::read).collect(Collectors.toSet());
+    }
 }
