@@ -8,21 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/notify.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/option_validate_rules.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <script>
         $(document).ready(function() {
             prepare();
-            $('#add_option_form').submit(function (event) {
-                event.preventDefault();
-                var $form = $(this);
-                $('input[type=submit]').notify("Sending data..", {position:"right", className:"success"});
-
-                $.post($form.attr("action"), $form.serialize(), response_validate($form), 'json');
-                $form.find(":input").prop("disabled", true);
-                return false;
-            });
         });
     </script>
     <title>New Option</title>

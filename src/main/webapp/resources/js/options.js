@@ -22,6 +22,7 @@ function check_item(type) {
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':'+type;
         if ($(this).is(':checked')) {
+            $.notify("Load options...", {position: "top right"});
             $.getJSON("/load_options", {disabling: true, type: type, data: checked_val}, function (e) {
                 var disableItIds = [];
                 var disableIt = $();
@@ -44,6 +45,7 @@ function check_item(type) {
                     }
                 });
                 $(item).data("disableIt", disableItIds);
+                $.notify("Options are here!");
             });
         } else {
             var enable = $();

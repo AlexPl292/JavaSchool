@@ -9,12 +9,14 @@
 <html>
 <head>
     <script src="<%=application.getContextPath() %>/resources/js/notify.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/tariff_validate_rules.js"></script>
     <title>New tariff</title>
 
     <script>
         $(document).ready(function() {
-            $('#add_tariff_form').submit(function (event) {
+/*            $('#add_tariff_form').submit(function (event) {
                 event.preventDefault();
                 var $form = $(this);
                 $('input[type=submit]').notify("Sending data..", {position:"right", className:"success"});
@@ -22,7 +24,7 @@
                 $.post($form.attr("action"), $form.serialize(), response_validate($form), 'json');
                 $form.find(":input").prop("disabled", true);
                 return false;
-            });
+            });*/
         });
     </script>
 </head>

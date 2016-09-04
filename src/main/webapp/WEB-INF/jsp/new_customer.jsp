@@ -8,11 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-<%--    <script src="<%=application.getContextPath() %>/resources/js/jquery.validate.min.js"></script>
-    <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>--%>
     <script src="<%=application.getContextPath() %>/resources/js/bootstrap-formhelpers-phone.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/notify.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/customer_validate_rules.js"></script>
     <title>New customer</title>
     <script>
         function loadlist(selobj, url, nameattr, valattr) {
@@ -24,17 +24,9 @@
                 });
         }
 
-        $(document).ready(function() {
+        $(function() {
             loadlist($("#tariff"), "/load_tariffs", "name", "id");
-            $('#add_customer_form').submit(function (e) {
-                e.preventDefault();
-                var $form = $(this);
-                $('input[type=submit]').notify("Sending data..", {position:"right", className:"success"});
 
-                $.post($form.attr("action"), $form.serialize(), response_validate($form), 'json');
-                $form.find(":input").prop("disabled", true);
-                return false;
-            });
         });
     </script>
 </head>
@@ -56,7 +48,7 @@
                                 <div class="control-group">
                                     <label class="control-label" for="name">Name</label>
                                     <div class="controls">
-                                        <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge">
+                                        <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge startsUppercase">
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +57,7 @@
                                 <div class="control-group">
                                     <label class="control-label" for="surname">Surname</label>
                                     <div class="controls">
-                                        <input type="text" id="surname" name="surname" placeholder="" class="form-control input-xlarge">
+                                        <input type="text" id="surname" name="surname" placeholder="" class="form-control input-xlarge startsUppercase">
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +119,7 @@
                 <div class="panel-heading">New contract data</div>
                 <div class="panel-body">
                     <div class="control-group">
-                        <label class="control-label" for="tariff">tariff</label>
+                        <label class="control-label" for="tariff">Tariff</label>
                         <div class="controls">
                             <select id="tariff" name="tariff" class="form-control">
                             </select>

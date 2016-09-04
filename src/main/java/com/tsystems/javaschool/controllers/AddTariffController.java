@@ -46,8 +46,8 @@ public class AddTariffController extends HttpServlet {
         String desc = request.getParameter("description");
 
         String tmpError;
-        if ((tmpError = Validator.name(name)) != null)
-            errors.put("name", tmpError);
+        if (name == null)
+            errors.put("name", "Enter name of new tariff");
         if ((tmpError = Validator.cost(cost)) != null)
             errors.put("cost", tmpError);
 
