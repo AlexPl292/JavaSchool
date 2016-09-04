@@ -108,6 +108,9 @@
                             <li>
                                 <a href="/add_option">Add new option</a>
                             </li>
+                            <li>
+                                <a href="/show_options">Show all options</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

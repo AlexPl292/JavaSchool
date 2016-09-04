@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by alex on 23.08.16.
  */
-@WebServlet({"/load_customers", "/load_tariffs"})
+@WebServlet({"/load_customers", "/load_tariffs", "/load_options_table"})
 public class DataLoaderController extends HttpServlet {
 
 
@@ -42,6 +42,8 @@ public class DataLoaderController extends HttpServlet {
             service = new CustomerServiceImpl();
         } else if ("/load_tariffs".equals(url)) {
             service = new TariffServiceImpl();
+        } else if ("/load_options_table".equals(url)) {
+            service = new OptionServiceImpl();
         } else {
             service = new CustomerServiceImpl();
         }

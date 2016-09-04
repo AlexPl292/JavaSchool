@@ -27,5 +27,7 @@ public class ContentLoaderController extends HttpServlet{
             request.getRequestDispatcher("/WEB-INF/jsp/show_tariffs.jsp").forward(request, response);
         else if ("/add_option".equals(path))
             request.getRequestDispatcher("/WEB-INF/jsp/new_option.jsp").forward(request, response);
+        else if ("/show_options".equals(path))
+            request.getRequestDispatcher("/WEB-INF/jsp/show_options.jsp").forward(request, response);
     }
 }

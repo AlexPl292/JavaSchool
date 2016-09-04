@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 /**
  * Created by alex on 19.08.16.
  */
-@WebServlet({"/index", "/options", "/show_customers", "/show_tariffs"})
+@WebServlet({"/index", "/options", "/show_customers", "/show_tariffs", "/show_options"})
 public class MainController extends HttpServlet {
 
     @Override
