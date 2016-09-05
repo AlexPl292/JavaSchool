@@ -21,6 +21,16 @@ import java.util.List;
 
 /**
  * Created by alex on 23.08.16.
+ *
+ * Loading data. Also with pagination.
+ * request parameters:
+ * page (int) - page of pagination
+ * updateCount (bool) - make query to update count of entries or not
+ * search (string) - search query
+ *
+ * response parameters:
+ * draw - page in pagination
+ * data - returned data
  */
 @WebServlet({"/load_customers", "/load_tariffs", "/load_options_table", "/load_contracts"})
 public class DataLoaderController extends HttpServlet {

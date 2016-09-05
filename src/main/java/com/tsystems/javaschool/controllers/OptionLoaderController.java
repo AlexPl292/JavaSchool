@@ -24,6 +24,17 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 01.09.16.
+ *
+ * Loading some cases of options
+ * Case is defined by "loadtype"
+ * Load types:
+ *  - toDisable: returns which options should be disabled, if this option is chosen
+ *  used in new option adding, by dependencies settings
+ *  For example: If option A is chosen in required, this option should be disabled in incompatible
+ *
+ *  - possibleOfTariff: load possible options of chosen tariff
+ *  - newOptionDependency (else): load options that are used by chosen tariffs
+ *  used in new option adding. Option cannot depends on option, those are not available for chosen tariffs
  */
 @WebServlet("/load_options")
 public class OptionLoaderController extends HttpServlet{
@@ -41,13 +52,13 @@ public class OptionLoaderController extends HttpServlet{
 
             EntityGraph<Option> graph = service.getEntityGraph();
             Set<Option> notForbidden = new HashSet<>();
-            Set<Option> notRequiredFrom = new HashSet<>();
+            Set<Option> notRequiredFrom;
 
             graph.addAttributeNodes("required", "forbidden", "requiredMe");
             Map<String, Object> hints = new HashMap<>();
             hints.put("javax.persistence.loadgraph", graph);
 
-            Option connectedToOption = service.loadWithDependencies(id, hints);
+            Option connectedToOption = service.loadByKey(id, hints);
 
             if ("requiredFrom".equals(request.getParameter("type"))) {
                 notForbidden = connectedToOption.getRequired();

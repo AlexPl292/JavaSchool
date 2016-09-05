@@ -6,18 +6,23 @@ import com.tsystems.javaschool.db.interfaces.GenericDao;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
 /**
  * Created by alex on 18.08.16.
+ * @param <T> Entity of this dao
+ * @param <PK> primary key
  */
-public abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK>{
+abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK>{
 
+    protected EntityManager em = EMF.createEntityManager();
     private Class type;
 
-    public GenericDaoImpl() {
+    /**
+     * Constructor with clever code, that get class type of generic
+     */
+    GenericDaoImpl() {
         ParameterizedType pt = (ParameterizedType) getClass().getGenericSuperclass();
         type = (Class) pt.getActualTypeArguments()[0];
     }
@@ -47,5 +52,10 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
     @Override
     public EntityGraph getEntityGraph() {
         return em.createEntityGraph(type);
+    }
+
+    @Override
+    public EntityTransaction getTransaction() {
+        return em.getTransaction();
     }
 }

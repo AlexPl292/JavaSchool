@@ -13,8 +13,6 @@ import java.util.Set;
 @Table(name = "Tariffs", schema = "eCare")
 public class Tariff {
 
-    // TODO add validation annotations
-
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,8 +43,17 @@ public class Tariff {
 
 
     public Tariff() {
+        // Empty constructor
     }
 
+    /**
+     * Constructor with only important data
+     * Used in Dao select queries
+     * @param id id of new entity
+     * @param name name of new entity
+     * @param cost cost of new entity
+     * @param description description of new entity
+     */
     public Tariff(Integer id, String name, BigDecimal cost, String description) {
         this.id = id;
         this.name = name;
@@ -109,10 +116,8 @@ public class Tariff {
             return false;
         if (cost != null ? !cost.equals(that.cost) : that.cost != null)
             return false;
-        if (description != null ? !description.equals(that.description) : that.description != null)
-            return false;
+        return description != null ? description.equals(that.description) : that.description == null;
 
-        return true;
     }
 
     @Override

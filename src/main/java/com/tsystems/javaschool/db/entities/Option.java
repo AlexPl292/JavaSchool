@@ -75,6 +75,15 @@ public class Option {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Contract> contractsThoseUseOption = new HashSet<>();
 
+    /**
+     * Constructor with only important data
+     * Used in Dao select queries
+     * @param id id of new entity
+     * @param name name of new entity
+     * @param cost cost of new entity
+     * @param connectCost connection cost of new eity
+     * @param description description of new entity
+     */
     public Option(Integer id, String name, BigDecimal cost, BigDecimal connectCost, String description) {
         this.id = id;
         this.name = name;
@@ -83,6 +92,9 @@ public class Option {
         this.description = description;
     }
 
+    /**
+     * Default constructor
+     */
     public Option() {
         required = new HashSet<>();
         forbidden = new HashSet<>();
@@ -90,27 +102,53 @@ public class Option {
         contractsThoseUseOption = new HashSet<>();
     }
 
+    /**
+     * Add option, this option required from
+     * @param option required option
+     */
     public void addRequiredFromOptions(Option option) {
         this.getRequired().add(option);
     }
 
+    /**
+     * Add option, that requires this
+     * @param option option, that requires this
+     */
     public void addRequiredMeOptions(Option option) {
         this.getRequiredMe().add(option);
     }
 
+    /**
+     * Add incompatible dependency with this option
+     * This dependency works in both sides
+     * @param option incompatible option
+     */
     public void addForbiddenWithOptions(Option option) {
         this.getForbidden().add(option);
         option.getForbidden().add(this);
     }
 
+    /**
+     * Add set of options, this option required from
+     * @param options required options
+     */
     public void addRequiredFromOptions(Set<Option> options) {
         this.getRequired().addAll(options);
     }
 
+    /**
+     * Add options, those requires this
+     * @param options options, those requires this
+     */
     public void addRequiredMeOptions(Set<Option> options) {
         this.getRequiredMe().addAll(options);
     }
 
+    /**
+     * Add incompatible dependencies with this option
+     * This dependencies work in both sides
+     * @param options incompatible options
+     */
     public void addForbiddenWithOptions(Set<Option> options) {
         this.getForbidden().addAll(options);
         for (Option opt : options)
@@ -214,10 +252,8 @@ public class Option {
             return false;
         if (connectCost != null ? !connectCost.equals(that.connectCost) : that.connectCost != null)
             return false;
-        if (description != null ? !description.equals(that.description) : that.description != null)
-            return false;
+        return description != null ? description.equals(that.description) : that.description == null;
 
-        return true;
     }
 
     @Override

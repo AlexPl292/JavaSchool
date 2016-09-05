@@ -22,12 +22,20 @@ public class PassGen {
 
     private final char[] buf;
 
+    /**
+     * Init password generator
+     * @param length length of passwords
+     */
     public PassGen(int length) {
         if (length < 1)
             throw new IllegalArgumentException("length < 1: " + length);
         buf = new char[length];
     }
 
+    /**
+     * Generate new password
+     * @return password
+     */
     public String nextPassword() {
         for (int idx = 0; idx < buf.length; ++idx)
             buf[idx] = symbols[random.nextInt(symbols.length)];

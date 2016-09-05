@@ -2,20 +2,14 @@ package com.tsystems.javaschool.business.services.implementations;
 
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
-import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
-import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
-import com.tsystems.javaschool.db.interfaces.GenericDao;
-import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
@@ -26,7 +20,7 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public Tariff addNew(Tariff tariff) {
-        EntityTransaction transaction = GenericDao.getTransaction();
+        EntityTransaction transaction = tariffDao.getTransaction();
         transaction.begin();
         Tariff newTariff = tariffDao.create(tariff);
         transaction.commit();
@@ -74,12 +68,12 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public Tariff loadByKey(Integer key, Map<String, Object> hints) {
-        return tariffDao.readWithDependencies(key, hints);
+        return tariffDao.read(key, hints);
     }
 
     @Override
     public Tariff addNew(Tariff tariff, List<Integer> optionsIds) {
-        EntityTransaction transaction = GenericDao.getTransaction();
+        EntityTransaction transaction = tariffDao.getTransaction();
         OptionService optionService = new OptionServiceImpl();
         transaction.begin();
         tariff.setPossibleOptions(optionService.loadOptionsByIds(optionsIds));

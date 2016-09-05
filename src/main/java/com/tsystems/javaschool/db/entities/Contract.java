@@ -13,8 +13,6 @@ import java.util.Set;
 @Table(name = "Contracts", schema = "eCare")
 public class Contract {
 
-    // TODO add validation annotations
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -44,8 +42,19 @@ public class Contract {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Option> usedOptions;
 
-    public Contract() { }
+    public Contract() {
+        //Empty constructor
+    }
 
+    /**
+     * Constructor with only important data
+     * Used in Dao select queries
+     * @param id id of new entity
+     * @param number number of new entity
+     * @param customer customer of new entity
+     * @param tariff tariff of new entity
+     * @param isBlocked if this contract blocked or not
+     */
     public Contract(Integer id, String number, Customer customer, Tariff tariff, Integer isBlocked) {
         this.id = id;
         this.number = number;

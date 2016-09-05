@@ -1,3 +1,114 @@
+CREATE TABLE Contracts
+(
+  id INT(11) PRIMARY KEY NOT NULL,
+  number VARCHAR(20),
+  tariff INT(11),
+  customer INT(11),
+  is_blocked INT(11),
+  customer_id INT(11),
+  tariff_id INT(11),
+  isBlocked INT(11),
+  CONSTRAINT FKbfmteghriyquoolvysadpbxtv FOREIGN KEY (tariff) REFERENCES Tariffs (id),
+  CONSTRAINT fk_Contacts_1 FOREIGN KEY (tariff) REFERENCES Tariffs (id),
+  CONSTRAINT FKyisn37gt0l8l840jkmnkktcp FOREIGN KEY (customer) REFERENCES Customers (id),
+  CONSTRAINT fk_Contacts_2 FOREIGN KEY (customer) REFERENCES Customers (id),
+  CONSTRAINT FKbhp1coa0i532wnft7wekhgmwe FOREIGN KEY (customer_id) REFERENCES Customers (id),
+  CONSTRAINT FKej7hp7c5fleppyvh8q5hv72cn FOREIGN KEY (tariff_id) REFERENCES Tariffs (id)
+);
+CREATE INDEX FKbhp1coa0i532wnft7wekhgmwe ON Contracts (customer_id);
+CREATE INDEX FKej7hp7c5fleppyvh8q5hv72cn ON Contracts (tariff_id);
+CREATE INDEX fk_Contacts_1_idx ON Contracts (tariff);
+CREATE INDEX fk_Contacts_2_idx ON Contracts (customer);
+CREATE UNIQUE INDEX number_UNIQUE ON Contracts (number);
+CREATE TABLE Customers
+(
+  id INT(11) PRIMARY KEY NOT NULL,
+  name VARCHAR(45),
+  surname VARCHAR(45),
+  date_of_birth DATE,
+  passport_number VARCHAR(45) NOT NULL,
+  passport_data VARCHAR(255),
+  address VARCHAR(255),
+  email VARCHAR(45),
+  password CHAR(64),
+  salt CHAR(12),
+  is_blocked INT(11)
+);
+CREATE UNIQUE INDEX Customers_passport_number_uindex ON Customers (passport_number);
+CREATE TABLE Forbidden_option_relationships
+(
+  id_first INT(11) NOT NULL,
+  id_second INT(11) NOT NULL,
+  CONSTRAINT FKofyolhyde7n8wjhwf1qnbx6x0 FOREIGN KEY (id_first) REFERENCES Options (id),
+  CONSTRAINT fk_Forbidden_option_relationships_1 FOREIGN KEY (id_first) REFERENCES Options (id),
+  CONSTRAINT FK30kmel1gaq3bjebiavgqns6tc FOREIGN KEY (id_second) REFERENCES Options (id),
+  CONSTRAINT fk_Forbidden_option_relationships_2 FOREIGN KEY (id_second) REFERENCES Options (id)
+);
+CREATE INDEX fk_Forbidden_option_relationships_1_idx ON Forbidden_option_relationships (id_first);
+CREATE INDEX fk_Forbidden_option_relationships_2_idx ON Forbidden_option_relationships (id_second);
+CREATE TABLE Options
+(
+  id INT(11) PRIMARY KEY NOT NULL,
+  name VARCHAR(45),
+  cost DECIMAL(8,2),
+  connect_cost DECIMAL(8,2),
+  description VARCHAR(255)
+);
+CREATE TABLE Possible_options_of_tariffs
+(
+  tariff_id INT(11) NOT NULL,
+  option_id INT(11) NOT NULL,
+  CONSTRAINT FKlcgds2iqll3cxgfmsis6w25wj FOREIGN KEY (tariff_id) REFERENCES Tariffs (id),
+  CONSTRAINT fk_Possible_options_of_tariffs_1 FOREIGN KEY (tariff_id) REFERENCES Tariffs (id),
+  CONSTRAINT FK5091f2q2higyor4yquh4e0rv0 FOREIGN KEY (option_id) REFERENCES Options (id),
+  CONSTRAINT fk_Possible_options_of_tariffs_2 FOREIGN KEY (option_id) REFERENCES Options (id)
+);
+CREATE INDEX FK5091f2q2higyor4yquh4e0rv0 ON Possible_options_of_tariffs (option_id);
+CREATE INDEX FKlcgds2iqll3cxgfmsis6w25wj ON Possible_options_of_tariffs (tariff_id);
+CREATE TABLE Required_option_relationships
+(
+  id_first INT(11) NOT NULL,
+  id_second INT(11) NOT NULL,
+  CONSTRAINT FK9erqhc74vuubovrkqu19u5dtl FOREIGN KEY (id_first) REFERENCES Options (id),
+  CONSTRAINT fk_Required_option_relationships_1 FOREIGN KEY (id_first) REFERENCES Options (id),
+  CONSTRAINT FK1hrfsm4y189yv93j9spjs9wa FOREIGN KEY (id_second) REFERENCES Options (id),
+  CONSTRAINT fk_Required_option_relationships_2 FOREIGN KEY (id_second) REFERENCES Options (id)
+);
+CREATE INDEX fk_Required_option_relationships_1_idx ON Required_option_relationships (id_first);
+CREATE INDEX fk_Required_option_relationships_2_idx ON Required_option_relationships (id_second);
+CREATE TABLE Staff
+(
+  id INT(11) PRIMARY KEY NOT NULL,
+  name VARCHAR(45),
+  surname VARCHAR(45),
+  email VARCHAR(45),
+  password VARCHAR(45)
+);
+CREATE TABLE Tariffs
+(
+  id INT(11) PRIMARY KEY NOT NULL,
+  name VARCHAR(45) NOT NULL,
+  cost DECIMAL(8,2),
+  description VARCHAR(255)
+);
+CREATE UNIQUE INDEX Tariffs_name_uindex ON Tariffs (name);
+CREATE TABLE Used_options_of_tariff
+(
+  contract_id INT(11) NOT NULL,
+  option_id INT(11) NOT NULL,
+  CONSTRAINT FKk65d31qu800fkdhdilq65dbpa FOREIGN KEY (contract_id) REFERENCES Contracts (id),
+  CONSTRAINT fk_Used_options_of_tariffs_2 FOREIGN KEY (contract_id) REFERENCES Contracts (id),
+  CONSTRAINT FK15fm5dlaxwptel12i0r1yqhxi FOREIGN KEY (option_id) REFERENCES Options (id),
+  CONSTRAINT fk_Used_options_of_tariffs_1 FOREIGN KEY (option_id) REFERENCES Options (id)
+);
+CREATE INDEX fk_Used_options_of_tariffs_1_idx ON Used_options_of_tariff (option_id);
+CREATE INDEX fk_Used_options_of_tariffs_2_idx ON Used_options_of_tariff (contract_id);
+CREATE TABLE hibernate_sequence
+(
+  next_val BIGINT(20)
+);
+
+/* -- first version backup
 CREATE TABLE IF NOT EXISTS `eCare`.`Tariffs` (
   `id` INT NOT NULL,
   `name` VARCHAR(45) NULL,
@@ -150,4 +261,5 @@ CREATE TABLE IF NOT EXISTS `eCare`.`Forbidden_option_relationships` (
   FOREIGN KEY (`id_second`)
   REFERENCES `eCare`.`Options` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON UPDATE NO ACTION);*/
+

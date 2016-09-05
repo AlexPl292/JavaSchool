@@ -5,7 +5,6 @@ import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
-import com.tsystems.javaschool.db.interfaces.GenericDao;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 
 import javax.persistence.EntityGraph;
@@ -64,17 +63,17 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
-    public Option loadWithDependencies(Integer key, Map<String, Object> hints) {
-        return optionDao.readWithDependencies(key, hints);
+    public Option loadByKey(Integer key, Map<String, Object> hints) {
+        return optionDao.read(key, hints);
     }
 
     @Override
-    public Option addWithDependencies(Option option, Map<String, String[]> dependencies) {
-        EntityTransaction transaction = GenericDao.getTransaction();
+    public Option addNew(Option option, Map<String, String[]> dependencies) {
+        EntityTransaction transaction = optionDao.getTransaction();
         TariffService tariffService = new TariffServiceImpl();
 
         transaction.begin();
-        Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs"))
+        Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs")) // Convert array of tariff ids to set of tariffs
                 .map(s -> tariffService.loadByKey(Integer.parseInt(s)))
                 .collect(Collectors.toSet());
         option.setPossibleTariffsOfOption(tariffs);
@@ -84,14 +83,14 @@ public class OptionServiceImpl implements OptionService{
         String[] forbiddenWith = dependencies.get("forbiddenWith");
 
         EntityGraph<Option> graph = getEntityGraph();
-        graph.addAttributeNodes("required", "forbidden");
+        graph.addAttributeNodes("required", "forbidden");  //Fetch this fields
         Map<String, Object> hints = new HashMap<>();
         hints.put("javax.persistence.loadgraph", graph);
 
         for (String reqF : requiredFrom) {
             Integer reqFId = Integer.parseInt(reqF);
 
-            Option reqFOpt = optionDao.readWithDependencies(reqFId, hints);
+            Option reqFOpt = optionDao.read(reqFId, hints);
             option.addRequiredFromOptions(reqFOpt);
             option.addRequiredFromOptions(reqFOpt.getRequired());
             option.addForbiddenWithOptions(reqFOpt.getForbidden());
@@ -103,7 +102,7 @@ public class OptionServiceImpl implements OptionService{
         for (String reqM : forbiddenWith) {
             Integer forbId = Integer.parseInt(reqM);
 
-            Option forbOpt = optionDao.readWithDependencies(forbId, hints);
+            Option forbOpt = optionDao.read(forbId, hints);
             option.addForbiddenWithOptions(forbOpt);
             option.addForbiddenWithOptions(forbOpt.getRequired());
             option.addForbiddenWithOptions(forbOpt.getRequiredMe());
@@ -115,7 +114,7 @@ public class OptionServiceImpl implements OptionService{
         for (String reqM : requiredMe) {
             Integer reqMId = Integer.parseInt(reqM);
 
-            Option reqMOpt = optionDao.readWithDependencies(reqMId, hints);
+            Option reqMOpt = optionDao.read(reqMId, hints);
             option.addRequiredMeOptions(reqMOpt);
             option.addRequiredMeOptions(reqMOpt.getRequiredMe());
         }

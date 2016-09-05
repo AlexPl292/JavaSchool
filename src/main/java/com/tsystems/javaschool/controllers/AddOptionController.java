@@ -1,17 +1,14 @@
 package com.tsystems.javaschool.controllers;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,6 +22,8 @@ import java.util.*;
 
 /**
  * Created by alex on 26.08.16.
+ * Add new Option
+ * Returns json with either success:true, or success:false and object with errors
  */
 @WebServlet("/add_option")
 public class AddOptionController extends HttpServlet {
@@ -45,16 +44,17 @@ public class AddOptionController extends HttpServlet {
 
         String name = request.getParameter("name");
         String cost = request.getParameter("cost");
-        String connect_cost = request.getParameter("connect_cost");
+        String connectCost = request.getParameter("connectCost");
         String desc = request.getParameter("description");
 
+        // Validation
         String tmpError;
         if (name == null)
             errors.put("name", "Enter name of new option");
         if ((tmpError = Validator.cost(cost)) != null)
             errors.put("cost", tmpError);
-        if ((tmpError = Validator.cost(connect_cost)) != null)
-            errors.put("connect_cost", tmpError);
+        if ((tmpError = Validator.cost(connectCost)) != null)
+            errors.put("connectCost", tmpError);
         if (request.getParameterValues("forTariffs") == null)
             errors.put("tariffs", "Choose at least one tariff");
 
@@ -62,7 +62,7 @@ public class AddOptionController extends HttpServlet {
             Option newOption = new Option();
             newOption.setName(name);
             newOption.setCost(new BigDecimal(cost));
-            newOption.setConnectCost(new BigDecimal(connect_cost));
+            newOption.setConnectCost(new BigDecimal(connectCost));
             newOption.setDescription(desc);
 
             HashMap<String, String[]> dependencies = new HashMap<>();
@@ -85,7 +85,7 @@ public class AddOptionController extends HttpServlet {
             dependencies.put("forTariffs", forTariffs);
 
             try {
-                service.addWithDependencies(newOption, dependencies);
+                service.addNew(newOption, dependencies);
             } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());

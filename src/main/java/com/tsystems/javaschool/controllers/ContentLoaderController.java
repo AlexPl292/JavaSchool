@@ -6,10 +6,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * Created by alex on 02.09.16.
+ *
+ * Load content of page. See index.jps > header
  */
 @WebServlet("/load_content")
 public class ContentLoaderController extends HttpServlet{

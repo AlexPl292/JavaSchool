@@ -23,20 +23,20 @@ public class ContractDaoImpl extends GenericDaoImpl<Contract, Integer> implement
     }
 
     @Override
-    public List<Contract> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere) {
+    public List<Contract> importantSearchFromTo(int maxEntries, int firstIndex, String searchQuery) {
         String query = "SELECT NEW Contract(c.id, c.number, c.customer, c.tariff, c.isBlocked) FROM Contract c WHERE c.number LIKE :first";
         return em.createQuery(query, Contract.class)
-                .setParameter("first", "%"+importantWhere+"%")
+                .setParameter("first", "%"+ searchQuery +"%")
                 .setFirstResult(firstIndex)
                 .setMaxResults(maxEntries)
                 .getResultList();
     }
 
     @Override
-    public long countOfImportantSearch(String importantWhere) {
+    public long countOfImportantSearch(String searchQuery) {
         String query = "SELECT COUNT(c.id) FROM Contract c WHERE c.number LIKE :first";
         return (long) em.createQuery(query)
-                .setParameter("first", "%"+importantWhere+"%")
+                .setParameter("first", "%"+ searchQuery +"%")
                 .getSingleResult();
     }
 

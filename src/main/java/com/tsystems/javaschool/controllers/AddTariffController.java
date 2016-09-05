@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 21.08.16.
+ * Add new tariff
+ * Returns json with either success:true, or success:false and object with errors
  */
 @WebServlet("/add_tariff")
 public class AddTariffController extends HttpServlet {
@@ -48,6 +50,7 @@ public class AddTariffController extends HttpServlet {
         String cost = request.getParameter("cost");
         String desc = request.getParameter("description");
 
+        // Validation
         String tmpError;
         if (name == null)
             errors.put("name", "Enter name of new tariff");

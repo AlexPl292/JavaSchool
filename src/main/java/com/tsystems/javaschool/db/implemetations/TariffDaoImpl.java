@@ -8,6 +8,8 @@ import java.util.Map;
 
 /**
  * Created by alex on 21.08.16.
+ *
+ * JPA implementation of TariffDao
  */
 public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements TariffDao{
     @Override
@@ -24,20 +26,20 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
     }
 
     @Override
-    public List<Tariff> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere) {
+    public List<Tariff> importantSearchFromTo(int maxEntries, int firstIndex, String searchQuery) {
         String query = "SELECT NEW Tariff(c.id, c.name, c.cost, c.description) FROM Tariff c WHERE c.name LIKE :first";
         return em.createQuery(query, Tariff.class)
-                .setParameter("first", "%"+importantWhere+"%")
+                .setParameter("first", "%"+ searchQuery +"%")
                 .setFirstResult(firstIndex)
                 .setMaxResults(maxEntries)
                 .getResultList();
     }
 
     @Override
-    public long countOfImportantSearch(String importantWhere) {
+    public long countOfImportantSearch(String searchQuery) {
         String query = "SELECT COUNT(c.id) FROM Tariff c WHERE c.name LIKE :first";
         return (long) em.createQuery(query)
-                .setParameter("first", "%"+importantWhere+"%")
+                .setParameter("first", "%"+ searchQuery +"%")
                 .getSingleResult();
     }
 
@@ -48,7 +50,7 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
     }
 
     @Override
-    public Tariff readWithDependencies(Integer key, Map<String, Object> hints) {
+    public Tariff read(Integer key, Map<String, Object> hints) {
         return em.find(Tariff.class, key, hints);
     }
 }

@@ -3,7 +3,6 @@ package com.tsystems.javaschool.controllers;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
@@ -28,6 +27,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 19.08.16.
+ * Add new customer
+ * Returns json with either success:true, or success:false and object with errors
  */
 @WebServlet("/add_customer")
 public class AddCustomerController extends HttpServlet {
@@ -103,6 +104,7 @@ public class AddCustomerController extends HttpServlet {
             contract.setTariff(tariff);
             contract.setIsBlocked(0);
 
+            // Get list of option ids from parameter
             List<Integer> options = Arrays.stream(request.getParameterValues("options")).map(Integer::parseInt).collect(Collectors.toList());
             try {
                 service.createCustomerAndContract(newCustomer, contract, options);

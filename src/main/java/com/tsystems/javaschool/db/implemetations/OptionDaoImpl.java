@@ -1,12 +1,8 @@
 package com.tsystems.javaschool.db.implemetations;
 
 import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.db.entities.Tariff;
-import com.tsystems.javaschool.db.interfaces.GenericDao;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 
-import javax.persistence.EntityGraph;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Map;
 
@@ -29,18 +25,18 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
     }
 
     @Override
-    public List<Option> importantSearchFromTo(int maxEntries, int firstIndex, String importantWhere) {
+    public List<Option> importantSearchFromTo(int maxEntries, int firstIndex, String searchQuery) {
         return em.createQuery("SELECT NEW Option(c.id, c.name, c.cost, c.connectCost, c.description) FROM Option c WHERE c.name LIKE :first", Option.class)
-                .setParameter("first", "%"+importantWhere+"%")
+                .setParameter("first", "%"+ searchQuery +"%")
                 .setFirstResult(firstIndex)
                 .setMaxResults(maxEntries)
                 .getResultList();
     }
 
     @Override
-    public long countOfImportantSearch(String importantWhere) {
+    public long countOfImportantSearch(String searchQuery) {
         return (long) em.createQuery("SELECT COUNT(c.id) FROM Option c WHERE c.name LIKE :first")
-                .setParameter("first", "%"+importantWhere+"%")
+                .setParameter("first", "%"+ searchQuery +"%")
                 .getSingleResult();
     }
 
@@ -51,7 +47,7 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
     }
 
     @Override
-    public Option readWithDependencies(Integer key, Map<String, Object> hints) {
+    public Option read(Integer key, Map<String, Object> hints) {
         return em.find(Option.class, key, hints);
     }
 

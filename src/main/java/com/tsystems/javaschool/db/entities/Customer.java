@@ -7,6 +7,8 @@ import java.util.Date;
 
 /**
  * Created by alex on 17.08.16.
+ *
+ * Customer entity class.
  */
 
 @Entity
@@ -59,27 +61,30 @@ public class Customer {
     @Expose
     private int isBlocked;
 
-    public Customer(String name, String surname, Date dateOfBirth, String passportNumber, String passportData, String address, String email, String password, String salt, int isBlocked) {
-        this.name = name;
-        this.surname = surname;
-        this.dateOfBirth = dateOfBirth;
-        this.passportNumber = passportNumber;
-        this.passportData = passportData;
-        this.address = address;
-        this.email = email;
-        this.password = password;
-        this.salt = salt;
-        this.isBlocked = isBlocked;
-    }
-
-    public Customer(String name, String surname, String email, int isBlocked) {
+    /**
+     * Constructor with only important data
+     * Used in Dao select queries
+     * @param id id of new entity
+     * @param name name of new entity
+     * @param surname surname of new entity
+     * @param email email of new entity
+     * @param isBlocked is this customer blocked or not
+     */
+    public Customer(Integer id, String name, String surname, String email, int isBlocked) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.isBlocked = isBlocked;
     }
 
-    public Customer() {}
+
+    /**
+     * Empty constructor
+     */
+    public Customer() {
+        // Empty constructor
+    }
 
     public Integer getId() {
         return id;
@@ -109,16 +114,16 @@ public class Customer {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date day_of_birth) {
-        this.dateOfBirth = day_of_birth;
+    public void setDateOfBirth(Date dayOfBirth) {
+        this.dateOfBirth = dayOfBirth;
     }
 
     public String getPassportData() {
         return passportData;
     }
 
-    public void setPassportData(String passport_data) {
-        this.passportData = passport_data;
+    public void setPassportData(String passportData) {
+        this.passportData = passportData;
     }
 
     public String getAddress() {
@@ -149,8 +154,8 @@ public class Customer {
         return isBlocked;
     }
 
-    public void setIsBlocked(int is_blocked) {
-        this.isBlocked = is_blocked;
+    public void setIsBlocked(int isBlocked) {
+        this.isBlocked = isBlocked;
     }
 
     public String getSalt() {
