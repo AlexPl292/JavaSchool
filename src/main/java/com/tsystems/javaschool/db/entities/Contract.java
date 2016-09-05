@@ -39,7 +39,7 @@ public class Contract {
             @JoinColumn(name = "contract_id", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "option_id", referencedColumnName = "id", nullable = false)
     })
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Option> usedOptions;
 
     public Contract() {

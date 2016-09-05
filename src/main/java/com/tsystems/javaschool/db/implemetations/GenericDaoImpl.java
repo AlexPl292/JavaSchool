@@ -30,6 +30,7 @@ abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<
     @Override
     public T create(T newInstance) {
         em.persist(newInstance);
+        em.flush();
         return newInstance;
     }
 

@@ -3,8 +3,10 @@ package com.tsystems.javaschool.controllers;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
+import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
@@ -99,7 +101,6 @@ public class AddCustomerController extends HttpServlet {
             Tariff tariff = new TariffServiceImpl().loadByKey(Integer.parseInt(request.getParameter("tariff")));
 
             Contract contract = new Contract();
-            contract.setCustomer(newCustomer);
             contract.setNumber(number);
             contract.setTariff(tariff);
             contract.setIsBlocked(0);
@@ -107,7 +108,12 @@ public class AddCustomerController extends HttpServlet {
             // Get list of option ids from parameter
             List<Integer> options = Arrays.stream(request.getParameterValues("options")).map(Integer::parseInt).collect(Collectors.toList());
 //            try {
-                service.createCustomerAndContract(newCustomer, contract, options);
+            //service.createCustomerAndContract(newCustomer, contract, options);
+            ContractService contractService = new ContractServiceImpl();
+            newCustomer = service.addNew(newCustomer);
+            contract.setCustomer(newCustomer);
+            contractService.addNew(contract, options);
+
 /*            } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());

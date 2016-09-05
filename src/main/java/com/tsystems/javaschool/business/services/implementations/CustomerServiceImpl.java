@@ -2,9 +2,12 @@ package com.tsystems.javaschool.business.services.implementations;
 
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
+import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
+import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.CustomerDaoImpl;
+import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.CustomerDao;
 import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
@@ -46,7 +49,11 @@ public class CustomerServiceImpl implements CustomerService {
         Email.sendSimpleEmail(customer.getEmail(), password); // Это заглушка. На самом деле просто вывод на консоль
         customer.setPassword(Hex.encodeHexString(md.digest()));
         customer.setSalt(salt);
-        return customerDao.create(customer);
+        EntityTransaction transaction = customerDao.getTransaction();
+        transaction.begin();
+        customer = customerDao.create(customer);
+        transaction.commit();
+        return customer;
     }
 
     @Override
@@ -88,14 +95,18 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDao.getEntityGraph();
     }
 
-    @Override
+/*    @Override
     public void createCustomerAndContract(Customer customer, Contract contract, List<Integer> contractOptionsIds) {
         EntityTransaction transaction = customerDao.getTransaction();
-        ContractService contractService = new ContractServiceImpl();
+        ContractDao contractDao = new ContractDaoImpl();
 
         transaction.begin();
-        customerDao.create(customer);
-        contractService.addNew(contract, contractOptionsIds);
+        OptionService optionService = new OptionServiceImpl();
+        contract.setUsedOptions(optionService.loadOptionsByIds(contractOptionsIds));
+
+        Customer newCustomer = customerDao.create(customer);
+        contract.setCustomer(newCustomer);
+        contractDao.create(contract);
         transaction.commit();
-    }
+    }*/
 }

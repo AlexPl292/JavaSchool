@@ -16,5 +16,5 @@ public interface CustomerService extends GenericService<Customer, Integer> {
      * @param contract contract to add
      * @param contractOptionsIds list of ids of options for adding to contract
      */
-    void createCustomerAndContract(Customer customer, Contract contract, List<Integer> contractOptionsIds);
+//    void createCustomerAndContract(Customer customer, Contract contract, List<Integer> contractOptionsIds);
 }
