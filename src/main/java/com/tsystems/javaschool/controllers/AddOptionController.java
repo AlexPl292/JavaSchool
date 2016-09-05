@@ -33,7 +33,7 @@ public class AddOptionController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/index").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/jsp/new_option.jsp").forward(request, response);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class AddCustomerController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/index").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/jsp/new_customer.jsp").forward(request, response);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class AddCustomerController extends HttpServlet {
             //service.createCustomerAndContract(newCustomer, contract, options);
             // Ждем, что мне ответят по транзакциям
             ContractService contractService = new ContractServiceImpl();
-/*            newCustomer = service.addNew(newCustomer);*/
+            newCustomer = service.addNew(newCustomer);
             contract.setCustomer(newCustomer);
             contractService.addNew(contract, options);
 

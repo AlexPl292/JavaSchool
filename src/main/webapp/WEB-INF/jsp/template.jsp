@@ -7,12 +7,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<!DOCTYPE html>
-<html lang="en">
-<html>
+<%--
+
 <head>
     <title>eCare</title>
-    <%--Relax, it's favicon =)--%>
+    &lt;%&ndash;Relax, it's favicon =)&ndash;%&gt;
     <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA8oQPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREREQAAAAABAQEBAAAAAAEREREAAAAAAQEBAQAAAAABERERAAAAAAEBAQEAAAAAAQEBAQAAAAABERERAAAAAAEREREAAAAAAQAAAQAAAAABAAABAAAAAAEAAAEAAAAAAREREQAAAAABERERAAAAAAAAARAAAAAAAAABEAAADwHwAA9V8AAPAfAAD1XwAA8B8AAPVfAAD1XwAA8B8AAPAfAAD33wAA998AAPffAADwHwAA8B8AAP8/AAD/PwAA" rel="icon" type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
@@ -42,6 +41,7 @@
 <body>
 
 <div id="wrapper">
+--%>
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -132,7 +132,7 @@
         <!-- /.navbar-static-side -->
     </nav>
 
-    <!-- Page Content -->
+<%--    <!-- Page Content -->
     <div id="page-wrapper">
         <div id="content">
         </div>
@@ -142,5 +142,4 @@
 </div>
 <!-- /#wrapper -->
 
-</body>
-</html>
+</body>--%>

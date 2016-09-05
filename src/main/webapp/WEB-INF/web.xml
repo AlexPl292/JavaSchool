@@ -3,29 +3,65 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-    <display-name>Archetype Created Web Application</display-name>
+<!--    <display-name>Archetype Created Web Application</display-name>
     <mime-mapping>
         <extension>css</extension>
         <mime-type>text/css</mime-type>
-    </mime-mapping>
+    </mime-mapping>-->
+
+    <servlet>
+        <servlet-name>Customer</servlet-name>
+        <jsp-file>/WEB-INF/jsp/customer.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Customer</servlet-name>
+        <url-pattern>/customer</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show customers</servlet-name>
+        <jsp-file>/WEB-INF/jsp/show_customers.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Show customers</servlet-name>
+        <url-pattern>/show_customers</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show tariffs</servlet-name>
+        <jsp-file>/WEB-INF/jsp/show_tariffs.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Show tariffs</servlet-name>
+        <url-pattern>/show_tariffs</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show options</servlet-name>
+        <jsp-file>/WEB-INF/jsp/show_options.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Show options</servlet-name>
+        <url-pattern>/show_options</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show contracts</servlet-name>
+        <jsp-file>/WEB-INF/jsp/show_contracts.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Show contracts</servlet-name>
+        <url-pattern>/show_contracts</url-pattern>
+    </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>index</welcome-file>
+        <welcome-file>show_customers</welcome-file>
     </welcome-file-list>
 
-
-<!--    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>
-            </web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>manager</role-name>
-        </auth-constraint>
-    </security-constraint>
-    <login-config>
-        <auth-method>BASIC</auth-method>
-        <realm-name>Hudson</realm-name>
-    </login-config>-->
 </web-app>
+
