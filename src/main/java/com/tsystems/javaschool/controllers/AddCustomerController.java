@@ -106,12 +106,12 @@ public class AddCustomerController extends HttpServlet {
 
             // Get list of option ids from parameter
             List<Integer> options = Arrays.stream(request.getParameterValues("options")).map(Integer::parseInt).collect(Collectors.toList());
-            try {
+//            try {
                 service.createCustomerAndContract(newCustomer, contract, options);
-            } catch (RollbackException e) {
+/*            } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());
-            }
+            }*/
         }
         if (!errors.isEmpty()) {
             JsonElement element = new Gson().toJsonTree(errors);

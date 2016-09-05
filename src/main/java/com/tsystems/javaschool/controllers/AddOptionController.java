@@ -44,7 +44,7 @@ public class AddOptionController extends HttpServlet {
 
         String name = request.getParameter("name");
         String cost = request.getParameter("cost");
-        String connectCost = request.getParameter("connectCost");
+        String connectCost = request.getParameter("connect_cost");
         String desc = request.getParameter("description");
 
         // Validation

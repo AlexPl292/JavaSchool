@@ -73,12 +73,12 @@ public class ContractServiceImpl implements ContractService{
         EntityTransaction transaction = contractDao.getTransaction();
         OptionService optionService = new OptionServiceImpl();
         boolean insideOtherTransaction = transaction.isActive();
-        if (!insideOtherTransaction)  // Check if transaction is active (this method could be called from customer add
-            transaction.begin();
-        contract.setUsedOptions(optionService.loadOptionsByIds(optionsIds));
+/*        if (!insideOtherTransaction)  // Check if transaction is active (this method could be called from customer add
+            transaction.begin();*/
+        // contract.setUsedOptions(optionService.loadOptionsByIds(optionsIds));
         contractDao.create(contract);
-        if (!insideOtherTransaction)
-            transaction.commit();
+/*        if (!insideOtherTransaction)
+            transaction.commit();*/
         return contract;
     }
 }

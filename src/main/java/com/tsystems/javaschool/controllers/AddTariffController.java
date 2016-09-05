@@ -18,10 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +59,10 @@ public class AddTariffController extends HttpServlet {
             tariff.setName(name);
             tariff.setCost(new BigDecimal(cost));
             tariff.setDescription(desc);
-            List<Integer> optionIds = Arrays.stream(request.getParameterValues("options")).map(Integer::parseInt).collect(Collectors.toList());
+            String[] options = request.getParameterValues("options");
+            List<Integer> optionIds = new ArrayList<>();
+            if (options != null)
+                optionIds = Arrays.stream(options).map(Integer::parseInt).collect(Collectors.toList());
             try {
                 service.addNew(tariff, optionIds);
             } catch (RollbackException e) {
