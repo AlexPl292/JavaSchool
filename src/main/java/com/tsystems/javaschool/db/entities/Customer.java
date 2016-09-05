@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by alex on 17.08.16.
@@ -61,6 +63,9 @@ public class Customer {
     @Expose
     private int isBlocked;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    private Set<Contract> contracts;
+
     /**
      * Constructor with only important data
      * Used in Dao select queries
@@ -70,12 +75,13 @@ public class Customer {
      * @param email email of new entity
      * @param isBlocked is this customer blocked or not
      */
-    public Customer(Integer id, String name, String surname, String email, int isBlocked) {
+    public Customer(Integer id, String name, String surname, String email, int isBlocked, String passportNumber) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.isBlocked = isBlocked;
+        this.passportNumber = passportNumber;
     }
 
 
@@ -83,7 +89,7 @@ public class Customer {
      * Empty constructor
      */
     public Customer() {
-        // Empty constructor
+        contracts = new HashSet<>();
     }
 
     public Integer getId() {
@@ -172,6 +178,14 @@ public class Customer {
 
     public void setPassportNumber(String passportNumber) {
         this.passportNumber = passportNumber;
+    }
+
+    public Set<Contract> getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(Set<Contract> contracts) {
+        this.contracts = contracts;
     }
 
     @Override

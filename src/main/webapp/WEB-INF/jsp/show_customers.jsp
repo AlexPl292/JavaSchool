@@ -42,6 +42,7 @@
                             <th abbr="name">First name</th>
                             <th abbr="surname">Last name</th>
                             <th abbr="email">Email</th>
+                            <th abbr="passportNumber">Passport number</th>
                         </tr>
                         </thead>
                         <tbody>

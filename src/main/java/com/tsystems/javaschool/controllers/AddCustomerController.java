@@ -109,8 +109,9 @@ public class AddCustomerController extends HttpServlet {
             List<Integer> options = Arrays.stream(request.getParameterValues("options")).map(Integer::parseInt).collect(Collectors.toList());
 //            try {
             //service.createCustomerAndContract(newCustomer, contract, options);
+            // Ждем, что мне ответят по транзакциям
             ContractService contractService = new ContractServiceImpl();
-            newCustomer = service.addNew(newCustomer);
+/*            newCustomer = service.addNew(newCustomer);*/
             contract.setCustomer(newCustomer);
             contractService.addNew(contract, options);
 
