@@ -67,6 +67,14 @@ public class TariffServiceImpl implements TariffService{
     }
 
     @Override
+    public void remove(Integer key) {
+        EntityTransaction transaction = tariffDao.getTransaction();
+        transaction.begin();
+        tariffDao.delete(key);
+        transaction.commit();
+    }
+
+    @Override
     public Tariff loadByKey(Integer key, Map<String, Object> hints) {
         return tariffDao.read(key, hints);
     }

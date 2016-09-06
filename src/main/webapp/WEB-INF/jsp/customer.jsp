@@ -69,6 +69,19 @@
             });
             loadlist($tariff, "/load_tariffs", "name", "id");
 
+            $("#accordion").on("click", "a", function (e) {
+                e.preventDefault();
+                var $panel = $(this).closest('.panel');
+                var id = $panel.find('input[type=hidden]').val();
+                var href = $(this).attr("href");
+                if (href === '/deleteContract') {
+                    $panel.removeClass("panel-default").addClass("panel-danger");
+                    $.post(href, {id:id}, function (e) {
+                        $panel.remove();
+                    });
+                }
+            })
+
         });
 
     </script>
@@ -115,9 +128,27 @@
                         <div class="panel-group" id="accordion">
                             <c:forEach items="${customer.getContracts()}" var="contract">
                                 <div class="panel panel-default">
+                                    <input type="hidden" value="${contract.getId()}"/>
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse${contract.getId()}" >${contract.getNumber()}</a>
+                                        <div class="pull-right">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                    Actions
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li><a href="#">Edit</a>
+                                                    </li>
+                                                    <li><a href="/blockContract">Block</a>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="/deleteContract">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                         </h4>
                                     </div>
                                     <div id="collapse${contract.getId()}" class="panel-collapse collapse" style="height: 0px;">

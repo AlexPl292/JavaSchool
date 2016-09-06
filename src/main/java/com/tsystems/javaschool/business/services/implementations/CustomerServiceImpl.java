@@ -95,6 +95,14 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDao.getEntityGraph();
     }
 
+    @Override
+    public void remove(Integer key) {
+        EntityTransaction transaction = customerDao.getTransaction();
+        transaction.begin();
+        customerDao.delete(key);
+        transaction.commit();
+    }
+
 /*    @Override
     public void createCustomerAndContract(Customer customer, Contract contract, List<Integer> contractOptionsIds) {
         EntityTransaction transaction = customerDao.getTransaction();

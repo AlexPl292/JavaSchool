@@ -66,4 +66,6 @@ public interface GenericService<T, PK extends Serializable> {
      * @return entity graph
      */
     EntityGraph getEntityGraph();
+
+    void remove(PK key);
 }

@@ -70,6 +70,14 @@ public class ContractServiceImpl implements ContractService{
     }
 
     @Override
+    public void remove(Integer key) {
+        EntityTransaction transaction = contractDao.getTransaction();
+        transaction.begin();
+        contractDao.delete(key);
+        transaction.commit();
+    }
+
+    @Override
     public Contract addNew(Contract contract, List<Integer> optionsIds) {
         EntityTransaction transaction = contractDao.getTransaction();
         OptionService optionService = new OptionServiceImpl();

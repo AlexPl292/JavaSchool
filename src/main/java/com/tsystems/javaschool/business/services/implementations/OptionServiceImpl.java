@@ -63,6 +63,14 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
+    public void remove(Integer key) {
+        EntityTransaction transaction = optionDao.getTransaction();
+        transaction.begin();
+        optionDao.delete(key);
+        transaction.commit();
+    }
+
+    @Override
     public Option loadByKey(Integer key, Map<String, Object> hints) {
         return optionDao.read(key, hints);
     }
