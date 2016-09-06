@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/font-awesome/css/font-awesome.min.css">
 
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.5.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.6.css">
 
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/jquery/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -24,8 +24,12 @@
 
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/table_creator.js"></script>
     <script>
-        $(document).ready(function () {
-            table_creator($('#customers'), '/load_customers')
+        $(function () {
+            table_creator($('#customers'), '/load_customers', "/customer")
+            $('table').on("click", '.clickableRow', function() {
+                //$.get($(this).data("href"), {id:$(this).data("val")})
+                window.location = $(this).data("href")+"?id="+$(this).data("val");
+            });
         })
     </script>
     <title>Show customers</title>

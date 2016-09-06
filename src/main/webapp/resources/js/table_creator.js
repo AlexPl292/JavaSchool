@@ -59,7 +59,7 @@ function init_table($table) {
     }
 }
 
-function fill_table($table, $pagination) {
+function fill_table($table, $pagination, link) {
     var recordsTotal, pages;
     return function (response) {
         var properties = $table.find("thead th").map(function () {
@@ -72,32 +72,38 @@ function fill_table($table, $pagination) {
         }
         paginationSet(pages, response.draw, $pagination);
 
-        $(function () {
-            for (var i = 0; i < 10; i++) {
-                if (response.data[i] !== undefined) {
-                    $.each(properties, function (j, item) {
-                        if (item.indexOf(".") === -1) {
-                            $table.find("tbody tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 1) + ")").text(response.data[i][item]);
-                        } else {
-                            var items = item.split(".");
-                            $table.find("tbody tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 1) + ")").text(response.data[i][items[0]][items[1]]);
-                        }
-                    })
-                } else {
-                    $.each(properties, function (j, item) {
-                        $table.find("tbody tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 1) + ")").html('&nbsp;');
-                    })
+        for (var i = 0; i < 10; i++) {
+            if (response.data[i] !== undefined) {
+                $row = $table.find("tbody tr:nth-child(" + (i + 1) + ")");
+                if (link) {
+                    $row.addClass("clickableRow").attr("data-href", link).attr("data-val", response.data[i].id);
                 }
+                $.each(properties, function (j, item) {
+                    if (item.indexOf(".") === -1) {
+                        $row.find("td:nth-child(" + (j + 1) + ")").text(response.data[i][item]);
+                    } else {
+                        var items = item.split(".");
+                        $row.find("td:nth-child(" + (j + 1) + ")").text(response.data[i][items[0]][items[1]]);
+                    }
+                })
+            } else {
+                $row = $table.find("tbody tr:nth-child(" + (i + 1) + ")");
+                if (link){
+                    $row.removeClass("clickableRow").removeAttr("data-href").removeAttr("data-val");
+                }
+                $.each(properties, function (j, item) {
+                    $row.find("td:nth-child(" + (j + 1) + ")").html('&nbsp;');
+                })
             }
-        })
+        }
     }
 }
 
 
-function table_creator($context, url) {
+function table_creator($context, url, row_link) {
     var $pagination = $context.find(".pagination");
     var $table = $context.find("table");
-    var fill_wrapper = fill_table($table, $pagination);
+    var fill_wrapper = fill_table($table, $pagination, row_link);
     var get_data_wrapper = get_data(url, $context.find('#search_query'));
     var $search_input = $context.find("#search-form input");
     var $search_submit = $context.find("#search-form button");
