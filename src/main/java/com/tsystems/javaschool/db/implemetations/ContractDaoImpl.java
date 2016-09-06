@@ -4,6 +4,7 @@ import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 24.08.16.
@@ -46,5 +47,9 @@ public class ContractDaoImpl extends GenericDaoImpl<Contract, Integer> implement
                 .getResultList();
     }
 
+    @Override
+    public Contract read(Integer key, Map<String, Object> hints) {
+        return em.find(Contract.class, key, hints);
+    }
 
 }

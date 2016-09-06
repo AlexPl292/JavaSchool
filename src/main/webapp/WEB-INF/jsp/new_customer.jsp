@@ -65,7 +65,7 @@
 </head>
 <body>
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/template.jsp"></c:import>
+    <c:import url="/WEB-INF/jsp/template.jsp"/>
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
@@ -154,29 +154,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">New contract data</div>
                         <div class="panel-body">
-                            <div class="control-group">
-                                <label class="control-label" for="tariff">Tariff</label>
-                                <div class="controls">
-                                    <select id="tariff" name="tariff" class="form-control">
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="control-group">
-                                <label class="control-label" for="options">Options</label>
-                                <div class="controls">
-                                    <div id="options" class="boxes"></div>
-                                </div>
-                            </div>
-
-                            <div class="control-group">
-                                <label class="control-label" for="number">Number</label>
-                                <div class="controls input-group">
-                                    <span class="input-group-addon"><i class="fa fa-phone"></i> </span>
-                                    <input type="text" id="number" name="number" placeholder="" class="form-control input-xlarge bfh-phone" data-format="+7 (ddd) ddd-dddd">
-                                </div>
-                            </div>
-
+                            <c:import url="template_new_contract.jsp"/>
                         </div>
                     </div>
                 </div>

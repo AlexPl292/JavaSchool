@@ -123,7 +123,7 @@ function table_creator($context, url, row_link) {
     });
 
     $search_submit.click(function (e) {
-        get_data_wrapper(1, fill_wrapper, true);
         e.preventDefault();
+        get_data_wrapper(1, fill_wrapper, true);
     });
 }

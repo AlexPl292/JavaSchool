@@ -25,6 +25,53 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/metisMenu/js/metisMenu.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
+
+    <script src="<%=application.getContextPath() %>/resources/vendor/formhelpers/js/bootstrap-formhelpers-phone.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/accordioner.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/contract_validate_rules.js"></script>
+    <script>
+        function loadlist(selobj, url, nameattr, valattr) {
+            $(selobj).empty();
+            $.getJSON(url, {page:-1, updateCount:false, search:""}, function (data) {
+                $.each(data.data, function (i, obj) {
+                    $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
+                });
+                $(selobj).change();
+            });
+        }
+
+        function create_boxes(selobj) {
+            return function (data) {
+                $(selobj).empty();
+                var checkboxs_name = selobj.attr('id');
+                $.each(data.data, function (i, obj) {
+                    $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name}));
+                    $(selobj).append($("<label/>", {"for": checkboxs_name+i, text:obj.name}));
+                    $(selobj).append($("<br/>"));
+                })
+            }
+        }
+
+        function handler(form, e) {
+            e.preventDefault();
+            $.post($(form).attr("action"), $(form).serialize(), create_accordion_node);
+        }
+
+        $(function() {
+            var $tariff = $("#tariff");
+
+            $tariff.change(function (e) {
+                e.preventDefault();
+                $.getJSON("/load_options", {loadtype: "possibleOfTariff", tariff_id:$(this).val()}, create_boxes($('#options')));
+            });
+            loadlist($tariff, "/load_tariffs", "name", "id");
+
+        });
+
+    </script>
 </head>
 <body>
 
@@ -70,10 +117,10 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" >${contract.getNumber()}</a>
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse${contract.getId()}" >${contract.getNumber()}</a>
                                         </h4>
                                     </div>
-                                    <div id="collapseOne" class="panel-collapse collapse" style="height: 0px;">
+                                    <div id="collapse${contract.getId()}" class="panel-collapse collapse" style="height: 0px;">
                                         <div class="panel-body">
                                             <div class="col-lg-6">
                                                 <h3>${contract.getTariff().getName()}</h3>
@@ -95,6 +142,31 @@
                                     </div>
                                 </div>
                             </c:forEach>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#newContract" >Add new contract</a>
+                                    </h4>
+                                </div>
+                                <div id="newContract" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        <div class="col-lg-12">
+                                            <form class="form-horizontal" id="add_contract_form" action='add_contract' method="POST">
+                                                <input type="hidden" name="customer_id" value="${customer.getId()}">
+                                                <c:import url="template_new_contract.jsp"/>
+                                                <div class="row">
+                                                    <div class="panel-body">
+                                                        <!-- Button -->
+                                                        <div class="controls">
+                                                            <input type="submit" class="btn btn-success"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- .panel-body -->

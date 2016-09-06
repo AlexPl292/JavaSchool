@@ -15,6 +15,7 @@ import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -77,5 +78,10 @@ public class ContractServiceImpl implements ContractService{
         contractDao.create(contract);
         transaction.commit();
         return contract;
+    }
+
+    @Override
+    public Contract loadByKey(Integer key, Map<String, Object> hints) {
+        return contractDao.read(key, hints);
     }
 }

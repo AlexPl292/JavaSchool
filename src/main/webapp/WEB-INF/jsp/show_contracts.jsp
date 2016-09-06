@@ -46,14 +46,16 @@
                     <div class="panel-heading">Show all contracts</div>
                     <div class="panel-body">
                         <div id="contracts">
-                            <div id="search-form" class="form-group input-group">
-                                <span class="input-group-addon"><i class="fa fa-phone"></i> </span>
-                                <input id="search_query" type="text" class="form-control bfh-phone" data-format="+7 (ddd) ddd-dddd" placeholder="Search by number" >
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit"><i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
+                            <form>
+                                <div id="search-form" class="form-group input-group">
+                                    <span class="input-group-addon"><i class="fa fa-phone"></i> </span>
+                                    <input id="search_query" type="text" class="form-control bfh-phone" data-format="+7 (ddd) ddd-dddd" placeholder="Search by number" >
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit"><i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </form>
                             <table class="table table-striped">
                                 <thead>
                                 <tr>

@@ -40,6 +40,7 @@ public class Contract {
             @JoinColumn(name = "option_id", referencedColumnName = "id", nullable = false)
     })
     @ManyToMany(fetch = FetchType.LAZY)
+    @Expose
     private Set<Option> usedOptions;
 
     public Contract() {
