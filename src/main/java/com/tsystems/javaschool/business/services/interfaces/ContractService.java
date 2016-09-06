@@ -17,4 +17,5 @@ public interface ContractService extends GenericService<Contract, Integer>{
      */
     Contract addNew(Contract contract, List<Integer> optionIds);
     Contract loadByKey(Integer key, Map<String, Object> hints);
+    void setBlock(Integer id, Integer blockLevel);
 }

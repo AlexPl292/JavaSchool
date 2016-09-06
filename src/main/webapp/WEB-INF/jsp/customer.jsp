@@ -69,17 +69,35 @@
             });
             loadlist($tariff, "/load_tariffs", "name", "id");
 
+
             $("#accordion").on("click", "a", function (e) {
                 e.preventDefault();
                 var $panel = $(this).closest('.panel');
                 var id = $panel.find('input[type=hidden]').val();
                 var href = $(this).attr("href");
-                if (href === '/deleteContract') {
-                    $panel.removeClass("panel-default").addClass("panel-danger");
-                    $.post(href, {id:id}, function (e) {
+                var actions = {
+                    "/deleteContract":function (e) {
                         $panel.remove();
+                    },
+                    "/blockContract":function (e) {
+                        $panel.removeClass("panel-default").addClass("panel-red");
+                        $(this).attr("href", "/unblockContract").text("Unblock");
+                    },
+                    "/unblockContract":function (e) {
+                        $panel.removeClass("panel-red").addClass("panel-default");
+                        $(this).attr("href", "/blockContract").text("Block");
+                    }
+                };
+
+                $.post(href, {id:id}, actions[href]);
+/*                if (href === '/deleteContract') {
+                    $panel.removeClass("panel-default").addClass("panel-danger");
+                    $.post(href, {id:id}, actions[href]);
+                } else if (href === '/blockContract' || href === '/unblockContract') {
+                    $.post(href, {id:id}, function (e) {
+
                     });
-                }
+                }*/
             })
 
         });
@@ -127,7 +145,8 @@
                     <div class="panel-body">
                         <div class="panel-group" id="accordion">
                             <c:forEach items="${customer.getContracts()}" var="contract">
-                                <div class="panel panel-default">
+                                <c:set var="blocked" value="${contract.getIsBlocked()}"/>
+                                <div class="panel ${blocked == 0 ? "panel-default" : "panel-red"}">
                                     <input type="hidden" value="${contract.getId()}"/>
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
@@ -141,7 +160,7 @@
                                                 <ul class="dropdown-menu pull-right" role="menu">
                                                     <li><a href="#">Edit</a>
                                                     </li>
-                                                    <li><a href="/blockContract">Block</a>
+                                                    <li>${blocked == 0 ? "<a href=\"/blockContract\">Block</a>":"<a href=\"/unblockContract\">Unblock</a>"}
                                                     </li>
                                                     <li class="divider"></li>
                                                     <li><a href="/deleteContract">Delete</a>

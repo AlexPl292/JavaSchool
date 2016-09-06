@@ -79,8 +79,8 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public Contract addNew(Contract contract, List<Integer> optionsIds) {
-        EntityTransaction transaction = contractDao.getTransaction();
         OptionService optionService = new OptionServiceImpl();
+        EntityTransaction transaction = contractDao.getTransaction();
         transaction.begin();
         contract.setUsedOptions(optionService.loadOptionsByIds(optionsIds));
         contractDao.create(contract);
@@ -91,5 +91,15 @@ public class ContractServiceImpl implements ContractService{
     @Override
     public Contract loadByKey(Integer key, Map<String, Object> hints) {
         return contractDao.read(key, hints);
+    }
+
+    @Override
+    public void setBlock(Integer id, Integer blockLevel) {
+        Contract contract = contractDao.read(id);
+
+        EntityTransaction transaction = contractDao.getTransaction();
+        transaction.begin();
+        contract.setIsBlocked(blockLevel);
+        transaction.commit();
     }
 }
