@@ -3,9 +3,7 @@ package com.tsystems.javaschool.db.entities;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by alex on 17.08.16.
@@ -64,7 +62,7 @@ public class Customer {
     private int isBlocked;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
-    private Set<Contract> contracts;
+    private List<Contract> contracts;
 
     /**
      * Constructor with only important data
@@ -89,7 +87,7 @@ public class Customer {
      * Empty constructor
      */
     public Customer() {
-        contracts = new HashSet<>();
+        contracts = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -180,11 +178,11 @@ public class Customer {
         this.passportNumber = passportNumber;
     }
 
-    public Set<Contract> getContracts() {
+    public List<Contract> getContracts() {
         return contracts;
     }
 
-    public void setContracts(Set<Contract> contracts) {
+    public void setContracts(List<Contract> contracts) {
         this.contracts = contracts;
     }
 
