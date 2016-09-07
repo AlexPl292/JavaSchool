@@ -38,9 +38,17 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public void addNew(Contract contract) {
-        EMU.beginTransaction();
-        contractDao.create(contract);
-        EMU.commit();
+        try {
+            EMU.beginTransaction();
+            contractDao.create(contract);
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
@@ -102,18 +110,34 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public void remove(Integer key) {
-        EMU.beginTransaction();
-        contractDao.delete(key);
-        EMU.commit();
+        try {
+            EMU.beginTransaction();
+            contractDao.delete(key);
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
     public Contract addNew(Contract contract, List<Integer> optionsIds) {
-        EMU.beginTransaction();
-        contract.setUsedOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
-        contractDao.create(contract);
-        EMU.commit();
-        return contract;
+        try {
+            EMU.beginTransaction();
+            contract.setUsedOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
+            contractDao.create(contract);
+            EMU.commit();
+            return contract;
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
@@ -126,9 +150,17 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public void setBlock(Integer id, Integer blockLevel) {
-        EMU.beginTransaction();
-        Contract contract = contractDao.read(id);
-        contract.setIsBlocked(blockLevel);
-        EMU.commit();
+        try {
+            EMU.beginTransaction();
+            Contract contract = contractDao.read(id);
+            contract.setIsBlocked(blockLevel);
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 }

@@ -32,9 +32,17 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public void addNew(Tariff tariff) {
-        EMU.beginTransaction();
-        tariffDao.create(tariff);
-        EMU.commit();
+        try {
+            EMU.beginTransaction();
+            tariffDao.create(tariff);
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
@@ -97,9 +105,17 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public void remove(Integer key) {
-        EMU.beginTransaction();
-        tariffDao.delete(key);
-        EMU.commit();
+        try {
+            EMU.beginTransaction();
+            tariffDao.delete(key);
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
@@ -112,10 +128,18 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public Tariff addNew(Tariff tariff, List<Integer> optionsIds) {
-        EMU.beginTransaction();
-        tariff.setPossibleOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
-        tariffDao.create(tariff);
-        EMU.commit();
-        return tariff;
+        try {
+            EMU.beginTransaction();
+            tariff.setPossibleOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
+            tariffDao.create(tariff);
+            EMU.commit();
+            return tariff;
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 }

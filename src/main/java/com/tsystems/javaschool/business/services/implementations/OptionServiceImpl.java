@@ -33,9 +33,17 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public void addNew(Option entity) {
-        EMU.beginTransaction();
-        optionDao.create(entity);
-        EMU.commit();
+        try {
+            EMU.beginTransaction();
+            optionDao.create(entity);
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
@@ -97,9 +105,17 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public void remove(Integer key) {
-        EMU.beginTransaction();
-        optionDao.delete(key);
-        EMU.commit();
+        try {
+            EMU.beginTransaction();
+            optionDao.delete(key);
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
@@ -113,64 +129,80 @@ public class OptionServiceImpl implements OptionService{
     @Override
     public Option addNew(Option option, Map<String, String[]> dependencies) {
 
-        EMU.beginTransaction();
-        Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs")) // Convert array of tariff ids to set of tariffs
-                .map(s -> TariffDaoImpl.getInstance().read(Integer.parseInt(s)))
-                .collect(Collectors.toSet());
-        option.setPossibleTariffsOfOption(tariffs);
+        try {
+            EMU.beginTransaction();
+            Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs")) // Convert array of tariff ids to set of tariffs
+                    .map(s -> TariffDaoImpl.getInstance().read(Integer.parseInt(s)))
+                    .collect(Collectors.toSet());
+            option.setPossibleTariffsOfOption(tariffs);
 
-        String[] requiredFrom = dependencies.get("requiredFrom");
-        String[] requiredMe = dependencies.get("requiredMe");
-        String[] forbiddenWith = dependencies.get("forbiddenWith");
+            String[] requiredFrom = dependencies.get("requiredFrom");
+            String[] requiredMe = dependencies.get("requiredMe");
+            String[] forbiddenWith = dependencies.get("forbiddenWith");
 
-        EntityGraph<Option> graph = getEntityGraph();
-        graph.addAttributeNodes("required", "forbidden");  //Fetch this fields
-        Map<String, Object> hints = new HashMap<>();
-        hints.put("javax.persistence.loadgraph", graph);
+            EntityGraph<Option> graph = getEntityGraph();
+            graph.addAttributeNodes("required", "forbidden");  //Fetch this fields
+            Map<String, Object> hints = new HashMap<>();
+            hints.put("javax.persistence.loadgraph", graph);
 
-        for (String reqF : requiredFrom) {
-            Integer reqFId = Integer.parseInt(reqF);
+            for (String reqF : requiredFrom) {
+                Integer reqFId = Integer.parseInt(reqF);
 
-            Option reqFOpt = optionDao.read(reqFId, hints);
-            option.addRequiredFromOptions(reqFOpt);
-            option.addRequiredFromOptions(reqFOpt.getRequired());
-            option.addForbiddenWithOptions(reqFOpt.getForbidden());
+                Option reqFOpt = optionDao.read(reqFId, hints);
+                option.addRequiredFromOptions(reqFOpt);
+                option.addRequiredFromOptions(reqFOpt.getRequired());
+                option.addForbiddenWithOptions(reqFOpt.getForbidden());
+            }
+
+            graph = getEntityGraph();
+            graph.addAttributeNodes("required", "forbidden");
+            hints.put("javax.persistence.loadgraph", graph);
+            for (String reqM : forbiddenWith) {
+                Integer forbId = Integer.parseInt(reqM);
+
+                Option forbOpt = optionDao.read(forbId, hints);
+                option.addForbiddenWithOptions(forbOpt);
+                option.addForbiddenWithOptions(forbOpt.getRequired());
+                option.addForbiddenWithOptions(forbOpt.getRequiredMe());
+            }
+
+            graph = getEntityGraph();
+            graph.addAttributeNodes("requiredMe");
+            hints.put("javax.persistence.loadgraph", graph);
+            for (String reqM : requiredMe) {
+                Integer reqMId = Integer.parseInt(reqM);
+
+                Option reqMOpt = optionDao.read(reqMId, hints);
+                option.addRequiredMeOptions(reqMOpt);
+                option.addRequiredMeOptions(reqMOpt.getRequiredMe());
+            }
+
+            optionDao.create(option);
+            EMU.commit();
+            return option;
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
         }
-
-        graph = getEntityGraph();
-        graph.addAttributeNodes("required", "forbidden");
-        hints.put("javax.persistence.loadgraph", graph);
-        for (String reqM : forbiddenWith) {
-            Integer forbId = Integer.parseInt(reqM);
-
-            Option forbOpt = optionDao.read(forbId, hints);
-            option.addForbiddenWithOptions(forbOpt);
-            option.addForbiddenWithOptions(forbOpt.getRequired());
-            option.addForbiddenWithOptions(forbOpt.getRequiredMe());
-        }
-
-        graph = getEntityGraph();
-        graph.addAttributeNodes("requiredMe");
-        hints.put("javax.persistence.loadgraph", graph);
-        for (String reqM : requiredMe) {
-            Integer reqMId = Integer.parseInt(reqM);
-
-            Option reqMOpt = optionDao.read(reqMId, hints);
-            option.addRequiredMeOptions(reqMOpt);
-            option.addRequiredMeOptions(reqMOpt.getRequiredMe());
-        }
-
-        optionDao.create(option);
-        EMU.commit();
-        return option;
     }
 
     @Override
     public List<Option> loadOptionsByTariffs(List<Integer> tariffs) {
-        EMU.beginTransaction();
-        List<Option> options = optionDao.getOptionsOfTariffs(tariffs);
-        EMU.commit();
-        return options;
+        try {
+            EMU.beginTransaction();
+            List<Option> options = optionDao.getOptionsOfTariffs(tariffs);
+            EMU.commit();
+            return options;
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
 }

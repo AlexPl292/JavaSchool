@@ -61,24 +61,28 @@ public class CustomerServiceImpl implements CustomerService {
         Email.sendSimpleEmail(customer.getEmail(), password); // Это заглушка. На самом деле просто вывод на консоль
         customer.setPassword(Hex.encodeHexString(md.digest()));
         customer.setSalt(salt);
-        EMU.beginTransaction();
-        customerDao.create(customer);
-        EMU.commit();
+        try {
+            EMU.beginTransaction();
+            customerDao.create(customer);
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
     public List<Customer> getNEntries(int maxResult, int firstResult) {
-//        EMU.beginTransaction();
         List<Customer> customers = customerDao.selectFromTo(maxResult, firstResult);
-//        EMU.commit();
         return customers;
     }
 
     @Override
     public long countOfEntries() {
-//        EMU.beginTransaction();
         long res = customerDao.countOfEntities();
-//        EMU.commit();
         return res;
     }
 
@@ -86,9 +90,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
         if ("".equals(searchQuery))
             return getNEntries(maxEntries, firstIndex);
-//        EMU.beginTransaction();
         List<Customer> customers = customerDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-//        EMU.commit();
         return customers;
     }
 
@@ -96,25 +98,19 @@ public class CustomerServiceImpl implements CustomerService {
     public long countOfEntries(String searchQuery) {
         if ("".equals(searchQuery))
             return countOfEntries();
-//        EMU.beginTransaction();
         long res = customerDao.countOfImportantSearch(searchQuery);
-//        EMU.commit();
         return res;
     }
 
     @Override
     public List<Customer> loadAll() {
-//        EMU.beginTransaction();
         List<Customer> customers = customerDao.getAll();
-//        EMU.commit();
         return customers;
     }
 
     @Override
     public Customer loadByKey(Integer key) {
-//        EMU.beginTransaction();
         Customer customer = customerDao.read(key);
-//        EMU.commit();
         return customer;
     }
 
@@ -125,28 +121,21 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void remove(Integer key) {
-        EMU.beginTransaction();
-        customerDao.delete(key);
-        EMU.commit();
+        try {
+            EMU.beginTransaction();
+            customerDao.delete(key);
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
     public Customer loadByKey(Integer key, Map<String, Object> hints) {
-        return  customerDao.read(key, hints);
+        return customerDao.read(key, hints);
     }
-
-/*    @Override
-    public void createCustomerAndContract(Customer customer, Contract contract, List<Integer> contractOptionsIds) {
-        EntityTransaction transaction = customerDao.getTransaction();
-        ContractDao contractDao = new ContractDaoImpl();
-
-        transaction.begin();
-        OptionService optionService = new OptionServiceImpl();
-        contract.setUsedOptions(optionService.loadOptionsByIds(contractOptionsIds));
-
-        Customer newCustomer = customerDao.create(customer);
-        contract.setCustomer(newCustomer);
-        contractDao.create(contract);
-        transaction.commit();
-    }*/
 }
