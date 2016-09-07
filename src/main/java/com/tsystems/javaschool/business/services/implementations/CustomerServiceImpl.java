@@ -19,6 +19,7 @@ import javax.persistence.EntityTransaction;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 17.08.16.
@@ -127,6 +128,11 @@ public class CustomerServiceImpl implements CustomerService {
         EMU.beginTransaction();
         customerDao.delete(key);
         EMU.commit();
+    }
+
+    @Override
+    public Customer loadByKey(Integer key, Map<String, Object> hints) {
+        return  customerDao.read(key, hints);
     }
 
 /*    @Override

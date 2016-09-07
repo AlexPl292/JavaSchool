@@ -14,17 +14,25 @@
 <html lang="en">
 <head>
     <title>Customer</title>
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/metisMenu/css/metisMenu.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="<%=application.getContextPath() %>/resources/vendor/metisMenu/css/metisMenu.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="<%=application.getContextPath() %>/resources/vendor/font-awesome/css/font-awesome.min.css">
 
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.6.css">
 
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/jquery/jquery-3.1.0.min.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/metisMenu/js/metisMenu.min.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
+    <script type="text/javascript"
+            src="<%=application.getContextPath() %>/resources/vendor/jquery/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript"
+            src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+            src="<%=application.getContextPath() %>/resources/vendor/metisMenu/js/metisMenu.min.js"></script>
+    <script type="text/javascript"
+            src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
 
     <script src="<%=application.getContextPath() %>/resources/vendor/formhelpers/js/bootstrap-formhelpers-phone.js"></script>
     <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
@@ -35,7 +43,7 @@
     <script>
         function loadlist(selobj, url, nameattr, valattr) {
             $(selobj).empty();
-            $.getJSON(url, {page:-1, updateCount:false, search:""}, function (data) {
+            $.getJSON(url, {page: -1, updateCount: false, search: ""}, function (data) {
                 $.each(data.data, function (i, obj) {
                     $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
                 });
@@ -48,8 +56,13 @@
                 $(selobj).empty();
                 var checkboxs_name = selobj.attr('id');
                 $.each(data.data, function (i, obj) {
-                    $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name}));
-                    $(selobj).append($("<label/>", {"for": checkboxs_name+i, text:obj.name}));
+                    $(selobj).append($("<input />", {
+                        type: "checkbox",
+                        id: checkboxs_name + i,
+                        value: obj.id,
+                        name: checkboxs_name
+                    }));
+                    $(selobj).append($("<label/>", {"for": checkboxs_name + i, text: obj.name}));
                     $(selobj).append($("<br/>"));
                 })
             }
@@ -60,44 +73,47 @@
             $.post($(form).attr("action"), $(form).serialize(), create_accordion_node);
         }
 
-        $(function() {
+        $(function () {
             var $tariff = $("#tariff");
 
             $tariff.change(function (e) {
                 e.preventDefault();
-                $.getJSON("/load_options", {loadtype: "possibleOfTariff", tariff_id:$(this).val()}, create_boxes($('#options')));
+                $.getJSON("/load_options", {
+                    loadtype: "possibleOfTariff",
+                    tariff_id: $(this).val()
+                }, create_boxes($('#options')));
             });
             loadlist($tariff, "/load_tariffs", "name", "id");
 
 
             $("#accordion").on("click", "a", function (e) {
                 e.preventDefault();
+                if ($(this).find('p').hasClass("text-muted")) {
+                    return false;
+                }
                 var $panel = $(this).closest('.panel');
                 var id = $panel.find('input[type=hidden]').val();
                 var href = $(this).attr("href");
-                var actions = {
-                    "/deleteContract":function (e) {
-                        $panel.remove();
-                    },
-                    "/blockContract":function (e) {
-                        $panel.removeClass("panel-default").addClass("panel-red");
-                        $(this).attr("href", "/unblockContract").text("Unblock");
-                    },
-                    "/unblockContract":function (e) {
-                        $panel.removeClass("panel-red").addClass("panel-default");
-                        $(this).attr("href", "/blockContract").text("Block");
+
+                function actions($obj) {
+                    return {
+                        "/deleteContract": function (e) {
+                            $panel.remove();
+                        },
+                        "/blockContract": function (e) {
+                            $panel.removeClass("panel-default").addClass("panel-red");
+                            $obj.attr("href", "/unblockContract").text("Unblock");
+                            $panel.find(":contains('Edit')").addClass("text-muted");
+                        },
+                        "/unblockContract": function (e) {
+                            $panel.removeClass("panel-red").addClass("panel-default");
+                            $obj.attr("href", "/blockContract").text("Block");
+                            $panel.find(":contains('Edit')").removeClass("text-muted");
+                        }
                     }
-                };
+                }
 
-                $.post(href, {id:id}, actions[href]);
-/*                if (href === '/deleteContract') {
-                    $panel.removeClass("panel-default").addClass("panel-danger");
-                    $.post(href, {id:id}, actions[href]);
-                } else if (href === '/blockContract' || href === '/unblockContract') {
-                    $.post(href, {id:id}, function (e) {
-
-                    });
-                }*/
+                $.post(href, {id: id}, actions($(this))[href]);
             })
 
         });
@@ -114,14 +130,17 @@
                 <h1 class="page-header">${customer.getSurname()} ${customer.getName()}</h1>
             </div>
         </div>
-        <h1><small>${customer.getEmail()}</small></h1>
+        <h1>
+            <small>${customer.getEmail()}</small>
+        </h1>
         <div class="row">
             <div class="col-lg-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">Passport</div>
                     <div class="panel-body">
-                            <i>${customer.getPassportNumber()}</i> <hr>
-                            ${fn:replace(customer.getPassportData(), newLine, "<br/>")}
+                        <i>${customer.getPassportNumber()}</i>
+                        <hr>
+                        ${fn:replace(customer.getPassportData(), newLine, "<br/>")}
                     </div>
                 </div>
             </div>
@@ -150,36 +169,41 @@
                                     <input type="hidden" value="${contract.getId()}"/>
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse${contract.getId()}" >${contract.getNumber()}</a>
-                                        <div class="pull-right">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                    Actions
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a href="#">Edit</a>
-                                                    </li>
-                                                    <li>${blocked == 0 ? "<a href=\"/blockContract\">Block</a>":"<a href=\"/unblockContract\">Unblock</a>"}
-                                                    </li>
-                                                    <li class="divider"></li>
-                                                    <li><a href="/deleteContract">Delete</a>
-                                                    </li>
-                                                </ul>
+                                            <a data-toggle="collapse" data-parent="#accordion"
+                                               href="#collapse${contract.getId()}">${contract.getNumber()}</a>
+                                            <div class="pull-right">
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+                                                            data-toggle="dropdown" aria-expanded="false">
+                                                        Actions
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu pull-right" role="menu">
+                                                        <li><a href="#"><p ${blocked != 0 ? "class=\"text-muted\"":""}>Edit</p></a>
+                                                        </li>
+                                                        <li>${blocked == 0 ? "<a href=\"/blockContract\"><p>Block</p></a>":"<a href=\"/unblockContract\"><p>Unblock</p></a>"}
+                                                        </li>
+                                                        <li class="divider"></li>
+                                                        <li><a href="/deleteContract"><p class="text-danger">Delete</p></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
                                         </h4>
                                     </div>
-                                    <div id="collapse${contract.getId()}" class="panel-collapse collapse" style="height: 0px;">
+                                    <div id="collapse${contract.getId()}" class="panel-collapse collapse"
+                                         style="height: 0px;">
                                         <div class="panel-body">
                                             <div class="col-lg-6">
                                                 <h3>${contract.getTariff().getName()}</h3>
                                                 <hr>
-                                                ${contract.getTariff().getDescription()}
+                                                    ${contract.getTariff().getDescription()}
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="well">
-                                                    <h4><small>Used options</small></h4>
+                                                    <h4>
+                                                        <small>Used options</small>
+                                                    </h4>
                                                     <hr>
                                                     <ul>
                                                         <c:forEach items="${contract.getUsedOptions()}" var="option">
@@ -195,13 +219,15 @@
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#newContract" >Add new contract</a>
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#newContract">Add new
+                                            contract</a>
                                     </h4>
                                 </div>
                                 <div id="newContract" class="panel-collapse collapse" style="height: 0px;">
                                     <div class="panel-body">
                                         <div class="col-lg-12">
-                                            <form class="form-horizontal" id="add_contract_form" action='add_contract' method="POST">
+                                            <form class="form-horizontal" id="add_contract_form" action='add_contract'
+                                                  method="POST">
                                                 <input type="hidden" name="customer_id" value="${customer.getId()}">
                                                 <c:import url="template_new_contract.jsp"/>
                                                 <div class="row">

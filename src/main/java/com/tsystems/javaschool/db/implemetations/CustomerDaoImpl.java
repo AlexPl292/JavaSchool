@@ -5,6 +5,7 @@ import com.tsystems.javaschool.db.interfaces.CustomerDao;
 import com.tsystems.javaschool.util.EMU;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 19.08.16.
@@ -78,5 +79,10 @@ public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implement
     public List<Customer> getAll() {
         return EMU.getEntityManager().createQuery("SELECT NEW Customer(c.id, c.name, c.surname, c.email, c.isBlocked, c.passportNumber) FROM Customer c", Customer.class)
                 .getResultList();
+    }
+
+    @Override
+    public Customer read(Integer key, Map<String, Object> hints) {
+        return EMU.getEntityManager().find(Customer.class, key, hints);
     }
 }
