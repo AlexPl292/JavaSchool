@@ -97,10 +97,9 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public void remove(Integer key) {
-        EntityTransaction transaction = tariffDao.getTransaction();
-        transaction.begin();
+        EMU.beginTransaction();
         tariffDao.delete(key);
-        transaction.commit();
+        EMU.commit();
     }
 
     @Override

@@ -102,10 +102,9 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public void remove(Integer key) {
-        EntityTransaction transaction = contractDao.getTransaction();
-        transaction.begin();
+        EMU.beginTransaction();
         contractDao.delete(key);
-        transaction.commit();
+        EMU.commit();
     }
 
     @Override
@@ -127,11 +126,9 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public void setBlock(Integer id, Integer blockLevel) {
+        EMU.beginTransaction();
         Contract contract = contractDao.read(id);
-
-        EntityTransaction transaction = contractDao.getTransaction();
-        transaction.begin();
         contract.setIsBlocked(blockLevel);
-        transaction.commit();
+        EMU.commit();
     }
 }

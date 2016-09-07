@@ -124,10 +124,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void remove(Integer key) {
-        EntityTransaction transaction = customerDao.getTransaction();
-        transaction.begin();
+        EMU.beginTransaction();
         customerDao.delete(key);
-        transaction.commit();
+        EMU.commit();
     }
 
 /*    @Override

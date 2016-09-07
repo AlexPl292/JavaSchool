@@ -97,10 +97,9 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public void remove(Integer key) {
-        EntityTransaction transaction = optionDao.getTransaction();
-        transaction.begin();
+        EMU.beginTransaction();
         optionDao.delete(key);
-        transaction.commit();
+        EMU.commit();
     }
 
     @Override

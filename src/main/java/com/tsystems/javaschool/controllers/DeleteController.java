@@ -19,7 +19,7 @@ public class DeleteController extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ContractService service = new ContractServiceImpl();
+        ContractService service = ContractServiceImpl.getInstance();
 
         Integer id = Integer.parseInt(request.getParameter("id"));
         service.remove(id);
