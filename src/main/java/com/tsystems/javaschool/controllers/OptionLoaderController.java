@@ -88,6 +88,30 @@ public class OptionLoaderController extends HttpServlet{
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
             JsonElement element = gson.toJsonTree(tariff.getPossibleOptions());
             json.add("data", element);
+        } else if ("getDependencies".equals(type)) {
+            Integer id = Integer.parseInt(request.getParameter("data"));
+
+            EntityGraph<Option> graph = service.getEntityGraph();
+
+            graph.addAttributeNodes("required", "forbidden");
+            Map<String, Object> hints = new HashMap<>();
+            hints.put("javax.persistence.loadgraph", graph);
+
+            Option option = service.loadByKey(id, hints);
+//            Option option = service.loadByKey(id);
+
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+            Set<Option> required = option.getRequired();
+            if (required == null)
+                required = new HashSet<>();
+
+            Set<Option> forbidden = option.getForbidden();
+            if (forbidden == null)
+                forbidden = new HashSet<>();
+
+            json.add("required", gson.toJsonTree(required));
+            json.add("forbidden", gson.toJsonTree(forbidden));
         } else {
             List<Integer> tariffs = Arrays.stream(request.getParameterValues("forTariffs")).map(Integer::parseInt).collect(Collectors.toList());
             List<Option> options = service.loadOptionsByTariffs(tariffs);

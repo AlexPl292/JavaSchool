@@ -27,6 +27,7 @@
     <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/customer_validate_rules.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <title>New customer</title>
     <script>
         function loadlist(selobj, url, nameattr, valattr) {
@@ -60,6 +61,7 @@
             });
             loadlist($tariff, "/load_tariffs", "name", "id");
 
+            $('#options').on('change', 'input[type=checkbox]', optionChecked);
         });
     </script>
 </head>
