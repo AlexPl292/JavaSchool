@@ -21,10 +21,9 @@ public class ShowCustomerController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Integer id = Integer.parseInt(request.getParameter("id"));
-        CustomerService service = new CustomerServiceImpl();
+        CustomerService service = CustomerServiceImpl.getInstance();
         Customer customer = service.loadByKey(id);
         request.setAttribute("customer", customer);
-        request.setAttribute("yy", "XXh");
         request.getRequestDispatcher("/WEB-INF/jsp/customer.jsp").forward(request, response);
     }
 }

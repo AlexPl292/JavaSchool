@@ -15,9 +15,8 @@ public interface GenericDao <T, PK extends Serializable> {
     /**
      * Persist new entity
      * @param newInstance entity to persist
-     * @return persisted entity
      */
-    T create(T newInstance);
+    void create(T newInstance);
 
     /**
      * Find entity by id
@@ -38,11 +37,6 @@ public interface GenericDao <T, PK extends Serializable> {
      * @param id id of entity to delete
      */
     void delete(PK id);
-
-    /**
-     * @return transaction
-     */
-    EntityTransaction getTransaction();
 
     /**
      * Return entities with pagination

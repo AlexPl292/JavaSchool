@@ -10,6 +10,7 @@ import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.GenericDao;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
+import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
@@ -23,45 +24,75 @@ import java.util.Set;
  */
 public class ContractServiceImpl implements ContractService{
 
-    ContractDao contractDao = new ContractDaoImpl();
+    ContractDao contractDao = ContractDaoImpl.getInstance();
+
+    private ContractServiceImpl() {}
+
+    private static class ContractServiceHolder {
+        private static final ContractServiceImpl instance = new ContractServiceImpl();
+    }
+
+    public static ContractServiceImpl getInstance() {
+        return ContractServiceHolder.instance;
+    }
 
     @Override
-    public Contract addNew(Contract contract) {
-        return contractDao.create(contract);
+    public void addNew(Contract contract) {
+        EMU.beginTransaction();
+        contractDao.create(contract);
+        EMU.commit();
     }
 
     @Override
     public List<Contract> getNEntries(int maxResult, int firstResult) {
-        return contractDao.selectFromTo(maxResult, firstResult);
+//        EMU.beginTransaction();
+        List<Contract> contracts = contractDao.selectFromTo(maxResult, firstResult);
+//        EMU.commit();
+        return contracts;
     }
 
     @Override
     public long countOfEntries() {
-        return contractDao.countOfEntities();
+//        EMU.beginTransaction();
+        long res =  contractDao.countOfEntities();
+//        EMU.commit();
+        return res;
     }
 
     @Override
     public List<Contract> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
         if ("".equals(searchQuery))
             return getNEntries(maxEntries, firstIndex);
-        return contractDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+//        EMU.beginTransaction();
+        List<Contract> contracts = contractDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+//        EMU.commit();
+        return contracts;
     }
 
     @Override
     public long countOfEntries(String searchQuery) {
         if ("".equals(searchQuery))
             return countOfEntries();
-        return contractDao.countOfImportantSearch(searchQuery);
+//        EMU.beginTransaction();
+        long res = contractDao.countOfImportantSearch(searchQuery);
+//        EMU.commit();
+        return res;
     }
 
     @Override
     public List<Contract> loadAll() {
-        return contractDao.getAll();
+//        EMU.beginTransaction();
+        List<Contract> contracts = contractDao.getAll();
+//        EMU.commit();
+        return contracts;
     }
 
     @Override
     public Contract loadByKey(Integer key) {
-        return contractDao.read(key);
+//        EMU.beginTransaction();
+        Contract contract = contractDao.read(key);
+//        EMU.commit();
+        return contract;
     }
 
     @Override
@@ -79,18 +110,19 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public Contract addNew(Contract contract, List<Integer> optionsIds) {
-        OptionService optionService = new OptionServiceImpl();
-        EntityTransaction transaction = contractDao.getTransaction();
-        transaction.begin();
-        contract.setUsedOptions(optionService.loadOptionsByIds(optionsIds));
+        EMU.beginTransaction();
+        contract.setUsedOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
         contractDao.create(contract);
-        transaction.commit();
+        EMU.commit();
         return contract;
     }
 
     @Override
     public Contract loadByKey(Integer key, Map<String, Object> hints) {
-        return contractDao.read(key, hints);
+//        EMU.beginTransaction();
+        Contract contract = contractDao.read(key, hints);
+//        EMU.commit();
+        return contract;
     }
 
     @Override

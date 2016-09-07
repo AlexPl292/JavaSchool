@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @WebServlet("/add_tariff")
 public class AddTariffController extends HttpServlet {
 
-    private TariffService service = new TariffServiceImpl();
+    private TariffService service = TariffServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

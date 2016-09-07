@@ -5,7 +5,9 @@ import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
+import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
+import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
@@ -17,44 +19,75 @@ import java.util.stream.Collectors;
  */
 public class OptionServiceImpl implements OptionService{
 
-    private OptionDao optionDao = new OptionDaoImpl();
+    private OptionServiceImpl() {}
+
+    private static class OptionServiceHolder {
+        private final static OptionServiceImpl instance = new OptionServiceImpl();
+    }
+
+    public static OptionServiceImpl getInstance() {
+        return OptionServiceHolder.instance;
+    }
+
+    private OptionDao optionDao = OptionDaoImpl.getInstance();
+
     @Override
-    public Option addNew(Option entity) {
-        return optionDao.create(entity);
+    public void addNew(Option entity) {
+        EMU.beginTransaction();
+        optionDao.create(entity);
+        EMU.commit();
     }
 
     @Override
     public List<Option> getNEntries(int maxResult, int firstResult) {
-        return optionDao.selectFromTo(maxResult, firstResult);
+//        EMU.beginTransaction();
+        List<Option> options = optionDao.selectFromTo(maxResult, firstResult);
+//        EMU.commit();
+        return options;
     }
 
     @Override
     public long countOfEntries() {
-        return optionDao.countOfEntities();
+//        EMU.beginTransaction();
+        long res = optionDao.countOfEntities();
+//        EMU.commit();
+        return res;
     }
 
     @Override
     public List<Option> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
         if (searchQuery == null || "".equals(searchQuery))
             return getNEntries(maxEntries, firstIndex);
-        return optionDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+//        EMU.beginTransaction();
+        List<Option> options = optionDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+//        EMU.commit();
+        return options;
     }
 
     @Override
     public long countOfEntries(String searchQuery) {
         if (searchQuery == null || "".equals(searchQuery))
             return countOfEntries();
-        return optionDao.countOfImportantSearch(searchQuery);
+//        EMU.beginTransaction();
+        long res = optionDao.countOfImportantSearch(searchQuery);
+//        EMU.commit();
+        return res;
     }
 
     @Override
     public List<Option> loadAll() {
-        return optionDao.getAll();
+//        EMU.beginTransaction();
+        List<Option> options = optionDao.getAll();
+//        EMU.commit();
+        return options;
     }
 
     @Override
     public Option loadByKey(Integer key) {
-        return optionDao.read(key);
+//        EMU.beginTransaction();
+        Option option = optionDao.read(key);
+//        EMU.commit();
+        return option;
     }
 
     @Override
@@ -72,17 +105,18 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public Option loadByKey(Integer key, Map<String, Object> hints) {
-        return optionDao.read(key, hints);
+//        EMU.beginTransaction();
+        Option option = optionDao.read(key, hints);
+//        EMU.commit();
+        return option;
     }
 
     @Override
     public Option addNew(Option option, Map<String, String[]> dependencies) {
-        EntityTransaction transaction = optionDao.getTransaction();
-        TariffService tariffService = new TariffServiceImpl();
 
-        transaction.begin();
+        EMU.beginTransaction();
         Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs")) // Convert array of tariff ids to set of tariffs
-                .map(s -> tariffService.loadByKey(Integer.parseInt(s)))
+                .map(s -> TariffDaoImpl.getInstance().read(Integer.parseInt(s)))
                 .collect(Collectors.toSet());
         option.setPossibleTariffsOfOption(tariffs);
 
@@ -127,18 +161,17 @@ public class OptionServiceImpl implements OptionService{
             option.addRequiredMeOptions(reqMOpt.getRequiredMe());
         }
 
-        option = optionDao.create(option);
-        transaction.commit();
+        optionDao.create(option);
+        EMU.commit();
         return option;
     }
 
     @Override
     public List<Option> loadOptionsByTariffs(List<Integer> tariffs) {
-        return optionDao.getOptionsOfTariffs(tariffs);
+        EMU.beginTransaction();
+        List<Option> options = optionDao.getOptionsOfTariffs(tariffs);
+        EMU.commit();
+        return options;
     }
 
-    @Override
-    public Set<Option> loadOptionsByIds(List<Integer> ids) {
-        return ids.stream().map(optionDao::read).collect(Collectors.toSet());
-    }
 }

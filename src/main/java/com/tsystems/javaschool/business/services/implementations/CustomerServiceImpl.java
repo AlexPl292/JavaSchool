@@ -9,6 +9,7 @@ import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.CustomerDaoImpl;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.CustomerDao;
+import com.tsystems.javaschool.util.EMU;
 import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
 import org.apache.commons.codec.binary.Hex;
@@ -24,10 +25,20 @@ import java.util.List;
  */
 public class CustomerServiceImpl implements CustomerService {
 
-    private CustomerDao customerDao = new CustomerDaoImpl();
+    private CustomerDao customerDao = CustomerDaoImpl.getInstance();
+
+    private CustomerServiceImpl() {}
+
+    private static class CustomerServiceHolder {
+        private static final CustomerServiceImpl instance = new CustomerServiceImpl();
+    }
+
+    public static CustomerServiceImpl getInstance() {
+        return CustomerServiceHolder.instance;
+    }
 
     @Override
-    public Customer addNew(Customer customer) {
+    public void addNew(Customer customer) {
         /*
         Пароль НЕ должен быть введен сотрудником.
         Будем его вручную генерировать, а потом посылать с помощью email или sms
@@ -49,45 +60,61 @@ public class CustomerServiceImpl implements CustomerService {
         Email.sendSimpleEmail(customer.getEmail(), password); // Это заглушка. На самом деле просто вывод на консоль
         customer.setPassword(Hex.encodeHexString(md.digest()));
         customer.setSalt(salt);
-        EntityTransaction transaction = customerDao.getTransaction();
-        transaction.begin();
-        customer = customerDao.create(customer);
-        transaction.commit();
-        return customer;
+        EMU.beginTransaction();
+        customerDao.create(customer);
+        EMU.commit();
     }
 
     @Override
     public List<Customer> getNEntries(int maxResult, int firstResult) {
-        return customerDao.selectFromTo(maxResult, firstResult);
+//        EMU.beginTransaction();
+        List<Customer> customers = customerDao.selectFromTo(maxResult, firstResult);
+//        EMU.commit();
+        return customers;
     }
 
     @Override
     public long countOfEntries() {
-        return customerDao.countOfEntities();
+//        EMU.beginTransaction();
+        long res = customerDao.countOfEntities();
+//        EMU.commit();
+        return res;
     }
 
     @Override
     public List<Customer> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
         if ("".equals(searchQuery))
             return getNEntries(maxEntries, firstIndex);
-        return customerDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+//        EMU.beginTransaction();
+        List<Customer> customers = customerDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+//        EMU.commit();
+        return customers;
     }
 
     @Override
     public long countOfEntries(String searchQuery) {
         if ("".equals(searchQuery))
             return countOfEntries();
-        return customerDao.countOfImportantSearch(searchQuery);
+//        EMU.beginTransaction();
+        long res = customerDao.countOfImportantSearch(searchQuery);
+//        EMU.commit();
+        return res;
     }
 
     @Override
     public List<Customer> loadAll() {
-        return customerDao.getAll();
+//        EMU.beginTransaction();
+        List<Customer> customers = customerDao.getAll();
+//        EMU.commit();
+        return customers;
     }
 
     @Override
     public Customer loadByKey(Integer key) {
-        return customerDao.read(key);
+//        EMU.beginTransaction();
+        Customer customer = customerDao.read(key);
+//        EMU.commit();
+        return customer;
     }
 
     @Override

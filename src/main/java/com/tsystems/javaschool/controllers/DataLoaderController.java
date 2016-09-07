@@ -8,6 +8,7 @@ import com.tsystems.javaschool.business.services.implementations.ContractService
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
+import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.business.services.interfaces.GenericService;
 
 import javax.servlet.ServletException;
@@ -51,15 +52,15 @@ public class DataLoaderController extends HttpServlet {
         String searchQuery = request.getParameter("search");
 
         if ("/load_customers".equals(url)) {
-            service = new CustomerServiceImpl();
+            service = CustomerServiceImpl.getInstance();
         } else if ("/load_tariffs".equals(url)) {
-            service = new TariffServiceImpl();
+            service = TariffServiceImpl.getInstance();
         } else if ("/load_options_table".equals(url)) {
-            service = new OptionServiceImpl();
+            service = OptionServiceImpl.getInstance();
         } else if ("/load_contracts".equals(url)) {
-            service = new ContractServiceImpl();
+            service = ContractServiceImpl.getInstance();
         } else {
-            service = new CustomerServiceImpl();
+            service = CustomerServiceImpl.getInstance();
         }
 
         if (updateCount) {

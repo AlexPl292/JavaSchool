@@ -16,7 +16,7 @@ public interface GenericService<T, PK extends Serializable> {
      * @param entity entity to add
      * @return added entity
      */
-    T addNew(T entity);
+    void addNew(T entity);
 
     /**
      * Return entities with pagination

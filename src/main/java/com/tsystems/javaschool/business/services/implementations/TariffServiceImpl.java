@@ -3,8 +3,10 @@ package com.tsystems.javaschool.business.services.implementations;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
+import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
+import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
@@ -16,49 +18,76 @@ import java.util.Map;
  */
 public class TariffServiceImpl implements TariffService{
 
-    private TariffDao tariffDao = new TariffDaoImpl();
+    private TariffDao tariffDao = TariffDaoImpl.getInstance();
+
+    private TariffServiceImpl() {}
+
+    private static class TariffServiceHolder {
+        private final static TariffServiceImpl instance = new TariffServiceImpl();
+    }
+
+    public static TariffServiceImpl getInstance() {
+        return TariffServiceHolder.instance;
+    }
 
     @Override
-    public Tariff addNew(Tariff tariff) {
-        EntityTransaction transaction = tariffDao.getTransaction();
-        transaction.begin();
-        Tariff newTariff = tariffDao.create(tariff);
-        transaction.commit();
-        return newTariff;
+    public void addNew(Tariff tariff) {
+        EMU.beginTransaction();
+        tariffDao.create(tariff);
+        EMU.commit();
     }
 
     @Override
     public List<Tariff> getNEntries(int maxResult, int firstResult) {
-        return tariffDao.selectFromTo(maxResult, firstResult);
+//        EMU.beginTransaction();
+        List<Tariff> tariffs = tariffDao.selectFromTo(maxResult, firstResult);
+//        EMU.commit();
+        return tariffs;
     }
 
     @Override
     public long countOfEntries() {
-        return tariffDao.countOfEntities();
+//        EMU.beginTransaction();
+        long res = tariffDao.countOfEntities();
+//        EMU.commit();
+        return res;
     }
 
     @Override
     public List<Tariff> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
         if ("".equals(searchQuery))
             return getNEntries(maxEntries, firstIndex);
-        return tariffDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+//        EMU.beginTransaction();
+        List<Tariff> tariffs = tariffDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+//        EMU.commit();
+        return tariffs;
     }
 
     @Override
     public long countOfEntries(String searchQuery) {
         if ("".equals(searchQuery))
             return countOfEntries();
-        return tariffDao.countOfImportantSearch(searchQuery);
+//        EMU.beginTransaction();
+        long res = tariffDao.countOfImportantSearch(searchQuery);
+//        EMU.commit();
+        return res;
+
     }
 
     @Override
     public List<Tariff> loadAll() {
-        return tariffDao.getAll();
+//        EMU.beginTransaction();
+        List<Tariff> tariffs = tariffDao.getAll();
+//        EMU.commit();
+        return tariffs;
     }
 
     @Override
     public Tariff loadByKey(Integer key) {
-        return tariffDao.read(key);
+//        EMU.beginTransaction();
+        Tariff tariff = tariffDao.read(key);
+//        EMU.commit();
+        return tariff;
     }
 
     @Override
@@ -76,17 +105,18 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public Tariff loadByKey(Integer key, Map<String, Object> hints) {
-        return tariffDao.read(key, hints);
+//        EMU.beginTransaction();
+        Tariff tariff = tariffDao.read(key, hints);
+//        EMU.commit();
+        return tariff;
     }
 
     @Override
     public Tariff addNew(Tariff tariff, List<Integer> optionsIds) {
-        EntityTransaction transaction = tariffDao.getTransaction();
-        OptionService optionService = new OptionServiceImpl();
-        transaction.begin();
-        tariff.setPossibleOptions(optionService.loadOptionsByIds(optionsIds));
+        EMU.beginTransaction();
+        tariff.setPossibleOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
         tariffDao.create(tariff);
-        transaction.commit();
+        EMU.commit();
         return tariff;
     }
 }

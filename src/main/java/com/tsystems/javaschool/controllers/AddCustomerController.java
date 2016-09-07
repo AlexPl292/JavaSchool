@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @WebServlet("/add_customer")
 public class AddCustomerController extends HttpServlet {
 
-    private CustomerService service = new CustomerServiceImpl();
+    private CustomerService service = CustomerServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -98,7 +98,7 @@ public class AddCustomerController extends HttpServlet {
             newCustomer.setEmail(email);
             newCustomer.setIsBlocked(0);
 
-            Tariff tariff = new TariffServiceImpl().loadByKey(Integer.parseInt(request.getParameter("tariff")));
+            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(Integer.parseInt(request.getParameter("tariff")));
 
             Contract contract = new Contract();
             contract.setNumber(number);
@@ -110,8 +110,8 @@ public class AddCustomerController extends HttpServlet {
 //            try {
             //service.createCustomerAndContract(newCustomer, contract, options);
             // Ждем, что мне ответят по транзакциям
-            ContractService contractService = new ContractServiceImpl();
-            newCustomer = service.addNew(newCustomer);
+            ContractService contractService = ContractServiceImpl.getInstance();
+            service.addNew(newCustomer);
             contract.setCustomer(newCustomer);
             contractService.addNew(contract, options);
 

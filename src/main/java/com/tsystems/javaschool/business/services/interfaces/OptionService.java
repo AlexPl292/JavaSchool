@@ -36,10 +36,4 @@ public interface OptionService extends GenericService<Option, Integer> {
      */
     List<Option> loadOptionsByTariffs(List<Integer> tariffs);
 
-    /**
-     * Load set of options by ids
-     * @param ids List of ids of options
-     * @return set of options
-     */
-    Set<Option> loadOptionsByIds(List<Integer> ids);
 }

@@ -28,7 +28,7 @@ import java.util.*;
 @WebServlet("/add_option")
 public class AddOptionController extends HttpServlet {
 
-    OptionService service = new OptionServiceImpl();
+    OptionService service = OptionServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -47,8 +47,8 @@ public class AddContractController extends HttpServlet {
 
         Contract contract = new Contract();
         if (errors.isEmpty()) {
-            Tariff tariff = new TariffServiceImpl().loadByKey(Integer.parseInt(request.getParameter("tariff")));
-            Customer customer = new CustomerServiceImpl().loadByKey(Integer.parseInt(customerId));
+            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(Integer.parseInt(request.getParameter("tariff")));
+            Customer customer = CustomerServiceImpl.getInstance().loadByKey(Integer.parseInt(customerId));
 
             contract.setCustomer(customer);
             contract.setNumber(number);
@@ -58,7 +58,7 @@ public class AddContractController extends HttpServlet {
             // Get list of option ids from parameter
             List<Integer> options = Arrays.stream(request.getParameterValues("options")).map(Integer::parseInt).collect(Collectors.toList());
             // Ждем, что мне ответят по транзакциям
-            ContractService contractService = new ContractServiceImpl();
+            ContractService contractService = ContractServiceImpl.getInstance();
             contract = contractService.addNew(contract, options);
         }
         if (!errors.isEmpty()) {

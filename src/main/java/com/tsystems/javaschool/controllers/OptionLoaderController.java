@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @WebServlet("/load_options")
 public class OptionLoaderController extends HttpServlet{
 
-    OptionService service = new OptionServiceImpl();
+    OptionService service = OptionServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -61,11 +61,11 @@ public class OptionLoaderController extends HttpServlet{
             Option connectedToOption = service.loadByKey(id, hints);
 
             if ("requiredFrom".equals(request.getParameter("type"))) {
-                notForbidden = connectedToOption.getRequired();
-                notRequiredFrom = connectedToOption.getForbidden();
+                notForbidden = new HashSet<>(connectedToOption.getRequired());
+                notRequiredFrom = new HashSet<>(connectedToOption.getForbidden());
                 notForbidden.add(connectedToOption);  // Add ref to itself
             } else {// "if forbidden
-                notRequiredFrom = connectedToOption.getRequiredMe();
+                notRequiredFrom = new HashSet<>(connectedToOption.getRequiredMe());
                 notRequiredFrom.add(connectedToOption);
             }
 
@@ -76,7 +76,7 @@ public class OptionLoaderController extends HttpServlet{
             json.add("not_required_from", elementNotRequiredFrom);
         }else if ("possibleOfTariff".equals(type)) {
             Integer tariffId = Integer.parseInt(request.getParameter("tariff_id"));
-            TariffService tariffService = new TariffServiceImpl();
+            TariffService tariffService = TariffServiceImpl.getInstance();
             EntityGraph<Option> graph = tariffService.getEntityGraph();
 
             graph.addAttributeNodes("possibleOptions");
