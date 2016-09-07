@@ -140,6 +140,6 @@ function optionChecked(e) {
             if ($(maybeEnable).data("enabledBy").length === 0)
                 uncheck = $.merge(uncheck, maybeEnable);
         });
-        $(uncheck).prop('checked', false).removeAttr('onclick');
+        $(uncheck).prop('checked', false).removeAttr('onclick').change();
     }
 }
