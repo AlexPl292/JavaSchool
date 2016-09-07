@@ -50,6 +50,7 @@ function response_validate($form) {
     return function (response) {
         if (response.success) {
             $.notify("Success!", {position: "right", className: "success"});
+            $form.find("input[type=checkbox]").removeData();
             $form[0].reset();
         } else {
             $.each(response.errors, function (prop, val) {
@@ -64,6 +65,7 @@ function submitting(form, e) {
     e.preventDefault();
     $.notify("Sending data..", {position:"right", className:"success"});
 
+    $(form).find("input[type=checkbox]").prop("disabled", false);
     $.post($(form).attr("action"), $(form).serialize(), response_validate($(form)));
     $(form).find(":input").prop("disabled", true);
     return false;

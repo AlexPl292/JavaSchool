@@ -102,7 +102,7 @@ function optionChecked(e) {
                 disableItIds.push(obj.id);
             });
 
-            enableIt.prop('checked', true).attr('onclick', 'return false');
+            enableIt.prop('checked', true).attr("disabled", true); //.attr('onclick', 'return false');
             disableIt.attr("disabled", true);
 
             $(disableIt).each(function (i, obj) {
@@ -140,6 +140,6 @@ function optionChecked(e) {
             if ($(maybeEnable).data("enabledBy").length === 0)
                 uncheck = $.merge(uncheck, maybeEnable);
         });
-        $(uncheck).prop('checked', false).removeAttr('onclick').change();
+        $(uncheck).prop('checked', false).prop('disabled', false).change();//.removeAttr('onclick').change();
     }
 }
