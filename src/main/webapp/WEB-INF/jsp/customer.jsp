@@ -40,6 +40,7 @@
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/accordioner.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/contract_validate_rules.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <script>
         function loadlist(selobj, url, nameattr, valattr) {
             $(selobj).empty();
@@ -74,6 +75,7 @@
         }
 
         $(function () {
+            $('#options').on('change', 'input[type=checkbox]', optionChecked);
             var $tariff = $("#tariff");
 
             $tariff.change(function (e) {

@@ -50,6 +50,8 @@ function check_item(type) {
             $($(this).data("disableIt")).each(function (i, obj) {
                 var finder = obj.split(":");
                 var maybeEnable = $('#'+finder[1]).find("input[value="+finder[0]+"]");
+                if (maybeEnable.length === 0)
+                    return;
                 $(maybeEnable).data("disabledBy").splice($.inArray(obj, $(maybeEnable).data("disabledBy")), 1);
                 if ($(maybeEnable).data("disabledBy").length === 0)
                     enable = $.merge(enable, maybeEnable);
@@ -127,6 +129,8 @@ function optionChecked(e) {
         var enable = $();
         $($(this).data("disableIt")).each(function (i, obj) {
             var maybeEnable = $('#options').find("input[value="+obj+"]");
+            if (maybeEnable.length === 0)
+                return;
             $(maybeEnable).data("disabledBy").splice($.inArray(obj, $(maybeEnable).data("disabledBy")), 1);
             if ($(maybeEnable).data("disabledBy").length === 0)
                 enable = $.merge(enable, maybeEnable);
@@ -136,6 +140,8 @@ function optionChecked(e) {
         var uncheck = $();
         $($(this).data("enableIt")).each(function (i, obj) {
             var maybeEnable = $('#options').find("input[value="+obj+"]");
+            if (maybeEnable.length === 0)
+                return;
             $(maybeEnable).data("enabledBy").splice($.inArray(obj, $(maybeEnable).data("enabledBy")), 1);
             if ($(maybeEnable).data("enabledBy").length === 0)
                 uncheck = $.merge(uncheck, maybeEnable);

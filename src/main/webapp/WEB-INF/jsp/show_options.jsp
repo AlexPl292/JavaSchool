@@ -55,7 +55,7 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th abbr="name">Tariff name</th>
+                                    <th abbr="name">Option name</th>
                                     <th abbr="cost">Cost</th>
                                     <th abbr="connectCost">Connection cost</th>
                                     <th abbr="description">Description</th>
