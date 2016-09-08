@@ -26,6 +26,8 @@
     <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/tariff_validate_rules.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
+
     <title>New tariff</title>
     <script>
         function create_boxes(selobj) {
@@ -41,6 +43,7 @@
         }
 
         $(function() {
+            $('#options').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
             $.getJSON("/load_options_table", {}, create_boxes($('#options')));
         });
     </script>

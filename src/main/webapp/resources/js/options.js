@@ -149,3 +149,45 @@ function optionChecked(e) {
         $(uncheck).prop('checked', false).prop('disabled', false).change();//.removeAttr('onclick').change();
     }
 }
+
+function optionCheckedNewTariff(e) {
+    e.preventDefault();
+    var $item = $(this);
+    var checked_val = parseInt($(this).val(), 10);
+    if ($item.is(':checked')) {
+        $.getJSON("/load_options", {"loadtype": "getDependencies", data: checked_val}, function (response) {
+            var disableItIds = [];
+            var disableIt = $();
+            var enableItIds = [];
+            var enableIt = $();
+
+            $(response.required).each(function (i, obj) {
+                enableIt = $.merge(enableIt, $('#options').find("input[value=" + obj.id + "]"));
+                enableItIds.push(obj.id);
+            });
+
+            enableIt.prop('checked', true).attr("disabled", true); //.attr('onclick', 'return false');
+
+            $(enableIt).each(function (i, obj) {
+                if ($(obj).data('enabledBy') === undefined) { // DisabledBy is not set (this checkbox is disabled first time
+                    $(obj).data('enabledBy', [checked_val]);
+                } else {
+                    $(obj).data('enabledBy').push(checked_val);
+                }
+            });
+
+            $item.data("enableIt", enableItIds);
+        })
+    } else {
+        var uncheck = $();
+        $($(this).data("enableIt")).each(function (i, obj) {
+            var maybeEnable = $('#options').find("input[value="+obj+"]");
+            if (maybeEnable.length === 0)
+                return;
+            $(maybeEnable).data("enabledBy").splice($.inArray(obj, $(maybeEnable).data("enabledBy")), 1);
+            if ($(maybeEnable).data("enabledBy").length === 0)
+                uncheck = $.merge(uncheck, maybeEnable);
+        });
+        $(uncheck).prop('checked', false).prop('disabled', false).change();//.removeAttr('onclick').change();
+    }
+}
