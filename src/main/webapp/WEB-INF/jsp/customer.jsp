@@ -88,7 +88,7 @@
             loadlist($tariff, "/load_tariffs", "name", "id");
 
 
-            $("#accordion").on("click", "a", function (e) {
+            $("#accordion").on("click", "ul[role='menu'] a", function (e) {
                 e.preventDefault();
                 if ($(this).find('p').hasClass("text-muted")) {
                     return false;
