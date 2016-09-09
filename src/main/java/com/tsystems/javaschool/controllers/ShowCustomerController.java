@@ -1,5 +1,6 @@
 package com.tsystems.javaschool.controllers;
 
+import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Contract;
@@ -19,27 +20,33 @@ import java.util.stream.Collectors;
 /**
  * Created by alex on 06.09.16.
  */
-@WebServlet("/customer")
+@WebServlet({"/customer", "/contract"})
 public class ShowCustomerController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Integer id = Integer.parseInt(request.getParameter("id"));
-        CustomerService service = CustomerServiceImpl.getInstance();
+        String path = request.getServletPath();
+        if ("/customer".equals(path)) {
+            CustomerService service = CustomerServiceImpl.getInstance();
 
-        EntityGraph<Customer> graph = service.getEntityGraph();
-        Subgraph<Contract> tariffSubgraph = graph.addSubgraph("contracts");
-        tariffSubgraph.addAttributeNodes("usedOptions");
+            EntityGraph<Customer> graph = service.getEntityGraph();
+            Subgraph<Contract> tariffSubgraph = graph.addSubgraph("contracts");
+            tariffSubgraph.addAttributeNodes("usedOptions");
 
-        Map<String, Object> hints = new HashMap<>();
-        hints.put("javax.persistence.loadgraph", graph);
+            Map<String, Object> hints = new HashMap<>();
+            hints.put("javax.persistence.loadgraph", graph);
 
-        Customer customer = service.loadByKey(id, hints);
-        Set<Contract> contractSet = new TreeSet<>(Comparator.comparing(Contract::getId).reversed());
-        contractSet.addAll(customer.getContracts());
-        customer.setContracts(contractSet);
-        request.setAttribute("customer", customer);
-        request.getRequestDispatcher("/WEB-INF/jsp/customer.jsp").forward(request, response);
+            Customer customer = service.loadByKey(id, hints);
+            Set<Contract> contractSet = new TreeSet<>(Comparator.comparing(Contract::getId).reversed());
+            contractSet.addAll(customer.getContracts());
+            customer.setContracts(contractSet);
+            request.setAttribute("customer", customer);
+            request.getRequestDispatcher("/WEB-INF/jsp/customer.jsp").forward(request, response);
+        } else {
+            Contract contract = ContractServiceImpl.getInstance().loadByKey(id);
+            response.sendRedirect("/customer?id="+contract.getCustomer().getId());
+        }
     }
 }

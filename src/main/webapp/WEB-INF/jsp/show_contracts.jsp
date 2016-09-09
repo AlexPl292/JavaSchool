@@ -25,8 +25,11 @@
     <script src="<%=application.getContextPath() %>/resources/vendor/formhelpers/js/bootstrap-formhelpers-phone.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/table_creator.js"></script>
     <script>
-        $(document).ready(function () {
-            table_creator($('#contracts'), '/load_contracts')
+        $(function () {
+            table_creator($('#contracts'), '/load_contracts', "/contract");
+            $('table').on("click", '.clickableRow', function() {
+                window.location = $(this).data("href")+"?id="+$(this).data("val");
+            });
         })
     </script>
     <title>Show contracts</title>
