@@ -48,17 +48,15 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public List<Option> getNEntries(int maxResult, int firstResult) {
-//        EMU.beginTransaction();
         List<Option> options = optionDao.selectFromTo(maxResult, firstResult);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return options;
     }
 
     @Override
     public long countOfEntries() {
-//        EMU.beginTransaction();
         long res = optionDao.countOfEntities();
-//        EMU.commit();
+        EMU.closeEntityManager();
         return res;
     }
 
@@ -66,9 +64,8 @@ public class OptionServiceImpl implements OptionService{
     public List<Option> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
         if (searchQuery == null || "".equals(searchQuery))
             return getNEntries(maxEntries, firstIndex);
-//        EMU.beginTransaction();
         List<Option> options = optionDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return options;
     }
 
@@ -76,25 +73,22 @@ public class OptionServiceImpl implements OptionService{
     public long countOfEntries(String searchQuery) {
         if (searchQuery == null || "".equals(searchQuery))
             return countOfEntries();
-//        EMU.beginTransaction();
         long res = optionDao.countOfImportantSearch(searchQuery);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return res;
     }
 
     @Override
     public List<Option> loadAll() {
-//        EMU.beginTransaction();
         List<Option> options = optionDao.getAll();
-//        EMU.commit();
+        EMU.closeEntityManager();
         return options;
     }
 
     @Override
     public Option loadByKey(Integer key) {
-//        EMU.beginTransaction();
         Option option = optionDao.read(key);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return option;
     }
 
@@ -120,15 +114,13 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public Option loadByKey(Integer key, Map<String, Object> hints) {
-//        EMU.beginTransaction();
         Option option = optionDao.read(key, hints);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return option;
     }
 
     @Override
     public Option addNew(Option option, Map<String, String[]> dependencies) {
-
         try {
             EMU.beginTransaction();
             Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs")) // Convert array of tariff ids to set of tariffs

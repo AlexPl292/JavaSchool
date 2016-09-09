@@ -77,12 +77,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Customer> getNEntries(int maxResult, int firstResult) {
         List<Customer> customers = customerDao.selectFromTo(maxResult, firstResult);
+        EMU.closeEntityManager();
         return customers;
     }
 
     @Override
     public long countOfEntries() {
         long res = customerDao.countOfEntities();
+        EMU.closeEntityManager();
         return res;
     }
 
@@ -91,6 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
         if ("".equals(searchQuery))
             return getNEntries(maxEntries, firstIndex);
         List<Customer> customers = customerDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
+        EMU.closeEntityManager();
         return customers;
     }
 
@@ -99,18 +102,21 @@ public class CustomerServiceImpl implements CustomerService {
         if ("".equals(searchQuery))
             return countOfEntries();
         long res = customerDao.countOfImportantSearch(searchQuery);
+        EMU.closeEntityManager();
         return res;
     }
 
     @Override
     public List<Customer> loadAll() {
         List<Customer> customers = customerDao.getAll();
+        EMU.closeEntityManager();
         return customers;
     }
 
     @Override
     public Customer loadByKey(Integer key) {
         Customer customer = customerDao.read(key);
+        EMU.closeEntityManager();
         return customer;
     }
 
@@ -136,6 +142,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer loadByKey(Integer key, Map<String, Object> hints) {
-        return customerDao.read(key, hints);
+        Customer customer = customerDao.read(key, hints);
+        EMU.closeEntityManager();
+        return customer;
     }
 }

@@ -47,17 +47,15 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public List<Tariff> getNEntries(int maxResult, int firstResult) {
-//        EMU.beginTransaction();
         List<Tariff> tariffs = tariffDao.selectFromTo(maxResult, firstResult);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return tariffs;
     }
 
     @Override
     public long countOfEntries() {
-//        EMU.beginTransaction();
         long res = tariffDao.countOfEntities();
-//        EMU.commit();
+        EMU.closeEntityManager();
         return res;
     }
 
@@ -65,9 +63,8 @@ public class TariffServiceImpl implements TariffService{
     public List<Tariff> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
         if ("".equals(searchQuery))
             return getNEntries(maxEntries, firstIndex);
-//        EMU.beginTransaction();
         List<Tariff> tariffs = tariffDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return tariffs;
     }
 
@@ -75,26 +72,23 @@ public class TariffServiceImpl implements TariffService{
     public long countOfEntries(String searchQuery) {
         if ("".equals(searchQuery))
             return countOfEntries();
-//        EMU.beginTransaction();
         long res = tariffDao.countOfImportantSearch(searchQuery);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return res;
 
     }
 
     @Override
     public List<Tariff> loadAll() {
-//        EMU.beginTransaction();
         List<Tariff> tariffs = tariffDao.getAll();
-//        EMU.commit();
+        EMU.closeEntityManager();
         return tariffs;
     }
 
     @Override
     public Tariff loadByKey(Integer key) {
-//        EMU.beginTransaction();
         Tariff tariff = tariffDao.read(key);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return tariff;
     }
 
@@ -120,9 +114,8 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public Tariff loadByKey(Integer key, Map<String, Object> hints) {
-//        EMU.beginTransaction();
         Tariff tariff = tariffDao.read(key, hints);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return tariff;
     }
 

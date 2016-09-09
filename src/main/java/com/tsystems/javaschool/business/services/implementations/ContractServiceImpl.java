@@ -53,17 +53,15 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public List<Contract> getNEntries(int maxResult, int firstResult) {
-//        EMU.beginTransaction();
         List<Contract> contracts = contractDao.selectFromTo(maxResult, firstResult);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return contracts;
     }
 
     @Override
     public long countOfEntries() {
-//        EMU.beginTransaction();
         long res =  contractDao.countOfEntities();
-//        EMU.commit();
+        EMU.closeEntityManager();
         return res;
     }
 
@@ -71,9 +69,8 @@ public class ContractServiceImpl implements ContractService{
     public List<Contract> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
         if ("".equals(searchQuery))
             return getNEntries(maxEntries, firstIndex);
-//        EMU.beginTransaction();
         List<Contract> contracts = contractDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return contracts;
     }
 
@@ -81,25 +78,22 @@ public class ContractServiceImpl implements ContractService{
     public long countOfEntries(String searchQuery) {
         if ("".equals(searchQuery))
             return countOfEntries();
-//        EMU.beginTransaction();
         long res = contractDao.countOfImportantSearch(searchQuery);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return res;
     }
 
     @Override
     public List<Contract> loadAll() {
-//        EMU.beginTransaction();
         List<Contract> contracts = contractDao.getAll();
-//        EMU.commit();
+        EMU.closeEntityManager();
         return contracts;
     }
 
     @Override
     public Contract loadByKey(Integer key) {
-//        EMU.beginTransaction();
         Contract contract = contractDao.read(key);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return contract;
     }
 
@@ -142,9 +136,8 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public Contract loadByKey(Integer key, Map<String, Object> hints) {
-//        EMU.beginTransaction();
         Contract contract = contractDao.read(key, hints);
-//        EMU.commit();
+        EMU.closeEntityManager();
         return contract;
     }
 
