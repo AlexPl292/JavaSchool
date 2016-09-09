@@ -49,7 +49,7 @@ $.validator.setDefaults({
 function response_validate($form) {
     return function (response) {
         if (response.success) {
-            $.notify("Success!", {position: "right", className: "success"});
+            $.notify("Success!", {position: "top right", className: "success"});
             $form.find("input[type=checkbox]").removeData();
             $form[0].reset();
         } else {
@@ -63,7 +63,7 @@ function response_validate($form) {
 
 function submitting(form, e) {
     e.preventDefault();
-    $.notify("Sending data..", {position:"right", className:"success"});
+    $.notify("Sending data..", {position:"top right", className:"success"});
 
     $(form).find("input[type=checkbox]").prop("disabled", false);
     $.post($(form).attr("action"), $(form).serialize(), response_validate($(form)));
