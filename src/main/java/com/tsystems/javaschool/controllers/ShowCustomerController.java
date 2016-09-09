@@ -36,10 +36,6 @@ public class ShowCustomerController extends HttpServlet {
         hints.put("javax.persistence.loadgraph", graph);
 
         Customer customer = service.loadByKey(id, hints);
-/*        customer.setContracts(customer.getContracts()
-                .stream()
-                .sorted(Comparator.comparing(Contract::getId).reversed())
-                .collect(Collectors.toSet()));*/
         Set<Contract> contractSet = new TreeSet<>(Comparator.comparing(Contract::getId).reversed());
         contractSet.addAll(customer.getContracts());
         customer.setContracts(contractSet);

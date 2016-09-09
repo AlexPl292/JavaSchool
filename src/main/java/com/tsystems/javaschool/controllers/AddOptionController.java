@@ -68,19 +68,15 @@ public class AddOptionController extends HttpServlet {
             HashMap<String, String[]> dependencies = new HashMap<>();
 
             String[] requiredFrom;
-            String[] requiredMe;
             String[] forbiddenWith;
             String[] forTariffs;
             if ((requiredFrom = request.getParameterValues("requiredFrom")) == null)
                 requiredFrom = new String[0];
-            if ((requiredMe = request.getParameterValues("requiredMe")) == null)
-                requiredMe = new String[0];
             if ((forbiddenWith = request.getParameterValues("forbiddenWith")) == null)
                 forbiddenWith = new String[0];
             forTariffs = request.getParameterValues("forTariffs");
 
             dependencies.put("requiredFrom", requiredFrom);
-            dependencies.put("requiredMe", requiredMe);
             dependencies.put("forbiddenWith", forbiddenWith);
             dependencies.put("forTariffs", forTariffs);
 

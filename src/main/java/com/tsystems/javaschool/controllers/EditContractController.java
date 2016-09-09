@@ -6,7 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
 import com.tsystems.javaschool.db.entities.Contract;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,8 +41,13 @@ public class EditContractController extends HttpServlet {
         } else {
             options = new ArrayList<>();
         }
-//        List<Integer> options = Arrays.stream(request.getParameterValues("optionsEdit"+contractId)).map(Integer::parseInt).collect(Collectors.toList());
-        Contract contract = ContractServiceImpl.getInstance().updateContract(contractId, tariffId, options);
+        Contract contract = new Contract();
+        try {
+            contract = ContractServiceImpl.getInstance().updateContract(contractId, tariffId, options);
+        } catch (RollbackException e) {
+            Throwable th = ExceptionUtils.getRootCause(e);
+            errors.put("General", th.getMessage());
+        }
 
         if (!errors.isEmpty()) {
             JsonElement element = new Gson().toJsonTree(errors);

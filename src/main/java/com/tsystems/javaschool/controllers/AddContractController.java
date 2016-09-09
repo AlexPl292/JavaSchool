@@ -12,7 +12,9 @@ import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.util.Validator;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -62,7 +64,12 @@ public class AddContractController extends HttpServlet {
             }
             // Ждем, что мне ответят по транзакциям
             ContractService contractService = ContractServiceImpl.getInstance();
-            contract = contractService.addNew(contract, options);
+            try {
+                contract = contractService.addNew(contract, options);
+            } catch (RollbackException e) {
+                Throwable th = ExceptionUtils.getRootCause(e);
+                errors.put("General", th.getMessage());
+            }
         }
         if (!errors.isEmpty()) {
             JsonElement element = new Gson().toJsonTree(errors);

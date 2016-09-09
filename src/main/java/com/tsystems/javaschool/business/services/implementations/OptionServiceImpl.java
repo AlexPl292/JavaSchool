@@ -129,7 +129,6 @@ public class OptionServiceImpl implements OptionService{
             option.setPossibleTariffsOfOption(tariffs);
 
             String[] requiredFrom = dependencies.get("requiredFrom");
-            String[] requiredMe = dependencies.get("requiredMe");
             String[] forbiddenWith = dependencies.get("forbiddenWith");
 
             EntityGraph<Option> graph = getEntityGraph();
@@ -147,7 +146,7 @@ public class OptionServiceImpl implements OptionService{
             }
 
             graph = getEntityGraph();
-            graph.addAttributeNodes("required", "forbidden");
+            graph.addAttributeNodes("required", "forbidden", "requiredMe");
             hints.put("javax.persistence.loadgraph", graph);
             for (String reqM : forbiddenWith) {
                 Integer forbId = Integer.parseInt(reqM);
@@ -156,17 +155,6 @@ public class OptionServiceImpl implements OptionService{
                 option.addForbiddenWithOptions(forbOpt);
                 option.addForbiddenWithOptions(forbOpt.getRequired());
                 option.addForbiddenWithOptions(forbOpt.getRequiredMe());
-            }
-
-            graph = getEntityGraph();
-            graph.addAttributeNodes("requiredMe");
-            hints.put("javax.persistence.loadgraph", graph);
-            for (String reqM : requiredMe) {
-                Integer reqMId = Integer.parseInt(reqM);
-
-                Option reqMOpt = optionDao.read(reqMId, hints);
-                option.addRequiredMeOptions(reqMOpt);
-                option.addRequiredMeOptions(reqMOpt.getRequiredMe());
             }
 
             optionDao.create(option);

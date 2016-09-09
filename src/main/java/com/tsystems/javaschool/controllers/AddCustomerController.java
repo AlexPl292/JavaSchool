@@ -58,6 +58,7 @@ public class AddCustomerController extends HttpServlet {
         String address = request.getParameter("address");
         String email = request.getParameter("email");
         String number = request.getParameter("number");
+        String tariffId = request.getParameter("tariff");
 
         // Validation
         String tmpError;
@@ -77,6 +78,9 @@ public class AddCustomerController extends HttpServlet {
             errors.put("number", tmpError);
         if ((tmpError = Validator.noSpaces(passportNumber)) != null)
             errors.put("passport_number", tmpError);
+        if (tariffId == null) {
+            errors.put("tariff", "Choose tariff");
+        }
 
         if (errors.isEmpty()) {
 
@@ -98,7 +102,7 @@ public class AddCustomerController extends HttpServlet {
             newCustomer.setEmail(email);
             newCustomer.setIsBlocked(0);
 
-            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(Integer.parseInt(request.getParameter("tariff")));
+            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(Integer.parseInt(tariffId));
 
             Contract contract = new Contract();
             contract.setNumber(number);
@@ -114,9 +118,14 @@ public class AddCustomerController extends HttpServlet {
                 options = new ArrayList<>();
             }
             ContractService contractService = ContractServiceImpl.getInstance();
-            service.addNew(newCustomer);
-            contract.setCustomer(newCustomer);
-            contractService.addNew(contract, options);
+            try {
+                service.addNew(newCustomer);
+                contract.setCustomer(newCustomer);
+                contractService.addNew(contract, options);
+            } catch (RollbackException e) {
+                Throwable th = ExceptionUtils.getRootCause(e);
+                errors.put("General", th.getMessage());
+            }
 
         }
         if (!errors.isEmpty()) {
