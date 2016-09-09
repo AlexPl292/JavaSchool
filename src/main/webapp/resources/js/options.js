@@ -217,3 +217,124 @@ function prepare_tariff_list(tariffList, options) {
 
     $(options).on('change', 'input[type=checkbox]', optionChecked(options));
 }
+
+function handler(form, e) {
+    e.preventDefault();
+    $(form).find("input[type=checkbox]").prop("disabled", false);
+    $.post($(form).attr("action"), $(form).serialize(), create_accordion_node);
+    $(form).find(":input").prop("disabled", true);
+}
+
+function edit_tariff(panel) {
+    var panel_backup = $(panel).clone().children();
+    var id = $(panel).find('input[name=contract_id]').val();
+    var tariff = $('<div class="control-group">'+
+        '<label class="control-label" for="tariffEdit'+id+'" >Tariff</label>'+
+        '<div class="controls">'+
+        '<select id="tariffEdit'+id+ '" name="tariff" class="form-control"></select>'+
+        "</div>"+
+        '</div>');
+
+    var options = $('<div class="control-group">'+
+        '<label class="control-label" for="optionsEdit'+id+'">Options</label>'+
+        '<div class="controls">'+
+        '<div id="optionsEdit'+id+'" class="boxes"></div>'+
+        '</div>'+
+        '</div>');
+
+    var leftPanel = $(panel).find('.col-lg-6:first');
+    var rightPanel = $(panel).find('.col-lg-6:last .well');
+    leftPanel.html(tariff);
+    rightPanel.html(options);
+    prepare_tariff_list($('#tariffEdit'+id), $('#optionsEdit'+id));
+    $(panel).find('.panel-heading .pull-right').html('<button type="button" class="btn btn-outline btn-danger btn-xs">Exit editing</button>');
+    $(panel).find('button:contains("Exit editing")').click(function (e) {
+        e.preventDefault();
+        $(panel).html(panel_backup);
+    });
+    $(panel).find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
+    $(panel).find('.panel-body').wrapInner('<form class="form-horizontal" action="editContract" method="POST"></form>');
+    $(panel).find('form').submit({panel:$(panel)}, edit_handler);
+}
+
+function edit_handler(e) {
+    e.preventDefault();
+    var panel = e.data.panel;
+    var form = panel.find("form");
+    $(form).find("input[type=checkbox]").prop("disabled", false);
+    $.post($(form).attr("action"), $(form).serialize(), function (e) {
+        var filling = fill_accordion_node(e.data);
+        $(panel).find(".panel-body").empty();
+        $(panel).find(".panel-body").append(filling[0]);
+        $(panel).find(".panel-body").append(filling[1]);
+        $(panel).find(".panel-body").append(filling[2]);
+        $(panel).find(".panel-title .pull-right").empty();
+        $(panel).find(".panel-title .pull-right").append(create_panel_menu());
+    });
+    $(form).find(":input").prop("disabled", true);
+}
+
+function fill_accordion_node(data) {
+    var $used_options = $('<ul></ul>');
+    for (var i = 0; i < data.usedOptions.length; i++) {
+        $used_options.append($('<li>', {text:data.usedOptions[i].name}));
+    }
+
+    var col_lg1 = $('<div class="col-lg-6">' +
+        '<h3>'+data.tariff.name+'</h3>' +
+        '<hr>' +
+        data.tariff.description +
+        '</div>');
+    var col_lg2 = $('<div class="col-lg-6"><div class="well">' +
+        '<h4><small>Used options</small></h4>' +
+        '<hr>'+
+        '</div>' +
+        '</div>');
+    col_lg2.find(".well").append($used_options);
+
+    var id = '<input type="hidden" name="contract_id" value="'+data.id+'"/>';
+
+    return [id, col_lg1, col_lg2];
+}
+
+function create_accordion_node(res) {
+    var data = res.data;
+
+    var $node = $('<div class="panel panel-success">' +
+        '<div class="panel-heading">' +
+        '<h4 class="panel-title">' +
+        '<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+data.id+'" >'+data.number+'</a>' +
+            '<div class="pull-right"></div>'+
+        '</h4>' +
+        '</div>' +
+        '<div id="collapse'+data.id+'" class="panel-collapse collapse" style="height: 0px;">' +
+        '<div class="panel-body"' +
+        '</div>' +
+        '</div>' +
+        '</div>');
+    var filling = fill_accordion_node(data);
+    $node.find(".panel-body").append(filling[0]);
+    $node.find(".panel-body").append(filling[1]);
+    $node.find(".panel-body").append(filling[2]);
+    $node.find(".panel-title .pull-right").append(create_panel_menu());
+    $('#accordion').prepend($node);
+}
+
+function create_panel_menu() {
+    return $('<div class="btn-group">'+
+        '<button type="button" class="btn btn-default btn-xs dropdown-toggle"'+
+            ' data-toggle="dropdown" aria-expanded="false">'+
+        'Actions'+
+        '<span class="caret"></span>'+
+        '</button>'+
+        '<ul class="dropdown-menu pull-right" role="menu">'+
+        '<li><a href="/editTariff"><p >Edit</p></a>'+
+        '</li>'+
+        '<li><a href=\"/blockContract\"><p>Block</p></a>'+
+        '</li>'+
+        '<li class="divider"></li>'+
+        '<li><a href="/deleteContract"><p class="text-danger">Delete</p></a>'+
+        '</li>'+
+        '</ul>'+
+        '</div>');
+}

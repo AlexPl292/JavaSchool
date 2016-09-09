@@ -38,59 +38,9 @@
     <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
-    <script src="<%=application.getContextPath() %>/resources/js/accordioner.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/contract_validate_rules.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <script>
-        function handler(form, e) {
-            e.preventDefault();
-            $(form).find("input[type=checkbox]").prop("disabled", false);
-            $.post($(form).attr("action"), $(form).serialize(), create_accordion_node);
-            $(form).find(":input").prop("disabled", true);
-        }
-
-        function edit_tariff(panel, obj) {
-            var panel_backup = $(panel).clone().children();
-            var id = $(panel).find('input[name=contract_id]').val();
-            var tariff = $('<div class="control-group">'+
-            '<label class="control-label" for="tariffEdit'+id+'" >Tariff</label>'+
-                '<div class="controls">'+
-                    '<select id="tariffEdit'+id+ '" name="tariff" class="form-control"></select>'+
-                "</div>"+
-            '</div>');
-
-            var options = $('<div class="control-group">'+
-            '<label class="control-label" for="optionsEdit'+id+'">Options</label>'+
-                '<div class="controls">'+
-                    '<div id="optionsEdit'+id+'" class="boxes"></div>'+
-                '</div>'+
-            '</div>');
-
-            var leftPanel = $(panel).find('.col-lg-6:first');
-            var rightPanel = $(panel).find('.col-lg-6:last .well');
-            leftPanel.html(tariff);
-            rightPanel.html(options);
-            prepare_tariff_list($('#tariffEdit'+id), $('#optionsEdit'+id));
-            $(panel).find('.panel-heading .btn-group').html('<button type="button" class="btn btn-outline btn-danger btn-xs">Exit editing</button>');
-            $(panel).find('button:contains("Exit editing")').click(function (e) {
-                e.preventDefault();
-                $(panel).html(panel_backup);
-            });
-            $(panel).find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
-            $(panel).find('.panel-body').wrapInner('<form class="form-horizontal" action="editContract" method="POST"></form>');
-            $(panel).find('form').submit({form:$(panel).find('form')}, edit_handler);
-        }
-
-        function edit_handler(e) {
-            e.preventDefault();
-            console.log("x");
-            var form = e.data.form;
-            $(form).find("input[type=checkbox]").prop("disabled", false);
-            $.post($(form).attr("action"), $(form).serialize(), function (e) {
-                console.log("submit");
-            });
-            $(form).find(":input").prop("disabled", true);
-        }
 
         $(function () {
             prepare_tariff_list($('#tariff'), $('#options'));
@@ -123,7 +73,7 @@
                         $panel.find(":contains('Edit')").removeClass("text-muted");
                     });
                 } else if (href === "/editTariff") {
-                    edit_tariff($panel, $obj)
+                    edit_tariff($panel)
                 }
             })
         });
