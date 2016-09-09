@@ -29,11 +29,6 @@
     <script src="<%=application.getContextPath() %>/resources/js/customer_validate_rules.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <title>New customer</title>
-    <script>
-        $(function() {
-            prepare_tariff_list($('#tariff'), $('#options'));
-        });
-    </script>
 </head>
 <body>
 <div class="wrapper">

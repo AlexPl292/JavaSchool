@@ -29,12 +29,6 @@
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
 
     <title>New tariff</title>
-    <script>
-        $(function() {
-            $('#options').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
-            $.getJSON("/load_options_table", {}, create_boxes([$('#options')]));
-        });
-    </script>
 </head>
 <body>
 <div class="wrapper">

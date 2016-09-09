@@ -40,45 +40,6 @@
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/contract_validate_rules.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
-    <script>
-
-        $(function () {
-            prepare_tariff_list($('#tariff'), $('#options'));
-
-
-            $("#accordion").on("click", "ul[role='menu'] a", function (e) {
-                e.preventDefault();
-                if ($(this).find('p').hasClass("text-muted")) {
-                    return false;
-                }
-                var $panel = $(this).closest('.panel');
-                var id = $panel.find('input[type=hidden]').val();
-                var href = $(this).attr("href");
-                var $obj = $(this);
-
-                if (href === "/deleteContract") {
-                    $.post(href, {id: id}, function (e) {
-                        $panel.remove();
-                    })
-                } else if (href === "/blockContract") {
-                    $.post(href, {id: id}, function (e) {
-                        $panel.removeClass("panel-default").addClass("panel-red");
-                        $obj.attr("href", "/unblockContract").text("Unblock");
-                        $panel.find(":contains('Edit')").addClass("text-muted");
-                    });
-                } else if (href === "/unblockContract") {
-                    $.post(href, {id: id}, function (e) {
-                        $panel.removeClass("panel-red").addClass("panel-default");
-                        $obj.attr("href", "/blockContract").text("Block");
-                        $panel.find(":contains('Edit')").removeClass("text-muted");
-                    });
-                } else if (href === "/editTariff") {
-                    edit_tariff($panel)
-                }
-            })
-        });
-
-    </script>
 </head>
 <body>
 

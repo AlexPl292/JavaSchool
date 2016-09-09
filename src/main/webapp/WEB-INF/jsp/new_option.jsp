@@ -27,11 +27,6 @@
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/option_validate_rules.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
-    <script>
-        $(function() {
-            prepare();
-        });
-    </script>
     <title>New Option</title>
 </head>
 <body>
