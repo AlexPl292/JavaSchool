@@ -62,7 +62,7 @@ public class Customer {
     private int isBlocked;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
-    private List<Contract> contracts;
+    private Set<Contract> contracts;
 
     /**
      * Constructor with only important data
@@ -87,7 +87,7 @@ public class Customer {
      * Empty constructor
      */
     public Customer() {
-        contracts = new ArrayList<>();
+        contracts = new HashSet<>();
     }
 
     public Integer getId() {
@@ -178,11 +178,11 @@ public class Customer {
         this.passportNumber = passportNumber;
     }
 
-    public List<Contract> getContracts() {
+    public Set<Contract> getContracts() {
         return contracts;
     }
 
-    public void setContracts(List<Contract> contracts) {
+    public void setContracts(Set<Contract> contracts) {
         this.contracts = contracts;
     }
 

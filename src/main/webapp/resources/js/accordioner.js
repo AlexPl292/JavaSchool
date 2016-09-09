@@ -14,12 +14,12 @@ function create_accordion_node(res) {
             '<hr>' +
             data.tariff.description +
         '</div>');
-    var col_lg2 = $('<div class="col-lg-6">' +
-            '<div class="well">' +
+    var col_lg2 = $('<div class="col-lg-6"><div class="well">' +
                 '<h4><small>Used options</small></h4>' +
                 '<hr>'+
             '</div>' +
-        '</div>').find(".well").append($used_options);
+        '</div>');
+    col_lg2.find(".well").append($used_options);
 
     var $node = $('<div class="panel panel-success">' +
             '<div class="panel-heading">' +
@@ -29,6 +29,7 @@ function create_accordion_node(res) {
             '</div>' +
             '<div id="collapse'+data.id+'" class="panel-collapse collapse" style="height: 0px;">' +
                 '<div class="panel-body"' +
+                    '<input type="hidden" name="contract_id" value="'+data.id+'"/>'+
                 '</div>' +
             '</div>' +
         '</div>');

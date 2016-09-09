@@ -7,17 +7,16 @@ import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
+import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.GenericDao;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
+import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by alex on 24.08.16.
@@ -148,6 +147,29 @@ public class ContractServiceImpl implements ContractService{
             Contract contract = contractDao.read(id);
             contract.setIsBlocked(blockLevel);
             EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
+    }
+
+    @Override
+    public Contract updateContract(Integer contract_id, Integer tariff_id, List<Integer> optionIds) {
+        EntityGraph<Contract> graph = ContractServiceImpl.getInstance().getEntityGraph();
+        graph.addAttributeNodes("usedOptions");
+
+        Map<String, Object> hints = new HashMap<>();
+        hints.put("javax.persistence.loadgraph", graph);
+        try {
+            EMU.beginTransaction();
+            Contract contract = contractDao.read(contract_id, hints);
+            contract.setTariff(TariffDaoImpl.getInstance().read(tariff_id));
+            contract.setUsedOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionIds));
+            EMU.commit();
+            return contract;
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();

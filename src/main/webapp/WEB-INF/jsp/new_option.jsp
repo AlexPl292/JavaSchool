@@ -28,7 +28,7 @@
     <script src="<%=application.getContextPath() %>/resources/js/option_validate_rules.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <script>
-        $(document).ready(function() {
+        $(function() {
             prepare();
         });
     </script>

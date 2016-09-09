@@ -30,38 +30,8 @@
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <title>New customer</title>
     <script>
-        function loadlist(selobj, url, nameattr, valattr) {
-            $(selobj).empty();
-            $.getJSON(url, {page:-1, updateCount:false, search:""}, function (data) {
-                $.each(data.data, function (i, obj) {
-                   $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
-                });
-                $(selobj).change();
-            });
-        }
-
-        function create_boxes(selobj) {
-            return function (data) {
-                $(selobj).empty();
-                var checkboxs_name = selobj.attr('id');
-                $.each(data.data, function (i, obj) {
-                    $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name}));
-                    $(selobj).append($("<label/>", {"for": checkboxs_name+i, text:obj.name}));
-                    $(selobj).append($("<br/>"));
-                })
-            }
-        }
-
         $(function() {
-            var $tariff = $("#tariff");
-
-            $tariff.change(function (e) {
-                e.preventDefault();
-                $.getJSON("/load_options", {loadtype: "possibleOfTariff", tariff_id:$(this).val()}, create_boxes($('#options')));
-            });
-            loadlist($tariff, "/load_tariffs", "name", "id");
-
-            $('#options').on('change', 'input[type=checkbox]', optionChecked);
+            prepare_tariff_list($('#tariff'), $('#options'));
         });
     </script>
 </head>

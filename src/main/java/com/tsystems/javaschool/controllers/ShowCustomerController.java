@@ -41,7 +41,7 @@ public class ShowCustomerController extends HttpServlet {
         customer.setContracts(customer.getContracts()
                 .stream()
                 .sorted(Comparator.comparing(Contract::getId).reversed())
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet()));
         request.setAttribute("customer", customer);
         request.getRequestDispatcher("/WEB-INF/jsp/customer.jsp").forward(request, response);
     }
