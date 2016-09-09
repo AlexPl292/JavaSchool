@@ -13,9 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -38,10 +36,13 @@ public class ShowCustomerController extends HttpServlet {
         hints.put("javax.persistence.loadgraph", graph);
 
         Customer customer = service.loadByKey(id, hints);
-        customer.setContracts(customer.getContracts()
+/*        customer.setContracts(customer.getContracts()
                 .stream()
                 .sorted(Comparator.comparing(Contract::getId).reversed())
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toSet()));*/
+        Set<Contract> contractSet = new TreeSet<>(Comparator.comparing(Contract::getId).reversed());
+        contractSet.addAll(customer.getContracts());
+        customer.setContracts(contractSet);
         request.setAttribute("customer", customer);
         request.getRequestDispatcher("/WEB-INF/jsp/customer.jsp").forward(request, response);
     }
