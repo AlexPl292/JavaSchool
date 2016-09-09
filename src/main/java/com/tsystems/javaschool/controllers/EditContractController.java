@@ -14,10 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +31,15 @@ public class EditContractController extends HttpServlet {
 
         Integer contractId = Integer.parseInt(request.getParameter("contract_id"));
         Integer tariffId = Integer.parseInt(request.getParameter("tariff"));
-        List<Integer> options = Arrays.stream(request.getParameterValues("optionsEdit"+contractId)).map(Integer::parseInt).collect(Collectors.toList());
+
+        String[] optionsIdStr = request.getParameterValues("optionsEdit"+contractId);
+        List<Integer> options;
+        if (optionsIdStr != null) {
+            options = Arrays.stream(optionsIdStr).map(Integer::parseInt).collect(Collectors.toList());
+        } else {
+            options = new ArrayList<>();
+        }
+//        List<Integer> options = Arrays.stream(request.getParameterValues("optionsEdit"+contractId)).map(Integer::parseInt).collect(Collectors.toList());
         Contract contract = ContractServiceImpl.getInstance().updateContract(contractId, tariffId, options);
 
         if (!errors.isEmpty()) {

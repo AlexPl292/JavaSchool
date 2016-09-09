@@ -106,19 +106,18 @@ public class AddCustomerController extends HttpServlet {
             contract.setIsBlocked(0);
 
             // Get list of option ids from parameter
-            List<Integer> options = Arrays.stream(request.getParameterValues("options")).map(Integer::parseInt).collect(Collectors.toList());
-//            try {
-            //service.createCustomerAndContract(newCustomer, contract, options);
-            // Ждем, что мне ответят по транзакциям
+            String[] optionsIdStr = request.getParameterValues("options");
+            List<Integer> options;
+            if (optionsIdStr != null) {
+                options = Arrays.stream(optionsIdStr).map(Integer::parseInt).collect(Collectors.toList());
+            } else {
+                options = new ArrayList<>();
+            }
             ContractService contractService = ContractServiceImpl.getInstance();
             service.addNew(newCustomer);
             contract.setCustomer(newCustomer);
             contractService.addNew(contract, options);
 
-/*            } catch (RollbackException e) {
-                Throwable th = ExceptionUtils.getRootCause(e);
-                errors.put("General", th.getMessage());
-            }*/
         }
         if (!errors.isEmpty()) {
             JsonElement element = new Gson().toJsonTree(errors);

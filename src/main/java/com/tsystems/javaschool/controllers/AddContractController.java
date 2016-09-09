@@ -20,10 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -56,7 +53,13 @@ public class AddContractController extends HttpServlet {
             contract.setIsBlocked(0);
 
             // Get list of option ids from parameter
-            List<Integer> options = Arrays.stream(request.getParameterValues("options")).map(Integer::parseInt).collect(Collectors.toList());
+            String[] optionsIdStr = request.getParameterValues("options");
+            List<Integer> options;
+            if (optionsIdStr != null) {
+                options = Arrays.stream(optionsIdStr).map(Integer::parseInt).collect(Collectors.toList());
+            } else {
+                options = new ArrayList<>();
+            }
             // Ждем, что мне ответят по транзакциям
             ContractService contractService = ContractServiceImpl.getInstance();
             contract = contractService.addNew(contract, options);
