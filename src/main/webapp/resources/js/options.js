@@ -25,6 +25,9 @@ function check_item(type) {
             $.getJSON("/load_options", {"loadtype": "toDisable", type: type, data: checked_val}, function (e) {
                 var disableItIds = [];
                 var disableIt = $();
+                var enableItIds = [];
+                var enableIt = $();
+
                 $(e.not_forbidden).each(function (i, obj) {
                     disableIt = $.merge(disableIt, $('#forbiddenWith').find("input[value=" + obj.id + "]"));
                     disableItIds.push(obj.id+":"+"forbiddenWith");
@@ -33,7 +36,14 @@ function check_item(type) {
                     disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
                     disableItIds.push(obj.id+":"+"requiredFrom");
                 });
+                $(e.not_forbidden).each(function (i, obj) {
+                    if (obj.id === checked_val)
+                        return;
+                    enableIt = $.merge(enableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
+                    enableItIds.push(obj.id);
+                });
 
+                enableIt.prop('checked', true).attr("disabled", true);
                 $(disableIt).attr("disabled", true);
 
                 $(disableIt).each(function (i, obj) {
@@ -43,7 +53,15 @@ function check_item(type) {
                         $(obj).data('disabledBy').push(disabledBy);
                     }
                 });
+                $(enableIt).each(function (i, obj) {
+                    if ($(obj).data('enabledBy') === undefined) { // DisabledBy is not set (this checkbox is disabled first time
+                        $(obj).data('enabledBy', [checked_val]);
+                    } else {
+                        $(obj).data('enabledBy').push(checked_val);
+                    }
+                });
                 $(item).data("disableIt", disableItIds);
+                $(item).data("enableIt", enableItIds);
             });
         } else {
             var enable = $();
@@ -58,6 +76,17 @@ function check_item(type) {
             });
 
             $(enable).prop('disabled', false);
+
+            var uncheck = $();
+            $($(this).data("enableIt")).each(function (i, obj) {
+                var maybeEnable = $('#requiredFrom').find("input[value=" + obj + "]");
+                if (maybeEnable.length === 0)
+                    return;
+                $(maybeEnable).data("enabledBy").splice($.inArray(obj, $(maybeEnable).data("enabledBy")), 1);
+                if ($(maybeEnable).data("enabledBy").length === 0)
+                    uncheck = $.merge(uncheck, maybeEnable);
+            });
+            $(uncheck).prop('checked', false).prop('disabled', false).change();
         }
     }
 }
@@ -84,7 +113,7 @@ function optionChecked(options) {
                     disableItIds.push(obj.id);
                 });
 
-                enableIt.prop('checked', true).attr("disabled", true); //.attr('onclick', 'return false');
+                enableIt.prop('checked', true).attr("disabled", true);
                 disableIt.attr("disabled", true);
 
                 $(disableIt).each(function (i, obj) {
@@ -126,7 +155,7 @@ function optionChecked(options) {
                 if ($(maybeEnable).data("enabledBy").length === 0)
                     uncheck = $.merge(uncheck, maybeEnable);
             });
-            $(uncheck).prop('checked', false).prop('disabled', false).change();//.removeAttr('onclick').change();
+            $(uncheck).prop('checked', false).prop('disabled', false).change();
         }
     }
 }
@@ -181,28 +210,6 @@ function loadlist(selobj, url, nameattr, valattr) {
         });
         $(selobj).change();
     });
-}
-
-function new_option_prepare() {
-    var requiredFrom = $("#requiredFrom");
-    var forbiddenWith = $("#forbiddenWith");
-    var forTariffs = $('#forTariffs');
-
-    forTariffs.empty();
-    $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes([forTariffs]));
-
-    // TODO add disablind or notifications
-    $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
-        e.preventDefault();
-        requiredFrom.empty();
-        forbiddenWith.empty();
-        var data = $("#forTariffs").find("input").serializeArray();
-        data.push({"loadtype": "newOptionDependency"});
-        $.getJSON("/load_options", $.param(data), create_boxes([requiredFrom, forbiddenWith]));
-    });
-
-    $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
-    $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));
 }
 
 function prepare_tariff_list(tariffList, options) {
@@ -378,7 +385,25 @@ var prepare = {
         prepare_tariff_list($('#tariff'), $('#options'));
     },
     "/add_option" : function () {
-        new_option_prepare();
+        var requiredFrom = $("#requiredFrom");
+        var forbiddenWith = $("#forbiddenWith");
+        var forTariffs = $('#forTariffs');
+
+        forTariffs.empty();
+        $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes([forTariffs]));
+
+        // TODO add disablind or notifications
+        $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
+            e.preventDefault();
+            requiredFrom.empty();
+            forbiddenWith.empty();
+            var data = $("#forTariffs").find("input").serializeArray();
+            data.push({"loadtype": "newOptionDependency"});
+            $.getJSON("/load_options", $.param(data), create_boxes([requiredFrom, forbiddenWith]));
+        });
+
+        $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
+        $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));
     },
     "/add_tariff" : function () {
         $('#options').on('change', 'input[type=checkbox]', optionCheckedNewTariff);

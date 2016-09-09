@@ -98,7 +98,6 @@ public class OptionLoaderController extends HttpServlet{
             hints.put("javax.persistence.loadgraph", graph);
 
             Option option = service.loadByKey(id, hints);
-//            Option option = service.loadByKey(id);
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
