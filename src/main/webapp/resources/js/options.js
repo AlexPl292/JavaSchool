@@ -225,12 +225,6 @@ function prepare_tariff_list(tariffList, options) {
     $(options).on('change', 'input[type=checkbox]', optionChecked(options));
 }
 
-function handler(form, e) {
-    e.preventDefault();
-    $(form).find("input[type=checkbox]").prop("disabled", false);
-    $.post($(form).attr("action"), $(form).serialize(), create_accordion_node);
-    $(form).find(":input").prop("disabled", true);
-}
 
 function edit_tariff(panel) {
     var panel_backup = $(panel).clone().children();
@@ -270,13 +264,20 @@ function edit_handler(e) {
     var form = panel.find("form");
     $(form).find("input[type=checkbox]").prop("disabled", false);
     $.post($(form).attr("action"), $(form).serialize(), function (e) {
-        var filling = fill_accordion_node(e.data);
-        $(panel).find(".panel-body").empty();
-        $(panel).find(".panel-body").append(filling[0]);
-        $(panel).find(".panel-body").append(filling[1]);
-        $(panel).find(".panel-body").append(filling[2]);
-        $(panel).find(".panel-title .pull-right").empty();
-        $(panel).find(".panel-title .pull-right").append(create_panel_menu());
+        if (e.success) {
+            $.notify("Success!", {position: "top right", className: "success"});
+            var filling = fill_accordion_node(e.data);
+            $(panel).find(".panel-body").empty();
+            $(panel).find(".panel-body").append(filling[0]);
+            $(panel).find(".panel-body").append(filling[1]);
+            $(panel).find(".panel-body").append(filling[2]);
+            $(panel).find(".panel-title .pull-right").empty();
+            $(panel).find(".panel-title .pull-right").append(create_panel_menu());
+        } else {
+            $.each(e.errors, function (prop, val) {
+                $.notify("Error: in " + prop + "\n" + val, {position: "top right", className: "error"});
+            });
+        }
     });
     $(form).find(":input").prop("disabled", true);
 }

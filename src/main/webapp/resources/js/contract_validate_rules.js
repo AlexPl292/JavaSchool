@@ -16,6 +16,6 @@ $(function() {
                 phone: "Wrong phone number format"
             }
         },
-        submitHandler: handler
+        submitHandler: submitting(create_accordion_node)
     })
 });

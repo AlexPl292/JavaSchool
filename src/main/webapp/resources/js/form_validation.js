@@ -42,31 +42,32 @@ $.validator.setDefaults({
     unhighlight: function(element, errorClass) {
         $(element).parent().parent().removeClass(errorClass);
     },
-    submitHandler: submitting
+    submitHandler: submitting()
 });
 
 
-function response_validate($form) {
-    return function (response) {
-        if (response.success) {
-            $.notify("Success!", {position: "top right", className: "success"});
-            $form.find("input[type=checkbox]").removeData();
-            $form[0].reset();
-        } else {
-            $.each(response.errors, function (prop, val) {
-                $.notify("Error: in "+prop+"\n" + val, {position: "top right", className: "error"});
-            });
-        }
-        $form.find(":input").prop("disabled", false);
+function submitting(full_success) {
+    return function(form, e) {
+        e.preventDefault();
+        $.notify("Sending data..", {position: "top right", className: "success"});
+
+        $(form).find("input[type=checkbox]").prop("disabled", false);
+        $.post($(form).attr("action"), $(form).serialize(), function (response) {
+            if (response.success) {
+                $.notify("Success!", {position: "top right", className: "success"});
+                $(form).find("input[type=checkbox]").removeData();
+                $(form)[0].reset();
+                if (full_success !== undefined) {
+                    full_success(response);
+                }
+            } else {
+                $.each(response.errors, function (prop, val) {
+                    $.notify("Error: in " + prop + "\n" + val, {position: "top right", className: "error"});
+                });
+            }
+            $(form).find(":input").prop("disabled", false);
+        });
+        $(form).find(":input").prop("disabled", true);
+        return false;
     }
-}
-
-function submitting(form, e) {
-    e.preventDefault();
-    $.notify("Sending data..", {position:"top right", className:"success"});
-
-    $(form).find("input[type=checkbox]").prop("disabled", false);
-    $.post($(form).attr("action"), $(form).serialize(), response_validate($(form)));
-    $(form).find(":input").prop("disabled", true);
-    return false;
 }
