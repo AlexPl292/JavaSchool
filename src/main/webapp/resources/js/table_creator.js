@@ -50,13 +50,16 @@ function paginationSet(pages_count, current, $pagination) {
 function init_table($table) {
 
     var fields_count = $table.find("thead th").length;
+    var table_body = $table.find("tbody");
+
     for (var i = 0; i < 10; i++) {
         var $tr = $('<tr>');
         for (var j = 0; j < fields_count; j++) {
             $tr.append('<td>&nbsp;</td>');
         }
-        $table.find("tbody").append($tr);
+        table_body.append($tr);
     }
+    $(table_body).find('tr:first-child td:first-child').text("loading table...");
 }
 
 function fill_table($table, $pagination, link) {
