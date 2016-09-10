@@ -13,21 +13,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "Customers")
-public class Customer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    @Expose
-    private Integer id;
-
-    @Column(name = "name")
-    @Expose
-    private String name;
-
-    @Column(name = "surname")
-    @Expose
-    private String surname;
+public class Customer extends User{
 
     @Column(name = "date_of_birth")
     @Expose
@@ -44,18 +30,6 @@ public class Customer {
     @Column(name = "address")
     @Expose
     private String address;
-
-    @Column(name = "email")
-    @Expose
-    private String email;
-
-    @Column(name = "password")
-    @Expose
-    private String password;
-
-    @Column(name = "salt")
-    @Expose
-    private String salt;
 
     @Column(name = "is_blocked")
     @Expose
@@ -74,10 +48,10 @@ public class Customer {
      * @param isBlocked is this customer blocked or not
      */
     public Customer(Integer id, String name, String surname, String email, int isBlocked, String passportNumber) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
+        this.setId(id);
+        this.setName(name);
+        this.setSurname(surname);
+        this.setEmail(email);
         this.isBlocked = isBlocked;
         this.passportNumber = passportNumber;
     }
@@ -88,30 +62,6 @@ public class Customer {
      */
     public Customer() {
         contracts = new HashSet<>();
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public Date getDateOfBirth() {
@@ -138,36 +88,12 @@ public class Customer {
         this.address = address;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public int getIsBlocked() {
         return isBlocked;
     }
 
     public void setIsBlocked(int isBlocked) {
         this.isBlocked = isBlocked;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getPassportNumber() {
@@ -189,14 +115,14 @@ public class Customer {
     @Override
     public String toString() {
         return "Customer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", surname='" + getSurname() + '\'' +
                 ", day_of_birth=" + dateOfBirth +
                 ", passport_data='" + passportData + '\'' +
                 ", passport_number='" + passportNumber + '\'' +
                 ", address='" + address + '\'' +
-                ", email='" + email + '\'' +
+                ", email='" + getEmail() + '\'' +
                 ", is_blocked=" + isBlocked +
                 '}';
     }
