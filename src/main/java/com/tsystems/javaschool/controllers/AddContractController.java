@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * Created by alex on 06.09.16.
  */
-@WebServlet("/add_contract")
+@WebServlet("/admin/add_contract")
 public class AddContractController extends HttpServlet {
 
     @Override

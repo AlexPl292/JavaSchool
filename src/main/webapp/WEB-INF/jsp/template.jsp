@@ -47,10 +47,10 @@
                     <a href="#"><i class="fa fa-group fa-fw"></i> Customers<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/add_customer">Add new customer</a>
+                            <a href="/admin/add_customer">Add new customer</a>
                         </li>
                         <li>
-                            <a href="/show_customers">Show all customers</a>
+                            <a href="/admin/customers">Show all customers</a>
                         </li>
                     </ul>
                 </li>
@@ -60,10 +60,10 @@
                     <a href="#"><i class="fa fa-cog fa-fw"></i> Tariffs<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/add_tariff">Add new tariff</a>
+                            <a href="/admin/add_tariff">Add new tariff</a>
                         </li>
                         <li>
-                            <a href="/show_tariffs">Show all tariffs</a>
+                            <a href="/admin/tariffs">Show all tariffs</a>
                         </li>
                     </ul>
                 </li>
@@ -73,10 +73,10 @@
                     <a href="#"><i class="fa fa-cogs fa-fw"></i> Options<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/add_option">Add new option</a>
+                            <a href="/admin/add_option">Add new option</a>
                         </li>
                         <li>
-                            <a href="/show_options">Show all options</a>
+                            <a href="/admin/options">Show all options</a>
                         </li>
                     </ul>
                 </li>
@@ -85,7 +85,7 @@
                     <a href="#"><i class="fa fa-credit-card fa-fw"></i> Contracts<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/show_contracts">Show all contracts</a>
+                            <a href="/admin/contracts">Show all contracts</a>
                         </li>
                     </ul>
                 </li>

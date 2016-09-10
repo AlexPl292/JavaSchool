@@ -22,7 +22,7 @@ function check_item(type) {
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':'+type;
         if ($(this).is(':checked')) {
-            $.getJSON("/load_options", {"loadtype": "toDisable", type: type, data: checked_val}, function (e) {
+            $.getJSON("/admin/load_option", {"loadtype": "toDisable", type: type, data: checked_val}, function (e) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
@@ -98,7 +98,7 @@ function optionChecked(options) {
         var $item = $(this);
         var checked_val = parseInt($(this).val(), 10);
         if ($item.is(':checked')) {
-            $.getJSON("/load_options", {"loadtype": "getDependencies", data: checked_val}, function (response) {
+            $.getJSON("/admin/load_option", {"loadtype": "getDependencies", data: checked_val}, function (response) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
@@ -165,7 +165,7 @@ function optionCheckedNewTariff(e) {
     var $item = $(this);
     var checked_val = parseInt($(this).val(), 10);
     if ($item.is(':checked')) {
-        $.getJSON("/load_options", {"loadtype": "getDependencies", data: checked_val}, function (response) {
+        $.getJSON("/admin/load_option", {"loadtype": "getDependencies", data: checked_val}, function (response) {
             var disableItIds = [];
             var disableIt = $();
             var enableItIds = [];
@@ -215,12 +215,12 @@ function loadlist(selobj, url, nameattr, valattr) {
 function prepare_tariff_list(tariffList, options) {
     $(tariffList).change(function (e) {
         e.preventDefault();
-        $.getJSON("/load_options", {
+        $.getJSON("/admin/load_option", {
             loadtype: "possibleOfTariff",
             tariff_id: $(this).val()
         }, create_boxes([$(options)]));
     });
-    loadlist($(tariffList), "/load_tariffs", "name", "id");
+    loadlist($(tariffList), "/admin/load_tariffs", "name", "id");
 
     $(options).on('change', 'input[type=checkbox]', optionChecked(options));
 }
@@ -254,7 +254,7 @@ function edit_tariff(panel) {
         $(panel).html(panel_backup);
     });
     $(panel).find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
-    $(panel).find('.panel-body').wrapInner('<form class="form-horizontal" action="editContract" method="POST"></form>');
+    $(panel).find('.panel-body').wrapInner('<form class="form-horizontal" action="admin/edit_contract" method="POST"></form>');
     $(panel).find('form').submit({panel:$(panel)}, edit_handler);
 }
 
@@ -338,16 +338,16 @@ function create_panel_menu() {
         '<ul class="dropdown-menu pull-right" role="menu">'+
         '<li><a href="/editTariff"><p >Edit</p></a>'+
         '</li>'+
-        '<li><a href=\"/blockContract\"><p>Block</p></a>'+
+        '<li><a href=\"/admin/blockContract\"><p>Block</p></a>'+
         '</li>'+
         '<li class="divider"></li>'+
-        '<li><a href="/deleteContract"><p class="text-danger">Delete</p></a>'+
+        '<li><a href="/admin/delete_contract"><p class="text-danger">Delete</p></a>'+
         '</li>'+
         '</ul>'+
         '</div>');
 }
 var prepare = {
-    "/customer" : function() {
+    "/admin/customer" : function() {
         prepare_tariff_list($('#tariff'), $('#options'));
 
 
@@ -361,20 +361,20 @@ var prepare = {
             var href = $(this).attr("href");
             var $obj = $(this);
 
-            if (href === "/deleteContract") {
+            if (href === "/admin/delete_contract") {
                 $.post(href, {id: id}, function (e) {
                     $panel.remove();
                 })
-            } else if (href === "/blockContract") {
+            } else if (href === "/admin/blockContract") {
                 $.post(href, {id: id}, function (e) {
                     $panel.removeClass("panel-default").addClass("panel-red");
-                    $obj.attr("href", "/unblockContract").text("Unblock");
+                    $obj.attr("href", "/admin/unblockContract").text("Unblock");
                     $panel.find(":contains('Edit')").addClass("text-muted");
                 });
-            } else if (href === "/unblockContract") {
+            } else if (href === "/admin/unblockContract") {
                 $.post(href, {id: id}, function (e) {
                     $panel.removeClass("panel-red").addClass("panel-default");
-                    $obj.attr("href", "/blockContract").text("Block");
+                    $obj.attr("href", "/admin/blockContract").text("Block");
                     $panel.find(":contains('Edit')").removeClass("text-muted");
                 });
             } else if (href === "/editTariff") {
@@ -382,16 +382,16 @@ var prepare = {
             }
         })
     },
-    "/add_customer" : function() {
+    "/admin/add_customer" : function() {
         prepare_tariff_list($('#tariff'), $('#options'));
     },
-    "/add_option" : function () {
+    "/admin/add_option" : function () {
         var requiredFrom = $("#requiredFrom");
         var forbiddenWith = $("#forbiddenWith");
         var forTariffs = $('#forTariffs');
 
         forTariffs.empty();
-        $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes([forTariffs]));
+        $.getJSON("/admin/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes([forTariffs]));
 
         // TODO add disablind or notifications
         $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
@@ -400,15 +400,15 @@ var prepare = {
             forbiddenWith.empty();
             var data = $("#forTariffs").find("input").serializeArray();
             data.push({"loadtype": "newOptionDependency"});
-            $.getJSON("/load_options", $.param(data), create_boxes([requiredFrom, forbiddenWith]));
+            $.getJSON("/admin/load_option", $.param(data), create_boxes([requiredFrom, forbiddenWith]));
         });
 
         $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
         $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));
     },
-    "/add_tariff" : function () {
+    "/admin/add_tariff" : function () {
         $('#options').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
-        $.getJSON("/load_options_table", {}, create_boxes([$('#options')]));
+        $.getJSON("/admin/load_options_table", {}, create_boxes([$('#options')]));
     }
 };
 $(function () {

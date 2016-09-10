@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * Add new tariff
  * Returns json with either success:true, or success:false and object with errors
  */
-@WebServlet("/add_tariff")
+@WebServlet("/admin/add_tariff")
 public class AddTariffController extends HttpServlet {
 
     private TariffService service = TariffServiceImpl.getInstance();

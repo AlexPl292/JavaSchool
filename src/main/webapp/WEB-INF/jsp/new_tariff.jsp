@@ -39,7 +39,7 @@
                 <h1 class="page-header">Add new tariff</h1>
             </div>
         </div>
-        <form class="form-horizontal" id="add_tariff_form" action='add_tariff' method="POST">
+        <form class="form-horizontal" id="add_tariff_form" action='admin/add_tariff' method="POST">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">

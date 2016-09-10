@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * Add new customer
  * Returns json with either success:true, or success:false and object with errors
  */
-@WebServlet("/add_customer")
+@WebServlet("/admin/add_customer")
 public class AddCustomerController extends HttpServlet {
 
     private CustomerService service = CustomerServiceImpl.getInstance();

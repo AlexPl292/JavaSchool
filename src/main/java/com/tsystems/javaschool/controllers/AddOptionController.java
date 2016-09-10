@@ -25,7 +25,7 @@ import java.util.*;
  * Add new Option
  * Returns json with either success:true, or success:false and object with errors
  */
-@WebServlet("/add_option")
+@WebServlet("/admin/add_option")
 public class AddOptionController extends HttpServlet {
 
     OptionService service = OptionServiceImpl.getInstance();

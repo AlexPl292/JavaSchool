@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  *  - newOptionDependency (else): load options that are used by chosen tariffs
  *  used in new option adding. Option cannot depends on option, those are not available for chosen tariffs
  */
-@WebServlet("/load_options")
+@WebServlet("/admin/load_option")
 public class OptionLoaderController extends HttpServlet{
 
     OptionService service = OptionServiceImpl.getInstance();

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Created by alex on 06.09.16.
  */
-@WebServlet({"/customer", "/contract"})
+@WebServlet({"/admin/customer", "/admin/contract"})
 public class ShowCustomerController extends HttpServlet {
 
     @Override
@@ -28,7 +28,7 @@ public class ShowCustomerController extends HttpServlet {
             throws ServletException, IOException {
         Integer id = Integer.parseInt(request.getParameter("id"));
         String path = request.getServletPath();
-        if ("/customer".equals(path)) {
+        if ("/admin/customer".equals(path)) {
             CustomerService service = CustomerServiceImpl.getInstance();
 
             EntityGraph<Customer> graph = service.getEntityGraph();
@@ -46,7 +46,7 @@ public class ShowCustomerController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/jsp/customer.jsp").forward(request, response);
         } else {
             Contract contract = ContractServiceImpl.getInstance().loadByKey(id);
-            response.sendRedirect("/customer?id="+contract.getCustomer().getId());
+            response.sendRedirect("/admin/customer?id="+contract.getCustomer().getId());
         }
     }
 }

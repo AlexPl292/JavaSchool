@@ -101,10 +101,10 @@
                                                     <ul class="dropdown-menu pull-right" role="menu">
                                                         <li><a href="/editTariff"><p ${blocked != 0 ? "class=\"text-muted\"":""}>Edit</p></a>
                                                         </li>
-                                                        <li>${blocked == 0 ? "<a href=\"/blockContract\"><p>Block</p></a>":"<a href=\"/unblockContract\"><p>Unblock</p></a>"}
+                                                        <li>${blocked == 0 ? "<a href=\"/admin/blockContract\"><p>Block</p></a>":"<a href=\"/admin/unblockContract\"><p>Unblock</p></a>"}
                                                         </li>
                                                         <li class="divider"></li>
-                                                        <li><a href="/deleteContract"><p class="text-danger">Delete</p></a>
+                                                        <li><a href="/admin/delete_contract"><p class="text-danger">Delete</p></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -147,7 +147,7 @@
                                 <div id="newContract" class="panel-collapse collapse" style="height: 0px;">
                                     <div class="panel-body">
                                         <div class="col-lg-12">
-                                            <form class="form-horizontal" id="add_contract_form" action='add_contract'
+                                            <form class="form-horizontal" id="add_contract_form" action='admin/add_contract'
                                                   method="POST">
                                                 <input type="hidden" name="customer_id" value="${customer.getId()}">
                                                 <c:import url="template_new_contract.jsp"/>

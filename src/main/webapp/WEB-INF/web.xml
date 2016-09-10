@@ -18,7 +18,7 @@
 
     <servlet-mapping>
         <servlet-name>Customer</servlet-name>
-        <url-pattern>/customer</url-pattern>
+        <url-pattern>/admin/customer</url-pattern>
     </servlet-mapping>-->
 
     <servlet>
@@ -28,7 +28,7 @@
 
     <servlet-mapping>
         <servlet-name>Show customers</servlet-name>
-        <url-pattern>/show_customers</url-pattern>
+        <url-pattern>/admin/customers</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -38,7 +38,7 @@
 
     <servlet-mapping>
         <servlet-name>Show tariffs</servlet-name>
-        <url-pattern>/show_tariffs</url-pattern>
+        <url-pattern>/admin/tariffs</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -48,7 +48,7 @@
 
     <servlet-mapping>
         <servlet-name>Show options</servlet-name>
-        <url-pattern>/show_options</url-pattern>
+        <url-pattern>/admin/options</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -58,11 +58,11 @@
 
     <servlet-mapping>
         <servlet-name>Show contracts</servlet-name>
-        <url-pattern>/show_contracts</url-pattern>
+        <url-pattern>/admin/contracts</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>show_customers</welcome-file>
+        <welcome-file>/admin/contracts</welcome-file>
     </welcome-file-list>
 
 </web-app>

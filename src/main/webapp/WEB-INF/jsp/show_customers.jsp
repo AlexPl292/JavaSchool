@@ -25,7 +25,7 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/table_creator.js"></script>
     <script>
         $(function () {
-            table_creator($('#customers'), '/load_customers', "/customer");
+            table_creator($('#customers'), '/admin/load_customers', "/admin/customer");
             $('table').on("click", '.clickableRow', function() {
                 window.location = $(this).data("href")+"?id="+$(this).data("val");
             });

@@ -33,7 +33,7 @@ import java.util.List;
  * draw - page in pagination
  * data - returned data
  */
-@WebServlet({"/load_customers", "/load_tariffs", "/load_options_table", "/load_contracts"})
+@WebServlet({"/admin/load_customers", "/admin/load_tariffs", "/admin/load_options_table", "/admin/load_contracts"})
 public class DataLoaderController extends HttpServlet {
 
 
@@ -51,13 +51,13 @@ public class DataLoaderController extends HttpServlet {
         long recordsTotal = -1;
         String searchQuery = request.getParameter("search");
 
-        if ("/load_customers".equals(url)) {
+        if ("/admin/load_customers".equals(url)) {
             service = CustomerServiceImpl.getInstance();
-        } else if ("/load_tariffs".equals(url)) {
+        } else if ("/admin/load_tariffs".equals(url)) {
             service = TariffServiceImpl.getInstance();
-        } else if ("/load_options_table".equals(url)) {
+        } else if ("/admin/load_options_table".equals(url)) {
             service = OptionServiceImpl.getInstance();
-        } else if ("/load_contracts".equals(url)) {
+        } else if ("/admin/load_contracts".equals(url)) {
             service = ContractServiceImpl.getInstance();
         } else {
             service = CustomerServiceImpl.getInstance();
