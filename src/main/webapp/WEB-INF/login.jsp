@@ -29,7 +29,23 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/metisMenu/js/metisMenu.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
 
+    <script>
+        $(function () {
+            var $form = $('#loginForm');
+            $form.submit(function (e) {
+                e.preventDefault();
+                $.post($form.attr("action"), $form.serialize(), function (res) {
+                    if (res.success) {
+                        window.location = "/show_customers";
+                    } else {
+                        $.notify('Error!');
+                    }
+                });
+            });
+        })
+    </script>
 </head>
 
 <body>
@@ -42,7 +58,7 @@
                     <h3 class="panel-title">Please Sign In</h3>
                 </div>
                 <div class="panel-body">
-                    <form role="form">
+                    <form role="form" action="/login" method="POST" id="loginForm">
                         <fieldset>
                             <div class="form-group">
                                 <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
@@ -56,7 +72,7 @@
                                 </label>
                             </div>--%>
                             <!-- Change this to a button or input when using this as a form -->
-                            <a href="index.html" class="btn btn-lg btn-success btn-block">Login</a>
+                            <input type="submit" class="btn btn-lg btn-success btn-block" title="Login"/>
                         </fieldset>
                     </form>
                 </div>

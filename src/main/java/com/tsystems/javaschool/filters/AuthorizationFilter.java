@@ -25,7 +25,7 @@ public class AuthorizationFilter implements Filter{
         HttpServletResponse httpRes = (HttpServletResponse) response;
 
         HttpSession session = httpReq.getSession();
-        Customer currentUser = (Customer) session.getAttribute("user");
+        String currentUser = (String) session.getAttribute("user");
 
         if ("/login".equals(((HttpServletRequest) request).getServletPath())) {
             chain.doFilter(request, response);
