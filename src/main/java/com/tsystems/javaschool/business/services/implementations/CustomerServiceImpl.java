@@ -13,6 +13,7 @@ import com.tsystems.javaschool.util.EMU;
 import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
@@ -45,21 +46,11 @@ public class CustomerServiceImpl implements CustomerService {
         Будем его вручную генерировать, а потом посылать с помощью email или sms
          */
         String password = new PassGen(10).nextPassword();
-        MessageDigest md = null;
-        // TODO заменить эту дербендю на апаче хэш
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        assert md != null;
-        md.update(password.getBytes());
-        String hashed = Hex.encodeHexString(md.digest());
+        String hashed = DigestUtils.sha256Hex(password);
         String salt = new PassGen(8).nextPassword();
-        md.update((hashed+salt).getBytes());
 
         Email.sendSimpleEmail(customer.getEmail(), password); // Это заглушка. На самом деле просто вывод на консоль
-        customer.setPassword(Hex.encodeHexString(md.digest()));
+        customer.setPassword(DigestUtils.sha256Hex(hashed + salt));
         customer.setSalt(salt);
         try {
             EMU.beginTransaction();
