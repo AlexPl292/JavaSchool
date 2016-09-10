@@ -34,7 +34,7 @@ public class EditContractController extends HttpServlet {
         Integer contractId = Integer.parseInt(request.getParameter("contract_id"));
         Integer tariffId = Integer.parseInt(request.getParameter("tariff"));
 
-        String[] optionsIdStr = request.getParameterValues("optionsEdit"+contractId);
+        String[] optionsIdStr = request.getParameterValues("optionsEdit" + contractId);
         List<Integer> options;
         if (optionsIdStr != null) {
             options = Arrays.stream(optionsIdStr).map(Integer::parseInt).collect(Collectors.toList());
@@ -63,8 +63,9 @@ public class EditContractController extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json.toString());
+            out.flush();
+        }
     }
 }

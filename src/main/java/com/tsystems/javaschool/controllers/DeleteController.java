@@ -14,7 +14,7 @@ import java.io.IOException;
  * Created by alex on 07.09.16.
  */
 @WebServlet("/admin/delete_contract")
-public class DeleteController extends HttpServlet{
+public class DeleteController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

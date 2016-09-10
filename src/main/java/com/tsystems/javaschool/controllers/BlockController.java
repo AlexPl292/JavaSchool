@@ -2,7 +2,6 @@ package com.tsystems.javaschool.controllers;
 
 import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
-import com.tsystems.javaschool.db.entities.Contract;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +14,7 @@ import java.io.IOException;
  * Created by alex on 07.09.16.
  */
 @WebServlet({"/admin/blockContract", "/admin/unblockContract"})
-public class BlockController extends HttpServlet{
+public class BlockController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

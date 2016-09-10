@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @WebServlet("/admin/add_customer")
 public class AddCustomerController extends HttpServlet {
 
-    private CustomerService service = CustomerServiceImpl.getInstance();
+    private final transient CustomerService service = CustomerServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -139,8 +139,9 @@ public class AddCustomerController extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json.toString());
+            out.flush();
+        }
     }
 }

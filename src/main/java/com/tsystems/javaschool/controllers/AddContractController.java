@@ -34,7 +34,7 @@ public class AddContractController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String customerId = request.getParameter("customer_id");
+        String customerIdStr = request.getParameter("customer_id");
         String number = request.getParameter("number");
         JsonObject json = new JsonObject();
 
@@ -43,11 +43,19 @@ public class AddContractController extends HttpServlet {
         if ((tmpError = Validator.phone(number)) != null)
             errors.put("number", tmpError);
 
+        Integer tariffId = 0;
+        Integer customerId = 0;
+        try {
+            tariffId = Integer.parseInt(request.getParameter("tariff"));
+            customerId = Integer.parseInt(customerIdStr);
+        } catch (NumberFormatException e) {
+            errors.put("Number format", "Error in tariff or customer id");
+        }
 
         Contract contract = new Contract();
         if (errors.isEmpty()) {
-            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(Integer.parseInt(request.getParameter("tariff")));
-            Customer customer = CustomerServiceImpl.getInstance().loadByKey(Integer.parseInt(customerId));
+            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(tariffId);
+            Customer customer = CustomerServiceImpl.getInstance().loadByKey(customerId);
 
             contract.setCustomer(customer);
             contract.setNumber(number);
@@ -62,7 +70,6 @@ public class AddContractController extends HttpServlet {
             } else {
                 options = new ArrayList<>();
             }
-            // Ждем, что мне ответят по транзакциям
             ContractService contractService = ContractServiceImpl.getInstance();
             try {
                 contract = contractService.addNew(contract, options);
@@ -85,8 +92,9 @@ public class AddContractController extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json.toString());
+            out.flush();
+        }
     }
 }

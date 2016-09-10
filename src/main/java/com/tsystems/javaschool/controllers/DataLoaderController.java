@@ -8,7 +8,6 @@ import com.tsystems.javaschool.business.services.implementations.ContractService
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
-import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.business.services.interfaces.GenericService;
 
 import javax.servlet.ServletException;
@@ -22,13 +21,13 @@ import java.util.List;
 
 /**
  * Created by alex on 23.08.16.
- *
+ * <p>
  * Loading data. Also with pagination.
  * request parameters:
  * page (int) - page of pagination
  * updateCount (bool) - make query to update count of entries or not
  * search (string) - search query
- *
+ * <p>
  * response parameters:
  * draw - page in pagination
  * data - returned data
@@ -92,8 +91,9 @@ public class DataLoaderController extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json.toString());
+            out.flush();
+        }
     }
 }

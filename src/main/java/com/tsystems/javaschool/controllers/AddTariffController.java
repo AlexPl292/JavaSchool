@@ -81,8 +81,9 @@ public class AddTariffController extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json.toString());
+            out.flush();
+        }
     }
 }

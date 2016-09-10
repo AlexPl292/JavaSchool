@@ -124,4 +124,8 @@
             </plugin>
         </plugins>
     </build>
+    <properties>
+        <sonar.exclusions>**/vendor/**</sonar.exclusions>
+        <sonar.test.exclusions>**/test/**</sonar.test.exclusions>
+    </properties>
 </project>

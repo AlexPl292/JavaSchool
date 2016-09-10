@@ -1,8 +1,6 @@
 package com.tsystems.javaschool.controllers;
 
 import com.google.gson.JsonObject;
-import com.tsystems.javaschool.business.services.implementations.StaffServiceImpl;
-import com.tsystems.javaschool.business.services.interfaces.StaffService;
 import com.tsystems.javaschool.db.entities.Staff;
 import com.tsystems.javaschool.db.entities.User;
 
@@ -19,7 +17,7 @@ import java.io.PrintWriter;
  * Created by alex on 10.09.16.
  */
 @WebServlet("/login")
-public class LoginController extends HttpServlet{
+public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -48,8 +46,9 @@ public class LoginController extends HttpServlet{
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json.toString());
+            out.flush();
+        }
     }
 }

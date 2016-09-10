@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by alex on 06.09.16.
@@ -46,7 +45,7 @@ public class ShowCustomerController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/jsp/customer.jsp").forward(request, response);
         } else {
             Contract contract = ContractServiceImpl.getInstance().loadByKey(id);
-            response.sendRedirect("/admin/customer?id="+contract.getCustomer().getId());
+            response.sendRedirect("/admin/customer?id=" + contract.getCustomer().getId());
         }
     }
 }

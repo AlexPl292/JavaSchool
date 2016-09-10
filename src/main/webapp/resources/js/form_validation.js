@@ -11,7 +11,6 @@ $.validator.addMethod("dateAb18", function (val) {
     var date = val.split("-");
     var orig_date = new Date(date[0], date[1]-1, date[2]);
     // Ну почему, по какой причине в этом js месяцы начинаются с 0?! Неужели было так сложно сделать январь первым, а не нулевым?!
-    console.log(orig_date);
     var today = new Date();
     return orig_date.setFullYear(orig_date.getFullYear()+18) <= today;
 });

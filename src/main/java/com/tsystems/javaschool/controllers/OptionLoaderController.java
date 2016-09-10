@@ -24,20 +24,20 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 01.09.16.
- *
+ * <p>
  * Loading some cases of options
  * Case is defined by "loadtype"
  * Load types:
- *  - toDisable: returns which options should be disabled, if this option is chosen
- *  used in new option adding, by dependencies settings
- *  For example: If option A is chosen in required, this option should be disabled in incompatible
- *
- *  - possibleOfTariff: load possible options of chosen tariff
- *  - newOptionDependency (else): load options that are used by chosen tariffs
- *  used in new option adding. Option cannot depends on option, those are not available for chosen tariffs
+ * - toDisable: returns which options should be disabled, if this option is chosen
+ * used in new option adding, by dependencies settings
+ * For example: If option A is chosen in required, this option should be disabled in incompatible
+ * <p>
+ * - possibleOfTariff: load possible options of chosen tariff
+ * - newOptionDependency (else): load options that are used by chosen tariffs
+ * used in new option adding. Option cannot depends on option, those are not available for chosen tariffs
  */
 @WebServlet("/admin/load_option")
-public class OptionLoaderController extends HttpServlet{
+public class OptionLoaderController extends HttpServlet {
 
     OptionService service = OptionServiceImpl.getInstance();
 
@@ -74,7 +74,7 @@ public class OptionLoaderController extends HttpServlet{
             JsonElement elementNotRequiredFrom = gson.toJsonTree(notRequiredFrom);
             json.add("not_forbidden", elementNotForbidden);
             json.add("not_required_from", elementNotRequiredFrom);
-        }else if ("possibleOfTariff".equals(type)) {
+        } else if ("possibleOfTariff".equals(type)) {
             Integer tariffId = Integer.parseInt(request.getParameter("tariff_id"));
             TariffService tariffService = TariffServiceImpl.getInstance();
             EntityGraph<Option> graph = tariffService.getEntityGraph();
@@ -122,8 +122,9 @@ public class OptionLoaderController extends HttpServlet{
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json.toString());
+            out.flush();
+        }
     }
 }
