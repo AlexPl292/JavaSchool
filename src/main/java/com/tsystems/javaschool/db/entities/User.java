@@ -1,6 +1,8 @@
 package com.tsystems.javaschool.db.entities;
 
 import com.google.gson.annotations.Expose;
+import com.tsystems.javaschool.util.EMU;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.persistence.*;
 
@@ -116,5 +118,24 @@ public abstract class User {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (salt != null ? salt.hashCode() : 0);
         return result;
+    }
+
+    public static User login(String email, String password) {
+
+        if (email != null && password != null) {
+            User user = EMU.getEntityManager().createQuery("SELECT u FROM User u WHERE u.email = :first", User.class)
+                    .setParameter("first", email)
+                    .getSingleResult();
+            if (user != null) {
+                String passwordHash = DigestUtils.sha256Hex(password);
+                passwordHash = DigestUtils.sha256Hex(passwordHash + user.getSalt());
+                if (passwordHash.equals(user.getPassword())) {
+                    EMU.closeEntityManager();
+                    return user;
+                }
+            }
+        }
+        EMU.closeEntityManager();
+        return null;
     }
 }

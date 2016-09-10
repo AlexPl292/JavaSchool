@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.services.implementations.StaffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.StaffService;
 import com.tsystems.javaschool.db.entities.Staff;
+import com.tsystems.javaschool.db.entities.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,20 +29,19 @@ public class LoginController extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        StaffService staffService = StaffServiceImpl.getInstance();
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         JsonObject json = new JsonObject();
 
-        if (email != null && password != null) {
-            Staff staff = staffService.login(email, password);
-            if (staff != null) {
-                HttpSession session = request.getSession();
+
+        User user = User.login(email, password);
+        if (user != null) {
+            HttpSession session = request.getSession();
+            if (user instanceof Staff)
                 session.setAttribute("user", "admin");
-                json.addProperty("success", true);
-            } else {
-                json.addProperty("success", false);
-            }
+            else
+                session.setAttribute("user", "customer");
+            json.addProperty("success", true);
         } else {
             json.addProperty("success", false);
         }
