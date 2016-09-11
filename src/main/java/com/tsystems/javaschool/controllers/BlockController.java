@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by alex on 07.09.16.
  */
-@WebServlet({"/admin/blockContract", "/admin/unblockContract"})
+@WebServlet({"/admin/blockContract", "/admin/unblockContract", "/customer/blockContract", "/customer/unblockContract"})
 public class BlockController extends HttpServlet {
 
     @Override
@@ -25,6 +25,8 @@ public class BlockController extends HttpServlet {
         String url = request.getServletPath();
         if ("/admin/blockContract".equals(url))
             service.setBlock(id, 2);
+        else if ("/customer/blockContract".equals(url))
+            service.setBlock(id, 1);
         else
             service.setBlock(id, 0);
     }

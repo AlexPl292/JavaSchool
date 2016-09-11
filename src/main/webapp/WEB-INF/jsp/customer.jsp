@@ -44,7 +44,7 @@
 <body>
 <c:set var="isCustomer" value="${\"customer\".equals(sessionScope.user)}"/>
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/template.jsp"/>
+    <%--<c:import url="/WEB-INF/jsp/template.jsp"/>--%>
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
@@ -100,12 +100,12 @@
                                                             <span class="caret"></span>
                                                         </button>
                                                         <ul class="dropdown-menu pull-right" role="menu">
-                                                            <li><a href="/admin/editTariff"><p ${blocked != 0 ? "class=\"text-muted\"":""}>Edit</p></a>
+                                                            <li><a href="/editTariff"><p ${blocked != 0 ? "class=\"text-muted\"":""}>Edit</p></a>
                                                             </li>
-                                                            <li>${blocked == 0 ? "<a href=\"/admin/blockContract\"><p>Block</p></a>":"<a href=\"/admin/unblockContract\"><p>Unblock</p></a>"}
+                                                            <li>${blocked == 0 ? "<a href=\"/blockContract\"><p>Block</p></a>":"<a href=\"/unblockContract\"><p>Unblock</p></a>"}
                                                             </li>
                                                             <li class="divider"></li>
-                                                            <li><a href="/admin/delete_contract"><p class="text-danger">Delete</p></a>
+                                                            <li><a href="/delete_contract"><p class="text-danger">Delete</p></a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -139,33 +139,35 @@
                                     </div>
                                 </div>
                             </c:forEach>
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#newContract">Add new
-                                            contract</a>
-                                    </h4>
-                                </div>
-                                <div id="newContract" class="panel-collapse collapse" style="height: 0px;">
-                                    <div class="panel-body">
-                                        <div class="col-lg-12">
-                                            <form class="form-horizontal" id="add_contract_form" action='add_contract'
-                                                  method="POST">
-                                                <input type="hidden" name="customer_id" value="${customer.getId()}">
-                                                <c:import url="template_new_contract.jsp"/>
-                                                <div class="row">
-                                                    <div class="panel-body">
-                                                        <!-- Button -->
-                                                        <div class="controls">
-                                                            <input type="submit" class="btn btn-success"/>
+                            <c:if test="${!isCustomer}">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#newContract">Add new
+                                                contract</a>
+                                        </h4>
+                                    </div>
+                                    <div id="newContract" class="panel-collapse collapse" style="height: 0px;">
+                                        <div class="panel-body">
+                                            <div class="col-lg-12">
+                                                <form class="form-horizontal" id="add_contract_form" action='add_contract'
+                                                      method="POST">
+                                                    <input type="hidden" name="customer_id" value="${customer.getId()}">
+                                                    <c:import url="template_new_contract.jsp"/>
+                                                    <div class="row">
+                                                        <div class="panel-body">
+                                                            <!-- Button -->
+                                                            <div class="controls">
+                                                                <input type="submit" class="btn btn-success"/>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </form>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </c:if>
                         </div>
                     </div>
                     <!-- .panel-body -->

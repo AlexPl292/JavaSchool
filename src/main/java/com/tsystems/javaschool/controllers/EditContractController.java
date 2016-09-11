@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * Created by alex on 09.09.16.
  */
-@WebServlet("/admin/edit_contract")
+@WebServlet({"/admin/edit_contract", "/edit_contract"})
 public class EditContractController extends HttpServlet {
 
     @Override

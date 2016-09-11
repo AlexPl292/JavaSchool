@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by alex on 07.09.16.
  */
-@WebServlet("/admin/delete_contract")
+@WebServlet({"/admin/delete_contract", "/customer/delete_contract"})
 public class DeleteController extends HttpServlet {
 
     @Override

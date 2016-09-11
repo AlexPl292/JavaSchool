@@ -56,12 +56,12 @@ public class AuthorizationFilter implements Filter{
             }
             httpRes.sendRedirect("/login");
         } else {
-            if ("admin".equals(currentUser) && path.startsWith("/admin/") ||
-                    "customer".equals(currentUser) && path.startsWith("/customer")) {
-                chain.doFilter(request, response);
+            if ("admin".equals(currentUser) && path.startsWith("/customer/") ||
+                    "customer".equals(currentUser) && path.startsWith("/admin/")) {
+                ((HttpServletResponse) response).sendRedirect("/error");
                 return;
             }
-            ((HttpServletResponse) response).sendRedirect("/error");
+            chain.doFilter(request, response);
         }
     }
 
