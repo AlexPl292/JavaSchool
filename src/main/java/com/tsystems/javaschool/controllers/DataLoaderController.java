@@ -9,7 +9,11 @@ import com.tsystems.javaschool.business.services.implementations.CustomerService
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.GenericService;
+import com.tsystems.javaschool.db.entities.Tariff;
+import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
+import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 
+import javax.persistence.EntityGraph;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +24,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by alex on 23.08.16.
@@ -47,6 +52,7 @@ public class DataLoaderController extends HttpServlet {
         Boolean updateCount = Boolean.valueOf(request.getParameter("updateCount"));
         List entitiesList;
         JsonObject json = new JsonObject();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String page = request.getParameter("page");
         int draw = 1;
         long recordsTotal = -1;
@@ -87,10 +93,19 @@ public class DataLoaderController extends HttpServlet {
 
         if ("-1".equals(page))
             entitiesList = service.loadAll();
-        else
+        else {
             entitiesList = service.load(kwargs);
+/*            if ("/load_tariffs".equals(url)) {
+                json.addProperty("hasPopover", true);
+                json.addProperty("popoverHeader", "Available options");
+                JsonObject popoverJson = new JsonObject();
+                for (Object tariff : entitiesList) {
+                    popoverJson.add(((Tariff) tariff).getId().toString(), gson.toJsonTree(((Tariff) tariff).getPossibleOptions()));
+                }
+                json.add("popoverData", popoverJson);
+            }*/
+        }
 
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         JsonElement element = gson.toJsonTree(entitiesList);
         json.addProperty("draw", draw);
         json.add("data", element);

@@ -88,7 +88,14 @@ function fill_table($table, $pagination, link) {
                         var items = item.split(".");
                         $row.find("td:nth-child(" + (j + 1) + ")").text(response.data[i][items[0]][items[1]]);
                     }
-                })
+                });
+/*                if (response.hasPopover) {
+                    var content = $('<ul>');
+                    for (var i = 0; i < response.popoverData.length; i++) {
+                        content.append($('<li type="disc"></li>').text(response.popoverData[response.data[i].id]))
+                    }
+                    // $row.popover({content:content, title:response.popoverHeader, placement:"top", trigger:"hover"});
+                }*/
             } else {
                 $row = $table.find("tbody tr:nth-child(" + (i + 1) + ")");
                 if (link){

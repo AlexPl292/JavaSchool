@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.db.entities;
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ public class Tariff {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Expose
-    private int id;
+    private Integer id;
 
     @Basic
     @Column(name = "name", nullable = true, length = 45)
@@ -61,11 +62,11 @@ public class Tariff {
         this.description = description;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
