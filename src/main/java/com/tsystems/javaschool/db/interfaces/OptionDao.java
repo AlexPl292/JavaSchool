@@ -13,13 +13,13 @@ import java.util.Set;
  */
 public interface OptionDao extends GenericDao<Option, Integer> {
 
-    /**
+/*    *//**
      * Load by key with lazy fetched fields
      * @param key id of entity
      * @param hints entity graph with fields
      * @return entity
-     */
-    Option read(Integer key, Map<String, Object> hints);
+     *//*
+    Option read(Integer key, Map<String, Object> hints);*/
 
     /**
      * Load options that contains in all this tariffs.

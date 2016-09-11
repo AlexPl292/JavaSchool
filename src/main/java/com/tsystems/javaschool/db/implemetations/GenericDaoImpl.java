@@ -6,6 +6,7 @@ import com.tsystems.javaschool.util.EMU;
 import javax.persistence.EntityGraph;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.Map;
 
 /**
  * Created by alex on 18.08.16.
@@ -47,5 +48,10 @@ abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<
     @Override
     public EntityGraph getEntityGraph() {
         return EMU.getEntityManager().createEntityGraph(type);
+    }
+
+    @Override
+    public T read(Integer key, Map<String, Object> hints) {
+        return (T) EMU.getEntityManager().find(type, key, hints);
     }
 }

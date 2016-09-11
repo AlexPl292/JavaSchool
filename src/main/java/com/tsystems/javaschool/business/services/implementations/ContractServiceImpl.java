@@ -50,7 +50,7 @@ public class ContractServiceImpl implements ContractService{
         }
     }
 
-    @Override
+/*    @Override
     public List<Contract> getNEntries(int maxResult, int firstResult) {
         List<Contract> contracts = contractDao.selectFromTo(maxResult, firstResult);
         EMU.closeEntityManager();
@@ -87,7 +87,7 @@ public class ContractServiceImpl implements ContractService{
         List<Contract> contracts = contractDao.getAll();
         EMU.closeEntityManager();
         return contracts;
-    }
+    }*/
 
     @Override
     public Contract loadByKey(Integer key) {
@@ -177,5 +177,24 @@ public class ContractServiceImpl implements ContractService{
         } finally {
             EMU.closeEntityManager();
         }
+    }
+
+    @Override
+    public List<Contract> load(Map<String, Object> kwargs) {
+        List<Contract> contracts = contractDao.read(kwargs);
+        EMU.closeEntityManager();
+        return contracts;
+    }
+
+    @Override
+    public long count(Map<String, Object> kwargs) {
+        long count = contractDao.count(kwargs);
+        EMU.closeEntityManager();
+        return count;
+    }
+
+    @Override
+    public List<Contract> loadAll() {
+        return load(new HashMap<>());
     }
 }

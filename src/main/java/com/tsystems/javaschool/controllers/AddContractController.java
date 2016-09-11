@@ -86,6 +86,7 @@ public class AddContractController extends HttpServlet {
             json.addProperty("success", true);
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
             JsonElement element = gson.toJsonTree(contract);
+            element.getAsJsonObject().add("usedOptions", gson.toJsonTree(contract.getUsedOptions()));
             json.add("data", element);
         }
 

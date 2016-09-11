@@ -11,5 +11,5 @@ import java.util.Map;
  */
 public interface ContractDao extends GenericDao<Contract, Integer>{
 
-    Contract read(Integer key, Map<String, Object> hints);
+//    Contract read(Integer key, Map<String, Object> hints);
 }

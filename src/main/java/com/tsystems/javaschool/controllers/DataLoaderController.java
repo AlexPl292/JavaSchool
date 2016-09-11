@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 23.08.16.
@@ -48,7 +50,9 @@ public class DataLoaderController extends HttpServlet {
         String page = request.getParameter("page");
         int draw = 1;
         long recordsTotal = -1;
+        Map<String, Object> kwargs = new HashMap<>();
         String searchQuery = request.getParameter("search");
+        kwargs.put("search", searchQuery);
 
         if ("/admin/load_customers".equals(url)) {
             service = CustomerServiceImpl.getInstance();
@@ -63,7 +67,7 @@ public class DataLoaderController extends HttpServlet {
         }
 
         if (updateCount) {
-            recordsTotal = service.countOfEntries(searchQuery);
+            recordsTotal = service.count(kwargs);
             json.addProperty("recordsTotal", recordsTotal);
         }
 
@@ -71,17 +75,20 @@ public class DataLoaderController extends HttpServlet {
         if ("first".equals(page)) {
             draw = 1;
         } else if ("last".equals(page)) {
-            if (recordsTotal == -1)
-                recordsTotal = service.countOfEntries(searchQuery);
+            recordsTotal = service.count(kwargs);
             draw = (int) Math.ceil(recordsTotal / 10.0);
         } else {
             if (page != null) // TODO странная ошибка: иногда page приходит null. Более того, даже эта строчка не всегда помогает
                 draw = Integer.parseInt(page);
         }
+
+        kwargs.put("maxEntries", 10);
+        kwargs.put("firstIndex", (draw - 1) * 10);
+
         if ("-1".equals(page))
             entitiesList = service.loadAll();
         else
-            entitiesList = service.getNEntries(10, (draw - 1) * 10, searchQuery);
+            entitiesList = service.load(kwargs);
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         JsonElement element = gson.toJsonTree(entitiesList);

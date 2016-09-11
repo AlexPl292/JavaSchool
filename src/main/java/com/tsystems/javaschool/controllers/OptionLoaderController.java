@@ -77,7 +77,7 @@ public class OptionLoaderController extends HttpServlet {
         } else if ("possibleOfTariff".equals(type)) {
             Integer tariffId = Integer.parseInt(request.getParameter("tariff_id"));
             TariffService tariffService = TariffServiceImpl.getInstance();
-            EntityGraph<Option> graph = tariffService.getEntityGraph();
+            EntityGraph graph = tariffService.getEntityGraph();
 
             graph.addAttributeNodes("possibleOptions");
             Map<String, Object> hints = new HashMap<>();

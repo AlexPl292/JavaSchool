@@ -4,6 +4,7 @@ import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 18.08.16.
@@ -38,45 +39,57 @@ public interface GenericDao <T, PK extends Serializable> {
      */
     void delete(PK id);
 
-    /**
+    List<T> read(Map<String, Object> kwargs);
+
+    long count(Map<String, Object> kwargs);
+
+/*    *//**
      * Return entities with pagination
      * @param maxEntries count of entries
      * @param firstIndex first index of entity (index != id)
      * @return list of entities between (firstIndex) - (firstIndex+maxEntries)
-     */
+     *//*
     List<T> selectFromTo(int maxEntries, int firstIndex);
 
-    /**
+    *//**
      * @return count of all entries
-     */
+     *//*
     long countOfEntities();
 
-    /**
+    *//**
      * Return pagination query with filter by "important" field
      * Which field is important is described in concrete dao interface JavaDoc
      * @param maxEntries count entries
      * @param firstIndex first index of entity (index != id)
      * @param searchQuery query. Could contain one or two words. Order is not important
      * @return list of entities between (firstIndex) - (firstIndex+maxEntries) those match searchQuery
-     */
+     *//*
     List<T> importantSearchFromTo(int maxEntries, int firstIndex, String searchQuery);
 
-    /**
+    *//**
      * Return count of entries with searchQuery
      * Which field is important is described in concrete dao interface JavaDoc
      * @param searchQuery query. Could contain one or two words. Order is not important
      * @return list of entities those match searchQuery
-     */
-    long countOfImportantSearch(String searchQuery);
+     *//*
+    long countOfImportantSearch(String searchQuery);*/
 
     /**
      * @return all entries
      */
-    List<T> getAll();
+//    List<T> getAll();
 
     /**
      * Used for load or not lazy fetched fields
      * @return entity graph
      */
     EntityGraph getEntityGraph();
+
+    /**
+     * Load by key with lazy fetched fields
+     * @param key id of entity
+     * @param hints entity graph with fields
+     * @return entity
+     */
+    T read(Integer key, Map<String, Object> hints);
 }

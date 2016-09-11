@@ -11,5 +11,5 @@ import java.util.Map;
  * Order is not important. Could contain two words
  */
 public interface CustomerDao extends GenericDao<Customer, Integer>{
-    Customer read(Integer key, Map<String, Object> hints);
+//    Customer read(Integer key, Map<String, Object> hints);
 }

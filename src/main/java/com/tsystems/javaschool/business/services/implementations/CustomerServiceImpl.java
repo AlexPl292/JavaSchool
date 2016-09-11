@@ -19,6 +19,7 @@ import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    @Override
+/*    @Override
     public List<Customer> getNEntries(int maxResult, int firstResult) {
         List<Customer> customers = customerDao.selectFromTo(maxResult, firstResult);
         EMU.closeEntityManager();
@@ -102,7 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
         List<Customer> customers = customerDao.getAll();
         EMU.closeEntityManager();
         return customers;
-    }
+    }*/
 
     @Override
     public Customer loadByKey(Integer key) {
@@ -136,5 +137,24 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerDao.read(key, hints);
         EMU.closeEntityManager();
         return customer;
+    }
+
+    @Override
+    public List<Customer> load(Map<String, Object> kwargs) {
+        List<Customer> customers = customerDao.read(kwargs);
+        EMU.closeEntityManager();
+        return customers;
+    }
+
+    @Override
+    public long count(Map<String, Object> kwargs) {
+        long count = customerDao.count(kwargs);
+        EMU.closeEntityManager();
+        return count;
+    }
+
+    @Override
+    public List<Customer> loadAll() {
+        return load(new HashMap<>());
     }
 }

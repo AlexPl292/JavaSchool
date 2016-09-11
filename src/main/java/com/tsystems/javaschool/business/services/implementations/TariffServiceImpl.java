@@ -10,6 +10,7 @@ import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class TariffServiceImpl implements TariffService{
         }
     }
 
-    @Override
+/*    @Override
     public List<Tariff> getNEntries(int maxResult, int firstResult) {
         List<Tariff> tariffs = tariffDao.selectFromTo(maxResult, firstResult);
         EMU.closeEntityManager();
@@ -83,7 +84,7 @@ public class TariffServiceImpl implements TariffService{
         List<Tariff> tariffs = tariffDao.getAll();
         EMU.closeEntityManager();
         return tariffs;
-    }
+    }*/
 
     @Override
     public Tariff loadByKey(Integer key) {
@@ -110,6 +111,25 @@ public class TariffServiceImpl implements TariffService{
         } finally {
             EMU.closeEntityManager();
         }
+    }
+
+    @Override
+    public List<Tariff> load(Map<String, Object> kwargs) {
+        List<Tariff> tariffs = tariffDao.read(kwargs);
+        EMU.closeEntityManager();
+        return tariffs;
+    }
+
+    @Override
+    public long count(Map<String, Object> kwargs) {
+        long count = tariffDao.count(kwargs);
+        EMU.closeEntityManager();
+        return count;
+    }
+
+    @Override
+    public List<Tariff> loadAll() {
+        return load(new HashMap<>());
     }
 
     @Override

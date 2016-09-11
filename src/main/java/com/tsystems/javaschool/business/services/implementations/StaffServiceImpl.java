@@ -8,7 +8,9 @@ import com.tsystems.javaschool.util.EMU;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.persistence.EntityGraph;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 10.09.16.
@@ -46,6 +48,7 @@ public class StaffServiceImpl  implements StaffService {
 
     }
 
+/*
     @Override
     public List<Staff> getNEntries(int maxResult, int firstResult) {
         return null;
@@ -70,6 +73,7 @@ public class StaffServiceImpl  implements StaffService {
     public List<Staff> loadAll() {
         return null;
     }
+*/
 
     @Override
     public Staff loadByKey(Integer key) {
@@ -84,5 +88,24 @@ public class StaffServiceImpl  implements StaffService {
     @Override
     public void remove(Integer key) {
 
+    }
+
+    @Override
+    public List<Staff> load(Map<String, Object> kwargs) {
+        List<Staff> staff = staffDao.read(kwargs);
+        EMU.closeEntityManager();
+        return staff;
+    }
+
+    @Override
+    public long count(Map<String, Object> kwargs) {
+        long count = staffDao.count(kwargs);
+        EMU.closeEntityManager();
+        return count;
+    }
+
+    @Override
+    public List<Staff> loadAll() {
+        return load(new HashMap<>());
     }
 }

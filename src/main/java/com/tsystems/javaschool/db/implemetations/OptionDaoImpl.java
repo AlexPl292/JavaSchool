@@ -4,6 +4,8 @@ import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.util.EMU;
 
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,45 +26,10 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
         return OptionDaoHolder.instance;
     }
 
-    @Override
-    public List<Option> selectFromTo(int maxEntries, int firstIndex) {
-        return EMU.getEntityManager().createQuery("SELECT NEW Option(c.id, c.name, c.cost, c.connectCost, c.description) FROM Option c", Option.class)
-                .setFirstResult(firstIndex)
-                .setMaxResults(maxEntries)
-                .getResultList();
-    }
-
-    @Override
-    public long countOfEntities() {
-        return (long) EMU.getEntityManager().createQuery("SELECT COUNT(c.id) FROM Option c").getSingleResult();
-    }
-
-    @Override
-    public List<Option> importantSearchFromTo(int maxEntries, int firstIndex, String searchQuery) {
-        return EMU.getEntityManager().createQuery("SELECT NEW Option(c.id, c.name, c.cost, c.connectCost, c.description) FROM Option c WHERE c.name LIKE :first", Option.class)
-                .setParameter("first", "%"+ searchQuery +"%")
-                .setFirstResult(firstIndex)
-                .setMaxResults(maxEntries)
-                .getResultList();
-    }
-
-    @Override
-    public long countOfImportantSearch(String searchQuery) {
-        return (long) EMU.getEntityManager().createQuery("SELECT COUNT(c.id) FROM Option c WHERE c.name LIKE :first")
-                .setParameter("first", "%"+ searchQuery +"%")
-                .getSingleResult();
-    }
-
-    @Override
-    public List<Option> getAll() {
-        return EMU.getEntityManager().createQuery("SELECT NEW Option(c.id, c.name, c.cost, c.connectCost, c.description) FROM Option c", Option.class)
-                .getResultList();
-    }
-
-    @Override
+/*    @Override
     public Option read(Integer key, Map<String, Object> hints) {
         return EMU.getEntityManager().find(Option.class, key, hints);
-    }
+    }*/
 
     @Override
     public List<Option> getOptionsOfTariffs(List<Integer> tariffs) {
@@ -76,5 +43,42 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
     @Override
     public Set<Option> loadOptionsByIds(List<Integer> ids) {
         return ids.stream().map(this::read).collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<Option> read(Map<String, Object> kwargs) {
+        String queryStr = "SELECT t FROM Option t";
+        String search = (String) kwargs.get("search");
+        Integer maxEntries = (Integer) kwargs.get("maxEntries");
+        Integer firstIndex = (Integer) kwargs.get("firstIndex");
+        Object graph = kwargs.get("graph");
+        if (search != null && !"".equals(search)) {
+            queryStr += " WHERE t.name LIKE :first";
+        }
+
+        TypedQuery<Option> query = EMU.getEntityManager().createQuery(queryStr, Option.class);
+        if (search != null && !"".equals(search))
+            query.setParameter("first", "%"+search+"%");
+        if (maxEntries != null)
+            query.setMaxResults(maxEntries);
+        if (firstIndex != null)
+            query.setFirstResult(firstIndex);
+        if (graph != null)
+            query.setHint("javax.persistence.loadgraph", graph);
+        return query.getResultList();
+    }
+
+    @Override
+    public long count(Map<String, Object> kwargs) {
+        String queryStr = "SELECT COUNT(t.id) FROM Option t";
+        String search = (String) kwargs.get("search");
+        if (search != null && !"".equals(search)) {
+            queryStr += " WHERE t.name LIKE :first";
+        }
+
+        Query query = EMU.getEntityManager().createQuery(queryStr);
+        if (search != null && !"".equals(search))
+            query.setParameter("first", "%"+search+"%");
+        return (long) query.getSingleResult();
     }
 }

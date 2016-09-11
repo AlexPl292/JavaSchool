@@ -46,7 +46,7 @@ public class OptionServiceImpl implements OptionService{
         }
     }
 
-    @Override
+/*    @Override
     public List<Option> getNEntries(int maxResult, int firstResult) {
         List<Option> options = optionDao.selectFromTo(maxResult, firstResult);
         EMU.closeEntityManager();
@@ -83,7 +83,7 @@ public class OptionServiceImpl implements OptionService{
         List<Option> options = optionDao.getAll();
         EMU.closeEntityManager();
         return options;
-    }
+    }*/
 
     @Override
     public Option loadByKey(Integer key) {
@@ -185,4 +185,23 @@ public class OptionServiceImpl implements OptionService{
         }
     }
 
+
+    @Override
+    public List<Option> load(Map<String, Object> kwargs) {
+        List<Option> options = optionDao.read(kwargs);
+        EMU.closeEntityManager();
+        return options;
+    }
+
+    @Override
+    public long count(Map<String, Object> kwargs) {
+        long count = optionDao.count(kwargs);
+        EMU.closeEntityManager();
+        return count;
+    }
+
+    @Override
+    public List<Option> loadAll() {
+        return load(new HashMap<>());
+    }
 }
