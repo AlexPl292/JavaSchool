@@ -26,14 +26,12 @@
                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
-                <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                </li>
-                <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                </li>
+<%--                <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                </li>--%>
                 <li class="divider"></li>
                 <li><a href="/sign_out"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                 </li>
-            </ul
+            </ul>
             <!-- /.dropdown-user -->
         </li>
     </ul>
@@ -63,7 +61,7 @@
                             <a href="/admin/add_tariff">Add new tariff</a>
                         </li>
                         <li>
-                            <a href="/admin/tariffs">Show all tariffs</a>
+                            <a href="/tariffs">Show all tariffs</a>
                         </li>
                     </ul>
                 </li>
@@ -76,7 +74,7 @@
                             <a href="/admin/add_option">Add new option</a>
                         </li>
                         <li>
-                            <a href="/admin/options">Show all options</a>
+                            <a href="/options">Show all options</a>
                         </li>
                     </ul>
                 </li>

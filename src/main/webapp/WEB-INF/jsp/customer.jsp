@@ -42,9 +42,16 @@
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
 </head>
 <body>
-<c:set var="isCustomer" value="${\"customer\".equals(sessionScope.user)}"/>
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/template.jsp"/>
+    <c:set var="isCustomer" value="${\"customer\".equals(sessionScope.user)}"/>
+    <c:choose>
+        <c:when test="${isCustomer}">
+            <c:import url="/WEB-INF/jsp/template_customer_version.jsp"/>
+        </c:when>
+        <c:otherwise>
+            <c:import url="/WEB-INF/jsp/template.jsp"/>
+        </c:otherwise>
+    </c:choose>
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
