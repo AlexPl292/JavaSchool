@@ -44,7 +44,7 @@
 <body>
 <c:set var="isCustomer" value="${\"customer\".equals(sessionScope.user)}"/>
 <div class="wrapper">
-    <%--<c:import url="/WEB-INF/jsp/template.jsp"/>--%>
+    <c:import url="/WEB-INF/jsp/template.jsp"/>
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">

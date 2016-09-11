@@ -61,6 +61,10 @@ public class AuthorizationFilter implements Filter{
                 ((HttpServletResponse) response).sendRedirect("/error");
                 return;
             }
+            if ("/login".equals(path)) {
+                httpRes.sendRedirect("/");
+                return;
+            }
             chain.doFilter(request, response);
         }
     }
