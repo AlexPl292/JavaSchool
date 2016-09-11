@@ -42,9 +42,9 @@
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
 </head>
 <body>
-
+<c:set var="isCustomer" value="${\"customer\".equals(sessionScope.user)}"/>
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/template.jsp"></c:import>
+    <c:import url="/WEB-INF/jsp/template.jsp"/>
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
@@ -91,24 +91,26 @@
                                         <h4 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#accordion"
                                                href="#collapse${contract.getId()}">${contract.getNumber()}</a>
-                                            <div class="pull-right">
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle"
-                                                            data-toggle="dropdown" aria-expanded="false">
-                                                        Actions
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu pull-right" role="menu">
-                                                        <li><a href="/editTariff"><p ${blocked != 0 ? "class=\"text-muted\"":""}>Edit</p></a>
-                                                        </li>
-                                                        <li>${blocked == 0 ? "<a href=\"/admin/blockContract\"><p>Block</p></a>":"<a href=\"/admin/unblockContract\"><p>Unblock</p></a>"}
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                        <li><a href="/admin/delete_contract"><p class="text-danger">Delete</p></a>
-                                                        </li>
-                                                    </ul>
+                                            <c:if test="${blocked != 2 || !isCustomer}">
+                                                <div class="pull-right">
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+                                                                data-toggle="dropdown" aria-expanded="false">
+                                                            Actions
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu pull-right" role="menu">
+                                                            <li><a href="/admin/editTariff"><p ${blocked != 0 ? "class=\"text-muted\"":""}>Edit</p></a>
+                                                            </li>
+                                                            <li>${blocked == 0 ? "<a href=\"/admin/blockContract\"><p>Block</p></a>":"<a href=\"/admin/unblockContract\"><p>Unblock</p></a>"}
+                                                            </li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="/admin/delete_contract"><p class="text-danger">Delete</p></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </c:if>
                                         </h4>
                                     </div>
                                     <div id="collapse${contract.getId()}" class="panel-collapse collapse"

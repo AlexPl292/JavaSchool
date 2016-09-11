@@ -377,7 +377,7 @@ var prepare = {
                     $obj.attr("href", "/admin/blockContract").text("Block");
                     $panel.find(":contains('Edit')").removeClass("text-muted");
                 });
-            } else if (href === "/editTariff") {
+            } else if (href === "/admin/editTariff") {
                 edit_tariff($panel)
             }
         })
