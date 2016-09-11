@@ -16,6 +16,7 @@ import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityTransaction;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -165,9 +166,13 @@ public class ContractServiceImpl implements ContractService{
         hints.put("javax.persistence.loadgraph", graph);
         try {
             EMU.beginTransaction();
+            Set<Option> options = OptionDaoImpl.getInstance().loadOptionsByIds(optionIds);
+            BigDecimal cost = options.stream().map(Option::getConnectCost).reduce(BigDecimal.ZERO, BigDecimal::add);
             Contract contract = contractDao.read(contract_id, hints);
+            BigDecimal res = contract.getCustomer().getBalance().subtract(cost);
+            contract.getCustomer().setBalance(res);
             contract.setTariff(TariffDaoImpl.getInstance().read(tariff_id));
-            contract.setUsedOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionIds));
+            contract.setUsedOptions(options);
             EMU.commit();
             return contract;
         } catch (RuntimeException re) {

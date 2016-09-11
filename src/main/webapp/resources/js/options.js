@@ -8,8 +8,11 @@ function create_boxes(selobjs) {
             $(selobj).empty();
             var checkboxs_name = selobj.attr('id');
             $.each(data.data, function (i, obj) {
-                $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name}));
-                $(selobj).append($("<label/>", {"for": checkboxs_name+i, text:obj.name}));
+                $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name, "data-cost":obj.connectCost}));
+                var name = obj.name;
+                if (obj.connectCost !== undefined)
+                    name += ' <p class="text-muted" style="display:inline">('+obj.connectCost+'<i class="fa fa-rub"></i>)</p>';
+                $(selobj).append($("<label/>", {"for": checkboxs_name+i, html:name}));
                 $(selobj).append($("<br/>"));
             })
         })
@@ -263,6 +266,10 @@ function edit_handler(e) {
     var panel = e.data.panel;
     var form = panel.find("form");
     $(form).find("input[type=checkbox]").prop("disabled", false);
+    var cost = 0;
+    $(form).find("input[type=checkbox]:checked").each(function (i, item) {
+        cost += $(item).data("cost");
+    });
     $.post($(form).attr("action"), $(form).serialize(), function (e) {
         if (e.success) {
             $.notify("Success!", {position: "top right", className: "success"});
@@ -273,6 +280,9 @@ function edit_handler(e) {
             $(panel).find(".panel-body").append(filling[2]);
             $(panel).find(".panel-title .pull-right").empty();
             $(panel).find(".panel-title .pull-right").append(create_panel_menu());
+            var balance = $.find("#balance");
+            var res_balance = $(balance).data("balance")-cost;
+            $(balance).html(res_balance.toFixed(2)+' <i class="fa fa-rub"></i>').data("balance", res_balance);
         } else {
             $.each(e.errors, function (prop, val) {
                 $.notify("Error: in " + prop + "\n" + val, {position: "top right", className: "error"});

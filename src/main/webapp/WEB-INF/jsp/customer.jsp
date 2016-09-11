@@ -55,7 +55,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">${customer.getSurname()} ${customer.getName()}</h1>
+                <h1 class="page-header">${customer.getSurname()} ${customer.getName()} <small id="balance" data-balance="${customer.getBalance()}">${customer.getBalance()} <i class="fa fa-rub"></i></small></h1>
             </div>
         </div>
         <h1>
