@@ -38,7 +38,7 @@
                 e.preventDefault();
                 $.post($form.attr("action"), $form.serialize(), function (res) {
                     if (res.success) {
-                        window.location = "/admin/customers";
+                        window.location = "/";
                     } else {
                         $.notify('Error!');
                     }

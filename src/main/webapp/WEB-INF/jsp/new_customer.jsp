@@ -39,7 +39,7 @@
                 <h1 class="page-header">Add new customer</h1>
             </div>
         </div>
-        <form class="form-horizontal" id="add_customer_form" action='admin/add_customer' method="POST">
+        <form class="form-horizontal" id="add_customer_form" action='add_customer' method="POST">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">

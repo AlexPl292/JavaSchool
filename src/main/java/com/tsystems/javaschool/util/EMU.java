@@ -3,18 +3,17 @@ package com.tsystems.javaschool.util;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
 /**
  * Created by alex on 07.09.16.
  */
-public class EMU {
-    private static final EntityManagerFactory emf;
-    private static final ThreadLocal<EntityManager> threadLocal;
-
-    static {
-        emf = Persistence.createEntityManagerFactory("JavaSchool");
-        threadLocal = new ThreadLocal<EntityManager>();
-    }
+@WebListener
+public class EMU implements ServletContextListener {
+    private static EntityManagerFactory emf;
+    private static ThreadLocal<EntityManager> threadLocal;
 
     public static EntityManager getEntityManager() {
         EntityManager em = threadLocal.get();
@@ -48,5 +47,16 @@ public class EMU {
 
     public static void commit() {
         getEntityManager().getTransaction().commit();
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        emf = Persistence.createEntityManagerFactory("JavaSchool");
+        threadLocal = new ThreadLocal<EntityManager>();
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+
     }
 }

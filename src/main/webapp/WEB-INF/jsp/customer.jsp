@@ -147,7 +147,7 @@
                                 <div id="newContract" class="panel-collapse collapse" style="height: 0px;">
                                     <div class="panel-body">
                                         <div class="col-lg-12">
-                                            <form class="form-horizontal" id="add_contract_form" action='admin/add_contract'
+                                            <form class="form-horizontal" id="add_contract_form" action='add_contract'
                                                   method="POST">
                                                 <input type="hidden" name="customer_id" value="${customer.getId()}">
                                                 <c:import url="template_new_contract.jsp"/>

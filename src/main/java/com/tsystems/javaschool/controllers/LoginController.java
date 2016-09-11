@@ -35,8 +35,9 @@ public class LoginController extends HttpServlet {
         User user = User.login(email, password);
         if (user != null) {
             HttpSession session = request.getSession();
+            session.setAttribute("id", user.getId());
             if (user instanceof Staff)
-                session.setAttribute("user", "manager");
+                session.setAttribute("user", "admin");
             else
                 session.setAttribute("user", "customer");
             json.addProperty("success", true);

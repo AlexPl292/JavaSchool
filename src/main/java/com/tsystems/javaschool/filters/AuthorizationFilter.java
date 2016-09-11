@@ -27,18 +27,41 @@ public class AuthorizationFilter implements Filter{
         HttpSession session = httpReq.getSession();
         String currentUser = (String) session.getAttribute("user");
 
-        if ("/login".equals(((HttpServletRequest) request).getServletPath())) {
+        String path = ((HttpServletRequest) request).getServletPath();
+        if (path.startsWith("/resources")) {
             chain.doFilter(request, response);
             return;
         }
-        if (((HttpServletRequest) request).getServletPath().startsWith("/resources")) {
+        if ("/error".equals(path)) {
             chain.doFilter(request, response);
             return;
+        }
+        if ("/".equals(path)) {
+            if ("admin".equals(currentUser)) {
+                httpRes.sendRedirect("/admin/customers");
+                return;
+            } else if ("customer".equals(currentUser)) {
+                httpRes.sendRedirect("/customer");
+                return;
+            } else {
+                httpRes.sendRedirect("/login");
+                return;
+            }
+
         }
         if (currentUser == null) {
+            if ("/login".equals(path)) {
+                chain.doFilter(request, response);
+                return;
+            }
             httpRes.sendRedirect("/login");
         } else {
-            chain.doFilter(request, response);
+            if ("admin".equals(currentUser) && path.startsWith("/admin/") ||
+                    "customer".equals(currentUser) && path.startsWith("/customer")) {
+                chain.doFilter(request, response);
+                return;
+            }
+            ((HttpServletResponse) response).sendRedirect("/error");
         }
     }
 

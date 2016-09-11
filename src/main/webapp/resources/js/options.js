@@ -254,7 +254,7 @@ function edit_tariff(panel) {
         $(panel).html(panel_backup);
     });
     $(panel).find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
-    $(panel).find('.panel-body').wrapInner('<form class="form-horizontal" action="admin/edit_contract" method="POST"></form>');
+    $(panel).find('.panel-body').wrapInner('<form class="form-horizontal" action="edit_contract" method="POST"></form>');
     $(panel).find('form').submit({panel:$(panel)}, edit_handler);
 }
 
@@ -412,5 +412,7 @@ var prepare = {
     }
 };
 $(function () {
-    prepare[window.location.pathname]();
+    var path = window.location.pathname;
+    if (path in prepare)
+        prepare[path]();
 });
