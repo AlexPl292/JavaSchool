@@ -18,6 +18,7 @@ public class StaffDaoImpl extends GenericDaoImpl<Staff, Integer> implements Staf
 
     private static class StaffDaoHolder {
         private static final StaffDaoImpl instance = new StaffDaoImpl();
+        private StaffDaoHolder() {}
     }
 
     public static StaffDaoImpl getInstance() {

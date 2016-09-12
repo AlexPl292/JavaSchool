@@ -1,7 +1,6 @@
 package com.tsystems.javaschool.business.services.implementations;
 
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
-import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
@@ -10,7 +9,6 @@ import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
-import javax.persistence.EntityTransaction;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,6 +21,7 @@ public class OptionServiceImpl implements OptionService{
 
     private static class OptionServiceHolder {
         private final static OptionServiceImpl instance = new OptionServiceImpl();
+        private OptionServiceHolder() {}
     }
 
     public static OptionServiceImpl getInstance() {
@@ -45,45 +44,6 @@ public class OptionServiceImpl implements OptionService{
             EMU.closeEntityManager();
         }
     }
-
-/*    @Override
-    public List<Option> getNEntries(int maxResult, int firstResult) {
-        List<Option> options = optionDao.selectFromTo(maxResult, firstResult);
-        EMU.closeEntityManager();
-        return options;
-    }
-
-    @Override
-    public long countOfEntries() {
-        long res = optionDao.countOfEntities();
-        EMU.closeEntityManager();
-        return res;
-    }
-
-    @Override
-    public List<Option> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
-        if (searchQuery == null || "".equals(searchQuery))
-            return getNEntries(maxEntries, firstIndex);
-        List<Option> options = optionDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-        EMU.closeEntityManager();
-        return options;
-    }
-
-    @Override
-    public long countOfEntries(String searchQuery) {
-        if (searchQuery == null || "".equals(searchQuery))
-            return countOfEntries();
-        long res = optionDao.countOfImportantSearch(searchQuery);
-        EMU.closeEntityManager();
-        return res;
-    }
-
-    @Override
-    public List<Option> loadAll() {
-        List<Option> options = optionDao.getAll();
-        EMU.closeEntityManager();
-        return options;
-    }*/
 
     @Override
     public Option loadByKey(Integer key) {

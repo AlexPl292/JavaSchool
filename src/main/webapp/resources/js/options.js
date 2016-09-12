@@ -169,8 +169,6 @@ function optionCheckedNewTariff(e) {
     var checked_val = parseInt($(this).val(), 10);
     if ($item.is(':checked')) {
         $.getJSON("/load_option", {"loadtype": "getDependencies", data: checked_val}, function (response) {
-            var disableItIds = [];
-            var disableIt = $();
             var enableItIds = [];
             var enableIt = $();
 
@@ -383,17 +381,17 @@ var prepare = {
             var $obj = $(this);
 
             if (href === "/delete_contract") {
-                $.post("/customer"+href, {id: id}, function (e) {
+                $.post("/customer"+href, {id: id}, function () {
                     $panel.remove();
                 })
             } else if (href === "/blockContract") {
-                $.post("/customer"+href, {id: id}, function (e) {
+                $.post("/customer"+href, {id: id}, function () {
                     $panel.removeClass("panel-default").addClass("panel-red");
                     $obj.attr("href", "/unblockContract").text("Unblock");
                     $panel.find(":contains('Edit')").addClass("text-muted");
                 });
             } else if (href === "/unblockContract") {
-                $.post("/customer"+href, {id: id}, function (e) {
+                $.post("/customer"+href, {id: id}, function () {
                     $panel.removeClass("panel-red").addClass("panel-default");
                     $obj.attr("href", "/blockContract").text("Block");
                     $panel.find(":contains('Edit')").removeClass("text-muted");
@@ -418,17 +416,17 @@ var prepare = {
             var $obj = $(this);
 
             if (href === "/delete_contract") {
-                $.post("/admin"+href, {id: id}, function (e) {
+                $.post("/admin"+href, {id: id}, function () {
                     $panel.remove();
                 })
             } else if (href === "/blockContract") {
-                $.post("/admin"+href, {id: id}, function (e) {
+                $.post("/admin"+href, {id: id}, function () {
                     $panel.removeClass("panel-default").addClass("panel-red");
                     $obj.attr("href", "/admin/unblockContract").text("Unblock");
                     $panel.find(":contains('Edit')").addClass("text-muted");
                 });
             } else if (href === "/unblockContract") {
-                $.post("/admin"+href, {id: id}, function (e) {
+                $.post("/admin"+href, {id: id}, function () {
                     $panel.removeClass("panel-red").addClass("panel-default");
                     $obj.attr("href", "/admin/blockContract").text("Block");
                     $panel.find(":contains('Edit')").removeClass("text-muted");

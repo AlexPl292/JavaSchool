@@ -3,8 +3,9 @@ package com.tsystems.javaschool.db.entities;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by alex on 17.08.16.
@@ -126,5 +127,37 @@ public class Customer extends User{
                 ", email='" + getEmail() + '\'' +
                 ", is_blocked=" + isBlocked +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Customer customer = (Customer) o;
+
+        if (isBlocked != customer.isBlocked) return false;
+        if (dateOfBirth != null ? !dateOfBirth.equals(customer.dateOfBirth) : customer.dateOfBirth != null)
+            return false;
+        if (passportNumber != null ? !passportNumber.equals(customer.passportNumber) : customer.passportNumber != null)
+            return false;
+        if (passportData != null ? !passportData.equals(customer.passportData) : customer.passportData != null)
+            return false;
+        if (address != null ? !address.equals(customer.address) : customer.address != null) return false;
+        return contracts != null ? contracts.equals(customer.contracts) : customer.contracts == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
+        result = 31 * result + (passportNumber != null ? passportNumber.hashCode() : 0);
+        result = 31 * result + (passportData != null ? passportData.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + isBlocked;
+        result = 31 * result + (contracts != null ? contracts.hashCode() : 0);
+        return result;
     }
 }

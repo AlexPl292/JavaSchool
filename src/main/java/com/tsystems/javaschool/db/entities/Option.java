@@ -4,8 +4,8 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by alex on 25.08.16.
@@ -244,9 +244,7 @@ public class Option {
 
         Option that = (Option) o;
 
-        if (id == that.id)
-            return true;
-        return false;
+        return id == that.id;
     }
 
     @Override

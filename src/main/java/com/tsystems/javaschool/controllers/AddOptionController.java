@@ -29,7 +29,7 @@ import java.util.Map;
 @WebServlet("/admin/add_option")
 public class AddOptionController extends HttpServlet {
 
-    OptionService service = OptionServiceImpl.getInstance();
+     private final transient OptionService service = OptionServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

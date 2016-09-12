@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mysql.cj.api.Session;
 import com.tsystems.javaschool.db.entities.Staff;
 import com.tsystems.javaschool.db.entities.User;
 
@@ -97,7 +96,6 @@ public class LoginController extends HttpServlet {
                 json.add("errors", element);
             } else {
                 json.addProperty("success", true);
-                Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 json.addProperty("data", res);
             }
 

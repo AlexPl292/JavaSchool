@@ -29,7 +29,7 @@ $.validator.setDefaults({
     errorClass: "has-error",
     onkeyup: false,
     onclick: false,
-    errorPlacement: function(error, element) {
+    errorPlacement: function(error) {
         $.notify(error.text(), {position: "top right", className: "error"});
     },
     highlight: function(element, errorClass) {

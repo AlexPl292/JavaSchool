@@ -59,7 +59,7 @@ public class AddCustomerController extends HttpServlet {
         String address = request.getParameter("address");
         String email = request.getParameter("email");
         String number = request.getParameter("number");
-        String tariffId = request.getParameter("tariff");
+        String tariffIdStr = request.getParameter("tariff");
 
         // Validation
         String tmpError;
@@ -79,8 +79,15 @@ public class AddCustomerController extends HttpServlet {
             errors.put("number", tmpError);
         if ((tmpError = Validator.noSpaces(passportNumber)) != null)
             errors.put("passport_number", tmpError);
-        if (tariffId == null) {
+        if (tariffIdStr == null) {
             errors.put("tariff", "Choose tariff");
+        }
+
+        Integer tariffId = 0;
+        try {
+            tariffId = Integer.parseInt(tariffIdStr);
+        } catch (NumberFormatException e) {
+            errors.put("General", "Tariff id wrong format");
         }
 
         if (errors.isEmpty()) {
@@ -103,7 +110,7 @@ public class AddCustomerController extends HttpServlet {
             newCustomer.setEmail(email);
             newCustomer.setIsBlocked(0);
 
-            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(Integer.parseInt(tariffId));
+            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(tariffId);
 
             Contract contract = new Contract();
             contract.setNumber(number);

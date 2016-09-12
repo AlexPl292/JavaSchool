@@ -1,6 +1,5 @@
 package com.tsystems.javaschool.business.services.implementations;
 
-import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
@@ -9,7 +8,6 @@ import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
-import javax.persistence.EntityTransaction;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +23,7 @@ public class TariffServiceImpl implements TariffService{
 
     private static class TariffServiceHolder {
         private final static TariffServiceImpl instance = new TariffServiceImpl();
+        private TariffServiceHolder() {}
     }
 
     public static TariffServiceImpl getInstance() {
@@ -45,46 +44,6 @@ public class TariffServiceImpl implements TariffService{
             EMU.closeEntityManager();
         }
     }
-
-/*    @Override
-    public List<Tariff> getNEntries(int maxResult, int firstResult) {
-        List<Tariff> tariffs = tariffDao.selectFromTo(maxResult, firstResult);
-        EMU.closeEntityManager();
-        return tariffs;
-    }
-
-    @Override
-    public long countOfEntries() {
-        long res = tariffDao.countOfEntities();
-        EMU.closeEntityManager();
-        return res;
-    }
-
-    @Override
-    public List<Tariff> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
-        if ("".equals(searchQuery))
-            return getNEntries(maxEntries, firstIndex);
-        List<Tariff> tariffs = tariffDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-        EMU.closeEntityManager();
-        return tariffs;
-    }
-
-    @Override
-    public long countOfEntries(String searchQuery) {
-        if ("".equals(searchQuery))
-            return countOfEntries();
-        long res = tariffDao.countOfImportantSearch(searchQuery);
-        EMU.closeEntityManager();
-        return res;
-
-    }
-
-    @Override
-    public List<Tariff> loadAll() {
-        List<Tariff> tariffs = tariffDao.getAll();
-        EMU.closeEntityManager();
-        return tariffs;
-    }*/
 
     @Override
     public Tariff loadByKey(Integer key) {

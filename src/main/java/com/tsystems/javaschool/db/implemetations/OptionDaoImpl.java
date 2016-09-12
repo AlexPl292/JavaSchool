@@ -20,16 +20,12 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
 
     private static class OptionDaoHolder {
         private static final OptionDaoImpl instance = new OptionDaoImpl();
+        private OptionDaoHolder() {}
     }
 
     public static OptionDaoImpl getInstance() {
         return OptionDaoHolder.instance;
     }
-
-/*    @Override
-    public Option read(Integer key, Map<String, Object> hints) {
-        return EMU.getEntityManager().find(Option.class, key, hints);
-    }*/
 
     @Override
     public List<Option> getOptionsOfTariffs(List<Integer> tariffs) {

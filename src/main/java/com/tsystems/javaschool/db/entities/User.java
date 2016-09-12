@@ -105,9 +105,8 @@ public abstract class User {
         if (surname != null ? !surname.equals(that.surname) : that.surname != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (salt != null ? !salt.equals(that.salt) : that.salt != null) return false;
+        return salt != null ? salt.equals(that.salt) : that.salt == null;
 
-        return true;
     }
 
     @Override

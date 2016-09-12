@@ -1,7 +1,5 @@
 package com.tsystems.javaschool.util;
 
-import com.tsystems.javaschool.db.entities.Customer;
-
 /**
  * Created by alex on 20.08.16.
  */

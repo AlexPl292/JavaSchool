@@ -3,7 +3,6 @@ package com.tsystems.javaschool.db.interfaces;
 import com.tsystems.javaschool.db.entities.Option;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -12,14 +11,6 @@ import java.util.Set;
  * Search field is name
  */
 public interface OptionDao extends GenericDao<Option, Integer> {
-
-/*    *//**
-     * Load by key with lazy fetched fields
-     * @param key id of entity
-     * @param hints entity graph with fields
-     * @return entity
-     *//*
-    Option read(Integer key, Map<String, Object> hints);*/
 
     /**
      * Load options that contains in all this tariffs.

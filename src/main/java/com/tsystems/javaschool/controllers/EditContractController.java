@@ -32,8 +32,14 @@ public class EditContractController extends HttpServlet {
         JsonObject json = new JsonObject();
         Map<String, String> errors = new HashMap<>();
 
-        Integer contractId = Integer.parseInt(request.getParameter("contract_id"));
-        Integer tariffId = Integer.parseInt(request.getParameter("tariff"));
+        Integer contractId = 0;
+        Integer tariffId = 0;
+        try {
+            contractId = Integer.parseInt(request.getParameter("contract_id"));
+            tariffId = Integer.parseInt(request.getParameter("tariff"));
+        } catch (NumberFormatException e) {
+            errors.put("General", "Contract or tariff id wrong format");
+        }
 
         String[] optionsIdStr = request.getParameterValues("optionsEdit" + contractId);
         List<Integer> options;

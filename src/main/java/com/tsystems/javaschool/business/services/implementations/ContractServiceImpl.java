@@ -1,23 +1,20 @@
 package com.tsystems.javaschool.business.services.implementations;
 
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
-import com.tsystems.javaschool.business.services.interfaces.GenericService;
-import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
-import com.tsystems.javaschool.db.interfaces.GenericDao;
-import com.tsystems.javaschool.db.interfaces.OptionDao;
-import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
-import javax.persistence.EntityTransaction;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by alex on 24.08.16.
@@ -30,6 +27,7 @@ public class ContractServiceImpl implements ContractService{
 
     private static class ContractServiceHolder {
         private static final ContractServiceImpl instance = new ContractServiceImpl();
+        private ContractServiceHolder() {}
     }
 
     public static ContractServiceImpl getInstance() {
@@ -50,45 +48,6 @@ public class ContractServiceImpl implements ContractService{
             EMU.closeEntityManager();
         }
     }
-
-/*    @Override
-    public List<Contract> getNEntries(int maxResult, int firstResult) {
-        List<Contract> contracts = contractDao.selectFromTo(maxResult, firstResult);
-        EMU.closeEntityManager();
-        return contracts;
-    }
-
-    @Override
-    public long countOfEntries() {
-        long res =  contractDao.countOfEntities();
-        EMU.closeEntityManager();
-        return res;
-    }
-
-    @Override
-    public List<Contract> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
-        if ("".equals(searchQuery))
-            return getNEntries(maxEntries, firstIndex);
-        List<Contract> contracts = contractDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-        EMU.closeEntityManager();
-        return contracts;
-    }
-
-    @Override
-    public long countOfEntries(String searchQuery) {
-        if ("".equals(searchQuery))
-            return countOfEntries();
-        long res = contractDao.countOfImportantSearch(searchQuery);
-        EMU.closeEntityManager();
-        return res;
-    }
-
-    @Override
-    public List<Contract> loadAll() {
-        List<Contract> contracts = contractDao.getAll();
-        EMU.closeEntityManager();
-        return contracts;
-    }*/
 
     @Override
     public Contract loadByKey(Integer key) {

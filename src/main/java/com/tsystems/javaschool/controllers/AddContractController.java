@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 @WebServlet("/admin/add_contract")
 public class AddContractController extends HttpServlet {
 
+    private transient final ContractService contractService = ContractServiceImpl.getInstance();
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -72,7 +74,6 @@ public class AddContractController extends HttpServlet {
             } else {
                 options = new ArrayList<>();
             }
-            ContractService contractService = ContractServiceImpl.getInstance();
             try {
                 contract = contractService.addNew(contract, options);
             } catch (RollbackException e) {

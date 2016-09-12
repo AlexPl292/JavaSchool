@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.db.entities;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Created by alex on 10.09.16.

@@ -23,6 +23,7 @@ public class StaffServiceImpl  implements StaffService {
 
     private static class StaffServiceHolder {
         private final static StaffServiceImpl instance = new StaffServiceImpl();
+        private StaffServiceHolder() {}
     }
 
     public static StaffServiceImpl getInstance() {
@@ -45,35 +46,8 @@ public class StaffServiceImpl  implements StaffService {
 
     @Override
     public void addNew(Staff entity) {
-
+        throw new UnsupportedOperationException();
     }
-
-/*
-    @Override
-    public List<Staff> getNEntries(int maxResult, int firstResult) {
-        return null;
-    }
-
-    @Override
-    public long countOfEntries() {
-        return 0;
-    }
-
-    @Override
-    public List<Staff> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
-        return null;
-    }
-
-    @Override
-    public long countOfEntries(String searchQuery) {
-        return 0;
-    }
-
-    @Override
-    public List<Staff> loadAll() {
-        return null;
-    }
-*/
 
     @Override
     public Staff loadByKey(Integer key) {
@@ -87,7 +61,7 @@ public class StaffServiceImpl  implements StaffService {
 
     @Override
     public void remove(Integer key) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override

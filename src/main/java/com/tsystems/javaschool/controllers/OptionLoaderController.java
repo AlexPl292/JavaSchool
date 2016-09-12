@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @WebServlet("/load_option")
 public class OptionLoaderController extends HttpServlet {
 
-    OptionService service = OptionServiceImpl.getInstance();
+    private transient final OptionService service = OptionServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -21,7 +21,12 @@ public class DeleteController extends HttpServlet {
             throws ServletException, IOException {
         ContractService service = ContractServiceImpl.getInstance();
 
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        Integer id;
+        try {
+            id = Integer.parseInt(request.getParameter("id"));
+        } catch (NumberFormatException e) {
+            return;
+        }
         service.remove(id);
     }
 }

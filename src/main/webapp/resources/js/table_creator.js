@@ -24,8 +24,8 @@ function paginationSet(pages_count, current, $pagination) {
             $shown_pages.push(i+1);
         }
     } else if (current === pages_count) {
-        for (var i = 0; i<pages; i++) {
-            $shown_pages.push(pages_count-(pages-i)+1);
+        for (var j = 0; j<pages; j++) {
+            $shown_pages.push(pages_count-(pages-j)+1);
         }
     } else {
         $shown_pages.push(current-1);
@@ -33,8 +33,8 @@ function paginationSet(pages_count, current, $pagination) {
         $shown_pages.push(current+1);
     }
 
-    for (var i = 0; i < $shown_pages.length; i++) {
-        $("<li class='page-item'><a class='page-link' href='#' name='" + $shown_pages[i] + "'>" + $shown_pages[i] + "</a></li>")
+    for (var k = 0; k < $shown_pages.length; k++) {
+        $("<li class='page-item'><a class='page-link' href='#' name='" + $shown_pages[k] + "'>" + $shown_pages[k] + "</a></li>")
             .insertBefore($last);
     }
 
@@ -77,7 +77,7 @@ function fill_table($table, $pagination, link) {
 
         for (var i = 0; i < 10; i++) {
             if (response.data[i] !== undefined) {
-                $row = $table.find("tbody tr:nth-child(" + (i + 1) + ")");
+                var $row = $table.find("tbody tr:nth-child(" + (i + 1) + ")");
                 if (link) {
                     $row.addClass("clickableRow").attr("data-href", link).attr("data-val", response.data[i].id);
                 }
@@ -89,19 +89,12 @@ function fill_table($table, $pagination, link) {
                         $row.find("td:nth-child(" + (j + 1) + ")").text(response.data[i][items[0]][items[1]]);
                     }
                 });
-/*                if (response.hasPopover) {
-                    var content = $('<ul>');
-                    for (var i = 0; i < response.popoverData.length; i++) {
-                        content.append($('<li type="disc"></li>').text(response.popoverData[response.data[i].id]))
-                    }
-                    // $row.popover({content:content, title:response.popoverHeader, placement:"top", trigger:"hover"});
-                }*/
             } else {
                 $row = $table.find("tbody tr:nth-child(" + (i + 1) + ")");
                 if (link){
                     $row.removeClass("clickableRow").removeAttr("data-href").removeAttr("data-val");
                 }
-                $.each(properties, function (j, item) {
+                $.each(properties, function (j) {
                     $row.find("td:nth-child(" + (j + 1) + ")").html('&nbsp;');
                 })
             }

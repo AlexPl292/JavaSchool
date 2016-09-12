@@ -1,7 +1,6 @@
 package com.tsystems.javaschool.db.entities;
 
 import com.google.gson.annotations.Expose;
-import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

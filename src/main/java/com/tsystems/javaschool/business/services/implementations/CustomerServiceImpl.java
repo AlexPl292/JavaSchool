@@ -1,24 +1,15 @@
 package com.tsystems.javaschool.business.services.implementations;
 
-import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
-import com.tsystems.javaschool.business.services.interfaces.OptionService;
-import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
-import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.CustomerDaoImpl;
-import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.CustomerDao;
 import com.tsystems.javaschool.util.EMU;
 import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.persistence.EntityGraph;
-import javax.persistence.EntityTransaction;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private static class CustomerServiceHolder {
         private static final CustomerServiceImpl instance = new CustomerServiceImpl();
+        private CustomerServiceHolder() {}
     }
 
     public static CustomerServiceImpl getInstance() {
@@ -65,45 +57,6 @@ public class CustomerServiceImpl implements CustomerService {
             EMU.closeEntityManager();
         }
     }
-
-/*    @Override
-    public List<Customer> getNEntries(int maxResult, int firstResult) {
-        List<Customer> customers = customerDao.selectFromTo(maxResult, firstResult);
-        EMU.closeEntityManager();
-        return customers;
-    }
-
-    @Override
-    public long countOfEntries() {
-        long res = customerDao.countOfEntities();
-        EMU.closeEntityManager();
-        return res;
-    }
-
-    @Override
-    public List<Customer> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
-        if ("".equals(searchQuery))
-            return getNEntries(maxEntries, firstIndex);
-        List<Customer> customers = customerDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-        EMU.closeEntityManager();
-        return customers;
-    }
-
-    @Override
-    public long countOfEntries(String searchQuery) {
-        if ("".equals(searchQuery))
-            return countOfEntries();
-        long res = customerDao.countOfImportantSearch(searchQuery);
-        EMU.closeEntityManager();
-        return res;
-    }
-
-    @Override
-    public List<Customer> loadAll() {
-        List<Customer> customers = customerDao.getAll();
-        EMU.closeEntityManager();
-        return customers;
-    }*/
 
     @Override
     public Customer loadByKey(Integer key) {

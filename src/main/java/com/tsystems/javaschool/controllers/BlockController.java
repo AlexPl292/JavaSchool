@@ -20,7 +20,13 @@ public class BlockController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ContractService service = ContractServiceImpl.getInstance();
-        Integer id = Integer.parseInt(request.getParameter("id"));
+
+        Integer id = 0;
+        try {
+            id = Integer.parseInt(request.getParameter("id"));
+        } catch (NumberFormatException e) {
+            return;
+        }
 
         String url = request.getServletPath();
         if ("/admin/blockContract".equals(url))

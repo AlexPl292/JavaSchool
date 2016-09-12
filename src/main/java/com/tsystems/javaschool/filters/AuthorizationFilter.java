@@ -1,7 +1,5 @@
 package com.tsystems.javaschool.filters;
 
-import com.tsystems.javaschool.db.entities.Customer;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;

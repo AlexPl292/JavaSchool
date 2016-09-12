@@ -9,11 +9,7 @@ import com.tsystems.javaschool.business.services.implementations.CustomerService
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.GenericService;
-import com.tsystems.javaschool.db.entities.Tariff;
-import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
-import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 
-import javax.persistence.EntityGraph;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,7 +20,6 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by alex on 23.08.16.
@@ -84,8 +79,13 @@ public class DataLoaderController extends HttpServlet {
             recordsTotal = service.count(kwargs);
             draw = (int) Math.ceil(recordsTotal / 10.0);
         } else {
-            if (page != null) // TODO странная ошибка: иногда page приходит null. Более того, даже эта строчка не всегда помогает
-                draw = Integer.parseInt(page);
+            if (page != null) { // TODO странная ошибка: иногда page приходит null. Более того, даже эта строчка не всегда помогает
+                try {
+                    draw = Integer.parseInt(page);
+                } catch (NumberFormatException e) {
+                    draw = 1;
+                }
+            }
         }
 
         kwargs.put("maxEntries", 10);
@@ -95,15 +95,6 @@ public class DataLoaderController extends HttpServlet {
             entitiesList = service.loadAll();
         else {
             entitiesList = service.load(kwargs);
-/*            if ("/load_tariffs".equals(url)) {
-                json.addProperty("hasPopover", true);
-                json.addProperty("popoverHeader", "Available options");
-                JsonObject popoverJson = new JsonObject();
-                for (Object tariff : entitiesList) {
-                    popoverJson.add(((Tariff) tariff).getId().toString(), gson.toJsonTree(((Tariff) tariff).getPossibleOptions()));
-                }
-                json.add("popoverData", popoverJson);
-            }*/
         }
 
         JsonElement element = gson.toJsonTree(entitiesList);
