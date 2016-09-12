@@ -136,9 +136,9 @@
                                                         <small>Used options</small>
                                                     </h4>
                                                     <hr>
-                                                    <ul>
+                                                    <ul id="usedOptions">
                                                         <c:forEach items="${contract.getUsedOptions()}" var="option">
-                                                            <li>${option.getName()}</li>
+                                                            <li data-id="${option.getId()}">${option.getName()}</li>
                                                         </c:forEach>
                                                     </ul>
                                                 </div>

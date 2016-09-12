@@ -167,10 +167,13 @@ public class ContractServiceImpl implements ContractService{
         try {
             EMU.beginTransaction();
             Set<Option> options = OptionDaoImpl.getInstance().loadOptionsByIds(optionIds);
-            BigDecimal cost = options.stream().map(Option::getConnectCost).reduce(BigDecimal.ZERO, BigDecimal::add);
             Contract contract = contractDao.read(contract_id, hints);
+
+            BigDecimal cost = options.stream().filter(e -> !contract.getUsedOptions().contains(e)).map(Option::getConnectCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+
             BigDecimal res = contract.getBalance().subtract(cost);
             contract.setBalance(res);
+
             contract.setTariff(TariffDaoImpl.getInstance().read(tariff_id));
             contract.setUsedOptions(options);
             EMU.commit();

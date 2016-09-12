@@ -232,6 +232,8 @@ function prepare_tariff_list(tariffList, options) {
 function edit_tariff(panel) {
     var panel_backup = $(panel).clone().children();
     var id = $(panel).find('input[name=contract_id]').val();
+    var usedOptions = $(panel).find('#usedOptions > li').map(function() {return $(this).data('id')});
+
     var tariff = $('<div class="control-group">'+
         '<label class="control-label" for="tariffEdit'+id+'" >Tariff</label>'+
         '<div class="controls">'+
@@ -258,17 +260,20 @@ function edit_tariff(panel) {
     });
     $(panel).find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
     $(panel).find('.panel-body').wrapInner('<form class="form-horizontal" action="edit_contract" method="POST"></form>');
-    $(panel).find('form').submit({panel:$(panel)}, edit_handler);
+    $(panel).find('form').submit({panel:$(panel), usedOptions:usedOptions}, edit_handler);
 }
 
 function edit_handler(e) {
     e.preventDefault();
     var panel = e.data.panel;
+    var usedOptions = e.data.usedOptions;
     var form = panel.find("form");
     $(form).find("input[type=checkbox]").prop("disabled", false);
     var cost = 0;
     $(form).find("input[type=checkbox]:checked").each(function (i, item) {
-        cost += $(item).data("cost");
+        if ($.inArray(parseInt($(item).val()), usedOptions) === -1) {
+            cost += $(item).data("cost");
+        }
     });
     $.post($(form).attr("action"), $(form).serialize(), function (e) {
         if (e.success) {

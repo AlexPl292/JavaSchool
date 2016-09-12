@@ -244,26 +244,14 @@ public class Option {
 
         Option that = (Option) o;
 
-        if (id != that.id)
-            return false;
-        if (name != null ? !name.equals(that.name) : that.name != null)
-            return false;
-        if (cost != null ? !cost.equals(that.cost) : that.cost != null)
-            return false;
-        if (connectCost != null ? !connectCost.equals(that.connectCost) : that.connectCost != null)
-            return false;
-        return description != null ? description.equals(that.description) : that.description == null;
-
+        if (id == that.id)
+            return true;
+        return false;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (cost != null ? cost.hashCode() : 0);
-        result = 31 * result + (connectCost != null ? connectCost.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return id;
     }
 
     @Override
