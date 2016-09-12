@@ -2,6 +2,7 @@ package com.tsystems.javaschool.db.entities;
 
 import com.google.gson.annotations.Expose;
 import com.tsystems.javaschool.util.EMU;
+import com.tsystems.javaschool.util.PassGen;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.persistence.*;
@@ -137,5 +138,33 @@ public abstract class User {
         }
         EMU.closeEntityManager();
         return null;
+    }
+
+    public static String updatePassword(Integer id, String oldPassword, String newPassword) {
+        try {
+            User user = EMU.getEntityManager().find(User.class, id);
+
+            String hashed = DigestUtils.sha256Hex(oldPassword);
+            String usedSalt = user.getSalt();
+            String usedPassword = DigestUtils.sha256Hex(hashed + usedSalt);
+
+            if (usedPassword.equals(user.getPassword())) {
+                newPassword = DigestUtils.sha256Hex(newPassword);
+                String newSalt = new PassGen(8).nextPassword();
+                EMU.beginTransaction();
+                user.setPassword(DigestUtils.sha256Hex(newPassword + newSalt));
+                user.setSalt(newSalt);
+                EMU.commit();
+                return "Success!";
+            } else {
+                return "You entered wrong current password";
+            }
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            return "Error while transaction!";
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 }

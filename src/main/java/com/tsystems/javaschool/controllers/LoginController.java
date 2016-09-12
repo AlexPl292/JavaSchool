@@ -1,6 +1,10 @@
 package com.tsystems.javaschool.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mysql.cj.api.Session;
 import com.tsystems.javaschool.db.entities.Staff;
 import com.tsystems.javaschool.db.entities.User;
 
@@ -12,11 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by alex on 10.09.16.
  */
-@WebServlet({"/login", "/sign_out"})
+@WebServlet({"/login", "/sign_out", "/change_password"})
 public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -26,6 +32,8 @@ public class LoginController extends HttpServlet {
             HttpSession session = request.getSession();
             session.invalidate();
             response.sendRedirect("/login");
+        } else if ("/change_password".equals(path)) {
+            request.getRequestDispatcher("/WEB-INF/jsp/password_change.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         }
@@ -53,6 +61,46 @@ public class LoginController extends HttpServlet {
             } else {
                 json.addProperty("success", false);
             }
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            try (PrintWriter out = response.getWriter()) {
+                out.print(json.toString());
+                out.flush();
+            }
+        } else if ("/change_password".equals(path)) {
+            String oldPassword = request.getParameter("oldPassword");
+            String newPassword = request.getParameter("newPassword");
+            String repeatNewPassword = request.getParameter("repeatNewPassword");
+
+            JsonObject json = new JsonObject();
+            Map<String, String> errors = new HashMap<>();
+
+            if (oldPassword == null || newPassword == null || repeatNewPassword == null) {
+                errors.put("General", "Input is empty");
+            } else if (newPassword.length() < 8) {
+                errors.put("General", "Password is shorter than 8 characters");
+            } else if (!newPassword.equals(repeatNewPassword)) {
+                errors.put("General", "Passwords are different!");
+            }
+
+            String res = "";
+            if (errors.isEmpty()) {
+                res = User.updatePassword((Integer) session.getAttribute("id"), oldPassword, newPassword);
+                if (!res.equals("Success!"))
+                    errors.put("General", res);
+            }
+
+            if (!errors.isEmpty()) {
+                JsonElement element = new Gson().toJsonTree(errors);
+                json.addProperty("success", false);
+                json.add("errors", element);
+            } else {
+                json.addProperty("success", true);
+                Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+                json.addProperty("data", res);
+            }
+
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
