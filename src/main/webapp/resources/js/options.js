@@ -354,7 +354,7 @@ function create_panel_menu() {
         '<button type="button" class="btn btn-default btn-xs dropdown-toggle"'+
             ' data-toggle="dropdown" aria-expanded="false">'+
         'Actions'+
-        '<span class="caret"></span>'+
+        ' <span class="caret"></span>'+
         '</button>'+
         '<ul class="dropdown-menu pull-right" role="menu">'+
         '<li><a href="/editTariff"><p >Edit</p></a>'+
