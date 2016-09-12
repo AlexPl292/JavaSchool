@@ -289,7 +289,7 @@ function edit_handler(e) {
             $(panel).find(".panel-body").append(filling[1]);
             $(panel).find(".panel-body").append(filling[2]);
             $(panel).find(".panel-title .pull-right").empty();
-            $(panel).find(".panel-title .pull-right").append(create_panel_menu());
+            $(panel).find(".panel-title .pull-right").append(create_panel_menu(e.data));
             var balance = $(panel).find("#balance");
             var res_balance = $(balance).data("balance")-cost;
             $(balance).html(res_balance.toFixed(2)+' <i class="fa fa-rub"></i>').data("balance", res_balance);
@@ -349,20 +349,21 @@ function create_accordion_node(res) {
     $('#accordion').prepend($node);
 }
 
-function create_panel_menu() {
-    return $('<div class="btn-group">'+
+function create_panel_menu(data) {
+    var disable_edit = data.isBlocked !== 0 || data.balance < 0;
+    return  $('<div class="btn-group">'+
         '<button type="button" class="btn btn-default btn-xs dropdown-toggle"'+
             ' data-toggle="dropdown" aria-expanded="false">'+
         'Actions'+
         ' <span class="caret"></span>'+
         '</button>'+
         '<ul class="dropdown-menu pull-right" role="menu">'+
-        '<li><a href="/editTariff"><p >Edit</p></a>'+
+        '<li><a href="/editTariff"><p '+(disable_edit?'class="text-muted"':'')+'>Edit</p></a>'+
         '</li>'+
-        '<li><a href=\"/admin/blockContract\"><p>Block</p></a>'+
+        '<li><a href=\"/blockContract\"><p>Block</p></a>'+
         '</li>'+
         '<li class="divider"></li>'+
-        '<li><a href="/admin/delete_contract"><p class="text-danger">Delete</p></a>'+
+        '<li><a href="/delete_contract"><p class="text-danger">Delete</p></a>'+
         '</li>'+
         '</ul>'+
         '</div>');

@@ -108,7 +108,7 @@
                                                             <span class="caret"></span>
                                                         </button>
                                                         <ul class="dropdown-menu pull-right" role="menu">
-                                                            <li><a href="/editTariff"><p ${blocked != 0 ? "class=\"text-muted\"":""}>Edit</p></a>
+                                                            <li><a href="/editTariff"><p ${blocked != 0 || contract.getBalance() < 0 ? "class=\"text-muted\"":""}>Edit</p></a>
                                                             </li>
                                                             <li>${blocked == 0 ? "<a href=\"/blockContract\"><p>Block</p></a>":"<a href=\"/unblockContract\"><p>Unblock</p></a>"}
                                                             </li>

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,11 +43,16 @@ public class EditContractController extends HttpServlet {
             options = new ArrayList<>();
         }
         Contract contract = new Contract();
-        try {
-            contract = ContractServiceImpl.getInstance().updateContract(contractId, tariffId, options);
-        } catch (RollbackException e) {
-            Throwable th = ExceptionUtils.getRootCause(e);
-            errors.put("General", th.getMessage());
+        if (contract.getBalance().compareTo(BigDecimal.ZERO) == 0 || contract.getIsBlocked() != 0) {
+            errors.put("Edit error", "You cannot edit options!");
+        }
+        if (errors.isEmpty()) {
+            try {
+                contract = ContractServiceImpl.getInstance().updateContract(contractId, tariffId, options);
+            } catch (RollbackException e) {
+                Throwable th = ExceptionUtils.getRootCause(e);
+                errors.put("General", th.getMessage());
+            }
         }
 
         if (!errors.isEmpty()) {
