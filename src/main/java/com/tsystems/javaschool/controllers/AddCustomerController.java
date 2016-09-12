@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -108,6 +109,7 @@ public class AddCustomerController extends HttpServlet {
             contract.setNumber(number);
             contract.setTariff(tariff);
             contract.setIsBlocked(0);
+            contract.setBalance(new BigDecimal(100));
 
             // Get list of option ids from parameter
             String[] optionsIdStr = request.getParameterValues("options");

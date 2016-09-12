@@ -55,7 +55,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">${customer.getSurname()} ${customer.getName()} <small id="balance" data-balance="${customer.getBalance()}">${customer.getBalance()} <i class="fa fa-rub"></i></small></h1>
+                <h1 class="page-header">${customer.getSurname()} ${customer.getName()} </h1>
             </div>
         </div>
         <h1>
@@ -98,6 +98,7 @@
                                         <h4 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#accordion"
                                                href="#collapse${contract.getId()}">${contract.getNumber()}</a>
+                                            <small id="balance" data-balance="${contract.getBalance()}">${contract.getBalance()} <i class="fa fa-rub"></i></small>
                                             <c:if test="${blocked != 2 || !isCustomer}">
                                                 <div class="pull-right">
                                                     <div class="btn-group">

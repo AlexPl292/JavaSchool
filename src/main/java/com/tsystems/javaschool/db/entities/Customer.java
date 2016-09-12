@@ -36,10 +36,6 @@ public class Customer extends User{
     @Expose
     private int isBlocked;
 
-    @Column(name = "balance")
-    @Expose
-    private BigDecimal balance;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     private Set<Contract> contracts;
 
@@ -52,14 +48,13 @@ public class Customer extends User{
      * @param email email of new entity
      * @param isBlocked is this customer blocked or not
      */
-    public Customer(Integer id, String name, String surname, String email, int isBlocked, String passportNumber, BigDecimal balance) {
+    public Customer(Integer id, String name, String surname, String email, int isBlocked, String passportNumber) {
         this.setId(id);
         this.setName(name);
         this.setSurname(surname);
         this.setEmail(email);
         this.isBlocked = isBlocked;
         this.passportNumber = passportNumber;
-        this.balance = balance;
     }
 
 
@@ -116,14 +111,6 @@ public class Customer extends User{
 
     public void setContracts(Set<Contract> contracts) {
         this.contracts = contracts;
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
     }
 
     @Override

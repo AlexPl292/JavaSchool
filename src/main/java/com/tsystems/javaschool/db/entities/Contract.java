@@ -3,6 +3,7 @@ package com.tsystems.javaschool.db.entities;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 
@@ -24,6 +25,10 @@ public class Contract {
     @Column(name = "is_blocked")
     @Expose
     private Integer isBlocked;
+
+    @Column(name = "balance")
+    @Expose
+    private BigDecimal balance;
 
     @ManyToOne
     @JoinColumn(name = "customer")
@@ -55,12 +60,13 @@ public class Contract {
      * @param tariff tariff of new entity
      * @param isBlocked if this contract blocked or not
      */
-    public Contract(Integer id, String number, Customer customer, Tariff tariff, Integer isBlocked) {
+    public Contract(Integer id, String number, Customer customer, Tariff tariff, Integer isBlocked, BigDecimal balance) {
         this.id = id;
         this.number = number;
         this.isBlocked = isBlocked;
         this.customer = customer;
         this.tariff = tariff;
+        this.balance = balance;
     }
 
     public Integer getId() {
@@ -109,6 +115,14 @@ public class Contract {
 
     public void setUsedOptions(Set<Option> usedOptions) {
         this.usedOptions = usedOptions;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     @Override

@@ -92,7 +92,7 @@ public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implement
 
     @Override
     public List<Customer> read(Map<String, Object> kwargs) {
-        String queryStr = "SELECT NEW Customer(c.id, c.name, c.surname, c.email, c.isBlocked, c.passportNumber, c.balance) FROM Customer c";
+        String queryStr = "SELECT NEW Customer(c.id, c.name, c.surname, c.email, c.isBlocked, c.passportNumber) FROM Customer c";
         String search = (String) kwargs.get("search");
         Integer maxEntries = (Integer) kwargs.get("maxEntries");
         Integer firstIndex = (Integer) kwargs.get("firstIndex");

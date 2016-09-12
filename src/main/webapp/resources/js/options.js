@@ -280,7 +280,7 @@ function edit_handler(e) {
             $(panel).find(".panel-body").append(filling[2]);
             $(panel).find(".panel-title .pull-right").empty();
             $(panel).find(".panel-title .pull-right").append(create_panel_menu());
-            var balance = $.find("#balance");
+            var balance = $(panel).find("#balance");
             var res_balance = $(balance).data("balance")-cost;
             $(balance).html(res_balance.toFixed(2)+' <i class="fa fa-rub"></i>').data("balance", res_balance);
         } else {
