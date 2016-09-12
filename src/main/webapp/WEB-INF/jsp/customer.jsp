@@ -126,7 +126,7 @@
                                         <div class="panel-body">
                                             <input type="hidden" name="contract_id" value="${contract.getId()}"/>
                                             <div class="col-lg-6">
-                                                <h3>${contract.getTariff().getName()}</h3>
+                                                <h3 id="tariffName" data-tariffId="${contract.getTariff().getId()}">${contract.getTariff().getName()}</h3>
                                                 <hr>
                                                     ${contract.getTariff().getDescription()}
                                             </div>

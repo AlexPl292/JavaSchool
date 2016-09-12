@@ -205,17 +205,19 @@ function optionCheckedNewTariff(e) {
     }
 }
 
-function loadlist(selobj, url, nameattr, valattr) {
+function loadlist(selobj, url, nameattr, valattr, selected_val) {
     $(selobj).empty();
     $.getJSON(url, {page: -1, updateCount: false, search: ""}, function (data) {
         $.each(data.data, function (i, obj) {
             $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
         });
+        if (selected_val !== undefined)
+            $(selobj).val(selected_val);
         $(selobj).change();
     });
 }
 
-function prepare_tariff_list(tariffList, options) {
+function prepare_tariff_list(tariffList, options, selected_val) {
     $(tariffList).change(function (e) {
         e.preventDefault();
         $.getJSON("/load_option", {
@@ -223,7 +225,7 @@ function prepare_tariff_list(tariffList, options) {
             tariff_id: $(this).val()
         }, create_boxes([$(options)]));
     });
-    loadlist($(tariffList), "/load_tariffs", "name", "id");
+    loadlist($(tariffList), "/load_tariffs", "name", "id", selected_val);
 
     $(options).on('change', 'input[type=checkbox]', optionChecked(options));
 }
@@ -233,6 +235,7 @@ function edit_tariff(panel) {
     var panel_backup = $(panel).clone().children();
     var id = $(panel).find('input[name=contract_id]').val();
     var usedOptions = $(panel).find('#usedOptions > li').map(function() {return $(this).data('id')});
+    var usedTariff = $(panel).find('#tariffName').data('tariffid');
 
     var tariff = $('<div class="control-group">'+
         '<label class="control-label" for="tariffEdit'+id+'" >Tariff</label>'+
@@ -252,7 +255,8 @@ function edit_tariff(panel) {
     var rightPanel = $(panel).find('.col-lg-6:last .well');
     leftPanel.html(tariff);
     rightPanel.html(options);
-    prepare_tariff_list($('#tariffEdit'+id), $('#optionsEdit'+id));
+    prepare_tariff_list($('#tariffEdit'+id), $('#optionsEdit'+id), usedTariff);
+
     $(panel).find('.panel-heading .pull-right').html('<button type="button" class="btn btn-outline btn-danger btn-xs">Exit editing</button>');
     $(panel).find('button:contains("Exit editing")').click(function (e) {
         e.preventDefault();
@@ -260,6 +264,7 @@ function edit_tariff(panel) {
     });
     $(panel).find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
     $(panel).find('.panel-body').wrapInner('<form class="form-horizontal" action="edit_contract" method="POST"></form>');
+
     $(panel).find('form').submit({panel:$(panel), usedOptions:usedOptions}, edit_handler);
 }
 

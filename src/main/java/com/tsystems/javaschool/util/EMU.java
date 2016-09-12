@@ -29,8 +29,8 @@ public class EMU implements ServletContextListener {
         EntityManager em = threadLocal.get();
         if (em != null) {
             em.close();
-            threadLocal.remove();
         }
+        threadLocal.remove();
     }
 
     public static void closeEntityManagerFactory() {
