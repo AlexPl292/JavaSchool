@@ -331,7 +331,8 @@ function create_accordion_node(res) {
     var $node = $('<div class="panel panel-success">' +
         '<div class="panel-heading">' +
         '<h4 class="panel-title">' +
-        '<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+data.id+'" >'+data.number+'</a>' +
+        '<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+data.id+'" >'+data.number+'</a> ' +
+        '<small id="balance" data-balance="'+data.balance+'">'+data.balance+' <i class="fa fa-rub"></i></small>' +
             '<div class="pull-right"></div>'+
         '</h4>' +
         '</div>' +
