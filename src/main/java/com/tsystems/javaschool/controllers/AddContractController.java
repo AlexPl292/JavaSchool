@@ -13,6 +13,7 @@ import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
 public class AddContractController extends HttpServlet {
 
     private transient final ContractService contractService = ContractServiceImpl.getInstance();
+    private final static Logger logger = Logger.getLogger(AddContractController.class);
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -53,6 +56,7 @@ public class AddContractController extends HttpServlet {
             customerId = Integer.parseInt(customerIdStr);
         } catch (NumberFormatException e) {
             errors.put("Number format", "Error in tariff or customer id");
+            logger.error("Exception while id converting", e);
         }
 
         Contract contract = new Contract();
@@ -79,6 +83,7 @@ public class AddContractController extends HttpServlet {
             } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());
+                logger.error("Exception while contract creating", th);
             }
         }
         if (!errors.isEmpty()) {

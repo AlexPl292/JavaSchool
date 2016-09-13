@@ -13,6 +13,7 @@ import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 public class AddCustomerController extends HttpServlet {
 
     private final transient CustomerService service = CustomerServiceImpl.getInstance();
+    private final static Logger logger = Logger.getLogger(AddCustomerController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -88,6 +90,17 @@ public class AddCustomerController extends HttpServlet {
             tariffId = Integer.parseInt(tariffIdStr);
         } catch (NumberFormatException e) {
             errors.put("General", "Tariff id wrong format");
+            logger.error("Exception while id converting", e);
+        }
+
+        Date birthday = new Date(0);
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            birthday = sdf.parse(birthdayStr);
+        } catch (ParseException e) {
+            errors.put("General", "Date wrong format");
+            logger.error("Exception while data converting", e);
         }
 
         if (errors.isEmpty()) {
@@ -95,14 +108,6 @@ public class AddCustomerController extends HttpServlet {
             Customer newCustomer = new Customer();
             newCustomer.setName(name);
             newCustomer.setSurname(surname);
-            Date birthday;
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                birthday = sdf.parse(birthdayStr);
-            } catch (ParseException e) {
-                birthday = new Date(0);
-            }
             newCustomer.setDateOfBirth(birthday);
             newCustomer.setPassportNumber(passportNumber);
             newCustomer.setPassportData(passport);
@@ -134,6 +139,7 @@ public class AddCustomerController extends HttpServlet {
             } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());
+                logger.error("Exception while customer or contract creating", th);
             }
 
         }

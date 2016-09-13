@@ -149,4 +149,17 @@ public class Contract {
         result = 31 * result + (isBlocked != null ? isBlocked.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Contract{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", isBlocked=" + isBlocked +
+                ", balance=" + balance +
+                ", customer=" + customer +
+                ", tariff=" + tariff +
+                ", usedOptions=" + usedOptions +
+                '}';
+    }
 }

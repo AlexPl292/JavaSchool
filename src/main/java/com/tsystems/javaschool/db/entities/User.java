@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.tsystems.javaschool.util.EMU;
 import com.tsystems.javaschool.util.PassGen;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 
@@ -13,35 +14,30 @@ import javax.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class User {
+    private final static Logger logger = Logger.getLogger(User.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @Column(name = "id", nullable = false)
     @Expose
     private int id;
 
     @Basic
-//    @Column(name = "name", nullable = true, length = 45)
     @Expose
     private String name;
 
     @Basic
-//    @Column(name = "surname", nullable = true, length = 45)
     @Expose
     private String surname;
 
     @Basic
-//    @Column(name = "email", nullable = true, length = 45)
     @Expose
     private String email;
 
     @Basic
-//    @Column(name = "password", nullable = true, length = 64)
     @Expose
     private String password;
 
     @Basic
-//    @Column(name = "salt", nullable = false, length = 45)
     @Expose
     private String salt;
 
@@ -131,11 +127,13 @@ public abstract class User {
                 passwordHash = DigestUtils.sha256Hex(passwordHash + user.getSalt());
                 if (passwordHash.equals(user.getPassword())) {
                     EMU.closeEntityManager();
+                    logger.info(email+": positive login");
                     return user;
                 }
             }
         }
         EMU.closeEntityManager();
+        logger.info(email+": negative login");
         return null;
     }
 
@@ -154,13 +152,16 @@ public abstract class User {
                 user.setPassword(DigestUtils.sha256Hex(newPassword + newSalt));
                 user.setSalt(newSalt);
                 EMU.commit();
+                logger.info("User with id = "+id+": password change!");
                 return "Success!";
             } else {
+                logger.info("User with id = "+id+": try to change password. Wrong old password!");
                 return "You entered wrong current password";
             }
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
+            logger.error("User with id = "+id+": try to change password. Exception!", re);
             return "Error while transaction!";
         } finally {
             EMU.closeEntityManager();

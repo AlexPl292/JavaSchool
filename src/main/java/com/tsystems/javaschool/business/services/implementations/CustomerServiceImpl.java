@@ -8,6 +8,7 @@ import com.tsystems.javaschool.util.EMU;
 import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.EntityGraph;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerDao customerDao = CustomerDaoImpl.getInstance();
+    private final static Logger logger = Logger.getLogger(CustomerServiceImpl.class);
 
     private CustomerServiceImpl() {}
 
@@ -42,12 +44,13 @@ public class CustomerServiceImpl implements CustomerService {
         String hashed = DigestUtils.sha256Hex(password);
         String salt = new PassGen(8).nextPassword();
 
-        Email.sendSimpleEmail(customer.getEmail(), password); // Это заглушка. На самом деле просто вывод на консоль
+        Email.sendSimpleEmail(customer.getEmail(), password); // Это заглушка.
         customer.setPassword(DigestUtils.sha256Hex(hashed + salt));
         customer.setSalt(salt);
         try {
             EMU.beginTransaction();
             customerDao.create(customer);
+            logger.info("New customer created. Id = "+customer.getId());
             EMU.commit();
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
@@ -76,6 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
             EMU.beginTransaction();
             customerDao.delete(key);
             EMU.commit();
+            logger.info("Customer removed. Id = "+key);
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();

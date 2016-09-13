@@ -8,6 +8,7 @@ import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -29,7 +30,8 @@ import java.util.Map;
 @WebServlet("/admin/add_option")
 public class AddOptionController extends HttpServlet {
 
-     private final transient OptionService service = OptionServiceImpl.getInstance();
+    private final transient OptionService service = OptionServiceImpl.getInstance();
+    private final static Logger logger = Logger.getLogger(AddOptionController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -86,6 +88,7 @@ public class AddOptionController extends HttpServlet {
             } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());
+                logger.error("Exception while option creating", th);
             }
         }
 

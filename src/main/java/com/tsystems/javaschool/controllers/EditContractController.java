@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
 import com.tsystems.javaschool.db.entities.Contract;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 @WebServlet({"/admin/edit_contract", "/edit_contract"})
 public class EditContractController extends HttpServlet {
 
+    private final static Logger logger = Logger.getLogger(EditContractController.class);
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -39,6 +42,7 @@ public class EditContractController extends HttpServlet {
             tariffId = Integer.parseInt(request.getParameter("tariff"));
         } catch (NumberFormatException e) {
             errors.put("General", "Contract or tariff id wrong format");
+            logger.error("Exception while id converting", e);
         }
 
         String[] optionsIdStr = request.getParameterValues("optionsEdit" + contractId);
@@ -58,6 +62,7 @@ public class EditContractController extends HttpServlet {
             } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());
+                logger.error("Exception while contract updating", th);
             }
         }
 

@@ -7,6 +7,7 @@ import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.util.EMU;
+import org.apache.log4j.Logger;
 
 import javax.persistence.EntityGraph;
 import java.util.*;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
  * Created by alex on 27.08.16.
  */
 public class OptionServiceImpl implements OptionService{
+
+    private final static Logger logger = Logger.getLogger(OptionServiceImpl.class);
 
     private OptionServiceImpl() {}
 
@@ -36,6 +39,7 @@ public class OptionServiceImpl implements OptionService{
             EMU.beginTransaction();
             optionDao.create(entity);
             EMU.commit();
+            logger.info("New option created. Id = "+entity.getId());
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -63,6 +67,7 @@ public class OptionServiceImpl implements OptionService{
             EMU.beginTransaction();
             optionDao.delete(key);
             EMU.commit();
+            logger.info("Option removed. Id = "+key);
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -119,6 +124,7 @@ public class OptionServiceImpl implements OptionService{
 
             optionDao.create(option);
             EMU.commit();
+            logger.info("New option created. Id = "+option.getId());
             return option;
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())

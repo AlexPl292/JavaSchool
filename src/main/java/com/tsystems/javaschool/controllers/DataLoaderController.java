@@ -9,6 +9,7 @@ import com.tsystems.javaschool.business.services.implementations.CustomerService
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.GenericService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,6 +38,7 @@ import java.util.Map;
 @WebServlet({"/admin/load_customers", "/load_tariffs", "/load_options_table", "/admin/load_contracts"})
 public class DataLoaderController extends HttpServlet {
 
+    private final static Logger logger = Logger.getLogger(DataLoaderController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -83,6 +85,7 @@ public class DataLoaderController extends HttpServlet {
                 try {
                     draw = Integer.parseInt(page);
                 } catch (NumberFormatException e) {
+                    logger.error("Exception while page converting", e);
                     draw = 1;
                 }
             }

@@ -1,5 +1,8 @@
 package com.tsystems.javaschool.util;
 
+
+import org.apache.log4j.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -14,6 +17,7 @@ import javax.servlet.annotation.WebListener;
 public class EMU implements ServletContextListener {
     private static EntityManagerFactory emf;
     private static ThreadLocal<EntityManager> threadLocal;
+    private final static Logger logger = Logger.getLogger(EMU.class);
 
     public static EntityManager getEntityManager() {
         EntityManager em = threadLocal.get();
@@ -53,10 +57,11 @@ public class EMU implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         emf = Persistence.createEntityManagerFactory("JavaSchool");
         threadLocal = new ThreadLocal<>();
+        logger.info("Context initialized");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
+        logger.info("Context destroyed");
     }
 }

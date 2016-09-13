@@ -8,6 +8,7 @@ import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 public class AddTariffController extends HttpServlet {
 
     private final transient TariffService service = TariffServiceImpl.getInstance();
+    private final static Logger logger = Logger.getLogger(AddTariffController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -68,6 +70,7 @@ public class AddTariffController extends HttpServlet {
             } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());
+                logger.error("Exception while tariff creating", th);
             }
         }
         if (!errors.isEmpty()) {

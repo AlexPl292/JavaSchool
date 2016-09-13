@@ -8,6 +8,7 @@ import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.util.EMU;
+import org.apache.log4j.Logger;
 
 import javax.persistence.EntityGraph;
 import java.math.BigDecimal;
@@ -21,7 +22,9 @@ import java.util.Set;
  */
 public class ContractServiceImpl implements ContractService{
 
-    ContractDao contractDao = ContractDaoImpl.getInstance();
+    private ContractDao contractDao = ContractDaoImpl.getInstance();
+    private final static Logger logger = Logger.getLogger(ContractServiceImpl.class);
+
 
     private ContractServiceImpl() {}
 
@@ -40,6 +43,7 @@ public class ContractServiceImpl implements ContractService{
             EMU.beginTransaction();
             contractDao.create(contract);
             EMU.commit();
+            logger.info("New contract created. Id = "+contract.getId());
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -67,6 +71,7 @@ public class ContractServiceImpl implements ContractService{
             EMU.beginTransaction();
             contractDao.delete(key);
             EMU.commit();
+            logger.info("Contract removed. Id = "+key);
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -83,6 +88,7 @@ public class ContractServiceImpl implements ContractService{
             contract.setUsedOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
             contractDao.create(contract);
             EMU.commit();
+            logger.info("New contract created. Id = "+contract.getId());
             return contract;
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
@@ -105,8 +111,10 @@ public class ContractServiceImpl implements ContractService{
         try {
             EMU.beginTransaction();
             Contract contract = contractDao.read(id);
+            Integer oldBlock = contract.getIsBlocked();
             contract.setIsBlocked(blockLevel);
             EMU.commit();
+            logger.info("Set block level for id = "+contract.getId()+". Old block level = "+oldBlock+". New level = "+blockLevel);
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -127,6 +135,7 @@ public class ContractServiceImpl implements ContractService{
             EMU.beginTransaction();
             Set<Option> options = OptionDaoImpl.getInstance().loadOptionsByIds(optionIds);
             Contract contract = contractDao.read(contract_id, hints);
+            String oldContractData = contract.toString();
 
             BigDecimal cost = options.stream().filter(e -> !contract.getUsedOptions().contains(e)).map(Option::getConnectCost).reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -136,6 +145,7 @@ public class ContractServiceImpl implements ContractService{
             contract.setTariff(TariffDaoImpl.getInstance().read(tariff_id));
             contract.setUsedOptions(options);
             EMU.commit();
+            logger.info("Contract updated. Old contract: "+oldContractData+". New contract: "+contract.toString());
             return contract;
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
