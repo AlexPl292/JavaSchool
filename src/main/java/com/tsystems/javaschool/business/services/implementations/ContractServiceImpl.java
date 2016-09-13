@@ -126,7 +126,7 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public Contract updateContract(Integer contract_id, Integer tariff_id, List<Integer> optionIds) {
-        EntityGraph<Contract> graph = ContractServiceImpl.getInstance().getEntityGraph();
+        EntityGraph<Contract> graph = getEntityGraph();
         graph.addAttributeNodes("usedOptions");
 
         Map<String, Object> hints = new HashMap<>();
