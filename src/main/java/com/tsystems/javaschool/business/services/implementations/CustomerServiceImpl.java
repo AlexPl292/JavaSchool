@@ -50,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
         try {
             EMU.beginTransaction();
             customerDao.create(customer);
-            logger.info("New customer created. Id = "+customer.getId());
+            logger.info("New customer is created. Id = "+customer.getId());
             EMU.commit();
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
@@ -79,7 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
             EMU.beginTransaction();
             customerDao.delete(key);
             EMU.commit();
-            logger.info("Customer removed. Id = "+key);
+            logger.info("Customer is removed. Id = "+key);
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();

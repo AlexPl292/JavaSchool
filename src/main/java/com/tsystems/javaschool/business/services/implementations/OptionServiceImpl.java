@@ -39,7 +39,7 @@ public class OptionServiceImpl implements OptionService{
             EMU.beginTransaction();
             optionDao.create(entity);
             EMU.commit();
-            logger.info("New option created. Id = "+entity.getId());
+            logger.info("New option is created. Id = "+entity.getId());
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -67,7 +67,7 @@ public class OptionServiceImpl implements OptionService{
             EMU.beginTransaction();
             optionDao.delete(key);
             EMU.commit();
-            logger.info("Option removed. Id = "+key);
+            logger.info("Option is removed. Id = "+key);
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -124,7 +124,7 @@ public class OptionServiceImpl implements OptionService{
 
             optionDao.create(option);
             EMU.commit();
-            logger.info("New option created. Id = "+option.getId());
+            logger.info("New option is created. Id = "+option.getId());
             return option;
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())

@@ -43,7 +43,7 @@ public class ContractServiceImpl implements ContractService{
             EMU.beginTransaction();
             contractDao.create(contract);
             EMU.commit();
-            logger.info("New contract created. Id = "+contract.getId());
+            logger.info("New contract is created. Id = "+contract.getId());
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -71,7 +71,7 @@ public class ContractServiceImpl implements ContractService{
             EMU.beginTransaction();
             contractDao.delete(key);
             EMU.commit();
-            logger.info("Contract removed. Id = "+key);
+            logger.info("Contract is removed. Id = "+key);
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -88,7 +88,7 @@ public class ContractServiceImpl implements ContractService{
             contract.setUsedOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
             contractDao.create(contract);
             EMU.commit();
-            logger.info("New contract created. Id = "+contract.getId());
+            logger.info("New contract is created. Id = "+contract.getId());
             return contract;
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())

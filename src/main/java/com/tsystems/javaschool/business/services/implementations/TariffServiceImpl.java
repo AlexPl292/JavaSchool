@@ -38,7 +38,7 @@ public class TariffServiceImpl implements TariffService{
             EMU.beginTransaction();
             tariffDao.create(tariff);
             EMU.commit();
-            logger.info("New tariff created. Id = "+tariff.getId());
+            logger.info("New tariff is created. Id = "+tariff.getId());
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -66,7 +66,7 @@ public class TariffServiceImpl implements TariffService{
             EMU.beginTransaction();
             tariffDao.delete(key);
             EMU.commit();
-            logger.info("Tariff removed. Id = "+ key);
+            logger.info("Tariff is removed. Id = "+ key);
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
                 EMU.rollback();
@@ -109,7 +109,7 @@ public class TariffServiceImpl implements TariffService{
             tariff.setPossibleOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
             tariffDao.create(tariff);
             EMU.commit();
-            logger.info("New tariff with options created. Id = "+tariff.getId());
+            logger.info("New tariff with options is created. Id = "+tariff.getId());
             return tariff;
         } catch (RuntimeException re) {
             if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
