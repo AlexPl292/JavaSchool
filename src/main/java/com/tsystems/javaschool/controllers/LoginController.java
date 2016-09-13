@@ -1,7 +1,6 @@
 package com.tsystems.javaschool.controllers;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tsystems.javaschool.db.entities.Staff;
@@ -20,6 +19,7 @@ import java.util.Map;
 
 /**
  * Created by alex on 10.09.16.
+ *
  */
 @WebServlet({"/login", "/sign_out", "/change_password"})
 public class LoginController extends HttpServlet {
@@ -27,7 +27,7 @@ public class LoginController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getServletPath();
-        if ("/sign_out".equals(path)) {
+        if ("/sign_out".equals(path)) {  // Sign out sends by "get" href
             HttpSession session = request.getSession();
             session.invalidate();
             response.sendRedirect("/login");
@@ -52,7 +52,7 @@ public class LoginController extends HttpServlet {
             User user = User.login(email, password);
             if (user != null) {
                 session.setAttribute("id", user.getId());
-                if (user instanceof Staff)
+                if (user instanceof Staff) // Define to which kind of user belongs this
                     session.setAttribute("user", "admin");
                 else
                     session.setAttribute("user", "customer");

@@ -11,6 +11,8 @@ import java.util.Map;
 
 /**
  * Created by alex on 19.08.16.
+ *
+ * JPA implementation of CustomerDao
  */
 public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implements CustomerDao {
 

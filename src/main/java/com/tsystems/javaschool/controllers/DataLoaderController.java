@@ -57,7 +57,7 @@ public class DataLoaderController extends HttpServlet {
         String searchQuery = request.getParameter("search");
         kwargs.put("search", searchQuery);
 
-        if ("/admin/load_customers".equals(url)) {
+        if ("/admin/load_customers".equals(url)) {  // Get service depends on path
             service = CustomerServiceImpl.getInstance();
         } else if ("/load_tariffs".equals(url)) {
             service = TariffServiceImpl.getInstance();
@@ -69,13 +69,13 @@ public class DataLoaderController extends HttpServlet {
             service = CustomerServiceImpl.getInstance();
         }
 
-        if (updateCount) {
+        if (updateCount) {  // Should we update count of all users or not
             recordsTotal = service.count(kwargs);
             json.addProperty("recordsTotal", recordsTotal);
         }
 
 
-        if ("first".equals(page)) {
+        if ("first".equals(page)) {  // Define accessible page
             draw = 1;
         } else if ("last".equals(page)) {
             recordsTotal = service.count(kwargs);

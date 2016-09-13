@@ -11,6 +11,8 @@ import java.util.Map;
 
 /**
  * Created by alex on 24.08.16.
+ *
+ * JPA implementation of ContractDao
  */
 public class ContractDaoImpl extends GenericDaoImpl<Contract, Integer> implements ContractDao {
 

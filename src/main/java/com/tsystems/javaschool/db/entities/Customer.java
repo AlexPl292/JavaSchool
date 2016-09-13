@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by alex on 17.08.16.
  *
- * Customer entity class.
+ * Entity for access customer table
  */
 
 @Entity

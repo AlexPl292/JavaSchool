@@ -9,6 +9,8 @@ import java.util.Set;
 
 /**
  * Created by alex on 25.08.16.
+ *
+ * Entity for access option table
  */
 @Entity
 @Table(name = "Options", schema = "eCare")

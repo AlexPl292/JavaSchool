@@ -9,6 +9,8 @@ import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
+ *
+ * Entity for access contract table
  */
 @Entity
 @Table(name = "Contracts", schema = "eCare")

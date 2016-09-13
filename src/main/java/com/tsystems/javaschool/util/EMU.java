@@ -16,6 +16,9 @@ import java.util.Enumeration;
 
 /**
  * Created by alex on 07.09.16.
+ *
+ * EntityManager utils.
+ * Available methods for thread-save entityManager usage.
  */
 @WebListener
 public class EMU implements ServletContextListener {
@@ -23,6 +26,10 @@ public class EMU implements ServletContextListener {
     private static ThreadLocal<EntityManager> threadLocal;
     private final static Logger logger = Logger.getLogger(EMU.class);
 
+    /**
+     * Get entityManager in threadLocal.
+     * @return entityManager
+     */
     public static EntityManager getEntityManager() {
         EntityManager em = threadLocal.get();
 
@@ -33,6 +40,9 @@ public class EMU implements ServletContextListener {
         return em;
     }
 
+    /**
+     * Closing entityManager in current thread
+     */
     public static void closeEntityManager() {
         EntityManager em = threadLocal.get();
         if (em != null) {
@@ -41,18 +51,30 @@ public class EMU implements ServletContextListener {
         threadLocal.remove();
     }
 
+    /**
+     * Closing entityManager factory
+     */
     public static void closeEntityManagerFactory() {
         emf.close();
     }
 
+    /**
+     * Starting transaction in current thread
+     */
     public static void beginTransaction() {
         getEntityManager().getTransaction().begin();
     }
 
+    /**
+     * Rollback transaction in current thread
+     */
     public static void rollback() {
         getEntityManager().getTransaction().rollback();
     }
 
+    /**
+     * Commit transaction in current thread
+     */
     public static void commit() {
         getEntityManager().getTransaction().commit();
     }

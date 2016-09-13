@@ -13,6 +13,8 @@ import java.io.IOException;
 
 /**
  * Created by alex on 07.09.16.
+ *
+ * Delete contract controller
  */
 @WebServlet({"/admin/delete_contract", "/customer/delete_contract"})
 public class DeleteController extends HttpServlet {
@@ -27,10 +29,9 @@ public class DeleteController extends HttpServlet {
         Integer id;
         try {
             id = Integer.parseInt(request.getParameter("id"));
+            service.remove(id);
         } catch (NumberFormatException e) {
             logger.error("Exception while id converting", e);
-            return;
         }
-        service.remove(id);
     }
 }

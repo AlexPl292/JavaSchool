@@ -9,6 +9,8 @@ import java.io.IOException;
 
 /**
  * Created by alex on 10.09.16.
+ *
+ * Filter for authorization
  */
 @WebFilter(filterName = "AuthorizationFilter", urlPatterns = {"/*"})
 public class AuthorizationFilter implements Filter{
@@ -26,15 +28,16 @@ public class AuthorizationFilter implements Filter{
         String currentUser = (String) session.getAttribute("user");
 
         String path = ((HttpServletRequest) request).getServletPath();
-        if (path.startsWith("/resources")) {
+
+        if (path.startsWith("/resources")) { // Resources should be available every time
             chain.doFilter(request, response);
             return;
         }
-        if ("/error".equals(path)) {
+        if ("/error".equals(path)) {  // Also errors =)
             chain.doFilter(request, response);
             return;
         }
-        if ("/".equals(path)) {
+        if ("/".equals(path)) {  // Define home path for every user
             if ("admin".equals(currentUser)) {
                 httpRes.sendRedirect("/admin/customers");
                 return;
@@ -54,12 +57,12 @@ public class AuthorizationFilter implements Filter{
             }
             httpRes.sendRedirect("/login");
         } else {
-            if ("admin".equals(currentUser) && path.startsWith("/customer/") ||
-                    "customer".equals(currentUser) && path.startsWith("/admin/")) {
+            if ("admin".equals(currentUser) && path.startsWith("/customer/") ||  // If admin tries to access customer page,
+                    "customer".equals(currentUser) && path.startsWith("/admin/")) {  // or vice versa there is error
                 ((HttpServletResponse) response).sendRedirect("/error");
                 return;
             }
-            if ("/login".equals(path)) {
+            if ("/login".equals(path)) {  // You cannot access login, if you are already logged
                 httpRes.sendRedirect("/");
                 return;
             }

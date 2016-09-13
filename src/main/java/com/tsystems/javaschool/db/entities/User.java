@@ -10,6 +10,8 @@ import javax.persistence.*;
 
 /**
  * Created by alex on 10.09.16.
+ *
+ * Define a default user
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)

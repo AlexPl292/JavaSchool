@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 25.08.16.
+ *
+ * JPA implementation of OptionDao
  */
 public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements OptionDao{
 

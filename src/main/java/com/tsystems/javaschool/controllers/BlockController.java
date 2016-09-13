@@ -13,6 +13,8 @@ import java.io.IOException;
 
 /**
  * Created by alex on 07.09.16.
+ *
+ * Controller for contract block and unblock
  */
 @WebServlet({"/admin/blockContract", "/admin/unblockContract", "/customer/blockContract", "/customer/unblockContract"})
 public class BlockController extends HttpServlet {
