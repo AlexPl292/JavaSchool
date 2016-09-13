@@ -343,7 +343,7 @@ function create_accordion_node(res) {
     $node.find(".panel-body").append(filling[0]);
     $node.find(".panel-body").append(filling[1]);
     $node.find(".panel-body").append(filling[2]);
-    $node.find(".panel-title .pull-right").append(create_panel_menu());
+    $node.find(".panel-title .pull-right").append(create_panel_menu(data));
     $('#accordion').prepend($node);
 }
 
