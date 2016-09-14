@@ -24,7 +24,7 @@ import java.util.Enumeration;
 public class EMU implements ServletContextListener {
     private static EntityManagerFactory emf;
     private static ThreadLocal<EntityManager> threadLocal;
-    private final static Logger logger = Logger.getLogger(EMU.class);
+    private static final Logger logger = Logger.getLogger(EMU.class);
 
     /**
      * Get entityManager in threadLocal.

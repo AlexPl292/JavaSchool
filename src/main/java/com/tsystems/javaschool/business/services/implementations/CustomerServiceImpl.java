@@ -21,7 +21,7 @@ import java.util.Map;
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerDao customerDao = CustomerDaoImpl.getInstance();
-    private final static Logger logger = Logger.getLogger(CustomerServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(CustomerServiceImpl.class);
 
     private CustomerServiceImpl() {}
 

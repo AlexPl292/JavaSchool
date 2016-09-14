@@ -18,20 +18,19 @@ import java.util.stream.Collectors;
  */
 public class OptionServiceImpl implements OptionService{
 
-    private final static Logger logger = Logger.getLogger(OptionServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(OptionServiceImpl.class);
+    private OptionDao optionDao = OptionDaoImpl.getInstance();
 
     private OptionServiceImpl() {}
 
     private static class OptionServiceHolder {
-        private final static OptionServiceImpl instance = new OptionServiceImpl();
+        private static final OptionServiceImpl instance = new OptionServiceImpl();
         private OptionServiceHolder() {}
     }
 
     public static OptionServiceImpl getInstance() {
         return OptionServiceHolder.instance;
     }
-
-    private OptionDao optionDao = OptionDaoImpl.getInstance();
 
     @Override
     public void addNew(Option entity) {

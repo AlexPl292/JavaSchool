@@ -5,6 +5,7 @@ import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.util.EMU;
+import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.LogLog;
 import org.junit.After;
 import org.junit.Before;
@@ -75,5 +76,4 @@ public class TariffServiceImplTest {
         Tariff loadedTariff = service.addNew(tariff, optionsId);
         assertEquals(options, loadedTariff.getPossibleOptions());
     }
-
 }

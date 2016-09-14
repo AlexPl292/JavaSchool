@@ -8,8 +8,9 @@ import org.apache.log4j.Logger;
  * Email stub class. This class is used by customer creating for stubbing email send.
  */
 public class Email {
-    private final static Logger logger = Logger.getLogger("email");
+    private static final Logger logger = Logger.getLogger("email");
 
+    private Email() {}
 
     /**
      * Stub email sending

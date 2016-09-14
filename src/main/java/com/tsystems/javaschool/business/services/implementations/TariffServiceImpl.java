@@ -19,12 +19,12 @@ import java.util.Map;
 public class TariffServiceImpl implements TariffService{
 
     private TariffDao tariffDao = TariffDaoImpl.getInstance();
-    private final static Logger logger = Logger.getLogger(TariffServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(TariffServiceImpl.class);
 
     private TariffServiceImpl() {}
 
     private static class TariffServiceHolder {
-        private final static TariffServiceImpl instance = new TariffServiceImpl();
+        private static final TariffServiceImpl instance = new TariffServiceImpl();
         private TariffServiceHolder() {}
     }
 

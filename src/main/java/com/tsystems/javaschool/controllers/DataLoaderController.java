@@ -38,7 +38,7 @@ import java.util.Map;
 @WebServlet({"/admin/load_customers", "/load_tariffs", "/load_options_table", "/admin/load_contracts"})
 public class DataLoaderController extends HttpServlet {
 
-    private final static Logger logger = Logger.getLogger(DataLoaderController.class);
+    private static final Logger logger = Logger.getLogger(DataLoaderController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -110,6 +110,8 @@ public class DataLoaderController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             out.print(json.toString());
             out.flush();
+        } catch (IOException e) {
+            logger.error("Get writer exception!", e);
         }
     }
 }

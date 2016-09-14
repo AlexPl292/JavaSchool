@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 @WebServlet("/admin/add_contract")
 public class AddContractController extends HttpServlet {
 
-    private transient final ContractService contractService = ContractServiceImpl.getInstance();
-    private final static Logger logger = Logger.getLogger(AddContractController.class);
+    private final transient ContractService contractService = ContractServiceImpl.getInstance();
+    private static final Logger logger = Logger.getLogger(AddContractController.class);
 
 
     @Override
@@ -104,6 +104,8 @@ public class AddContractController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             out.print(json.toString());
             out.flush();
+        } catch (IOException e){
+            logger.error("Get writer exception!", e);
         }
     }
 }

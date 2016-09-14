@@ -19,7 +19,7 @@ import java.io.IOException;
 @WebServlet({"/admin/blockContract", "/admin/unblockContract", "/customer/blockContract", "/customer/unblockContract"})
 public class BlockController extends HttpServlet {
 
-    private final static Logger logger = Logger.getLogger(BlockController.class);
+    private static final Logger logger = Logger.getLogger(BlockController.class);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

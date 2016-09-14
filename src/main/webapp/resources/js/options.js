@@ -447,7 +447,6 @@ var prepare = {
         forTariffs.empty();
         $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes([forTariffs]));
 
-        // TODO add disablind or notifications
         $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
             e.preventDefault();
             requiredFrom.empty();

@@ -48,6 +48,7 @@ public class Customer extends User{
      * @param surname surname of new entity
      * @param email email of new entity
      * @param isBlocked is this customer blocked or not
+     * @param passportNumber number of passport of new customer. Must be unique for every customer
      */
     public Customer(Integer id, String name, String surname, String email, int isBlocked, String passportNumber) {
         this.setId(id);
@@ -131,20 +132,25 @@ public class Customer extends User{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
 
         Customer customer = (Customer) o;
 
-        if (isBlocked != customer.isBlocked) return false;
+        if (isBlocked != customer.isBlocked)
+            return false;
         if (dateOfBirth != null ? !dateOfBirth.equals(customer.dateOfBirth) : customer.dateOfBirth != null)
             return false;
         if (passportNumber != null ? !passportNumber.equals(customer.passportNumber) : customer.passportNumber != null)
             return false;
         if (passportData != null ? !passportData.equals(customer.passportData) : customer.passportData != null)
             return false;
-        if (address != null ? !address.equals(customer.address) : customer.address != null) return false;
+        if (address != null ? !address.equals(customer.address) : customer.address != null)
+            return false;
         return contracts != null ? contracts.equals(customer.contracts) : customer.contracts == null;
 
     }

@@ -31,12 +31,18 @@ import java.util.Map;
 public class AddOptionController extends HttpServlet {
 
     private final transient OptionService service = OptionServiceImpl.getInstance();
-    private final static Logger logger = Logger.getLogger(AddOptionController.class);
+    private static final Logger logger = Logger.getLogger(AddOptionController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/jsp/new_option.jsp").forward(request, response);
+        try {
+            request.getRequestDispatcher("/WEB-INF/jsp/new_option.jsp").forward(request, response);
+        } catch (IOException e) {
+            logger.error("Forward exception", e);
+        } catch (ServletException e) {
+            logger.error("Servlet exception", e);
+        }
     }
 
     @Override
@@ -106,6 +112,8 @@ public class AddOptionController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             out.print(json.toString());
             out.flush();
+        } catch (IOException e) {
+            logger.error("Get writer exception!", e);
         }
     }
 }

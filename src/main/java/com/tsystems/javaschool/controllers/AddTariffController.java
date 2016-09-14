@@ -31,12 +31,18 @@ import java.util.stream.Collectors;
 public class AddTariffController extends HttpServlet {
 
     private final transient TariffService service = TariffServiceImpl.getInstance();
-    private final static Logger logger = Logger.getLogger(AddTariffController.class);
+    private static final Logger logger = Logger.getLogger(AddTariffController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/jsp/new_tariff.jsp").forward(request, response);
+        try {
+            request.getRequestDispatcher("/WEB-INF/jsp/new_tariff.jsp").forward(request, response);
+        } catch (IOException e) {
+            logger.error("Forward exception", e);
+        } catch (ServletException e) {
+            logger.error("Servlet exception", e);
+        }
     }
 
     @Override
@@ -87,6 +93,8 @@ public class AddTariffController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             out.print(json.toString());
             out.flush();
+        } catch (IOException e) {
+            logger.error("Get writer exception!", e);
         }
     }
 }

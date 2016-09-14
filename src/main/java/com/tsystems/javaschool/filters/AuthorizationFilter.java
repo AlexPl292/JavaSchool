@@ -1,5 +1,7 @@
 package com.tsystems.javaschool.filters;
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +18,7 @@ import java.io.IOException;
 public class AuthorizationFilter implements Filter{
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        // Empty
     }
 
     @Override
@@ -72,6 +74,6 @@ public class AuthorizationFilter implements Filter{
 
     @Override
     public void destroy() {
-
+        // Empty
     }
 }

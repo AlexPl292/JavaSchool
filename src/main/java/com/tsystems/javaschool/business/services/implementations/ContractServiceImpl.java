@@ -23,7 +23,7 @@ import java.util.Set;
 public class ContractServiceImpl implements ContractService{
 
     private ContractDao contractDao = ContractDaoImpl.getInstance();
-    private final static Logger logger = Logger.getLogger(ContractServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(ContractServiceImpl.class);
 
 
     private ContractServiceImpl() {}
@@ -125,7 +125,7 @@ public class ContractServiceImpl implements ContractService{
     }
 
     @Override
-    public Contract updateContract(Integer contract_id, Integer tariff_id, List<Integer> optionIds) {
+    public Contract updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds) {
         EntityGraph<Contract> graph = getEntityGraph();
         graph.addAttributeNodes("usedOptions");
 
@@ -134,7 +134,7 @@ public class ContractServiceImpl implements ContractService{
         try {
             EMU.beginTransaction();
             Set<Option> options = OptionDaoImpl.getInstance().loadOptionsByIds(optionIds);
-            Contract contract = contractDao.read(contract_id, hints);
+            Contract contract = contractDao.read(contractId, hints);
             String oldContractData = contract.toString();
 
             BigDecimal cost = options.stream().filter(e -> !contract.getUsedOptions().contains(e)).map(Option::getConnectCost).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -142,7 +142,7 @@ public class ContractServiceImpl implements ContractService{
             BigDecimal res = contract.getBalance().subtract(cost);
             contract.setBalance(res);
 
-            contract.setTariff(TariffDaoImpl.getInstance().read(tariff_id));
+            contract.setTariff(TariffDaoImpl.getInstance().read(tariffId));
             contract.setUsedOptions(options);
             EMU.commit();
             logger.info("Contract updated. Old contract: "+oldContractData+". New contract: "+contract.toString());

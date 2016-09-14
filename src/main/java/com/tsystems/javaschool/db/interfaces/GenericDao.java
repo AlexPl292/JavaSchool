@@ -38,8 +38,27 @@ public interface GenericDao <T, PK extends Serializable> {
      */
     void delete(PK id);
 
+    /**
+     * Read entity with kwargs
+     * kwargs list:
+     * - search: search query
+     * - maxEntries: max entries for query
+     * - firstIndex: first index for query  (pagination)
+     * - graph: entityGraph
+     * All other kwargs are ignored
+     * @param kwargs kwargs
+     * @return list of entities
+     */
     List<T> read(Map<String, Object> kwargs);
 
+    /**
+     * Count entities with kwargs
+     * kwargs list:
+     * - search: search query
+     * All other kwargs are ignored
+     * @param kwargs kwargs
+     * @return count of entities
+     */
     long count(Map<String, Object> kwargs);
 
     /**

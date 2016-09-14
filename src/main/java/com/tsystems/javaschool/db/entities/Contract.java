@@ -11,6 +11,11 @@ import java.util.Set;
  * Created by alex on 21.08.16.
  *
  * Entity for access contract table
+ *
+ * Block levels:
+ * 0 - unblocked
+ * 1 - blocked by customer
+ * 2 - blocked by staff
  */
 @Entity
 @Table(name = "Contracts", schema = "eCare")
@@ -61,6 +66,7 @@ public class Contract {
      * @param customer customer of new entity
      * @param tariff tariff of new entity
      * @param isBlocked if this contract blocked or not
+     * @param balance balance of new contract
      */
     public Contract(Integer id, String number, Customer customer, Tariff tariff, Integer isBlocked, BigDecimal balance) {
         this.id = id;

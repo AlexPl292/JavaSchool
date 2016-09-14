@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tsystems.javaschool.db.entities.Staff;
 import com.tsystems.javaschool.db.entities.User;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +24,9 @@ import java.util.Map;
  */
 @WebServlet({"/login", "/sign_out", "/change_password"})
 public class LoginController extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(LoginController.class);
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -30,11 +34,27 @@ public class LoginController extends HttpServlet {
         if ("/sign_out".equals(path)) {  // Sign out sends by "get" href
             HttpSession session = request.getSession();
             session.invalidate();
-            response.sendRedirect("/login");
+            try {
+                response.sendRedirect("/login");
+            } catch (IOException e){
+                logger.error("Redirect exception", e);
+            }
         } else if ("/change_password".equals(path)) {
-            request.getRequestDispatcher("/WEB-INF/jsp/password_change.jsp").forward(request, response);
+            try {
+                request.getRequestDispatcher("/WEB-INF/jsp/password_change.jsp").forward(request, response);
+            } catch (IOException e) {
+                logger.error("Forward exception", e);
+            } catch (ServletException e) {
+                logger.error("Servlet exception", e);
+            }
         } else {
-            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            try {
+                request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            } catch (IOException e) {
+                logger.error("Forward exception", e);
+            } catch (ServletException e) {
+                logger.error("Servlet exception", e);
+            }
         }
     }
 
@@ -66,6 +86,8 @@ public class LoginController extends HttpServlet {
             try (PrintWriter out = response.getWriter()) {
                 out.print(json.toString());
                 out.flush();
+            } catch (IOException e) {
+                logger.error("Get writer exception!", e);
             }
         } else if ("/change_password".equals(path)) {
             String oldPassword = request.getParameter("oldPassword");
@@ -105,6 +127,8 @@ public class LoginController extends HttpServlet {
             try (PrintWriter out = response.getWriter()) {
                 out.print(json.toString());
                 out.flush();
+            } catch (IOException e) {
+                logger.error("Get writer exception!", e);
             }
         }
     }

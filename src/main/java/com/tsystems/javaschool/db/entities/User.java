@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class User {
-    private final static Logger logger = Logger.getLogger(User.class);
+    private static final Logger logger = Logger.getLogger(User.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -93,16 +93,23 @@ public abstract class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         User that = (User) o;
 
-        if (id != that.id) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (surname != null ? !surname.equals(that.surname) : that.surname != null) return false;
-        if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        if (id != that.id)
+            return false;
+        if (name != null ? !name.equals(that.name) : that.name != null)
+            return false;
+        if (surname != null ? !surname.equals(that.surname) : that.surname != null)
+            return false;
+        if (email != null ? !email.equals(that.email) : that.email != null)
+            return false;
+        if (password != null ? !password.equals(that.password) : that.password != null)
+            return false;
         return salt != null ? salt.equals(that.salt) : that.salt == null;
 
     }
@@ -118,6 +125,12 @@ public abstract class User {
         return result;
     }
 
+    /**
+     * Log in new user by email and password
+     * @param email email of user
+     * @param password password of user
+     * @return logged user if positive, null if negative
+     */
     public static User login(String email, String password) {
 
         if (email != null && password != null) {
@@ -139,6 +152,13 @@ public abstract class User {
         return null;
     }
 
+    /**
+     * Update password of user
+     * @param id id of user
+     * @param oldPassword old password to change
+     * @param newPassword new password
+     * @return "Success!" if positive, error message if negative
+     */
     public static String updatePassword(Integer id, String oldPassword, String newPassword) {
         try {
             User user = EMU.getEntityManager().find(User.class, id);
@@ -148,10 +168,10 @@ public abstract class User {
             String usedPassword = DigestUtils.sha256Hex(hashed + usedSalt);
 
             if (usedPassword.equals(user.getPassword())) {
-                newPassword = DigestUtils.sha256Hex(newPassword);
+                String newHashedPassword = DigestUtils.sha256Hex(newPassword);
                 String newSalt = new PassGen(8).nextPassword();
                 EMU.beginTransaction();
-                user.setPassword(DigestUtils.sha256Hex(newPassword + newSalt));
+                user.setPassword(DigestUtils.sha256Hex(newHashedPassword + newSalt));
                 user.setSalt(newSalt);
                 EMU.commit();
                 logger.info("User with id = "+id+": password change!");

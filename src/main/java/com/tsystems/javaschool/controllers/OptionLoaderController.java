@@ -10,6 +10,7 @@ import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
+import org.apache.log4j.Logger;
 
 import javax.persistence.EntityGraph;
 import javax.servlet.ServletException;
@@ -39,7 +40,8 @@ import java.util.stream.Collectors;
 @WebServlet("/load_option")
 public class OptionLoaderController extends HttpServlet {
 
-    private transient final OptionService service = OptionServiceImpl.getInstance();
+    private final transient OptionService service = OptionServiceImpl.getInstance();
+    private static final Logger logger = Logger.getLogger(OptionLoaderController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +50,12 @@ public class OptionLoaderController extends HttpServlet {
         JsonObject json = new JsonObject();
         String type = request.getParameter("loadtype");
         if ("toDisable".equals(type)) {
-            Integer id = Integer.parseInt(request.getParameter("data"));
+            Integer id = 0;
+            try {
+                id = Integer.parseInt(request.getParameter("data"));
+            } catch (NumberFormatException e) {
+                logger.error("Wrong id format!", e);
+            }
 
             EntityGraph<Option> graph = service.getEntityGraph();
             Set<Option> notForbidden = new HashSet<>();
@@ -75,7 +82,13 @@ public class OptionLoaderController extends HttpServlet {
             json.add("not_forbidden", elementNotForbidden);
             json.add("not_required_from", elementNotRequiredFrom);
         } else if ("possibleOfTariff".equals(type)) {
-            Integer tariffId = Integer.parseInt(request.getParameter("tariff_id"));
+            Integer tariffId = 0;
+            try {
+                tariffId = Integer.parseInt(request.getParameter("tariff_id"));
+            } catch (NumberFormatException e) {
+                logger.error("Wrong id format!", e);
+            }
+
             TariffService tariffService = TariffServiceImpl.getInstance();
             EntityGraph graph = tariffService.getEntityGraph();
 
@@ -89,7 +102,12 @@ public class OptionLoaderController extends HttpServlet {
             JsonElement element = gson.toJsonTree(tariff.getPossibleOptions());
             json.add("data", element);
         } else if ("getDependencies".equals(type)) {
-            Integer id = Integer.parseInt(request.getParameter("data"));
+            Integer id = 0;
+            try {
+                id = Integer.parseInt(request.getParameter("data"));
+            } catch (NumberFormatException e) {
+                logger.error("Wrong id format!", e);
+            }
 
             EntityGraph<Option> graph = service.getEntityGraph();
 
@@ -125,6 +143,8 @@ public class OptionLoaderController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             out.print(json.toString());
             out.flush();
+        } catch (IOException e) {
+            logger.error("Get writer exception!", e);
         }
     }
 }
