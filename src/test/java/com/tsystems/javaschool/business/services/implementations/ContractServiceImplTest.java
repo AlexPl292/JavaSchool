@@ -79,30 +79,6 @@ public class ContractServiceImplTest {
     }
 
     @Test
-    public void addNew() throws Exception {
-        List<Integer> optionsId = new ArrayList<>();
-        optionsId.add(1);
-        optionsId.add(2);
-        Set<Option> options = new HashSet<>();
-        Option option1 = new Option(1, "x1", new BigDecimal("100"), new BigDecimal("200"), "Desc1");
-        Option option2 = new Option(2, "x2", new BigDecimal("101"), new BigDecimal("201"), "Desc2");
-        options.add(option1);
-        options.add(option2);
-        Mockito.when(mockOptionDao.loadOptionsByIds(anyListOf(Integer.class))).thenReturn(options);
-
-
-        PowerMockito.doNothing().when(EMU.class, "closeEntityManager");
-        PowerMockito.doNothing().when(EMU.class, "beginTransaction");
-        PowerMockito.doNothing().when(EMU.class, "commit");
-        PowerMockito.doNothing().when(EMU.class, "rollback");
-
-
-        ContractServiceImpl service = ContractServiceImpl.getInstance();
-        Contract loadedContract = service.addNew(contract, optionsId);
-        assertEquals(options, loadedContract.getUsedOptions());
-    }
-
-    @Test
     public void updateContract() throws Exception {
         PowerMockito.mockStatic(TariffDaoImpl.class);
         TariffDaoImpl mockTariffDao = mock(TariffDaoImpl.class);
@@ -132,4 +108,27 @@ public class ContractServiceImplTest {
         assertEquals(options, updated.getUsedOptions());
     }
 
+    @Test
+    public void addNew() throws Exception {
+        List<Integer> optionsId = new ArrayList<>();
+        optionsId.add(1);
+        optionsId.add(2);
+        Set<Option> options = new HashSet<>();
+        Option option1 = new Option(1, "x1", new BigDecimal("100"), new BigDecimal("200"), "Desc1");
+        Option option2 = new Option(2, "x2", new BigDecimal("101"), new BigDecimal("201"), "Desc2");
+        options.add(option1);
+        options.add(option2);
+        Mockito.when(mockOptionDao.loadOptionsByIds(anyListOf(Integer.class))).thenReturn(options);
+
+
+        PowerMockito.doNothing().when(EMU.class, "closeEntityManager");
+        PowerMockito.doNothing().when(EMU.class, "beginTransaction");
+        PowerMockito.doNothing().when(EMU.class, "commit");
+        PowerMockito.doNothing().when(EMU.class, "rollback");
+
+
+        ContractServiceImpl service = ContractServiceImpl.getInstance();
+        Contract loadedContract = service.addNew(contract, optionsId);
+        assertEquals(options, loadedContract.getUsedOptions());
+    }
 }
