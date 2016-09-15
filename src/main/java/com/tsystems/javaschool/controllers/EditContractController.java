@@ -54,7 +54,7 @@ public class EditContractController extends HttpServlet {
         } else {
             options = new ArrayList<>();
         }
-        Contract contract = new Contract();
+        Contract contract = ContractServiceImpl.getInstance().loadByKey(contractId);
         if (contract.getBalance().compareTo(BigDecimal.ZERO) == 0 || contract.getIsBlocked() != 0) {
             errors.put("Edit error", "You cannot edit options!");
         }

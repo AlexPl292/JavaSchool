@@ -15,7 +15,6 @@ public interface GenericService<T, PK extends Serializable> {
     /**
      * Add new entity to database
      * @param entity entity to add
-     * @return added entity
      */
     void addNew(T entity);
 
