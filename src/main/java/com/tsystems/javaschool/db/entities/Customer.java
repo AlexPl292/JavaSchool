@@ -10,26 +10,12 @@ import java.util.Set;
 /**
  * Created by alex on 17.08.16.
  *
- * Customer entity class.
+ * Entity for access customer table
  */
 
 @Entity
 @Table(name = "Customers")
-public class Customer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    @Expose
-    private Integer id;
-
-    @Column(name = "name")
-    @Expose
-    private String name;
-
-    @Column(name = "surname")
-    @Expose
-    private String surname;
+public class Customer extends User{
 
     @Column(name = "date_of_birth")
     @Expose
@@ -47,18 +33,6 @@ public class Customer {
     @Expose
     private String address;
 
-    @Column(name = "email")
-    @Expose
-    private String email;
-
-    @Column(name = "password")
-    @Expose
-    private String password;
-
-    @Column(name = "salt")
-    @Expose
-    private String salt;
-
     @Column(name = "is_blocked")
     @Expose
     private int isBlocked;
@@ -74,12 +48,13 @@ public class Customer {
      * @param surname surname of new entity
      * @param email email of new entity
      * @param isBlocked is this customer blocked or not
+     * @param passportNumber number of passport of new customer. Must be unique for every customer
      */
     public Customer(Integer id, String name, String surname, String email, int isBlocked, String passportNumber) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
+        this.setId(id);
+        this.setName(name);
+        this.setSurname(surname);
+        this.setEmail(email);
         this.isBlocked = isBlocked;
         this.passportNumber = passportNumber;
     }
@@ -90,30 +65,6 @@ public class Customer {
      */
     public Customer() {
         contracts = new HashSet<>();
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public Date getDateOfBirth() {
@@ -140,36 +91,12 @@ public class Customer {
         this.address = address;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public int getIsBlocked() {
         return isBlocked;
     }
 
     public void setIsBlocked(int isBlocked) {
         this.isBlocked = isBlocked;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getPassportNumber() {
@@ -191,15 +118,52 @@ public class Customer {
     @Override
     public String toString() {
         return "Customer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", surname='" + getSurname() + '\'' +
                 ", day_of_birth=" + dateOfBirth +
                 ", passport_data='" + passportData + '\'' +
                 ", passport_number='" + passportNumber + '\'' +
                 ", address='" + address + '\'' +
-                ", email='" + email + '\'' +
+                ", email='" + getEmail() + '\'' +
                 ", is_blocked=" + isBlocked +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Customer customer = (Customer) o;
+
+        if (isBlocked != customer.isBlocked)
+            return false;
+        if (dateOfBirth != null ? !dateOfBirth.equals(customer.dateOfBirth) : customer.dateOfBirth != null)
+            return false;
+        if (passportNumber != null ? !passportNumber.equals(customer.passportNumber) : customer.passportNumber != null)
+            return false;
+        if (passportData != null ? !passportData.equals(customer.passportData) : customer.passportData != null)
+            return false;
+        if (address != null ? !address.equals(customer.address) : customer.address != null)
+            return false;
+        return contracts != null ? contracts.equals(customer.contracts) : customer.contracts == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
+        result = 31 * result + (passportNumber != null ? passportNumber.hashCode() : 0);
+        result = 31 * result + (passportData != null ? passportData.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + isBlocked;
+        result = 31 * result + (contracts != null ? contracts.hashCode() : 0);
+        return result;
     }
 }

@@ -4,11 +4,13 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by alex on 25.08.16.
+ *
+ * Entity for access option table
  */
 @Entity
 @Table(name = "Options", schema = "eCare")
@@ -244,26 +246,12 @@ public class Option {
 
         Option that = (Option) o;
 
-        if (id != that.id)
-            return false;
-        if (name != null ? !name.equals(that.name) : that.name != null)
-            return false;
-        if (cost != null ? !cost.equals(that.cost) : that.cost != null)
-            return false;
-        if (connectCost != null ? !connectCost.equals(that.connectCost) : that.connectCost != null)
-            return false;
-        return description != null ? description.equals(that.description) : that.description == null;
-
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (cost != null ? cost.hashCode() : 0);
-        result = 31 * result + (connectCost != null ? connectCost.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return id;
     }
 
     @Override

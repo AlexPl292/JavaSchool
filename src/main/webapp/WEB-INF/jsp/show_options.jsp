@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA8oQPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREREQAAAAABAQEBAAAAAAEREREAAAAAAQEBAQAAAAABERERAAAAAAEBAQEAAAAAAQEBAQAAAAABERERAAAAAAEREREAAAAAAQAAAQAAAAABAAABAAAAAAEAAAEAAAAAAREREQAAAAABERERAAAAAAAAARAAAAAAAAABEAAADwHwAA9V8AAPAfAAD1XwAA8B8AAPVfAAD1XwAA8B8AAPAfAAD33wAA998AAPffAADwHwAA8B8AAP8/AAD/PwAA" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/metisMenu/css/metisMenu.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
@@ -32,7 +33,15 @@
 </head>
 <body>
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/template.jsp"></c:import>
+    <c:set var="isCustomer" value="${\"customer\".equals(sessionScope.user)}"/>
+    <c:choose>
+        <c:when test="${isCustomer}">
+            <c:import url="/WEB-INF/jsp/template_customer_version.jsp"/>
+        </c:when>
+        <c:otherwise>
+            <c:import url="/WEB-INF/jsp/template.jsp"/>
+        </c:otherwise>
+    </c:choose>
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
@@ -55,7 +64,7 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th abbr="name">Tariff name</th>
+                                    <th abbr="name">Option name</th>
                                     <th abbr="cost">Cost</th>
                                     <th abbr="connectCost">Connection cost</th>
                                     <th abbr="description">Description</th>

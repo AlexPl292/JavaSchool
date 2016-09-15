@@ -16,7 +16,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">eCare</a>
+        <a class="navbar-brand" href="/">eCare</a>
     </div>
     <!-- /.navbar-header -->
 
@@ -26,12 +26,12 @@
                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
-                <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                <li><a href="/change_password"><i class="fa fa-gear fa-fw"></i> Change </a>
                 </li>
-                <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                </li>
+<%--                <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                </li>--%>
                 <li class="divider"></li>
-                <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                <li><a href="/sign_out"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                 </li>
             </ul>
             <!-- /.dropdown-user -->
@@ -47,10 +47,10 @@
                     <a href="#"><i class="fa fa-group fa-fw"></i> Customers<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/add_customer">Add new customer</a>
+                            <a href="/admin/add_customer">Add new customer</a>
                         </li>
                         <li>
-                            <a href="/show_customers">Show all customers</a>
+                            <a href="/admin/customers">Show all customers</a>
                         </li>
                     </ul>
                 </li>
@@ -60,10 +60,10 @@
                     <a href="#"><i class="fa fa-cog fa-fw"></i> Tariffs<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/add_tariff">Add new tariff</a>
+                            <a href="/admin/add_tariff">Add new tariff</a>
                         </li>
                         <li>
-                            <a href="/show_tariffs">Show all tariffs</a>
+                            <a href="/tariffs">Show all tariffs</a>
                         </li>
                     </ul>
                 </li>
@@ -73,10 +73,10 @@
                     <a href="#"><i class="fa fa-cogs fa-fw"></i> Options<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/add_option">Add new option</a>
+                            <a href="/admin/add_option">Add new option</a>
                         </li>
                         <li>
-                            <a href="/show_options">Show all options</a>
+                            <a href="/options">Show all options</a>
                         </li>
                     </ul>
                 </li>
@@ -85,7 +85,7 @@
                     <a href="#"><i class="fa fa-credit-card fa-fw"></i> Contracts<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/show_contracts">Show all contracts</a>
+                            <a href="/admin/contracts">Show all contracts</a>
                         </li>
                     </ul>
                 </li>

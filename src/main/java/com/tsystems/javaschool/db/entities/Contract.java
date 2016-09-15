@@ -3,11 +3,19 @@ package com.tsystems.javaschool.db.entities;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
+ *
+ * Entity for access contract table
+ *
+ * Block levels:
+ * 0 - unblocked
+ * 1 - blocked by customer
+ * 2 - blocked by staff
  */
 @Entity
 @Table(name = "Contracts", schema = "eCare")
@@ -25,6 +33,10 @@ public class Contract {
     @Expose
     private Integer isBlocked;
 
+    @Column(name = "balance")
+    @Expose
+    private BigDecimal balance;
+
     @ManyToOne
     @JoinColumn(name = "customer")
     @Expose
@@ -40,7 +52,6 @@ public class Contract {
             @JoinColumn(name = "option_id", referencedColumnName = "id", nullable = false)
     })
     @ManyToMany(fetch = FetchType.LAZY)
-    @Expose
     private Set<Option> usedOptions;
 
     public Contract() {
@@ -55,13 +66,15 @@ public class Contract {
      * @param customer customer of new entity
      * @param tariff tariff of new entity
      * @param isBlocked if this contract blocked or not
+     * @param balance balance of new contract
      */
-    public Contract(Integer id, String number, Customer customer, Tariff tariff, Integer isBlocked) {
+    public Contract(Integer id, String number, Customer customer, Tariff tariff, Integer isBlocked, BigDecimal balance) {
         this.id = id;
         this.number = number;
         this.isBlocked = isBlocked;
         this.customer = customer;
         this.tariff = tariff;
+        this.balance = balance;
     }
 
     public Integer getId() {
@@ -112,6 +125,14 @@ public class Contract {
         this.usedOptions = usedOptions;
     }
 
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -135,5 +156,18 @@ public class Contract {
         result = 31 * result + (number != null ? number.hashCode() : 0);
         result = 31 * result + (isBlocked != null ? isBlocked.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Contract{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", isBlocked=" + isBlocked +
+                ", balance=" + balance +
+                ", customer=" + customer +
+                ", tariff=" + tariff +
+                ", usedOptions=" + usedOptions +
+                '}';
     }
 }

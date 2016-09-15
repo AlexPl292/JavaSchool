@@ -4,7 +4,6 @@ import com.tsystems.javaschool.db.entities.Option;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by alex on 27.08.16.
@@ -36,10 +35,4 @@ public interface OptionService extends GenericService<Option, Integer> {
      */
     List<Option> loadOptionsByTariffs(List<Integer> tariffs);
 
-    /**
-     * Load set of options by ids
-     * @param ids List of ids of options
-     * @return set of options
-     */
-    Set<Option> loadOptionsByIds(List<Integer> ids);
 }

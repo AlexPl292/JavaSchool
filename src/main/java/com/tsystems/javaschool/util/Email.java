@@ -1,13 +1,23 @@
 package com.tsystems.javaschool.util;
 
-import com.tsystems.javaschool.db.entities.Customer;
+import org.apache.log4j.Logger;
 
 /**
  * Created by alex on 20.08.16.
+ *
+ * Email stub class. This class is used by customer creating for stubbing email send.
  */
 public class Email {
+    private static final Logger logger = Logger.getLogger("email");
 
-    public static void sendSimpleEmail(String user, String text) {
-        System.out.println(text);
+    private Email() {}
+
+    /**
+     * Stub email sending
+     * @param userEmail email of user
+     * @param text text to send
+     */
+    public static void sendSimpleEmail(String userEmail, String text) {
+        logger.info("Password for "+userEmail+": "+text);
     }
 }

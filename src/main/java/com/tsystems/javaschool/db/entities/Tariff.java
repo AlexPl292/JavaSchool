@@ -4,10 +4,13 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
+ *
+ * Entity for tariff table access
  */
 @Entity
 @Table(name = "Tariffs", schema = "eCare")
@@ -17,7 +20,7 @@ public class Tariff {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Expose
-    private int id;
+    private Integer id;
 
     @Basic
     @Column(name = "name", nullable = true, length = 45)
@@ -61,11 +64,11 @@ public class Tariff {
         this.description = description;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -110,7 +113,7 @@ public class Tariff {
 
         Tariff that = (Tariff) o;
 
-        if (id != that.id)
+        if (!Objects.equals(id, that.id))
             return false;
         if (name != null ? !name.equals(that.name) : that.name != null)
             return false;

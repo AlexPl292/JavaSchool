@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA8oQPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREREQAAAAABAQEBAAAAAAEREREAAAAAAQEBAQAAAAABERERAAAAAAEBAQEAAAAAAQEBAQAAAAABERERAAAAAAEREREAAAAAAQAAAQAAAAABAAABAAAAAAEAAAEAAAAAAREREQAAAAABERERAAAAAAAAARAAAAAAAAABEAAADwHwAA9V8AAPAfAAD1XwAA8B8AAPVfAAD1XwAA8B8AAPAfAAD33wAA998AAPffAADwHwAA8B8AAP8/AAD/PwAA" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/metisMenu/css/metisMenu.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
@@ -27,41 +28,8 @@
     <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/customer_validate_rules.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <title>New customer</title>
-    <script>
-        function loadlist(selobj, url, nameattr, valattr) {
-            $(selobj).empty();
-            $.getJSON(url, {page:-1, updateCount:false, search:""}, function (data) {
-                $.each(data.data, function (i, obj) {
-                   $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
-                });
-                $(selobj).change();
-            });
-        }
-
-        function create_boxes(selobj) {
-            return function (data) {
-                $(selobj).empty();
-                var checkboxs_name = selobj.attr('id');
-                $.each(data.data, function (i, obj) {
-                    $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name}));
-                    $(selobj).append($("<label/>", {"for": checkboxs_name+i, text:obj.name}));
-                    $(selobj).append($("<br/>"));
-                })
-            }
-        }
-
-        $(function() {
-            var $tariff = $("#tariff");
-
-            $tariff.change(function (e) {
-                e.preventDefault();
-                $.getJSON("/load_options", {loadtype: "possibleOfTariff", tariff_id:$(this).val()}, create_boxes($('#options')));
-            });
-            loadlist($tariff, "/load_tariffs", "name", "id");
-
-        });
-    </script>
 </head>
 <body>
 <div class="wrapper">

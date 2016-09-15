@@ -11,7 +11,6 @@ $.validator.addMethod("dateAb18", function (val) {
     var date = val.split("-");
     var orig_date = new Date(date[0], date[1]-1, date[2]);
     // Ну почему, по какой причине в этом js месяцы начинаются с 0?! Неужели было так сложно сделать январь первым, а не нулевым?!
-    console.log(orig_date);
     var today = new Date();
     return orig_date.setFullYear(orig_date.getFullYear()+18) <= today;
 });
@@ -30,7 +29,7 @@ $.validator.setDefaults({
     errorClass: "has-error",
     onkeyup: false,
     onclick: false,
-    errorPlacement: function(error, element) {
+    errorPlacement: function(error) {
         $.notify(error.text(), {position: "top right", className: "error"});
     },
     highlight: function(element, errorClass) {
@@ -42,29 +41,32 @@ $.validator.setDefaults({
     unhighlight: function(element, errorClass) {
         $(element).parent().parent().removeClass(errorClass);
     },
-    submitHandler: submitting
+    submitHandler: submitting()
 });
 
 
-function response_validate($form) {
-    return function (response) {
-        if (response.success) {
-            $.notify("Success!", {position: "right", className: "success"});
-            $form[0].reset();
-        } else {
-            $.each(response.errors, function (prop, val) {
-                $.notify("Error: in "+prop+"\n" + val, {position: "top right", className: "error"});
-            });
-        }
-        $form.find(":input").prop("disabled", false);
+function submitting(full_success) {
+    return function(form, e) {
+        e.preventDefault();
+        $.notify("Sending data..", {position: "top right", className: "success"});
+
+        $(form).find("input[type=checkbox]").prop("disabled", false);
+        $.post($(form).attr("action"), $(form).serialize(), function (response) {
+            if (response.success) {
+                $.notify("Success!", {position: "top right", className: "success"});
+                $(form).find("input[type=checkbox]").removeData();
+                $(form)[0].reset();
+                if (full_success !== undefined) {
+                    full_success(response);
+                }
+            } else {
+                $.each(response.errors, function (prop, val) {
+                    $.notify("Error: in " + prop + "\n" + val, {position: "top right", className: "error"});
+                });
+            }
+            $(form).find(":input").prop("disabled", false);
+        });
+        $(form).find(":input").prop("disabled", true);
+        return false;
     }
-}
-
-function submitting(form, e) {
-    e.preventDefault();
-    $.notify("Sending data..", {position:"right", className:"success"});
-
-    $.post($(form).attr("action"), $(form).serialize(), response_validate($(form)));
-    $(form).find(":input").prop("disabled", true);
-    return false;
 }

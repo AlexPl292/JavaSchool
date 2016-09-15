@@ -32,11 +32,11 @@
             <version>5.2.2.Final</version>
         </dependency>
 
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.4</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>commons-codec</groupId>-->
+            <!--<artifactId>commons-codec</artifactId>-->
+            <!--<version>1.4</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -74,6 +74,36 @@
             <version>3.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>JavaSchool</finalName>
@@ -90,14 +120,22 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
                 <configuration>
-                    <url>http://127.0.0.1:8080/manager</url>
-                    <server>mytomcat</server>
-                    <path>/ecare</path>
+                    <url>http://127.0.0.1:8080/manager/text</url>
+                    <!--<server>mytomcat</server>-->
+                    <update>true</update>
+                    <username>alex</username>
+                    <password>keinerverstehtdeutsch</password>
+                    <path>/</path>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <properties>
+        <sonar.exclusions>**/vendor/**</sonar.exclusions>
+        <sonar.test.exclusions>**/test/**</sonar.test.exclusions>
+    </properties>
 </project>

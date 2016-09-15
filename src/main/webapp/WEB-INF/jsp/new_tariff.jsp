@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA8oQPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREREQAAAAABAQEBAAAAAAEREREAAAAAAQEBAQAAAAABERERAAAAAAEBAQEAAAAAAQEBAQAAAAABERERAAAAAAEREREAAAAAAQAAAQAAAAABAAABAAAAAAEAAAEAAAAAAREREQAAAAABERERAAAAAAAAARAAAAAAAAABEAAADwHwAA9V8AAPAfAAD1XwAA8B8AAPVfAAD1XwAA8B8AAPAfAAD33wAA998AAPffAADwHwAA8B8AAP8/AAD/PwAA" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/metisMenu/css/metisMenu.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
@@ -26,28 +27,13 @@
     <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/tariff_validate_rules.js"></script>
-    <title>New tariff</title>
-    <script>
-        function create_boxes(selobj) {
-            return function (data) {
-                $(selobj).empty();
-                var checkboxs_name = selobj.attr('id');
-                $.each(data.data, function (i, obj) {
-                    $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name}));
-                    $(selobj).append($("<label/>", {"for": checkboxs_name+i, text:obj.name}));
-                    $(selobj).append($("<br/>"));
-                })
-            }
-        }
+    <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
 
-        $(function() {
-            $.getJSON("/load_options_table", {}, create_boxes($('#options')));
-        });
-    </script>
+    <title>New tariff</title>
 </head>
 <body>
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/template.jsp"></c:import>
+    <c:import url="/WEB-INF/jsp/template.jsp"/>
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">

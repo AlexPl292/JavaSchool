@@ -1,13 +1,12 @@
 package com.tsystems.javaschool.db.implemetations;
 
-import com.tsystems.javaschool.db.EMF;
 import com.tsystems.javaschool.db.interfaces.GenericDao;
+import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.Map;
 
 /**
  * Created by alex on 18.08.16.
@@ -16,7 +15,6 @@ import java.lang.reflect.ParameterizedType;
  */
 abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK>{
 
-    protected EntityManager em = EMF.createEntityManager();
     private Class type;
 
     /**
@@ -28,35 +26,32 @@ abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<
     }
 
     @Override
-    public T create(T newInstance) {
-        em.persist(newInstance);
-//        em.flush();
-        return newInstance;
+    public void create(T newInstance) {
+        EMU.getEntityManager().persist(newInstance);
     }
 
     @Override
     public T read(PK id) {
-        return (T) em.find(type, id);
+        return (T) EMU.getEntityManager().find(type, id);
     }
 
     @Override
     public T update(T transientObject) {
-        em.merge(transientObject);
-        return transientObject;
+        return EMU.getEntityManager().merge(transientObject);
     }
 
     @Override
     public void delete(PK id) {
-        em.remove(em.getReference(type, id));
+        EMU.getEntityManager().remove(EMU.getEntityManager().getReference(type, id));
     }
 
     @Override
     public EntityGraph getEntityGraph() {
-        return em.createEntityGraph(type);
+        return EMU.getEntityManager().createEntityGraph(type);
     }
 
     @Override
-    public EntityTransaction getTransaction() {
-        return em.getTransaction();
+    public T read(Integer key, Map<String, Object> hints) {
+        return (T) EMU.getEntityManager().find(type, key, hints);
     }
 }

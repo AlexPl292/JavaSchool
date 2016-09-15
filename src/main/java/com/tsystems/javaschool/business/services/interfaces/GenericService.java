@@ -3,6 +3,7 @@ package com.tsystems.javaschool.business.services.interfaces;
 import javax.persistence.EntityGraph;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 23.08.16.
@@ -14,46 +15,8 @@ public interface GenericService<T, PK extends Serializable> {
     /**
      * Add new entity to database
      * @param entity entity to add
-     * @return added entity
      */
-    T addNew(T entity);
-
-    /**
-     * Return entities with pagination
-     * @param maxResult count of entries
-     * @param firstResult first index of entity (index != id)
-     * @return list of entities between (firstIndex) - (firstIndex+maxEntries)
-     */
-    List<T> getNEntries(int maxResult, int firstResult);
-
-    /**
-     * @return count of all entries
-     */
-    long countOfEntries();
-
-    /**
-     * Return pagination query with filter by search query
-     * Which field is important is described in concrete dao interface JavaDoc
-     * @param maxEntries count entries
-     * @param firstIndex first index of entity (index != id)
-     * @param searchQuery query. Could contain one or two words. Order is not important
-     * @return list of entities between (firstIndex) - (firstIndex+maxEntries) those match searchQuery
-     */
-    List<T> getNEntries(int maxEntries, int firstIndex, String searchQuery);
-
-    /**
-     * Return count of entries with searchQuery
-     * Which field is important is described in concrete dao interface JavaDoc
-     * @param searchQuery query. Could contain one or two words. Order is not important
-     * @return list of entities those match searchQuery
-     */
-    long countOfEntries(String searchQuery);
-
-    /**
-     * Load all entryes
-     * @return all entries
-     */
-    List<T> loadAll();
+    void addNew(T entity);
 
     /**
      * @param key id of entity
@@ -66,4 +29,32 @@ public interface GenericService<T, PK extends Serializable> {
      * @return entity graph
      */
     EntityGraph getEntityGraph();
+
+    /**
+     * Remove entity by id
+     * @param key id of entity
+     */
+    void remove(PK key);
+
+    /**
+     * Load entities by kwargs
+     * See {@link com.tsystems.javaschool.db.interfaces.GenericDao#read(Map)}
+     * @param kwargs kwargs
+     * @return list of entities
+     */
+    List<T> load(Map<String, Object> kwargs);
+
+    /**
+     * Count entityes by kwargs
+     * See {@link com.tsystems.javaschool.db.interfaces.GenericDao#read(Map)}
+     * @param kwargs kwargs
+     * @return count of entityes
+     */
+    long count(Map<String, Object> kwargs);
+
+    /**
+     * Load all entryes
+     * @return all entries
+     */
+    List<T> loadAll();
 }

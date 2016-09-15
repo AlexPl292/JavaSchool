@@ -1,13 +1,15 @@
 package com.tsystems.javaschool.business.services.implementations;
 
-import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
+import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
+import com.tsystems.javaschool.util.EMU;
+import org.apache.log4j.Logger;
 
 import javax.persistence.EntityGraph;
-import javax.persistence.EntityTransaction;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,49 +18,41 @@ import java.util.Map;
  */
 public class TariffServiceImpl implements TariffService{
 
-    private TariffDao tariffDao = new TariffDaoImpl();
+    private TariffDao tariffDao = TariffDaoImpl.getInstance();
+    private static final Logger logger = Logger.getLogger(TariffServiceImpl.class);
 
-    @Override
-    public Tariff addNew(Tariff tariff) {
-        EntityTransaction transaction = tariffDao.getTransaction();
-        transaction.begin();
-        Tariff newTariff = tariffDao.create(tariff);
-        transaction.commit();
-        return newTariff;
+    private TariffServiceImpl() {}
+
+    private static class TariffServiceHolder {
+        private static final TariffServiceImpl instance = new TariffServiceImpl();
+        private TariffServiceHolder() {}
+    }
+
+    public static TariffServiceImpl getInstance() {
+        return TariffServiceHolder.instance;
     }
 
     @Override
-    public List<Tariff> getNEntries(int maxResult, int firstResult) {
-        return tariffDao.selectFromTo(maxResult, firstResult);
-    }
-
-    @Override
-    public long countOfEntries() {
-        return tariffDao.countOfEntities();
-    }
-
-    @Override
-    public List<Tariff> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
-        if ("".equals(searchQuery))
-            return getNEntries(maxEntries, firstIndex);
-        return tariffDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-    }
-
-    @Override
-    public long countOfEntries(String searchQuery) {
-        if ("".equals(searchQuery))
-            return countOfEntries();
-        return tariffDao.countOfImportantSearch(searchQuery);
-    }
-
-    @Override
-    public List<Tariff> loadAll() {
-        return tariffDao.getAll();
+    public void addNew(Tariff tariff) {
+        try {
+            EMU.beginTransaction();
+            tariffDao.create(tariff);
+            EMU.commit();
+            logger.info("New tariff is created. Id = "+tariff.getId());
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
     public Tariff loadByKey(Integer key) {
-        return tariffDao.read(key);
+        Tariff tariff = tariffDao.read(key);
+        EMU.closeEntityManager();
+        return tariff;
     }
 
     @Override
@@ -67,18 +61,62 @@ public class TariffServiceImpl implements TariffService{
     }
 
     @Override
+    public void remove(Integer key) {
+        try {
+            EMU.beginTransaction();
+            tariffDao.delete(key);
+            EMU.commit();
+            logger.info("Tariff is removed. Id = "+ key);
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
+    }
+
+    @Override
+    public List<Tariff> load(Map<String, Object> kwargs) {
+        List<Tariff> tariffs = tariffDao.read(kwargs);
+        EMU.closeEntityManager();
+        return tariffs;
+    }
+
+    @Override
+    public long count(Map<String, Object> kwargs) {
+        long count = tariffDao.count(kwargs);
+        EMU.closeEntityManager();
+        return count;
+    }
+
+    @Override
+    public List<Tariff> loadAll() {
+        return load(new HashMap<>());
+    }
+
+    @Override
     public Tariff loadByKey(Integer key, Map<String, Object> hints) {
-        return tariffDao.read(key, hints);
+        Tariff tariff = tariffDao.read(key, hints);
+        EMU.closeEntityManager();
+        return tariff;
     }
 
     @Override
     public Tariff addNew(Tariff tariff, List<Integer> optionsIds) {
-        EntityTransaction transaction = tariffDao.getTransaction();
-        OptionService optionService = new OptionServiceImpl();
-        transaction.begin();
-        tariff.setPossibleOptions(optionService.loadOptionsByIds(optionsIds));
-        tariffDao.create(tariff);
-        transaction.commit();
-        return tariff;
+        try {
+            EMU.beginTransaction();
+            tariff.setPossibleOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
+            tariffDao.create(tariff);
+            EMU.commit();
+            logger.info("New tariff with options is created. Id = "+tariff.getId());
+            return tariff;
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 }

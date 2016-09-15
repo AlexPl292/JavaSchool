@@ -24,8 +24,8 @@ function paginationSet(pages_count, current, $pagination) {
             $shown_pages.push(i+1);
         }
     } else if (current === pages_count) {
-        for (var i = 0; i<pages; i++) {
-            $shown_pages.push(pages_count-(pages-i)+1);
+        for (var j = 0; j<pages; j++) {
+            $shown_pages.push(pages_count-(pages-j)+1);
         }
     } else {
         $shown_pages.push(current-1);
@@ -33,8 +33,8 @@ function paginationSet(pages_count, current, $pagination) {
         $shown_pages.push(current+1);
     }
 
-    for (var i = 0; i < $shown_pages.length; i++) {
-        $("<li class='page-item'><a class='page-link' href='#' name='" + $shown_pages[i] + "'>" + $shown_pages[i] + "</a></li>")
+    for (var k = 0; k < $shown_pages.length; k++) {
+        $("<li class='page-item'><a class='page-link' href='#' name='" + $shown_pages[k] + "'>" + $shown_pages[k] + "</a></li>")
             .insertBefore($last);
     }
 
@@ -50,13 +50,16 @@ function paginationSet(pages_count, current, $pagination) {
 function init_table($table) {
 
     var fields_count = $table.find("thead th").length;
+    var table_body = $table.find("tbody");
+
     for (var i = 0; i < 10; i++) {
         var $tr = $('<tr>');
         for (var j = 0; j < fields_count; j++) {
             $tr.append('<td>&nbsp;</td>');
         }
-        $table.find("tbody").append($tr);
+        table_body.append($tr);
     }
+    $(table_body).find('tr:first-child td:first-child').text("loading table...");
 }
 
 function fill_table($table, $pagination, link) {
@@ -74,7 +77,7 @@ function fill_table($table, $pagination, link) {
 
         for (var i = 0; i < 10; i++) {
             if (response.data[i] !== undefined) {
-                $row = $table.find("tbody tr:nth-child(" + (i + 1) + ")");
+                var $row = $table.find("tbody tr:nth-child(" + (i + 1) + ")");
                 if (link) {
                     $row.addClass("clickableRow").attr("data-href", link).attr("data-val", response.data[i].id);
                 }
@@ -85,13 +88,13 @@ function fill_table($table, $pagination, link) {
                         var items = item.split(".");
                         $row.find("td:nth-child(" + (j + 1) + ")").text(response.data[i][items[0]][items[1]]);
                     }
-                })
+                });
             } else {
                 $row = $table.find("tbody tr:nth-child(" + (i + 1) + ")");
                 if (link){
                     $row.removeClass("clickableRow").removeAttr("data-href").removeAttr("data-val");
                 }
-                $.each(properties, function (j, item) {
+                $.each(properties, function (j) {
                     $row.find("td:nth-child(" + (j + 1) + ")").html('&nbsp;');
                 })
             }

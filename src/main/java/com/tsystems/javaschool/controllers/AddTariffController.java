@@ -8,6 +8,7 @@ import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -26,15 +27,22 @@ import java.util.stream.Collectors;
  * Add new tariff
  * Returns json with either success:true, or success:false and object with errors
  */
-@WebServlet("/add_tariff")
+@WebServlet("/admin/add_tariff")
 public class AddTariffController extends HttpServlet {
 
-    private TariffService service = new TariffServiceImpl();
+    private final transient TariffService service = TariffServiceImpl.getInstance();
+    private static final Logger logger = Logger.getLogger(AddTariffController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/jsp/new_tariff.jsp").forward(request, response);
+        try {
+            request.getRequestDispatcher("/WEB-INF/jsp/new_tariff.jsp").forward(request, response);
+        } catch (IOException e) {
+            logger.error("Forward exception", e);
+        } catch (ServletException e) {
+            logger.error("Servlet exception", e);
+        }
     }
 
     @Override
@@ -68,6 +76,7 @@ public class AddTariffController extends HttpServlet {
             } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());
+                logger.error("Exception while tariff creating", th);
             }
         }
         if (!errors.isEmpty()) {
@@ -81,8 +90,11 @@ public class AddTariffController extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json.toString());
+            out.flush();
+        } catch (IOException e) {
+            logger.error("Get writer exception!", e);
+        }
     }
 }

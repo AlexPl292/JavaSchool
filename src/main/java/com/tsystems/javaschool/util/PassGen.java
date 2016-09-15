@@ -4,6 +4,8 @@ import java.util.Random;
 
 /**
  * Created by alex on 20.08.16.
+ *
+ * Password generator
  */
 public class PassGen {
 

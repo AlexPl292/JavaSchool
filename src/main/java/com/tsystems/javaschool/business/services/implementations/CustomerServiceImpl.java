@@ -1,93 +1,71 @@
 package com.tsystems.javaschool.business.services.implementations;
 
-import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
-import com.tsystems.javaschool.business.services.interfaces.OptionService;
-import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
-import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.CustomerDaoImpl;
-import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.CustomerDao;
+import com.tsystems.javaschool.util.EMU;
 import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
-import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.EntityGraph;
-import javax.persistence.EntityTransaction;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 17.08.16.
  */
 public class CustomerServiceImpl implements CustomerService {
 
-    private CustomerDao customerDao = new CustomerDaoImpl();
+    private CustomerDao customerDao = CustomerDaoImpl.getInstance();
+    private static final Logger logger = Logger.getLogger(CustomerServiceImpl.class);
+
+    private CustomerServiceImpl() {}
+
+    private static class CustomerServiceHolder {
+        private static final CustomerServiceImpl instance = new CustomerServiceImpl();
+        private CustomerServiceHolder() {}
+    }
+
+    public static CustomerServiceImpl getInstance() {
+        return CustomerServiceHolder.instance;
+    }
 
     @Override
-    public Customer addNew(Customer customer) {
+    public void addNew(Customer customer) {
         /*
         Пароль НЕ должен быть введен сотрудником.
         Будем его вручную генерировать, а потом посылать с помощью email или sms
          */
         String password = new PassGen(10).nextPassword();
-        MessageDigest md = null;
-        // TODO заменить эту дербендю на апаче хэш
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        assert md != null;
-        md.update(password.getBytes());
-        String hashed = Hex.encodeHexString(md.digest());
+        String hashed = DigestUtils.sha256Hex(password);
         String salt = new PassGen(8).nextPassword();
-        md.update((hashed+salt).getBytes());
 
-        Email.sendSimpleEmail(customer.getEmail(), password); // Это заглушка. На самом деле просто вывод на консоль
-        customer.setPassword(Hex.encodeHexString(md.digest()));
+        Email.sendSimpleEmail(customer.getEmail(), password); // Это заглушка.
+        customer.setPassword(DigestUtils.sha256Hex(hashed + salt));
         customer.setSalt(salt);
-        EntityTransaction transaction = customerDao.getTransaction();
-        transaction.begin();
-        customer = customerDao.create(customer);
-        transaction.commit();
-        return customer;
-    }
-
-    @Override
-    public List<Customer> getNEntries(int maxResult, int firstResult) {
-        return customerDao.selectFromTo(maxResult, firstResult);
-    }
-
-    @Override
-    public long countOfEntries() {
-        return customerDao.countOfEntities();
-    }
-
-    @Override
-    public List<Customer> getNEntries(int maxEntries, int firstIndex, String searchQuery) {
-        if ("".equals(searchQuery))
-            return getNEntries(maxEntries, firstIndex);
-        return customerDao.importantSearchFromTo(maxEntries, firstIndex, searchQuery);
-    }
-
-    @Override
-    public long countOfEntries(String searchQuery) {
-        if ("".equals(searchQuery))
-            return countOfEntries();
-        return customerDao.countOfImportantSearch(searchQuery);
-    }
-
-    @Override
-    public List<Customer> loadAll() {
-        return customerDao.getAll();
+        try {
+            EMU.beginTransaction();
+            customerDao.create(customer);
+            logger.info("New customer is created. Id = "+customer.getId());
+            EMU.commit();
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
     }
 
     @Override
     public Customer loadByKey(Integer key) {
-        return customerDao.read(key);
+        Customer customer = customerDao.read(key);
+        EMU.closeEntityManager();
+        return customer;
     }
 
     @Override
@@ -95,18 +73,45 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDao.getEntityGraph();
     }
 
-/*    @Override
-    public void createCustomerAndContract(Customer customer, Contract contract, List<Integer> contractOptionsIds) {
-        EntityTransaction transaction = customerDao.getTransaction();
-        ContractDao contractDao = new ContractDaoImpl();
+    @Override
+    public void remove(Integer key) {
+        try {
+            EMU.beginTransaction();
+            customerDao.delete(key);
+            EMU.commit();
+            logger.info("Customer is removed. Id = "+key);
+        } catch (RuntimeException re) {
+            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
+                EMU.rollback();
+            throw re;
+        } finally {
+            EMU.closeEntityManager();
+        }
+    }
 
-        transaction.begin();
-        OptionService optionService = new OptionServiceImpl();
-        contract.setUsedOptions(optionService.loadOptionsByIds(contractOptionsIds));
+    @Override
+    public Customer loadByKey(Integer key, Map<String, Object> hints) {
+        Customer customer = customerDao.read(key, hints);
+        EMU.closeEntityManager();
+        return customer;
+    }
 
-        Customer newCustomer = customerDao.create(customer);
-        contract.setCustomer(newCustomer);
-        contractDao.create(contract);
-        transaction.commit();
-    }*/
+    @Override
+    public List<Customer> load(Map<String, Object> kwargs) {
+        List<Customer> customers = customerDao.read(kwargs);
+        EMU.closeEntityManager();
+        return customers;
+    }
+
+    @Override
+    public long count(Map<String, Object> kwargs) {
+        long count = customerDao.count(kwargs);
+        EMU.closeEntityManager();
+        return count;
+    }
+
+    @Override
+    public List<Customer> loadAll() {
+        return load(new HashMap<>());
+    }
 }

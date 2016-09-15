@@ -8,6 +8,7 @@ import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -18,22 +19,30 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by alex on 26.08.16.
  * Add new Option
  * Returns json with either success:true, or success:false and object with errors
  */
-@WebServlet("/add_option")
+@WebServlet("/admin/add_option")
 public class AddOptionController extends HttpServlet {
 
-    OptionService service = new OptionServiceImpl();
+    private final transient OptionService service = OptionServiceImpl.getInstance();
+    private static final Logger logger = Logger.getLogger(AddOptionController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/jsp/new_option.jsp").forward(request, response);
+        try {
+            request.getRequestDispatcher("/WEB-INF/jsp/new_option.jsp").forward(request, response);
+        } catch (IOException e) {
+            logger.error("Forward exception", e);
+        } catch (ServletException e) {
+            logger.error("Servlet exception", e);
+        }
     }
 
     @Override
@@ -68,19 +77,15 @@ public class AddOptionController extends HttpServlet {
             HashMap<String, String[]> dependencies = new HashMap<>();
 
             String[] requiredFrom;
-            String[] requiredMe;
             String[] forbiddenWith;
             String[] forTariffs;
             if ((requiredFrom = request.getParameterValues("requiredFrom")) == null)
                 requiredFrom = new String[0];
-            if ((requiredMe = request.getParameterValues("requiredMe")) == null)
-                requiredMe = new String[0];
             if ((forbiddenWith = request.getParameterValues("forbiddenWith")) == null)
                 forbiddenWith = new String[0];
             forTariffs = request.getParameterValues("forTariffs");
 
             dependencies.put("requiredFrom", requiredFrom);
-            dependencies.put("requiredMe", requiredMe);
             dependencies.put("forbiddenWith", forbiddenWith);
             dependencies.put("forTariffs", forTariffs);
 
@@ -89,6 +94,7 @@ public class AddOptionController extends HttpServlet {
             } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());
+                logger.error("Exception while option creating", th);
             }
         }
 
@@ -103,8 +109,11 @@ public class AddOptionController extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json.toString());
+            out.flush();
+        } catch (IOException e) {
+            logger.error("Get writer exception!", e);
+        }
     }
 }
