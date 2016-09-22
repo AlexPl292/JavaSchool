@@ -5,7 +5,6 @@ import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
-import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;

@@ -56,6 +56,7 @@ public class AddTariffController {
         StatusResponse response = new StatusResponse();
 
         if (!bindingResult.hasErrors()) {
+            service.addNew(tariff);
             response.setSuccess(true);
         } else {
             response.addBindingResult(bindingResult);
@@ -63,46 +64,6 @@ public class AddTariffController {
         }
 
         return response;
-/*        String name = request.getParameter("name");
-        String cost = request.getParameter("cost");
-        String desc = request.getParameter("description");*/
-
-        // Validation
-        /*
-        String tmpError;
-        if (name == null)
-            errors.put("name", "Enter name of new tariff");
-        if ((tmpError = Validator.cost(cost)) != null)
-            errors.put("cost", tmpError);
-
-        if (errors.isEmpty()) {
-            Tariff tariff = new Tariff();
-            tariff.setName(name);
-            tariff.setCost(new BigDecimal(cost));
-            tariff.setDescription(desc);
-//            String[] options = request.getParameterValues("options");
-            List<Integer> optionIds = new ArrayList<>();
-            if (options != null)
-                optionIds = Arrays.stream(options).map(Integer::parseInt).collect(Collectors.toList());
-            try {
-                service.addNew(tariff, optionIds);
-            } catch (RollbackException e) {
-                Throwable th = ExceptionUtils.getRootCause(e);
-                errors.put("General", th.getMessage());
-                logger.error("Exception while tariff creating", th);
-            }
-        }
-        if (!errors.isEmpty()) {
-            JsonElement element = new Gson().toJsonTree(errors);
-            json.addProperty("success", false);
-            json.add("errors", element);
-        } else {
-            json.addProperty("success", true);
-        }
-
-
-        return json.toString();
-        */
     }
 }
 

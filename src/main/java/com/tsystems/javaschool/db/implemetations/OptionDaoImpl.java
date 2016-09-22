@@ -3,6 +3,7 @@ package com.tsystems.javaschool.db.implemetations;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.util.EMU;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
  *
  * JPA implementation of OptionDao
  */
+@Repository
 public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements OptionDao{
 
     private OptionDaoImpl() {}

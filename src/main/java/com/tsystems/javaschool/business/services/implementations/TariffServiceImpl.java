@@ -1,9 +1,9 @@
 package com.tsystems.javaschool.business.services.implementations;
 
+import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
-import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
-import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
+import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;
 import org.apache.log4j.Logger;
@@ -20,14 +20,17 @@ import java.util.Map;
  * Created by alex on 21.08.16.
  */
 @Service
+@Transactional
 public class TariffServiceImpl implements TariffService{
 
     private final TariffDao tariffDao;// = TariffDaoImpl.getInstance();
+    private final OptionDao optionDao;
     private static final Logger logger = Logger.getLogger(TariffServiceImpl.class);
 
     @Autowired
-    public TariffServiceImpl(TariffDao tariffDao) {
+    public TariffServiceImpl(TariffDao tariffDao, OptionDao optionDao) {
         this.tariffDao = tariffDao;
+        this.optionDao = optionDao;
     }
 
 /*
@@ -42,26 +45,20 @@ public class TariffServiceImpl implements TariffService{
 */
 
     @Override
-    public void addNew(Tariff tariff) {
-        try {
-            EMU.beginTransaction();
-            tariffDao.create(tariff);
-            EMU.commit();
-            logger.info("New tariff is created. Id = "+tariff.getId());
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
+    public void addNew(TariffDto tariffDto) {
+        Tariff tariff = tariffDto.getTariffEntity();
+        tariff.setPossibleOptions(tariffDto.convertIdToEntities(optionDao));
+
+        tariffDao.create(tariff);
+        logger.info("New tariff is created. Id = "+tariff.getId());
     }
 
     @Override
-    public Tariff loadByKey(Integer key) {
-        Tariff tariff = tariffDao.read(key);
+    public TariffDto loadByKey(Integer key) {
+/*        Tariff tariff = tariffDao.read(key);
         EMU.closeEntityManager();
-        return tariff;
+        return tariff;*/
+        return null;
     }
 
     @Override
@@ -86,10 +83,11 @@ public class TariffServiceImpl implements TariffService{
     }
 
     @Override
-    public List<Tariff> load(Map<String, Object> kwargs) {
-        List<Tariff> tariffs = tariffDao.read(kwargs);
+    public List<TariffDto> load(Map<String, Object> kwargs) {
+/*        List<Tariff> tariffs = tariffDao.read(kwargs);
         EMU.closeEntityManager();
-        return tariffs;
+        return tariffs;*/
+        return null;
     }
 
     @Override
@@ -100,18 +98,19 @@ public class TariffServiceImpl implements TariffService{
     }
 
     @Override
-    public List<Tariff> loadAll() {
+    public List<TariffDto> loadAll() {
         return load(new HashMap<>());
     }
 
     @Override
-    public Tariff loadByKey(Integer key, Map<String, Object> hints) {
-        Tariff tariff = tariffDao.read(key, hints);
+    public TariffDto loadByKey(Integer key, Map<String, Object> hints) {
+/*        Tariff tariff = tariffDao.read(key, hints);
         EMU.closeEntityManager();
-        return tariff;
+        return tariff;*/
+        return null;
     }
 
-    @Override
+/*    @Override
     @Transactional
     public Tariff addNew(Tariff tariff, List<Integer> optionsIds) {
         try {
@@ -128,5 +127,5 @@ public class TariffServiceImpl implements TariffService{
         } finally {
 //            EMU.closeEntityManager();
         }
-    }
+    }*/
 }

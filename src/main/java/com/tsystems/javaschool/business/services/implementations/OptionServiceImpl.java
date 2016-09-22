@@ -4,7 +4,6 @@ import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
-import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;

@@ -12,7 +12,6 @@ import com.tsystems.javaschool.business.services.interfaces.GenericService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +59,7 @@ public class DataLoaderController extends HttpServlet {
         if ("/admin/load_customers".equals(url)) {  // Get service depends on path
             service = CustomerServiceImpl.getInstance();
         } else if ("/load_tariffs".equals(url)) {
-            service = new TariffServiceImpl(null);// = TariffServiceImpl.getInstance();
+            service = new TariffServiceImpl(null, null);// = TariffServiceImpl.getInstance();
         } else if ("/load_options_table".equals(url)) {
             service = OptionServiceImpl.getInstance();
         } else if ("/admin/load_contracts".equals(url)) {

@@ -1,6 +1,10 @@
 package com.tsystems.javaschool.business.dto;
 
+import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
+import com.tsystems.javaschool.db.interfaces.OptionDao;
+import com.tsystems.javaschool.db.interfaces.TariffDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -16,7 +20,7 @@ import java.util.stream.Collectors;
 public class TariffDto {
     private int id;
 
-    @Size(min = 3, max = 45)
+    @Size(min = 2, max = 45)
     @NotNull
     private String name;
 
@@ -51,6 +55,10 @@ public class TariffDto {
         Tariff tariff = new Tariff(id, name, cost, description);
         tariff.setPossibleOptions(possibleOptions.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
         return tariff;
+    }
+
+    public Set<Option> convertIdToEntities(OptionDao dao) {
+        return possibleOptionsId.stream().map(dao::read).collect(Collectors.toSet());
     }
 
     public int getId() {

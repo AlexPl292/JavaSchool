@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
@@ -14,7 +15,6 @@ import org.apache.log4j.Logger;
 
 import javax.persistence.EntityGraph;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -90,14 +90,14 @@ public class OptionLoaderController extends HttpServlet {
             }
 
 //            TariffService tariffService = TariffServiceImpl.getInstance();
-            TariffService tariffService = new TariffServiceImpl(null);
+            TariffService tariffService = new TariffServiceImpl(null, null);
             EntityGraph graph = tariffService.getEntityGraph();
 
             graph.addAttributeNodes("possibleOptions");
             Map<String, Object> hints = new HashMap<>();
             hints.put("javax.persistence.loadgraph", graph);
 
-            Tariff tariff = tariffService.loadByKey(tariffId, hints);
+            TariffDto tariff = tariffService.loadByKey(tariffId, hints);
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
             JsonElement element = gson.toJsonTree(tariff.getPossibleOptions());
