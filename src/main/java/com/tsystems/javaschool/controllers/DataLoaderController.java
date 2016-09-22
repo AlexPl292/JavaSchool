@@ -46,29 +46,29 @@ public class DataLoaderController {
 //    @Autowired
 //    CustomerService customerService;
     final TariffService tariffService;
+    final OptionService optionService;
 
     @Autowired
-    public DataLoaderController(TariffService tariffService) {
+    public DataLoaderController(TariffService tariffService, OptionService optionService) {
         this.tariffService = tariffService;
+        this.optionService = optionService;
     }
-/*    @Autowired
-    OptionService optionService;*/
 //    @Autowired
 //    ContractService contractService;
 
     @GetMapping(value = "/load_tariffs", produces="application/json")
-    public TableResponse loadTariffs(@RequestParam boolean updateCount,
-                            @RequestParam String page,
-                            @RequestParam String search) {
+    public TableResponse loadTariffs(@RequestParam(required = false) boolean updateCount,
+                            @RequestParam(required = false) String page,
+                            @RequestParam(required = false) String search) {
         return load(tariffService, updateCount, page, search);
     }
 
-/*    @GetMapping(value = "/load_options_table", produces="application/json")
-    public TableResponse loadOptions(@RequestParam boolean updateCount,
-                                     @RequestParam String page,
-                                     @RequestParam String search) {
+    @GetMapping(value = "/load_options_table", produces="application/json")
+    public TableResponse loadOptions(@RequestParam(required = false) boolean updateCount,
+                                     @RequestParam(required = false) String page,
+                                     @RequestParam(required = false) String search) {
         return load(optionService, updateCount, page, search);
-    }*/
+    }
 
 
     //@RequestMapping({"/admin/load_customers", "/load_options_table", "/admin/load_contracts"})
@@ -95,7 +95,6 @@ public class DataLoaderController {
 
         if (updateCount) {  // Should we update count of all users or not
             recordsTotal = service.count(kwargs);
-//            json.addProperty("recordsTotal", recordsTotal);
             tableResponse.setRecordsTotal(recordsTotal);
         }
 

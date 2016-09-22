@@ -9,6 +9,8 @@ import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -28,10 +30,16 @@ import java.util.Map;
  * Returns json with either success:true, or success:false and object with errors
  */
 //@WebServlet("/admin/add_option")
+@Controller
 public class AddOptionController extends HttpServlet {
 
-    private final transient OptionService service = OptionServiceImpl.getInstance();
+    private final OptionService service;
     private static final Logger logger = Logger.getLogger(AddOptionController.class);
+
+    @Autowired
+    public AddOptionController(OptionService service) {
+        this.service = service;
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -90,7 +98,7 @@ public class AddOptionController extends HttpServlet {
             dependencies.put("forTariffs", forTariffs);
 
             try {
-                service.addNew(newOption, dependencies);
+                //service.addNew(newOption, dependencies);
             } catch (RollbackException e) {
                 Throwable th = ExceptionUtils.getRootCause(e);
                 errors.put("General", th.getMessage());

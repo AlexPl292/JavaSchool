@@ -1,12 +1,12 @@
 package com.tsystems.javaschool.business.services.implementations;
 
+import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
-import com.tsystems.javaschool.util.EMU;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,45 +18,30 @@ import java.util.stream.Collectors;
 /**
  * Created by alex on 27.08.16.
  */
+@Service
 public class OptionServiceImpl implements OptionService{
 
     private static final Logger logger = Logger.getLogger(OptionServiceImpl.class);
-    private OptionDao optionDao = OptionDaoImpl.getInstance();
+    private final OptionDao optionDao;
+    private final TariffDao tariffDao;
+
     @Autowired
-    private TariffDao tariffDao;
-
-    private OptionServiceImpl() {}
-
-    private static class OptionServiceHolder {
-        private static final OptionServiceImpl instance = new OptionServiceImpl();
-        private OptionServiceHolder() {}
-    }
-
-    public static OptionServiceImpl getInstance() {
-        return OptionServiceHolder.instance;
+    public OptionServiceImpl(TariffDao tariffDao, OptionDao optionDao) {
+        this.tariffDao = tariffDao;
+        this.optionDao = optionDao;
     }
 
     @Override
-    public void addNew(Option entity) {
-        try {
-            EMU.beginTransaction();
-            optionDao.create(entity);
-            EMU.commit();
-            logger.info("New option is created. Id = "+entity.getId());
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
+    public void addNew(OptionDto entity) {
+
+//        optionDao.create(entity);
+//        logger.info("New option is created. Id = "+entity.getId());
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public Option loadByKey(Integer key) {
-        Option option = optionDao.read(key);
-        EMU.closeEntityManager();
-        return option;
+    public OptionDto loadByKey(Integer key) {
+        return new OptionDto(optionDao.read(key));
     }
 
     @Override
@@ -66,28 +51,20 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public void remove(Integer key) {
-        try {
-            EMU.beginTransaction();
-            optionDao.delete(key);
-            EMU.commit();
-            logger.info("Option is removed. Id = "+key);
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
+//        optionDao.delete(key);
+//        logger.info("Option is removed. Id = "+key);
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public Option loadByKey(Integer key, Map<String, Object> hints) {
+    public OptionDto loadByKey(Integer key, Map<String, Object> hints) {
         Option option = optionDao.read(key, hints);
-        EMU.closeEntityManager();
-        return option;
+        OptionDto optionDto = new OptionDto(option);
+        optionDto.setDependencies(option);
+        return optionDto;
     }
 
-    @Override
+/*    @Override
     public Option addNew(Option option, Map<String, String[]> dependencies) {
         try {
             EMU.beginTransaction();
@@ -136,41 +113,40 @@ public class OptionServiceImpl implements OptionService{
         } finally {
             EMU.closeEntityManager();
         }
-    }
+    }*/
 
     @Override
-    public List<Option> loadOptionsByTariffs(List<Integer> tariffs) {
-        try {
-            EMU.beginTransaction();
-            List<Option> options = optionDao.getOptionsOfTariffs(tariffs);
-            EMU.commit();
-            return options;
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
+    public List<OptionDto> loadOptionsByTariffs(List<Integer> tariffs) {
+        List<Option> options = optionDao.getOptionsOfTariffs(tariffs);
+        List<OptionDto> optionDtos = new ArrayList<>();
+        for (Option o:options) {
+            OptionDto od = new OptionDto(o);
+            od.setDependencies(o);
+            optionDtos.add(od);
         }
+        return optionDtos;
     }
 
 
     @Override
-    public List<Option> load(Map<String, Object> kwargs) {
+    public List<OptionDto> load(Map<String, Object> kwargs) {
         List<Option> options = optionDao.read(kwargs);
-        EMU.closeEntityManager();
-        return options;
+        List<OptionDto> optionDtos = new ArrayList<>();
+        for (Option o:options) {
+            OptionDto od = new OptionDto(o);
+            od.setDependencies(o);
+            optionDtos.add(od);
+        }
+        return optionDtos;
     }
 
     @Override
     public long count(Map<String, Object> kwargs) {
-        long count = optionDao.count(kwargs);
-        EMU.closeEntityManager();
-        return count;
+        return optionDao.count(kwargs);
     }
 
     @Override
-    public List<Option> loadAll() {
+    public List<OptionDto> loadAll() {
         return load(new HashMap<>());
     }
 }

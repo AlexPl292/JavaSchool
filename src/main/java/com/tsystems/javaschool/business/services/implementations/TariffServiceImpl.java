@@ -5,7 +5,6 @@ import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
-import com.tsystems.javaschool.util.EMU;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,8 +46,8 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public void addNew(TariffDto tariffDto) {
+        tariffDto.convertIdToEntities(optionDao);
         Tariff tariff = tariffDto.getTariffEntity();
-        tariff.setPossibleOptions(tariffDto.convertIdToEntities(optionDao));
 
         tariffDao.create(tariff);
         logger.info("New tariff is created. Id = "+tariff.getId());
@@ -69,18 +68,8 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public void remove(Integer key) {
-        try {
-            EMU.beginTransaction();
-            tariffDao.delete(key);
-            EMU.commit();
-            logger.info("Tariff is removed. Id = "+ key);
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
+        tariffDao.delete(key);
+        logger.info("Tariff is removed. Id = "+ key);
     }
 
     @Override
@@ -101,7 +90,6 @@ public class TariffServiceImpl implements TariffService{
     @Override
     public long count(Map<String, Object> kwargs) {
         long count = tariffDao.count(kwargs);
-        EMU.closeEntityManager();
         return count;
     }
 
@@ -126,7 +114,7 @@ public class TariffServiceImpl implements TariffService{
     public Tariff addNew(Tariff tariff, List<Integer> optionsIds) {
         try {
 //            EMU.beginTransaction();
-            tariff.setPossibleOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
+            tariff.setPossibleOptionsEntities(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
             tariffDao.create(tariff);
 //            EMU.commit();
             logger.info("New tariff with options is created. Id = "+tariff.getId());

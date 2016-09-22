@@ -79,9 +79,9 @@
                         <div class="panel-heading">New tariff data</div>
                         <div class="panel-body">
                             <div class="control-group">
-                                <label class="control-label" for="options">Options</label>
+                                <label class="control-label" for="possibleOptions">Options</label>
                                 <div class="controls">
-                                    <div id="options" class="boxes"></div>
+                                    <div id="possibleOptions" class="boxes"></div>
                                 </div>
                             </div>
                         </div>

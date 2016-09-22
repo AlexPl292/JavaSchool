@@ -17,17 +17,6 @@ import java.util.Map;
 @Repository
 public class TariffDaoImpl implements TariffDao{
 
-    /*    private TariffDaoImpl() {}
-
-        private static class TariffDaoHolder {
-            private static final TariffDaoImpl instance = new TariffDaoImpl();
-            private TariffDaoHolder() {}
-        }
-
-        public static TariffDaoImpl getInstance() {
-            return TariffDaoHolder.instance;
-        }
-        */
     @PersistenceContext
     EntityManager em;
 

@@ -4,14 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.dto.TariffDto;
-import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.db.entities.Tariff;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import javax.persistence.EntityGraph;
 import javax.servlet.ServletException;
@@ -38,9 +39,11 @@ import java.util.stream.Collectors;
  * used in new option adding. Option cannot depends on option, those are not available for chosen tariffs
  */
 //@WebServlet("/load_option")
+@Controller
 public class OptionLoaderController extends HttpServlet {
 
-    private final transient OptionService service = OptionServiceImpl.getInstance();
+    @Autowired
+    private OptionService service;
     private static final Logger logger = Logger.getLogger(OptionLoaderController.class);
 
     @Override
@@ -58,14 +61,14 @@ public class OptionLoaderController extends HttpServlet {
             }
 
             EntityGraph<Option> graph = service.getEntityGraph();
-            Set<Option> notForbidden = new HashSet<>();
-            Set<Option> notRequiredFrom;
+            Set<OptionDto> notForbidden = new HashSet<>();
+            Set<OptionDto> notRequiredFrom;
 
             graph.addAttributeNodes("required", "forbidden", "requiredMe");
             Map<String, Object> hints = new HashMap<>();
             hints.put("javax.persistence.loadgraph", graph);
 
-            Option connectedToOption = service.loadByKey(id, hints);
+            OptionDto connectedToOption = service.loadByKey(id, hints);
 
             if ("requiredFrom".equals(request.getParameter("type"))) {
                 notForbidden = new HashSet<>(connectedToOption.getRequired());
@@ -100,7 +103,7 @@ public class OptionLoaderController extends HttpServlet {
             TariffDto tariff = tariffService.loadByKey(tariffId, hints);
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            JsonElement element = gson.toJsonTree(tariff.getPossibleOptions());
+            JsonElement element = gson.toJsonTree(tariff.getPossibleOptionsEntities());
             json.add("data", element);
         } else if ("getDependencies".equals(type)) {
             Integer id = 0;
@@ -116,15 +119,15 @@ public class OptionLoaderController extends HttpServlet {
             Map<String, Object> hints = new HashMap<>();
             hints.put("javax.persistence.loadgraph", graph);
 
-            Option option = service.loadByKey(id, hints);
+            OptionDto option = service.loadByKey(id, hints);
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-            Set<Option> required = option.getRequired();
+            Set<OptionDto> required = option.getRequired();
             if (required == null)
                 required = new HashSet<>();
 
-            Set<Option> forbidden = option.getForbidden();
+            Set<OptionDto> forbidden = option.getForbidden();
             if (forbidden == null)
                 forbidden = new HashSet<>();
 
@@ -132,7 +135,7 @@ public class OptionLoaderController extends HttpServlet {
             json.add("forbidden", gson.toJsonTree(forbidden));
         } else {
             List<Integer> tariffs = Arrays.stream(request.getParameterValues("forTariffs")).map(Integer::parseInt).collect(Collectors.toList());
-            List<Option> options = service.loadOptionsByTariffs(tariffs);
+            List<OptionDto> options = service.loadOptionsByTariffs(tariffs);
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
             JsonElement element = gson.toJsonTree(options);

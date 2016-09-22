@@ -460,8 +460,8 @@ var prepare = {
         $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));
     },
     "/admin/add_tariff" : function () {
-        $('#options').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
-        $.getJSON("/load_options_table", {}, create_boxes([$('#options')]));
+        $('#possibleOptions').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
+        $.getJSON("/load_options_table", {}, create_boxes([$('#possibleOptions')]));
     }
 };
 $(function () {

@@ -1,12 +1,11 @@
 package com.tsystems.javaschool.db.implemetations;
 
 import com.tsystems.javaschool.db.entities.Option;
+import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
-import com.tsystems.javaschool.util.EMU;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,22 +17,14 @@ import java.util.stream.Collectors;
  * JPA implementation of OptionDao
  */
 @Repository
-public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements OptionDao{
+public class OptionDaoImpl implements OptionDao{
 
-    private OptionDaoImpl() {}
-
-    private static class OptionDaoHolder {
-        private static final OptionDaoImpl instance = new OptionDaoImpl();
-        private OptionDaoHolder() {}
-    }
-
-    public static OptionDaoImpl getInstance() {
-        return OptionDaoHolder.instance;
-    }
+    @PersistenceContext
+    EntityManager em;
 
     @Override
     public List<Option> getOptionsOfTariffs(List<Integer> tariffs) {
-        return EMU.getEntityManager().createQuery("SELECT distinct o FROM Option o JOIN o.possibleTariffsOfOption t WHERE t.id IN :tariffs GROUP BY o.id, o.name HAVING COUNT(t.id) = :size"
+        return em.createQuery("SELECT distinct o FROM Option o JOIN o.possibleTariffsOfOption t WHERE t.id IN :tariffs GROUP BY o.id, o.name HAVING COUNT(t.id) = :size"
                 , Option.class)
                 .setParameter("tariffs", tariffs)
                 .setParameter("size", (long) tariffs.size())
@@ -43,6 +34,26 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
     @Override
     public Set<Option> loadOptionsByIds(List<Integer> ids) {
         return ids.stream().map(this::read).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void create(Option newInstance) {
+        em.persist(newInstance);
+    }
+
+    @Override
+    public Option read(Integer id) {
+        return em.find(Option.class, id);
+    }
+
+    @Override
+    public Option update(Option transientObject) {
+        return em.merge(transientObject);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        em.remove(em.getReference(Option.class, id));
     }
 
     @Override
@@ -56,7 +67,7 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
             queryStr += " WHERE t.name LIKE :first";
         }
 
-        TypedQuery<Option> query = EMU.getEntityManager().createQuery(queryStr, Option.class);
+        TypedQuery<Option> query = em.createQuery(queryStr, Option.class);
         if (search != null && !"".equals(search))
             query.setParameter("first", "%"+search+"%");
         if (maxEntries != null)
@@ -76,9 +87,19 @@ public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements Op
             queryStr += " WHERE t.name LIKE :first";
         }
 
-        Query query = EMU.getEntityManager().createQuery(queryStr);
+        Query query = em.createQuery(queryStr);
         if (search != null && !"".equals(search))
             query.setParameter("first", "%"+search+"%");
         return (long) query.getSingleResult();
+    }
+
+    @Override
+    public EntityGraph getEntityGraph() {
+        return em.createEntityGraph(Option.class);
+    }
+
+    @Override
+    public Option read(Integer key, Map<String, Object> hints) {
+        return em.find(Option.class, key, hints);
     }
 }

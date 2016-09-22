@@ -72,6 +72,6 @@ public class TariffServiceImplTest {
 
 *//*        TariffServiceImpl service = TariffServiceImpl.getInstance();
         Tariff loadedTariff = service.addNew(tariff, optionsId);
-        assertEquals(options, loadedTariff.getPossibleOptions());*/
+        assertEquals(options, loadedTariff.getPossibleOptionsEntities());*/
     }
 }

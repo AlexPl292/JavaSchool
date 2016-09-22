@@ -6,6 +6,7 @@ import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
+import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;
 import org.apache.log4j.Logger;
@@ -27,6 +28,8 @@ public class ContractServiceImpl implements ContractService{
     private ContractDao contractDao = ContractDaoImpl.getInstance();
     @Autowired
     private TariffDao tariffDao;
+    @Autowired
+    private OptionDao optionDao;
     private static final Logger logger = Logger.getLogger(ContractServiceImpl.class);
 
 
@@ -89,7 +92,7 @@ public class ContractServiceImpl implements ContractService{
     public Contract addNew(Contract contract, List<Integer> optionsIds) {
         try {
             EMU.beginTransaction();
-            contract.setUsedOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
+            contract.setUsedOptions(optionDao.loadOptionsByIds(optionsIds));
             contractDao.create(contract);
             EMU.commit();
             logger.info("New contract is created. Id = "+contract.getId());
@@ -137,7 +140,7 @@ public class ContractServiceImpl implements ContractService{
         hints.put("javax.persistence.loadgraph", graph);
         try {
             EMU.beginTransaction();
-            Set<Option> options = OptionDaoImpl.getInstance().loadOptionsByIds(optionIds);
+            Set<Option> options = optionDao.loadOptionsByIds(optionIds);
             Contract contract = contractDao.read(contractId, hints);
             String oldContractData = contract.toString();
 

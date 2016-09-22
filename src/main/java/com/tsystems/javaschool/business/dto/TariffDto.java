@@ -1,10 +1,7 @@
 package com.tsystems.javaschool.business.dto;
 
-import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
-import com.tsystems.javaschool.db.interfaces.TariffDao;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -29,12 +26,12 @@ public class TariffDto {
     private BigDecimal cost;
 
     private String description;
-    private Set<OptionDto> possibleOptions;
-    private Set<Integer> possibleOptionsId;
+    private Set<OptionDto> possibleOptionsEntities;
+    private Set<Integer> possibleOptions;
 
     public TariffDto(){
+        possibleOptionsEntities = new HashSet<>();
         possibleOptions = new HashSet<>();
-        possibleOptionsId = new HashSet<>();
     }
 
     public TariffDto(Tariff tariff) {
@@ -42,23 +39,23 @@ public class TariffDto {
         this.name = tariff.getName();
         this.cost = tariff.getCost();
         this.description = tariff.getDescription();
-        this.possibleOptions = new HashSet<>();
+        this.possibleOptionsEntities = new HashSet<>();
+        possibleOptionsEntities = new HashSet<>();
         possibleOptions = new HashSet<>();
-        possibleOptionsId = new HashSet<>();
     }
 
     public void setDependencies(Tariff tariff) {
-        possibleOptions = tariff.getPossibleOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
+        possibleOptionsEntities = tariff.getPossibleOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
     }
 
     public Tariff getTariffEntity() {
         Tariff tariff = new Tariff(id, name, cost, description);
-        tariff.setPossibleOptions(possibleOptions.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
+        tariff.setPossibleOptions(possibleOptionsEntities.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
         return tariff;
     }
 
-    public Set<Option> convertIdToEntities(OptionDao dao) {
-        return possibleOptionsId.stream().map(dao::read).collect(Collectors.toSet());
+    public void convertIdToEntities(OptionDao dao) {
+        possibleOptionsEntities = possibleOptions.stream().map(dao::read).map(OptionDto::new).collect(Collectors.toSet());
     }
 
     public int getId() {
@@ -93,19 +90,19 @@ public class TariffDto {
         this.description = description;
     }
 
-    public Set<OptionDto> getPossibleOptions() {
+    public Set<OptionDto> getPossibleOptionsEntities() {
+        return possibleOptionsEntities;
+    }
+
+    public void setPossibleOptionsEntities(Set<OptionDto> possibleOptionsEntities) {
+        this.possibleOptionsEntities = possibleOptionsEntities;
+    }
+
+    public Set<Integer> getPossibleOptions() {
         return possibleOptions;
     }
 
-    public void setPossibleOptions(Set<OptionDto> possibleOptions) {
+    public void setPossibleOptions(Set<Integer> possibleOptions) {
         this.possibleOptions = possibleOptions;
-    }
-
-    public Set<Integer> getPossibleOptionsId() {
-        return possibleOptionsId;
-    }
-
-    public void setPossibleOptionsId(Set<Integer> possibleOptionsId) {
-        this.possibleOptionsId = possibleOptionsId;
     }
 }
