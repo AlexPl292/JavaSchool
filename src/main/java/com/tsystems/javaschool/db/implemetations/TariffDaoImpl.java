@@ -2,10 +2,10 @@ package com.tsystems.javaschool.db.implemetations;
 
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
-import com.tsystems.javaschool.util.EMU;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +14,10 @@ import java.util.Map;
  *
  * JPA implementation of TariffDao
  */
-public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements TariffDao{
+@Repository
+public class TariffDaoImpl implements TariffDao{
 
-    private TariffDaoImpl() {}
+/*    private TariffDaoImpl() {}
 
     private static class TariffDaoHolder {
         private static final TariffDaoImpl instance = new TariffDaoImpl();
@@ -25,6 +26,29 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
 
     public static TariffDaoImpl getInstance() {
         return TariffDaoHolder.instance;
+    }
+    */
+    @PersistenceContext
+    EntityManager em;
+
+    @Override
+    public void create(Tariff newInstance) {
+        em.persist(newInstance);
+    }
+
+    @Override
+    public Tariff read(Integer id) {
+        return em.find(Tariff.class, id);
+    }
+
+    @Override
+    public Tariff update(Tariff transientObject) {
+        return em.merge(transientObject);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        em.remove(em.getReference(Tariff.class, id));
     }
 
     @Override
@@ -38,7 +62,7 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
             queryStr += " WHERE t.name LIKE :first";
         }
 
-        TypedQuery<Tariff> query = EMU.getEntityManager().createQuery(queryStr, Tariff.class);
+        TypedQuery<Tariff> query = em.createQuery(queryStr, Tariff.class);
         if (search != null && !"".equals(search))
             query.setParameter("first", "%"+search+"%");
         if (maxEntries != null)
@@ -58,9 +82,19 @@ public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements Ta
             queryStr += " WHERE t.name LIKE :first";
         }
 
-        Query query = EMU.getEntityManager().createQuery(queryStr);
+        Query query = em.createQuery(queryStr);
         if (search != null && !"".equals(search))
             query.setParameter("first", "%"+search+"%");
         return (long) query.getSingleResult();
+    }
+
+    @Override
+    public EntityGraph getEntityGraph() {
+        return em.createEntityGraph(Tariff.class);
+    }
+
+    @Override
+    public Tariff read(Integer key, Map<String, Object> hints) {
+        return em.find(Tariff.class, key, hints);
     }
 }

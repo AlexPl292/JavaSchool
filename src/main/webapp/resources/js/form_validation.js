@@ -3,6 +3,23 @@
  */
 
 
+$.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
 $.validator.addMethod("no_spaces", function (val){
     return val.indexOf(' ') === -1;
 });
@@ -51,7 +68,12 @@ function submitting(full_success) {
         $.notify("Sending data..", {position: "top right", className: "success"});
 
         $(form).find("input[type=checkbox]").prop("disabled", false);
-        $.post($(form).attr("action"), $(form).serialize(), function (response) {
+        $.ajax({
+            url: $(form).attr("action"),
+            data: JSON.stringify($(form).serializeObject()),
+            method: "POST",
+            contentType: "application/json",
+            success : function (response) {
             if (response.success) {
                 $.notify("Success!", {position: "top right", className: "success"});
                 $(form).find("input[type=checkbox]").removeData();
@@ -65,7 +87,7 @@ function submitting(full_success) {
                 });
             }
             $(form).find(":input").prop("disabled", false);
-        });
+        }});
         $(form).find(":input").prop("disabled", true);
         return false;
     }

@@ -35,7 +35,7 @@ import java.util.Map;
  * draw - page in pagination
  * data - returned data
  */
-@WebServlet({"/admin/load_customers", "/load_tariffs", "/load_options_table", "/admin/load_contracts"})
+//@WebServlet({"/admin/load_customers", "/load_tariffs", "/load_options_table", "/admin/load_contracts"})
 public class DataLoaderController extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(DataLoaderController.class);
@@ -60,7 +60,7 @@ public class DataLoaderController extends HttpServlet {
         if ("/admin/load_customers".equals(url)) {  // Get service depends on path
             service = CustomerServiceImpl.getInstance();
         } else if ("/load_tariffs".equals(url)) {
-            service = TariffServiceImpl.getInstance();
+            service = new TariffServiceImpl(null);// = TariffServiceImpl.getInstance();
         } else if ("/load_options_table".equals(url)) {
             service = OptionServiceImpl.getInstance();
         } else if ("/admin/load_contracts".equals(url)) {

@@ -16,7 +16,7 @@ import java.io.IOException;
  *
  * Controller for contract block and unblock
  */
-@WebServlet({"/admin/blockContract", "/admin/unblockContract", "/customer/blockContract", "/customer/unblockContract"})
+//@WebServlet({"/admin/blockContract", "/admin/unblockContract", "/customer/blockContract", "/customer/unblockContract"})
 public class BlockController extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(BlockController.class);

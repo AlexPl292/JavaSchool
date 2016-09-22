@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * Created by alex on 06.09.16.
  */
-@WebServlet("/admin/add_contract")
+//@WebServlet("/admin/add_contract")
 public class AddContractController extends HttpServlet {
 
     private final transient ContractService contractService = ContractServiceImpl.getInstance();
@@ -61,7 +61,8 @@ public class AddContractController extends HttpServlet {
 
         Contract contract = new Contract();
         if (errors.isEmpty()) {
-            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(tariffId);
+//            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(tariffId);
+            Tariff tariff = null;
             Customer customer = CustomerServiceImpl.getInstance().loadByKey(customerId);
 
             contract.setCustomer(customer);

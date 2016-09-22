@@ -16,7 +16,7 @@ import java.io.IOException;
  *
  * Delete contract controller
  */
-@WebServlet({"/admin/delete_contract", "/customer/delete_contract"})
+//@WebServlet({"/admin/delete_contract", "/customer/delete_contract"})
 public class DeleteController extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(DeleteController.class);

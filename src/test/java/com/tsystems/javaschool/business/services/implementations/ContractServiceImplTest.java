@@ -83,7 +83,7 @@ public class ContractServiceImplTest {
         PowerMockito.mockStatic(TariffDaoImpl.class);
         TariffDaoImpl mockTariffDao = mock(TariffDaoImpl.class);
 
-        Mockito.when(TariffDaoImpl.getInstance()).thenReturn(mockTariffDao);
+        //Mockito.when(TariffDaoImpl.getInstance()).thenReturn(mockTariffDao);
 
         List<Integer> optionsId = new ArrayList<>();
         optionsId.add(1);

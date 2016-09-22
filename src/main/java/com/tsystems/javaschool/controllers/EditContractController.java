@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * Controller for contract editing. Access for admin or customer
  */
-@WebServlet({"/admin/edit_contract", "/edit_contract"})
+//@WebServlet({"/admin/edit_contract", "/edit_contract"})
 public class EditContractController extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(EditContractController.class);

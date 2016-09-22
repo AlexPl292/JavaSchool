@@ -14,7 +14,7 @@ import java.io.IOException;
  *
  * Filter for authorization
  */
-@WebFilter(filterName = "AuthorizationFilter", urlPatterns = {"/*"})
+//@WebFilter(filterName = "AuthorizationFilter", urlPatterns = {"/*"})
 public class AuthorizationFilter implements Filter{
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

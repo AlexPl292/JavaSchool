@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * - newOptionDependency (else): load options that are used by chosen tariffs
  * used in new option adding. Option cannot depends on option, those are not available for chosen tariffs
  */
-@WebServlet("/load_option")
+//@WebServlet("/load_option")
 public class OptionLoaderController extends HttpServlet {
 
     private final transient OptionService service = OptionServiceImpl.getInstance();
@@ -89,7 +89,8 @@ public class OptionLoaderController extends HttpServlet {
                 logger.error("Wrong id format!", e);
             }
 
-            TariffService tariffService = TariffServiceImpl.getInstance();
+//            TariffService tariffService = TariffServiceImpl.getInstance();
+            TariffService tariffService = new TariffServiceImpl(null);
             EntityGraph graph = tariffService.getEntityGraph();
 
             graph.addAttributeNodes("possibleOptions");

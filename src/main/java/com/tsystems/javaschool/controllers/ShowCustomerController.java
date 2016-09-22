@@ -23,7 +23,7 @@ import java.util.*;
  *
  * Controller for customer access from customer or contract table
  */
-@WebServlet({"/admin/customer", "/admin/contract", "/customer"})
+//@WebServlet({"/admin/customer", "/admin/contract", "/customer"})
 public class ShowCustomerController extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(ShowCustomerController.class);

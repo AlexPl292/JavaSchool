@@ -3,12 +3,18 @@ package com.tsystems.javaschool.controllers;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
+import com.tsystems.javaschool.util.StatusResponse;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -16,6 +22,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -27,35 +34,41 @@ import java.util.stream.Collectors;
  * Add new tariff
  * Returns json with either success:true, or success:false and object with errors
  */
-@WebServlet("/admin/add_tariff")
-public class AddTariffController extends HttpServlet {
+@Controller
+public class AddTariffController {
 
-    private final transient TariffService service = TariffServiceImpl.getInstance();
+    private final transient TariffService service;
     private static final Logger logger = Logger.getLogger(AddTariffController.class);
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            request.getRequestDispatcher("/WEB-INF/jsp/new_tariff.jsp").forward(request, response);
-        } catch (IOException e) {
-            logger.error("Forward exception", e);
-        } catch (ServletException e) {
-            logger.error("Servlet exception", e);
-        }
+    @Autowired
+    public AddTariffController(TariffService service) {
+        this.service = service;
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Map<String, String> errors = new HashMap<>();
-        JsonObject json = new JsonObject();
+    @GetMapping("/admin/add_tariff")
+    public String getNewTariffPage() {
+        return "new_tariff";
+    }
 
-        String name = request.getParameter("name");
+    @PostMapping(value = "/admin/add_tariff", produces="application/json")
+    @ResponseBody
+    public StatusResponse addNewTariff(@Valid @RequestBody TariffDto tariff, BindingResult bindingResult) {
+        StatusResponse response = new StatusResponse();
+
+        if (!bindingResult.hasErrors()) {
+            response.setSuccess(true);
+        } else {
+            response.addBindingResult(bindingResult);
+            response.setSuccess(false);
+        }
+
+        return response;
+/*        String name = request.getParameter("name");
         String cost = request.getParameter("cost");
-        String desc = request.getParameter("description");
+        String desc = request.getParameter("description");*/
 
         // Validation
+        /*
         String tmpError;
         if (name == null)
             errors.put("name", "Enter name of new tariff");
@@ -67,7 +80,7 @@ public class AddTariffController extends HttpServlet {
             tariff.setName(name);
             tariff.setCost(new BigDecimal(cost));
             tariff.setDescription(desc);
-            String[] options = request.getParameterValues("options");
+//            String[] options = request.getParameterValues("options");
             List<Integer> optionIds = new ArrayList<>();
             if (options != null)
                 optionIds = Arrays.stream(options).map(Integer::parseInt).collect(Collectors.toList());
@@ -88,13 +101,8 @@ public class AddTariffController extends HttpServlet {
         }
 
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.print(json.toString());
-            out.flush();
-        } catch (IOException e) {
-            logger.error("Get writer exception!", e);
-        }
+        return json.toString();
+        */
     }
 }
+

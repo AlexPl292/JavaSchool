@@ -81,7 +81,8 @@ public class EMU implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        emf = Persistence.createEntityManagerFactory("JavaSchool");
+//        emf = Persistence.createEntityManagerFactory("JavaSchool");
+        emf = null;
         threadLocal = new ThreadLocal<>();
         logger.info("Context initialized");
     }

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * Add new customer
  * Returns json with either success:true, or success:false and object with errors
  */
-@WebServlet("/admin/add_customer")
+//@WebServlet("/admin/add_customer")
 public class AddCustomerController extends HttpServlet {
 
     private final transient CustomerService service = CustomerServiceImpl.getInstance();
@@ -121,7 +121,8 @@ public class AddCustomerController extends HttpServlet {
             newCustomer.setEmail(email);
             newCustomer.setIsBlocked(0);
 
-            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(tariffId);
+//            Tariff tariff = TariffServiceImpl.getInstance().loadByKey(tariffId);
+            Tariff tariff = new Tariff();
 
             Contract contract = new Contract();
             contract.setNumber(number);

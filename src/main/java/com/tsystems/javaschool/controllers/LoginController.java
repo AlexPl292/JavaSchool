@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by alex on 10.09.16.
  *
  */
-@WebServlet({"/login", "/sign_out", "/change_password"})
+//@WebServlet({"/login", "/sign_out", "/change_password"})
 public class LoginController extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(LoginController.class);

@@ -1,0 +1,28 @@
+.boxes {
+    height: 150px;
+    overflow: auto;
+    width: auto;
+}
+
+textarea {
+    height: 100%;
+    resize: vertical;
+}
+
+.startsUppercase {
+    text-transform:capitalize;
+}
+
+.table {
+    table-layout:fixed;
+}
+
+.table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+tr.clickableRow {
+    cursor: pointer;
+}

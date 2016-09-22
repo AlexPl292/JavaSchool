@@ -7,8 +7,10 @@ import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
+import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityGraph;
 import java.math.BigDecimal;
@@ -23,6 +25,8 @@ import java.util.Set;
 public class ContractServiceImpl implements ContractService{
 
     private ContractDao contractDao = ContractDaoImpl.getInstance();
+    @Autowired
+    private TariffDao tariffDao;
     private static final Logger logger = Logger.getLogger(ContractServiceImpl.class);
 
 
@@ -142,7 +146,7 @@ public class ContractServiceImpl implements ContractService{
             BigDecimal res = contract.getBalance().subtract(cost);
             contract.setBalance(res);
 
-            contract.setTariff(TariffDaoImpl.getInstance().read(tariffId));
+            contract.setTariff(tariffDao.read(tariffId));
             contract.setUsedOptions(options);
             EMU.commit();
             logger.info("Contract updated. Old contract: "+oldContractData+". New contract: "+contract.toString());

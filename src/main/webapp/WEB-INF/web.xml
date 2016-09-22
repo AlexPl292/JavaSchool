@@ -21,6 +21,7 @@
         <url-pattern>/admin/customer</url-pattern>
     </servlet-mapping>-->
 
+<!--
     <servlet>
         <servlet-name>Show customers</servlet-name>
         <jsp-file>/WEB-INF/jsp/show_customers.jsp</jsp-file>
@@ -74,6 +75,23 @@
     <error-page>
         <location>/error</location>
     </error-page>
+-->
+    <servlet>
+        <servlet-name>javaschool</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>javaschool</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <persistence-unit-ref>
+        <persistence-unit-ref-name>EM</persistence-unit-ref-name>
+        <persistence-unit-name>JSPool</persistence-unit-name>
+    </persistence-unit-ref>
+
 
 </web-app>
 

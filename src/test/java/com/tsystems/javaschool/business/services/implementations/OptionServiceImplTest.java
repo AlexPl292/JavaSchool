@@ -54,7 +54,7 @@ public class OptionServiceImplTest {
         TariffDaoImpl mockTariffDao = mock(TariffDaoImpl.class);
 
         Mockito.when(OptionDaoImpl.getInstance()).thenReturn(mockOptionDao);
-        Mockito.when(TariffDaoImpl.getInstance()).thenReturn(mockTariffDao);
+        //Mockito.when(TariffDaoImpl.getInstance()).thenReturn(mockTariffDao);
         Tariff tariff = new Tariff(1, "name", new BigDecimal(100), "desc");
         Mockito.when(mockTariffDao.read(anyInt())).thenReturn(tariff);
 

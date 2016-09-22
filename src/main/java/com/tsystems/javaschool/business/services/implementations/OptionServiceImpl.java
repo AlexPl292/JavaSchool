@@ -6,8 +6,10 @@ import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
 import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
+import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityGraph;
 import java.util.*;
@@ -20,6 +22,8 @@ public class OptionServiceImpl implements OptionService{
 
     private static final Logger logger = Logger.getLogger(OptionServiceImpl.class);
     private OptionDao optionDao = OptionDaoImpl.getInstance();
+    @Autowired
+    private TariffDao tariffDao;
 
     private OptionServiceImpl() {}
 
@@ -88,7 +92,7 @@ public class OptionServiceImpl implements OptionService{
         try {
             EMU.beginTransaction();
             Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs")) // Convert array of tariff ids to set of tariffs
-                    .map(s -> TariffDaoImpl.getInstance().read(Integer.parseInt(s)))
+                    .map(s -> tariffDao.read(Integer.parseInt(s)))
                     .collect(Collectors.toSet());
             option.setPossibleTariffsOfOption(tariffs);
 
