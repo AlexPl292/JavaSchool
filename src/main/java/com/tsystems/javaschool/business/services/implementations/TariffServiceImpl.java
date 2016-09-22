@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityGraph;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class TariffServiceImpl implements TariffService{
 /*        Tariff tariff = tariffDao.read(key);
         EMU.closeEntityManager();
         return tariff;*/
-        return null;
+        return new TariffDto(tariffDao.read(key));
     }
 
     @Override
@@ -87,7 +88,14 @@ public class TariffServiceImpl implements TariffService{
 /*        List<Tariff> tariffs = tariffDao.read(kwargs);
         EMU.closeEntityManager();
         return tariffs;*/
-        return null;
+        List<Tariff> tariff = tariffDao.read(kwargs);
+        List<TariffDto> tariffDtos = new ArrayList<>();
+        for (Tariff t:tariff) {
+            TariffDto td = new TariffDto(t);
+            td.setDependencies(t);
+            tariffDtos.add(td);
+        }
+        return tariffDtos;
     }
 
     @Override
@@ -107,7 +115,10 @@ public class TariffServiceImpl implements TariffService{
 /*        Tariff tariff = tariffDao.read(key, hints);
         EMU.closeEntityManager();
         return tariff;*/
-        return null;
+        Tariff tariff = tariffDao.read(key, hints);
+        TariffDto tariffDto = new TariffDto(tariff);
+        tariffDto.setDependencies(tariff);
+        return tariffDto;
     }
 
 /*    @Override

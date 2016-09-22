@@ -8,8 +8,12 @@ import com.tsystems.javaschool.business.services.implementations.ContractService
 import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
-import com.tsystems.javaschool.business.services.interfaces.GenericService;
+import com.tsystems.javaschool.business.services.interfaces.*;
+import com.tsystems.javaschool.util.TableResponse;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,42 +39,64 @@ import java.util.Map;
  * data - returned data
  */
 //@WebServlet({"/admin/load_customers", "/load_tariffs", "/load_options_table", "/admin/load_contracts"})
-public class DataLoaderController extends HttpServlet {
+@RestController
+public class DataLoaderController {
 
     private static final Logger logger = Logger.getLogger(DataLoaderController.class);
+//    @Autowired
+//    CustomerService customerService;
+    final TariffService tariffService;
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    @Autowired
+    public DataLoaderController(TariffService tariffService) {
+        this.tariffService = tariffService;
+    }
+/*    @Autowired
+    OptionService optionService;*/
+//    @Autowired
+//    ContractService contractService;
 
-        GenericService service;
-        String url = request.getServletPath();
-        Boolean updateCount = Boolean.valueOf(request.getParameter("updateCount"));
-        List entitiesList;
-        JsonObject json = new JsonObject();
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        String page = request.getParameter("page");
+    @GetMapping(value = "/load_tariffs", produces="application/json")
+    public TableResponse loadTariffs(@RequestParam boolean updateCount,
+                            @RequestParam String page,
+                            @RequestParam String search) {
+        return load(tariffService, updateCount, page, search);
+    }
+
+/*    @GetMapping(value = "/load_options_table", produces="application/json")
+    public TableResponse loadOptions(@RequestParam boolean updateCount,
+                                     @RequestParam String page,
+                                     @RequestParam String search) {
+        return load(optionService, updateCount, page, search);
+    }*/
+
+
+    //@RequestMapping({"/admin/load_customers", "/load_options_table", "/admin/load_contracts"})
+    protected TableResponse load(GenericService service, boolean updateCount, String page, String searchQuery) {
+
+        List<Object> entitiesList;
         int draw = 1;
         long recordsTotal = -1;
         Map<String, Object> kwargs = new HashMap<>();
-        String searchQuery = request.getParameter("search");
         kwargs.put("search", searchQuery);
+        TableResponse tableResponse = new TableResponse();
 
-        if ("/admin/load_customers".equals(url)) {  // Get service depends on path
-            service = CustomerServiceImpl.getInstance();
+/*        if ("/admin/load_customers".equals(url)) {  // Get service depends on path
+            service = null;//customerService;
         } else if ("/load_tariffs".equals(url)) {
-            service = new TariffServiceImpl(null, null);// = TariffServiceImpl.getInstance();
+            service = tariffService;
         } else if ("/load_options_table".equals(url)) {
-            service = OptionServiceImpl.getInstance();
+            service = null;//optionService;
         } else if ("/admin/load_contracts".equals(url)) {
-            service = ContractServiceImpl.getInstance();
+            service = null;//contractService;
         } else {
-            service = CustomerServiceImpl.getInstance();
-        }
+            service = null;//customerService;
+        }*/
 
         if (updateCount) {  // Should we update count of all users or not
             recordsTotal = service.count(kwargs);
-            json.addProperty("recordsTotal", recordsTotal);
+//            json.addProperty("recordsTotal", recordsTotal);
+            tableResponse.setRecordsTotal(recordsTotal);
         }
 
 
@@ -99,18 +125,9 @@ public class DataLoaderController extends HttpServlet {
             entitiesList = service.load(kwargs);
         }
 
-        JsonElement element = gson.toJsonTree(entitiesList);
-        json.addProperty("draw", draw);
-        json.add("data", element);
+        tableResponse.setDraw(draw);
+        tableResponse.setData(entitiesList);
+        return tableResponse;
 
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.print(json.toString());
-            out.flush();
-        } catch (IOException e) {
-            logger.error("Get writer exception!", e);
-        }
     }
 }

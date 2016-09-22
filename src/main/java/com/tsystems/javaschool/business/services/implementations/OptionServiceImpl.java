@@ -9,6 +9,7 @@ import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.EMU;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityGraph;
 import java.util.*;
