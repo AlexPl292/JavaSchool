@@ -48,14 +48,19 @@ public class TariffDto {
         possibleOptionsEntities = tariff.getPossibleOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
     }
 
-    public Tariff getTariffEntity() {
+    public Tariff getTariffEntity(OptionDao dao) {
+        convertIdToEntities(dao);
+        return getTariffEntityNoConvert();
+    }
+
+    public Tariff getTariffEntityNoConvert() {
         Tariff tariff = new Tariff(id, name, cost, description);
         tariff.setPossibleOptions(possibleOptionsEntities.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
         return tariff;
     }
 
     public void convertIdToEntities(OptionDao dao) {
-        possibleOptionsEntities = possibleOptions.stream().map(dao::read).map(OptionDto::new).collect(Collectors.toSet());
+        possibleOptionsEntities.addAll(possibleOptions.stream().map(dao::read).map(OptionDto::new).collect(Collectors.toSet()));
     }
 
     public int getId() {

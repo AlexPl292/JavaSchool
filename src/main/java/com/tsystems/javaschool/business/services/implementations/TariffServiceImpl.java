@@ -46,8 +46,7 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public void addNew(TariffDto tariffDto) {
-        tariffDto.convertIdToEntities(optionDao);
-        Tariff tariff = tariffDto.getTariffEntity();
+        Tariff tariff = tariffDto.getTariffEntity(optionDao);
 
         tariffDao.create(tariff);
         logger.info("New tariff is created. Id = "+tariff.getId());
