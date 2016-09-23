@@ -3,16 +3,19 @@ package com.tsystems.javaschool.util;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by alex on 22.09.16.
+ * Class for status returning for post requests.
+ * Default success == true. It changes to false on:
+ * - addBingingResult with errors
+ * - Add error
+ * - Set errors (not null)
  */
 public class StatusResponse {
-    private boolean success;
+    private boolean success = true;
     private Map<String, String> errors = new HashMap<>();
 
     public StatusResponse() {
@@ -24,6 +27,7 @@ public class StatusResponse {
 
     public void addBindingResult(BindingResult result) {
         if (result.hasErrors()) {
+            success = false;
             for (FieldError error : result.getFieldErrors()) {
                 errors.put(error.getField(), error.getDefaultMessage());
             }
@@ -31,6 +35,7 @@ public class StatusResponse {
     }
 
     public void addError(String name, String message) {
+        success = false;
         errors.put(name, message);
     }
 
@@ -39,7 +44,10 @@ public class StatusResponse {
     }
 
     public void setErrors(Map<String, String> errors) {
-        this.errors = errors;
+        if (errors != null) {
+            success = false;
+            this.errors = errors;
+        }
     }
 
     public boolean isSuccess() {

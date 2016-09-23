@@ -57,10 +57,8 @@ public class AddTariffController {
 
         if (!bindingResult.hasErrors()) {
             service.addNew(tariff);
-            response.setSuccess(true);
         } else {
             response.addBindingResult(bindingResult);
-            response.setSuccess(false);
         }
 
         return response;
