@@ -10,9 +10,14 @@ import com.tsystems.javaschool.business.services.implementations.TariffServiceIm
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
+import com.tsystems.javaschool.util.TableResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityGraph;
 import javax.servlet.ServletException;
@@ -39,26 +44,30 @@ import java.util.stream.Collectors;
  * used in new option adding. Option cannot depends on option, those are not available for chosen tariffs
  */
 //@WebServlet("/load_option")
-@Controller
+@RestController
+@RequestMapping("/load_option")
 public class OptionLoaderController extends HttpServlet {
 
-    @Autowired
-    private OptionService service;
+    private final OptionService service;
     private static final Logger logger = Logger.getLogger(OptionLoaderController.class);
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    @Autowired
+    public OptionLoaderController(OptionService service) {
+        this.service = service;
+    }
 
-        JsonObject json = new JsonObject();
-        String type = request.getParameter("loadtype");
-        if ("toDisable".equals(type)) {
-            Integer id = 0;
-            try {
-                id = Integer.parseInt(request.getParameter("data"));
-            } catch (NumberFormatException e) {
-                logger.error("Wrong id format!", e);
-            }
+    @RequestMapping(produces="application/json")
+    public ResponseHelper loadOptions(@RequestParam String loadtype,
+                                     @RequestParam(required = false) Integer data,
+                                     @RequestParam(required = false) String type,
+                                     @RequestParam(required = false, value = "tariff_id") Integer tariffId,
+                                     @RequestParam(required = false, value = "forTariffs") List<Integer> tariffs) {
+
+//        JsonObject json = new JsonObject();
+//        String type = request.getParameter("loadtype");
+        ResponseHelper rh = new ResponseHelper();
+        if ("toDisable".equals(loadtype)) {
+            Integer id = data;
 
             EntityGraph<Option> graph = service.getEntityGraph();
             Set<OptionDto> notForbidden = new HashSet<>();
@@ -70,7 +79,7 @@ public class OptionLoaderController extends HttpServlet {
 
             OptionDto connectedToOption = service.loadByKey(id, hints);
 
-            if ("requiredFrom".equals(request.getParameter("type"))) {
+            if ("requiredFrom".equals(type)) {
                 notForbidden = new HashSet<>(connectedToOption.getRequired());
                 notRequiredFrom = new HashSet<>(connectedToOption.getForbidden());
                 notForbidden.add(connectedToOption);  // Add ref to itself
@@ -79,18 +88,13 @@ public class OptionLoaderController extends HttpServlet {
                 notRequiredFrom.add(connectedToOption);
             }
 
-            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            JsonElement elementNotForbidden = gson.toJsonTree(notForbidden);
-            JsonElement elementNotRequiredFrom = gson.toJsonTree(notRequiredFrom);
-            json.add("not_forbidden", elementNotForbidden);
-            json.add("not_required_from", elementNotRequiredFrom);
-        } else if ("possibleOfTariff".equals(type)) {
-            Integer tariffId = 0;
-            try {
-                tariffId = Integer.parseInt(request.getParameter("tariff_id"));
-            } catch (NumberFormatException e) {
-                logger.error("Wrong id format!", e);
-            }
+//            JsonElement elementNotForbidden = new Gson().toJsonTree(notForbidden);
+//            JsonElement elementNotRequiredFrom = new Gson().toJsonTree(notRequiredFrom);
+//            json.add("not_forbidden", elementNotForbidden);
+//            json.add("not_required_from", elementNotRequiredFrom);
+            rh.setNot_forbidden(notForbidden);
+            rh.setNot_required_from(notRequiredFrom);
+        } else if ("possibleOfTariff".equals(loadtype)) {
 
 //            TariffService tariffService = TariffServiceImpl.getInstance();
             TariffService tariffService = new TariffServiceImpl(null, null);
@@ -102,16 +106,11 @@ public class OptionLoaderController extends HttpServlet {
 
             TariffDto tariff = tariffService.loadByKey(tariffId, hints);
 
-            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            JsonElement element = gson.toJsonTree(tariff.getPossibleOptionsEntities());
-            json.add("data", element);
-        } else if ("getDependencies".equals(type)) {
-            Integer id = 0;
-            try {
-                id = Integer.parseInt(request.getParameter("data"));
-            } catch (NumberFormatException e) {
-                logger.error("Wrong id format!", e);
-            }
+            JsonElement element = new Gson().toJsonTree(tariff.getPossibleOptionsEntities());
+//            json.add("data", element);
+            rh.setData(new ArrayList<>(tariff.getPossibleOptionsEntities()));
+        } else if ("getDependencies".equals(loadtype)) {
+            Integer id = data;
 
             EntityGraph<Option> graph = service.getEntityGraph();
 
@@ -121,7 +120,6 @@ public class OptionLoaderController extends HttpServlet {
 
             OptionDto option = service.loadByKey(id, hints);
 
-            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
             Set<OptionDto> required = option.getRequired();
             if (required == null)
@@ -131,24 +129,77 @@ public class OptionLoaderController extends HttpServlet {
             if (forbidden == null)
                 forbidden = new HashSet<>();
 
-            json.add("required", gson.toJsonTree(required));
-            json.add("forbidden", gson.toJsonTree(forbidden));
+//            json.add("required", new Gson().toJsonTree(required));
+//            json.add("forbidden", new Gson().toJsonTree(forbidden));
+            rh.setRequired(required);
+            rh.setForbidden(forbidden);
         } else {
-            List<Integer> tariffs = Arrays.stream(request.getParameterValues("forTariffs")).map(Integer::parseInt).collect(Collectors.toList());
+//            List<Integer> tariffs = Arrays.stream(request.getParameterValues("forTariffs")).map(Integer::parseInt).collect(Collectors.toList());
             List<OptionDto> options = service.loadOptionsByTariffs(tariffs);
 
-            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            JsonElement element = gson.toJsonTree(options);
-            json.add("data", element);
+//            JsonElement element = new Gson().toJsonTree(options);
+//            json.add("data", element);
+            rh.setData(options);
+
         }
 
-        response.setContentType("application/json");
+        return rh;
+
+/*        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
             out.print(json.toString());
             out.flush();
         } catch (IOException e) {
             logger.error("Get writer exception!", e);
+        }*/
+    }
+
+    class ResponseHelper {
+        List<OptionDto> data;
+        Set<OptionDto> required;
+        Set<OptionDto> forbidden;
+        Set<OptionDto> not_forbidden;
+        Set<OptionDto> not_required_from;
+
+        public List<OptionDto> getData() {
+            return data;
+        }
+
+        public void setData(List<OptionDto> data) {
+            this.data = data;
+        }
+
+        public Set<OptionDto> getRequired() {
+            return required;
+        }
+
+        public void setRequired(Set<OptionDto> required) {
+            this.required = required;
+        }
+
+        public Set<OptionDto> getForbidden() {
+            return forbidden;
+        }
+
+        public void setForbidden(Set<OptionDto> forbidden) {
+            this.forbidden = forbidden;
+        }
+
+        public Set<OptionDto> getNot_forbidden() {
+            return not_forbidden;
+        }
+
+        public void setNot_forbidden(Set<OptionDto> not_forbidden) {
+            this.not_forbidden = not_forbidden;
+        }
+
+        public Set<OptionDto> getNot_required_from() {
+            return not_required_from;
+        }
+
+        public void setNot_required_from(Set<OptionDto> not_required_from) {
+            this.not_required_from = not_required_from;
         }
     }
 }

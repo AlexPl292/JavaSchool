@@ -173,7 +173,7 @@ function optionCheckedNewTariff(e) {
             var enableIt = $();
 
             $(response.required).each(function (i, obj) {
-                enableIt = $.merge(enableIt, $('#options').find("input[value=" + obj.id + "]"));
+                enableIt = $.merge(enableIt, $('#possibleOptions').find("input[value=" + obj.id + "]"));
                 enableItIds.push(obj.id);
             });
 
@@ -192,7 +192,7 @@ function optionCheckedNewTariff(e) {
     } else {
         var uncheck = $();
         $($(this).data("enableIt")).each(function (i, obj) {
-            var maybeEnable = $('#options').find("input[value="+obj+"]");
+            var maybeEnable = $('#possibleOptions').find("input[value="+obj+"]");
             if (maybeEnable.length === 0)
                 return;
             $(maybeEnable).data("enabledBy").splice($.inArray(obj, $(maybeEnable).data("enabledBy")), 1);

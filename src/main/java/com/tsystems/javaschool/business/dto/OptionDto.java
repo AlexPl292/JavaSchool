@@ -51,7 +51,7 @@ public class OptionDto {
         option.setRequired(required.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
         option.setRequiredMe(requiredMe.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
         option.setForbidden(forbidden.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
-        option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(TariffDto::getTariffEntity).collect(Collectors.toSet()));
+        option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(TariffDto::getTariffEntityNoConvert).collect(Collectors.toSet()));
         option.setContractsThoseUseOption(contractsThoseUseOption.stream().map(ContractDto::getContractEntity).collect(Collectors.toSet()));
         return option;
     }

@@ -34,7 +34,7 @@ public class ContractDto {
     }
 
     public Contract getContractEntity() {
-        Contract contract = new Contract(id, number, customer.getCustomerEntity(), tariff.getTariffEntity(), isBlocked, balance);
+        Contract contract = new Contract(id, number, customer.getCustomerEntity(), tariff.getTariffEntityNoConvert(), isBlocked, balance);
         contract.setUsedOptions(usedOptions.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
         return contract;
     }
