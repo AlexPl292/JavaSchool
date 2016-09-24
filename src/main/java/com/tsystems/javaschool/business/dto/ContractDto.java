@@ -1,12 +1,9 @@
 package com.tsystems.javaschool.business.dto;
 
 import com.tsystems.javaschool.db.entities.Contract;
-import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.interfaces.CustomerDao;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -38,15 +35,15 @@ public class ContractDto {
         this.tariff = new TariffDto(contract.getTariff());
     }
 
-    public Contract getContractEntity(TariffDao tariffDao, OptionDao optionDao, CustomerDao customerDao) {
+    public Contract convertContractEntity(TariffDao tariffDao, OptionDao optionDao, CustomerDao customerDao) {
         Contract contract = new Contract(id, number, customerDao.read(customer.getId()), tariffDao.read(tariff.getId()), isBlocked, balance);
         contract.setUsedOptions(usedOptions.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
         return contract;
     }
 
-    public Contract getContractEntity() {
-        Contract contract = new Contract(id, number, customer.getCustomerEntity(), tariff.getTariffEntity(), isBlocked, balance);
-        contract.setUsedOptions(usedOptions.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
+    public Contract convertContractEntity() {
+        Contract contract = new Contract(id, number, customer.convertCustomerEntity(), tariff.convertTariffEntity(), isBlocked, balance);
+        contract.setUsedOptions(usedOptions.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
         return contract;
     }
 

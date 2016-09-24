@@ -37,10 +37,12 @@ public class OptionServiceImpl implements OptionService{
     public void addNew(OptionDto entity) {
 
 //        optionDao.create(entity);
-/*        Option option = entity.getOptionEntity(optionDao, contractDao, tariffDao);
+/*        Option option = entity.convertToOptionEntity(optionDao, contractDao, tariffDao);
         optionDao.create(option);
         logger.info("New option is created. Id = "+entity.getId());*/
-        throw new UnsupportedOperationException();
+        Option option = entity.convertToOptionEntity(optionDao, tariffDao);
+        optionDao.create(option);
+        logger.info("New option is created. Id = "+entity.getId());
     }
 
     @Override
@@ -121,6 +123,9 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public List<OptionDto> loadOptionsByTariffs(List<Integer> tariffs) {
+        if (tariffs == null) {
+            return new ArrayList<>();
+        }
         List<Option> options = optionDao.getOptionsOfTariffs(tariffs);
         List<OptionDto> optionDtos = new ArrayList<>();
         for (Option o:options) {

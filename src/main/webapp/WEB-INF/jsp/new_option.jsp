@@ -22,6 +22,7 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/metisMenu/js/metisMenu.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
+    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/jquery.serialize-object.min.js"></script>
 
     <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>

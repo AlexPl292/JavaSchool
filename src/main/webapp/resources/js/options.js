@@ -23,13 +23,36 @@ function check_item(type) {
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':'+type;
         if ($(this).is(':checked')) {
-            $.getJSON("/load_option", {"loadtype": "toDisable", type: type, data: checked_val}, function (e) {
+            $.getJSON("/admin/option/"+checked_val, {}, function (res) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
                 var enableIt = $();
 
-                $(e.not_forbidden).each(function (i, obj) {
+                if (type === "requiredFrom") {
+                    $(res.requiredFrom).each(function (i, obj) {
+                        disableIt = $.merge(disableIt, $('#forbiddenWith').find("input[value=" + obj.id + "]"));
+                        disableItIds.push(obj.id+":"+"forbiddenWith");
+
+                        enableIt = $.merge(enableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
+                        enableItIds.push(obj.id);
+                    });
+                    $(res.forbiddenWith).each(function (i, obj) {
+                        disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
+                        disableItIds.push(obj.id+":"+"requiredFrom");
+                    });
+                    disableIt = $.merge(disableIt, $('#forbiddenWith').find("input[value=" + checked_val + "]"));
+                    disableItIds.push(checked_val+":"+"forbiddenWith");
+                } else {
+                    $(res.requiredMe).each(function (i, obj) {
+                        disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
+                        disableItIds.push(obj.id+":"+"requiredFrom");
+                    });
+                    disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + checked_val + "]"));
+                    disableItIds.push(checked_val+":"+"requiredFrom");
+                }
+
+/*                $(e.not_forbidden).each(function (i, obj) {
                     disableIt = $.merge(disableIt, $('#forbiddenWith').find("input[value=" + obj.id + "]"));
                     disableItIds.push(obj.id+":"+"forbiddenWith");
                 });
@@ -42,7 +65,7 @@ function check_item(type) {
                         return;
                     enableIt = $.merge(enableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
                     enableItIds.push(obj.id);
-                });
+                });*/
 
                 enableIt.prop('checked', true).attr("disabled", true);
                 $(disableIt).attr("disabled", true);
@@ -443,18 +466,16 @@ var prepare = {
         var forTariffs = $('#forTariffs');
 
         forTariffs.empty();
-        $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes(forTariffs, forTariffs.id));
+        $.getJSON("/admin/tariff/getAll", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
 
         $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
             e.preventDefault();
             requiredFrom.empty();
             forbiddenWith.empty();
             var data = $("#forTariffs").find("input").serializeArray();
-            // data.push({"loadtype": "newOptionDependency"});
-            data.push({name:"loadtype", value:"newOptionDependency"});
-            $.getJSON("/load_option", $.param(data), function(data) {
-                create_boxes(requiredFrom, requiredFrom.id)(data);
-                create_boxes(forbiddenWith, forbiddenWith.id)(data);
+            $.getJSON("/admin/option/forTariffs", $.param(data), function(data) {
+                create_boxes(requiredFrom, "requiredFrom[][id]")(data);
+                create_boxes(forbiddenWith, "forbiddenWith[][id]")(data);
             });
         });
 

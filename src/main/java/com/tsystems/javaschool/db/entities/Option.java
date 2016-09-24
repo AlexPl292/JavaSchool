@@ -18,9 +18,9 @@ public class Option {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @Expose
-    private int id;
+    private Integer id;
 
     @Basic
     @Column(name = "name", nullable = true, length = 45)
@@ -157,11 +157,11 @@ public class Option {
            opt.getForbidden().add(this);
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

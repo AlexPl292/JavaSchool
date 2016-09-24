@@ -63,6 +63,11 @@ public class OptionLoaderController extends HttpServlet {
         return service.loadByKey(optionId, hints);
     }
 
+    @RequestMapping("/forTariffs")
+    public List<OptionDto> getForTariffs(@RequestParam(value = "possibleTariffsOfOption[][id]", required = false) List<Integer> forTariffs) {
+       return service.loadOptionsByTariffs(forTariffs);
+    }
+
 
 //    @RequestMapping(produces="application/json")
     public ResponseHelper loadOptions(@RequestParam String loadtype,
