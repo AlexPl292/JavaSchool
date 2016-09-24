@@ -2,11 +2,11 @@
  * Created by alex on 28.08.16.
  */
 
-function create_boxes(selobj) {
+function create_boxes(selobj, checkboxs_name) {
     return function (data) {
         $(selobj).empty();
-        var checkboxs_name = selobj.attr('id');
-        $.each(data.data, function (i, obj) {
+        // var checkboxs_name = selobj.attr('id');
+        $.each(data, function (i, obj) {
             $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name, "data-cost":obj.connectCost}));
             var name = obj.name;
             if (obj.connectCost !== undefined)
@@ -219,7 +219,7 @@ function prepare_tariff_list(tariffList, options, selected_val) {
         $.getJSON("/load_option", {
             loadtype: "possibleOfTariff",
             tariff_id: $(this).val()
-        }, create_boxes($(options)));
+        }, create_boxes($(options), $(options).id));
     });
     loadlist($(tariffList), "/load_tariffs", "name", "id", selected_val);
 
@@ -443,7 +443,7 @@ var prepare = {
         var forTariffs = $('#forTariffs');
 
         forTariffs.empty();
-        $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes(forTariffs));
+        $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes(forTariffs, forTariffs.id));
 
         $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
             e.preventDefault();
@@ -453,8 +453,8 @@ var prepare = {
             // data.push({"loadtype": "newOptionDependency"});
             data.push({name:"loadtype", value:"newOptionDependency"});
             $.getJSON("/load_option", $.param(data), function(data) {
-                create_boxes(requiredFrom)(data);
-                create_boxes(forbiddenWith)(data);
+                create_boxes(requiredFrom, requiredFrom.id)(data);
+                create_boxes(forbiddenWith, forbiddenWith.id)(data);
             });
         });
 
@@ -463,7 +463,7 @@ var prepare = {
     },
     "/admin/add_tariff" : function () {
         $('#possibleOptions').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
-        $.getJSON("/admin/option/getAll", {}, create_boxes($('#possibleOptions')));
+        $.getJSON("/admin/option/getAll", {}, create_boxes($('#possibleOptions'), "possibleOptions[][id]"));
     }
 };
 $(function () {

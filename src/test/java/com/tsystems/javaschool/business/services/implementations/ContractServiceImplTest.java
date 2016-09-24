@@ -49,7 +49,7 @@ public class ContractServiceImplTest {
         mockContractDao = mock(ContractDaoImpl.class);
         mockOptionDao = mock(OptionDaoImpl.class);
 
-        Mockito.when(ContractDaoImpl.getInstance()).thenReturn(mockContractDao);
+//        Mockito.when(ContractDaoImpl.getInstance()).thenReturn(mockContractDao);
 //        Mockito.when(OptionDaoImpl.getInstance()).thenReturn(mockOptionDao);
 
         contract = Mockito.spy(Contract.class);

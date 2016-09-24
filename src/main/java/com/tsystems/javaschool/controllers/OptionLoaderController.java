@@ -1,33 +1,22 @@
 package com.tsystems.javaschool.controllers;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.util.TableResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityGraph;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by alex on 01.09.16.
@@ -45,7 +34,8 @@ import java.util.stream.Collectors;
  */
 //@WebServlet("/load_option")
 @RestController
-@RequestMapping("/load_option")
+//@RequestMapping("/load_option")
+@RequestMapping("/admin/option")
 public class OptionLoaderController extends HttpServlet {
 
     private final OptionService service;
@@ -54,6 +44,11 @@ public class OptionLoaderController extends HttpServlet {
     @Autowired
     public OptionLoaderController(OptionService service) {
         this.service = service;
+    }
+
+    @RequestMapping("/getAll")
+    public List<OptionDto> loadAdd() {
+        return service.loadAll();
     }
 
     @RequestMapping(produces="application/json")
@@ -80,8 +75,8 @@ public class OptionLoaderController extends HttpServlet {
             OptionDto connectedToOption = service.loadByKey(id, hints);
 
             if ("requiredFrom".equals(type)) {
-                notForbidden = new HashSet<>(connectedToOption.getRequired());
-                notRequiredFrom = new HashSet<>(connectedToOption.getForbidden());
+                notForbidden = new HashSet<>(connectedToOption.getRequiredFrom());
+                notRequiredFrom = new HashSet<>(connectedToOption.getForbiddenWith());
                 notForbidden.add(connectedToOption);  // Add ref to itself
             } else {// "if forbidden
                 notRequiredFrom = new HashSet<>(connectedToOption.getRequiredMe());
@@ -106,9 +101,9 @@ public class OptionLoaderController extends HttpServlet {
 
             TariffDto tariff = tariffService.loadByKey(tariffId, hints);
 
-            JsonElement element = new Gson().toJsonTree(tariff.getPossibleOptionsEntities());
+            JsonElement element = new Gson().toJsonTree(tariff.getPossibleOptions());
 //            json.add("data", element);
-            rh.setData(new ArrayList<>(tariff.getPossibleOptionsEntities()));
+            rh.setData(new ArrayList<>(tariff.getPossibleOptions()));
         } else if ("getDependencies".equals(loadtype)) {
             Integer id = data;
 
@@ -121,11 +116,11 @@ public class OptionLoaderController extends HttpServlet {
             OptionDto option = service.loadByKey(id, hints);
 
 
-            Set<OptionDto> required = option.getRequired();
+            Set<OptionDto> required = option.getRequiredFrom();
             if (required == null)
                 required = new HashSet<>();
 
-            Set<OptionDto> forbidden = option.getForbidden();
+            Set<OptionDto> forbidden = option.getForbiddenWith();
             if (forbidden == null)
                 forbidden = new HashSet<>();
 
@@ -135,7 +130,7 @@ public class OptionLoaderController extends HttpServlet {
             rh.setForbidden(forbidden);
         } else {
 //            List<Integer> tariffs = Arrays.stream(request.getParameterValues("forTariffs")).map(Integer::parseInt).collect(Collectors.toList());
-            List<OptionDto> options = service.loadOptionsByTariffs(tariffs);
+            List<OptionDto> options = service.loadOptionsByTariffs(tariffs!=null? tariffs:new ArrayList<Integer>());
 
 //            JsonElement element = new Gson().toJsonTree(options);
 //            json.add("data", element);

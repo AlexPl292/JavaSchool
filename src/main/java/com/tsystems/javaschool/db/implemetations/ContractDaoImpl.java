@@ -3,6 +3,7 @@ package com.tsystems.javaschool.db.implemetations;
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.util.EMU;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -14,8 +15,10 @@ import java.util.Map;
  *
  * JPA implementation of ContractDao
  */
+@Repository
 public class ContractDaoImpl extends GenericDaoImpl<Contract, Integer> implements ContractDao {
 
+/*
     private ContractDaoImpl() {}
 
     private static class ContractDaoHolder {
@@ -26,6 +29,7 @@ public class ContractDaoImpl extends GenericDaoImpl<Contract, Integer> implement
     public static ContractDaoImpl getInstance() {
         return ContractDaoHolder.instance;
     }
+*/
 
 
     @Override

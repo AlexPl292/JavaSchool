@@ -3,14 +3,21 @@ package com.tsystems.javaschool.controllers;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.implementations.OptionServiceImpl;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
+import com.tsystems.javaschool.util.StatusResponse;
 import com.tsystems.javaschool.util.Validator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
@@ -18,6 +25,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -41,7 +49,26 @@ public class AddOptionController extends HttpServlet {
         this.service = service;
     }
 
-    @Override
+    @GetMapping("/admin/add_option")
+    public String loadPage() {
+        return "new_option";
+    }
+
+    @PostMapping(value = "/admin/add_option", produces="application/json")
+    @ResponseBody
+    public StatusResponse addOption(@Valid @RequestBody OptionDto optionDto, BindingResult bindingResult) {
+        StatusResponse response = new StatusResponse();
+
+        if (!bindingResult.hasErrors()) {
+            service.addNew(optionDto);
+        } else {
+            response.addBindingResult(bindingResult);
+        }
+
+        return response;
+    }
+
+/*    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -51,9 +78,9 @@ public class AddOptionController extends HttpServlet {
         } catch (ServletException e) {
             logger.error("Servlet exception", e);
         }
-    }
+    }*/
 
-    @Override
+/*    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Map<String, String> errors = new HashMap<>();
@@ -123,5 +150,5 @@ public class AddOptionController extends HttpServlet {
         } catch (IOException e) {
             logger.error("Get writer exception!", e);
         }
-    }
+    }*/
 }

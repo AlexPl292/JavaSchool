@@ -65,7 +65,7 @@
                                         <label class="control-label" for="connect_cost">Connection cost</label>
                                         <div class="controls input-group">
                                             <span class="input-group-addon"><i class="fa fa-rub"></i> </span>
-                                            <input type="text" id="connect_cost" name="connect_cost" placeholder="" class="form-control input-xlarge">
+                                            <input type="text" id="connect_cost" name="connectCost" placeholder="" class="form-control input-xlarge">
                                         </div>
                                     </div>
 
@@ -83,7 +83,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <input type="hidden" name="tariff_list"/>
+                    <%--<input type="hidden" name="tariff_list"/>--%>
                     <div class="panel panel-default">
                         <div class="panel-heading">Available for there tariffs</div>
                         <div class="panel-body boxes">

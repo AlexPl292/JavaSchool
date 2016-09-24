@@ -3,39 +3,43 @@ package com.tsystems.javaschool.business.services.implementations;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.db.entities.Tariff;
-import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
+import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.OptionDao;
 import com.tsystems.javaschool.db.interfaces.TariffDao;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityGraph;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by alex on 27.08.16.
  */
 @Service
+@Transactional
 public class OptionServiceImpl implements OptionService{
 
     private static final Logger logger = Logger.getLogger(OptionServiceImpl.class);
     private final OptionDao optionDao;
     private final TariffDao tariffDao;
+    private final ContractDao contractDao;
 
     @Autowired
-    public OptionServiceImpl(TariffDao tariffDao, OptionDao optionDao) {
+    public OptionServiceImpl(TariffDao tariffDao, OptionDao optionDao, ContractDao contractDao) {
         this.tariffDao = tariffDao;
         this.optionDao = optionDao;
+        this.contractDao = contractDao;
     }
 
     @Override
     public void addNew(OptionDto entity) {
 
 //        optionDao.create(entity);
-//        logger.info("New option is created. Id = "+entity.getId());
+/*        Option option = entity.getOptionEntity(optionDao, contractDao, tariffDao);
+        optionDao.create(option);
+        logger.info("New option is created. Id = "+entity.getId());*/
         throw new UnsupportedOperationException();
     }
 
@@ -86,8 +90,8 @@ public class OptionServiceImpl implements OptionService{
 
                 Option reqFOpt = optionDao.read(reqFId, hints);
                 option.addRequiredFromOptions(reqFOpt);
-                option.addRequiredFromOptions(reqFOpt.getRequired());
-                option.addForbiddenWithOptions(reqFOpt.getForbidden());
+                option.addRequiredFromOptions(reqFOpt.getRequiredFrom());
+                option.addForbiddenWithOptions(reqFOpt.getForbiddenWith());
             }
 
             graph = getEntityGraph();
@@ -98,7 +102,7 @@ public class OptionServiceImpl implements OptionService{
 
                 Option forbOpt = optionDao.read(forbId, hints);
                 option.addForbiddenWithOptions(forbOpt);
-                option.addForbiddenWithOptions(forbOpt.getRequired());
+                option.addForbiddenWithOptions(forbOpt.getRequiredFrom());
                 option.addForbiddenWithOptions(forbOpt.getRequiredMe());
             }
 
@@ -147,6 +151,12 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public List<OptionDto> loadAll() {
-        return load(new HashMap<>());
+        List<Option> options = optionDao.read(new HashMap<>());
+        List<OptionDto> optionDtos = new ArrayList<>();
+        for (Option o:options) {
+            OptionDto od = new OptionDto(o);
+            optionDtos.add(od);
+        }
+        return optionDtos;
     }
 }

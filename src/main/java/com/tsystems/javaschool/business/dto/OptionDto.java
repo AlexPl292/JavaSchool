@@ -1,11 +1,14 @@
 package com.tsystems.javaschool.business.dto;
 
-import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.db.entities.Tariff;
+import com.tsystems.javaschool.db.interfaces.ContractDao;
+import com.tsystems.javaschool.db.interfaces.OptionDao;
+import com.tsystems.javaschool.db.interfaces.TariffDao;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,14 +17,17 @@ import java.util.stream.Collectors;
  */
 public class OptionDto {
 
-    private int id;
+    private Integer id;
+
+    @NotNull
     private String name;
+
     private BigDecimal cost;
     private BigDecimal connectCost;
     private String description;
-    private Set<OptionDto> required = new HashSet<>();
+    private Set<OptionDto> requiredFrom = new HashSet<>();
     private Set<OptionDto> requiredMe = new HashSet<>();
-    private Set<OptionDto> forbidden = new HashSet<>();
+    private Set<OptionDto> forbiddenWith = new HashSet<>();
     private Set<TariffDto> possibleTariffsOfOption = new HashSet<>();
     private Set<ContractDto> contractsThoseUseOption = new HashSet<>();
 
@@ -38,29 +44,63 @@ public class OptionDto {
     }
 
     public void setDependencies(Option option) {
-        required = option.getRequired().stream().map(OptionDto::new).collect(Collectors.toSet());
+        requiredFrom = option.getRequired().stream().map(OptionDto::new).collect(Collectors.toSet());
         requiredMe = option.getRequiredMe().stream().map(OptionDto::new).collect(Collectors.toSet());
-        forbidden = option.getForbidden().stream().map(OptionDto::new).collect(Collectors.toSet());
+        forbiddenWith = option.getForbidden().stream().map(OptionDto::new).collect(Collectors.toSet());
         possibleTariffsOfOption = option.getPossibleTariffsOfOption().stream().map(TariffDto::new).collect(Collectors.toSet());
         contractsThoseUseOption = option.getContractsThoseUseOption().stream().map(ContractDto::new).collect(Collectors.toSet());
     }
 
 
+    public Option getOptionEntity(OptionDao optionDao, ContractDao contractDao, TariffDao tariffDao) {
+        Option option = new Option(id, name, cost, connectCost, description);
+        option.setRequired(requiredFrom.stream().map(OptionDto::getId).filter(Objects::nonNull).map(optionDao::read).collect(Collectors.toSet()));
+        option.setRequiredMe(requiredMe.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
+        option.setForbidden(forbiddenWith.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
+        option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(e -> tariffDao.read(e.getId())).collect(Collectors.toSet()));
+        option.setContractsThoseUseOption(contractsThoseUseOption.stream().map(e -> contractDao.read(e.getId())).collect(Collectors.toSet()));
+        return option;
+    }
+
     public Option getOptionEntity() {
         Option option = new Option(id, name, cost, connectCost, description);
-        option.setRequired(required.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
+        option.setRequired(requiredFrom.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
         option.setRequiredMe(requiredMe.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
-        option.setForbidden(forbidden.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
-        option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(TariffDto::getTariffEntityNoConvert).collect(Collectors.toSet()));
+        option.setForbidden(forbiddenWith.stream().map(OptionDto::getOptionEntity).collect(Collectors.toSet()));
+        option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(TariffDto::getTariffEntity).collect(Collectors.toSet()));
         option.setContractsThoseUseOption(contractsThoseUseOption.stream().map(ContractDto::getContractEntity).collect(Collectors.toSet()));
         return option;
     }
 
-    public int getId() {
+/*    public Option getOptionEntityNoConvert() {
+        Option option = new Option(id, name, cost, connectCost, description);
+        option.setRequired(requiredFrom.stream().map(OptionDto::getOptionEntityNoConvert).collect(Collectors.toSet()));
+        option.setRequiredMe(requiredMe.stream().map(OptionDto::getOptionEntityNoConvert).collect(Collectors.toSet()));
+        option.setForbidden(forbiddenWith.stream().map(OptionDto::getOptionEntityNoConvert).collect(Collectors.toSet()));
+        option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(TariffDto::getTariffEntityNoConvert).collect(Collectors.toSet()));
+        option.setContractsThoseUseOption(contractsThoseUseOption.stream().map(ContractDto::getContractEntity).collect(Collectors.toSet()));
+        return option;
+    }*/
+/*
+    public void convertIdToEntities(OptionDao optionDao, ContractDao contractDao, TariffDao tariffDao) {
+        if (optionDao != null) {
+            requiredFrom.addAll(requiredFrom.stream().map(e -> new OptionDto(optionDao.read(e))).collect(Collectors.toSet()));
+            requiredMe.addAll(requiredMe.stream().map(e -> new OptionDto(optionDao.read(e))).collect(Collectors.toSet()));
+            forbiddenWith.addAll(forbiddenWith.stream().map(e -> new OptionDto(optionDao.read(e))).collect(Collectors.toSet()));
+        }
+        if (contractDao != null) {
+            contractsThoseUseOption.addAll(contractsThoseUseOption.stream().map(e -> new ContractDto(contractDao.read(e))).collect(Collectors.toSet()));
+        }
+        if (tariffDao != null) {
+            possibleTariffsOfOption.addAll(forTariffs.stream().map(e -> new TariffDto(tariffDao.read(e))).collect(Collectors.toSet()));
+        }
+    }*/
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -96,12 +136,12 @@ public class OptionDto {
         this.description = description;
     }
 
-    public Set<OptionDto> getRequired() {
-        return required;
+    public Set<OptionDto> getRequiredFrom() {
+        return requiredFrom;
     }
 
-    public void setRequired(Set<OptionDto> required) {
-        this.required = required;
+    public void setRequiredFrom(Set<OptionDto> requiredFrom) {
+        this.requiredFrom = requiredFrom;
     }
 
     public Set<OptionDto> getRequiredMe() {
@@ -112,12 +152,12 @@ public class OptionDto {
         this.requiredMe = requiredMe;
     }
 
-    public Set<OptionDto> getForbidden() {
-        return forbidden;
+    public Set<OptionDto> getForbiddenWith() {
+        return forbiddenWith;
     }
 
-    public void setForbidden(Set<OptionDto> forbidden) {
-        this.forbidden = forbidden;
+    public void setForbiddenWith(Set<OptionDto> forbiddenWith) {
+        this.forbiddenWith = forbiddenWith;
     }
 
     public Set<TariffDto> getPossibleTariffsOfOption() {

@@ -40,27 +40,27 @@
             $form.validate({
                 rules: {
                     oldPassword: {
-                        required:true,
+                        requiredFrom:true,
                     },
                     newPassword:{
-                        required:true,
+                        requiredFrom:true,
                         minlength: 8
                     },
                     repeatNewPassword: {
-                        required: true,
+                        requiredFrom: true,
                         equalTo: '#newPassword'
                     }
                 },
                 messages: {
                     oldPassword: {
-                        required: "Please, enter old password"
+                        requiredFrom: "Please, enter old password"
                     },
                     newPassword:{
-                        required: "Please, enter new password",
+                        requiredFrom: "Please, enter new password",
                         minlength: "New password should contain at least 8 characters!"
                     },
                     repeatNewPassword: {
-                        required: "Please, repeat new password",
+                        requiredFrom: "Please, repeat new password",
                         equalTo: "Passwords are not equal!"
                     }
                 },

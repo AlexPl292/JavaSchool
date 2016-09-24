@@ -113,7 +113,7 @@ public class TariffServiceImpl implements TariffService{
     public Tariff addNew(Tariff tariff, List<Integer> optionsIds) {
         try {
 //            EMU.beginTransaction();
-            tariff.setPossibleOptionsEntities(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
+            tariff.setPossibleOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
             tariffDao.create(tariff);
 //            EMU.commit();
             logger.info("New tariff with options is created. Id = "+tariff.getId());

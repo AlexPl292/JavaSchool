@@ -3,7 +3,7 @@
  */
 
 
-$.fn.serializeObject = function()
+/*$.fn.serializeObject = function()
 {
     var o = {};
     var a = this.serializeArray();
@@ -18,7 +18,7 @@ $.fn.serializeObject = function()
         }
     });
     return o;
-};
+};*/
 
 $.validator.addMethod("no_spaces", function (val){
     return val.indexOf(' ') === -1;

@@ -2,6 +2,7 @@ package com.tsystems.javaschool.business.dto;
 
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
+import com.tsystems.javaschool.db.interfaces.ContractDao;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +52,17 @@ public class CustomerDto {
         customer.setSalt(salt);
         customer.setAddress(address);
         customer.setContracts(contracts.stream().map(ContractDto::getContractEntity).collect(Collectors.toSet()));
+        return customer;
+    }
+
+    public Customer getCustomerEntity(ContractDao contractDao) {
+        Customer customer = new Customer(id, name, surname, email, isBlocked, passportNumber);
+        customer.setPassportData(passportData);
+        customer.setDateOfBirth(dateOfBirth);
+        customer.setPassword(password);
+        customer.setSalt(salt);
+        customer.setAddress(address);
+        customer.setContracts(contracts.stream().map(e -> contractDao.read(e.getId())).collect(Collectors.toSet()));
         return customer;
     }
 

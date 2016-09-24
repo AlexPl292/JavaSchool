@@ -25,7 +25,8 @@ import java.util.Set;
  */
 public class ContractServiceImpl implements ContractService{
 
-    private ContractDao contractDao = ContractDaoImpl.getInstance();
+    @Autowired
+    private ContractDao contractDao;
     @Autowired
     private TariffDao tariffDao;
     @Autowired

@@ -78,6 +78,6 @@ public class OptionServiceImplTest {
         dep.put("forbiddenWith", new String[]{});
 
         Option newOpt = service.addNew(option3, dep);
-        assertEquals(2, newOpt.getRequired().size());*/
+        assertEquals(2, newOpt.getRequiredFrom().size());*/
     }
 }
