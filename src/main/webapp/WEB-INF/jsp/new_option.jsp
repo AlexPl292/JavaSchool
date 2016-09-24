@@ -40,7 +40,7 @@
                 <h1 class="page-header">Add new option</h1>
             </div>
         </div>
-        <form class="form-horizontal" id="add_option_form" action="add_option" method="POST">
+        <form class="form-horizontal" id="add_option_form" action="/rest/option" method="POST">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">

@@ -73,7 +73,7 @@
                     <a href="#"><i class="fa fa-cogs fa-fw"></i> Options<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/admin/add_option">Add new option</a>
+                            <a href="/admin/option/new">Add new option</a>
                         </li>
                         <li>
                             <a href="/options">Show all options</a>

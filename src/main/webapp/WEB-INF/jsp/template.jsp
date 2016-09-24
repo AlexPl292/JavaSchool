@@ -60,7 +60,7 @@
                     <a href="#"><i class="fa fa-cog fa-fw"></i> Tariffs<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/admin/add_tariff">Add new tariff</a>
+                            <a href="/admin/new_tariff">Add new tariff</a>
                         </li>
                         <li>
                             <a href="/tariffs">Show all tariffs</a>
@@ -73,7 +73,7 @@
                     <a href="#"><i class="fa fa-cogs fa-fw"></i> Options<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/admin/add_option">Add new option</a>
+                            <a href="/admin/new_option">Add new option</a>
                         </li>
                         <li>
                             <a href="/options">Show all options</a>

@@ -23,7 +23,7 @@ function check_item(type) {
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':'+type;
         if ($(this).is(':checked')) {
-            $.getJSON("/admin/option/"+checked_val, {}, function (res) {
+            $.getJSON("/rest/option/"+checked_val, {}, function (res) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
@@ -189,7 +189,7 @@ function optionCheckedNewTariff(e) {
     var $item = $(this);
     var checked_val = parseInt($(this).val(), 10);
     if ($item.is(':checked')) {
-        $.getJSON("/admin/option/"+checked_val, {}, function (response) {
+        $.getJSON("/rest/option/"+checked_val, {}, function (response) {
             var enableItIds = [];
             var enableIt = $();
 
@@ -460,20 +460,20 @@ var prepare = {
     "/admin/add_customer" : function() {
         prepare_tariff_list($('#tariff'), $('#options'));
     },
-    "/admin/add_option" : function () {
+    "/admin/new_option" : function () {
         var requiredFrom = $("#requiredFrom");
         var forbiddenWith = $("#forbiddenWith");
         var forTariffs = $('#forTariffs');
 
         forTariffs.empty();
-        $.getJSON("/admin/tariff/getAll", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
+        $.getJSON("/rest/tariff", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
 
         $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
             e.preventDefault();
             requiredFrom.empty();
             forbiddenWith.empty();
             var data = $("#forTariffs").find("input").serializeArray();
-            $.getJSON("/admin/option/forTariffs", $.param(data), function(data) {
+            $.getJSON("/rest/option/forTariffs", $.param(data), function(data) {
                 create_boxes(requiredFrom, "requiredFrom[][id]")(data);
                 create_boxes(forbiddenWith, "forbiddenWith[][id]")(data);
             });
@@ -482,9 +482,9 @@ var prepare = {
         $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
         $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));
     },
-    "/admin/add_tariff" : function () {
+    "/admin/new_tariff" : function () {
         $('#possibleOptions').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
-        $.getJSON("/admin/option/getAll", {}, create_boxes($('#possibleOptions'), "possibleOptions[][id]"));
+        $.getJSON("/rest/option", {}, create_boxes($('#possibleOptions'), "possibleOptions[][id]"));
     }
 };
 $(function () {

@@ -439,7 +439,7 @@ var prepare = {
     "/admin/add_customer" : function() {
         prepare_tariff_list($('#tariff'), $('#options'));
     },
-    "/admin/add_option" : function () {
+    "/admin/option/new" : function () {
         var requiredFrom = $("#requiredFrom");
         var forbiddenWith = $("#forbiddenWith");
         var forTariffs = $('#forTariffs');
