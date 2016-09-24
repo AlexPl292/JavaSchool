@@ -15,30 +15,10 @@ import java.util.Map;
  * JPA implementation of TariffDao
  */
 @Repository
-public class TariffDaoImpl implements TariffDao{
+public class TariffDaoImpl extends GenericDaoImpl<Tariff, Integer> implements TariffDao{
 
     @PersistenceContext
     EntityManager em;
-
-    @Override
-    public void create(Tariff newInstance) {
-        em.persist(newInstance);
-    }
-
-    @Override
-    public Tariff read(Integer id) {
-        return em.find(Tariff.class, id);
-    }
-
-    @Override
-    public Tariff update(Tariff transientObject) {
-        return em.merge(transientObject);
-    }
-
-    @Override
-    public void delete(Integer id) {
-        em.remove(em.getReference(Tariff.class, id));
-    }
 
     @Override
     public List<Tariff> read(Map<String, Object> kwargs) {
@@ -75,15 +55,5 @@ public class TariffDaoImpl implements TariffDao{
         if (search != null && !"".equals(search))
             query.setParameter("first", "%"+search+"%");
         return (long) query.getSingleResult();
-    }
-
-    @Override
-    public EntityGraph getEntityGraph() {
-        return em.createEntityGraph(Tariff.class);
-    }
-
-    @Override
-    public Tariff read(Integer key, Map<String, Object> hints) {
-        return em.find(Tariff.class, key, hints);
     }
 }

@@ -1,9 +1,10 @@
 package com.tsystems.javaschool.db.implemetations;
 
 import com.tsystems.javaschool.db.interfaces.GenericDao;
-import com.tsystems.javaschool.util.EMU;
 
 import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Map;
@@ -14,6 +15,9 @@ import java.util.Map;
  * @param <PK> primary key
  */
 abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK>{
+
+    @PersistenceContext
+    protected EntityManager em;
 
     private Class type;
 
@@ -27,31 +31,31 @@ abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<
 
     @Override
     public void create(T newInstance) {
-        EMU.getEntityManager().persist(newInstance);
+        em.persist(newInstance);
     }
 
     @Override
     public T read(PK id) {
-        return (T) EMU.getEntityManager().find(type, id);
+        return (T) em.find(type, id);
     }
 
     @Override
     public T update(T transientObject) {
-        return EMU.getEntityManager().merge(transientObject);
+        return em.merge(transientObject);
     }
 
     @Override
     public void delete(PK id) {
-        EMU.getEntityManager().remove(EMU.getEntityManager().getReference(type, id));
+        em.remove(em.getReference(type, id));
     }
 
     @Override
     public EntityGraph getEntityGraph() {
-        return EMU.getEntityManager().createEntityGraph(type);
+        return em.createEntityGraph(type);
     }
 
     @Override
     public T read(Integer key, Map<String, Object> hints) {
-        return (T) EMU.getEntityManager().find(type, key, hints);
+        return (T) em.find(type, key, hints);
     }
 }

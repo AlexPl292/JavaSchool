@@ -19,7 +19,7 @@ import java.io.IOException;
 //@WebServlet({"/admin/delete_contract", "/customer/delete_contract"})
 public class DeleteController extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(DeleteController.class);
+/*    private static final Logger logger = Logger.getLogger(DeleteController.class);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -33,5 +33,5 @@ public class DeleteController extends HttpServlet {
         } catch (NumberFormatException e) {
             logger.error("Exception while id converting", e);
         }
-    }
+    }*/
 }

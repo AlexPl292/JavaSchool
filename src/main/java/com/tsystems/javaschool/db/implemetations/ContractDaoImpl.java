@@ -2,7 +2,6 @@ package com.tsystems.javaschool.db.implemetations;
 
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.interfaces.ContractDao;
-import com.tsystems.javaschool.util.EMU;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
@@ -18,20 +17,6 @@ import java.util.Map;
 @Repository
 public class ContractDaoImpl extends GenericDaoImpl<Contract, Integer> implements ContractDao {
 
-/*
-    private ContractDaoImpl() {}
-
-    private static class ContractDaoHolder {
-        private static final ContractDaoImpl instance = new ContractDaoImpl();
-        private ContractDaoHolder() {}
-    }
-
-    public static ContractDaoImpl getInstance() {
-        return ContractDaoHolder.instance;
-    }
-*/
-
-
     @Override
     public List<Contract> read(Map<String, Object> kwargs) {
         String queryStr = "SELECT t FROM Contract t";
@@ -43,7 +28,7 @@ public class ContractDaoImpl extends GenericDaoImpl<Contract, Integer> implement
             queryStr += " WHERE t.number LIKE :first";
         }
 
-        TypedQuery<Contract> query = EMU.getEntityManager().createQuery(queryStr, Contract.class);
+        TypedQuery<Contract> query = em.createQuery(queryStr, Contract.class);
         if (search != null && !"".equals(search))
             query.setParameter("first", "%"+search+"%");
         if (maxEntries != null)
@@ -63,7 +48,7 @@ public class ContractDaoImpl extends GenericDaoImpl<Contract, Integer> implement
             queryStr += " WHERE t.number LIKE :first";
         }
 
-        Query query = EMU.getEntityManager().createQuery(queryStr);
+        Query query = em.createQuery(queryStr);
         if (search != null && !"".equals(search))
             query.setParameter("first", "%"+search+"%");
         return (long) query.getSingleResult();

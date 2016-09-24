@@ -17,10 +17,7 @@ import java.util.stream.Collectors;
  * JPA implementation of OptionDao
  */
 @Repository
-public class OptionDaoImpl implements OptionDao{
-
-    @PersistenceContext
-    EntityManager em;
+public class OptionDaoImpl extends GenericDaoImpl<Option, Integer> implements OptionDao{
 
     @Override
     public List<Option> getOptionsOfTariffs(List<Integer> tariffs) {
@@ -34,26 +31,6 @@ public class OptionDaoImpl implements OptionDao{
     @Override
     public Set<Option> loadOptionsByIds(List<Integer> ids) {
         return ids.stream().map(this::read).collect(Collectors.toSet());
-    }
-
-    @Override
-    public void create(Option newInstance) {
-        em.persist(newInstance);
-    }
-
-    @Override
-    public Option read(Integer id) {
-        return em.find(Option.class, id);
-    }
-
-    @Override
-    public Option update(Option transientObject) {
-        return em.merge(transientObject);
-    }
-
-    @Override
-    public void delete(Integer id) {
-        em.remove(em.getReference(Option.class, id));
     }
 
     @Override
@@ -91,15 +68,5 @@ public class OptionDaoImpl implements OptionDao{
         if (search != null && !"".equals(search))
             query.setParameter("first", "%"+search+"%");
         return (long) query.getSingleResult();
-    }
-
-    @Override
-    public EntityGraph getEntityGraph() {
-        return em.createEntityGraph(Option.class);
-    }
-
-    @Override
-    public Option read(Integer key, Map<String, Object> hints) {
-        return em.find(Option.class, key, hints);
     }
 }

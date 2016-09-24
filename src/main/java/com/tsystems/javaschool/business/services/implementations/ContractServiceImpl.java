@@ -23,26 +23,19 @@ import java.util.Set;
 /**
  * Created by alex on 24.08.16.
  */
+@Service
 public class ContractServiceImpl implements ContractService{
 
-    @Autowired
-    private ContractDao contractDao;
-    @Autowired
-    private TariffDao tariffDao;
-    @Autowired
-    private OptionDao optionDao;
+    private final ContractDao contractDao;
+    private final TariffDao tariffDao;
+    private final OptionDao optionDao;
     private static final Logger logger = Logger.getLogger(ContractServiceImpl.class);
 
-
-    private ContractServiceImpl() {}
-
-    private static class ContractServiceHolder {
-        private static final ContractServiceImpl instance = new ContractServiceImpl();
-        private ContractServiceHolder() {}
-    }
-
-    public static ContractServiceImpl getInstance() {
-        return ContractServiceHolder.instance;
+    @Autowired
+    public ContractServiceImpl(OptionDao optionDao, ContractDao contractDao, TariffDao tariffDao) {
+        this.optionDao = optionDao;
+        this.contractDao = contractDao;
+        this.tariffDao = tariffDao;
     }
 
     @Override

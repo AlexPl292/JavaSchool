@@ -38,23 +38,18 @@ import java.util.Map;
  * draw - page in pagination
  * data - returned data
  */
-//@WebServlet({"/admin/load_customers", "/load_tariffs", "/load_options_table", "/admin/load_contracts"})
 @RestController
 public class DataLoaderController {
 
     private static final Logger logger = Logger.getLogger(DataLoaderController.class);
-//    @Autowired
-//    CustomerService customerService;
-    final TariffService tariffService;
-    final OptionService optionService;
+    private final TariffService tariffService;
+    private final OptionService optionService;
 
     @Autowired
     public DataLoaderController(TariffService tariffService, OptionService optionService) {
         this.tariffService = tariffService;
         this.optionService = optionService;
     }
-//    @Autowired
-//    ContractService contractService;
 
     @GetMapping(value = "/load_tariffs", produces="application/json")
     public TableResponse loadTariffs(@RequestParam(required = false) boolean updateCount,

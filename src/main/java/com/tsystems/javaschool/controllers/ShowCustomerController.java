@@ -26,7 +26,7 @@ import java.util.*;
 //@WebServlet({"/admin/customer", "/admin/contract", "/customer"})
 public class ShowCustomerController extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(ShowCustomerController.class);
+/*    private static final Logger logger = Logger.getLogger(ShowCustomerController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,10 +62,10 @@ public class ShowCustomerController extends HttpServlet {
             hints.put("javax.persistence.loadgraph", graph);
 
             Customer customer = service.loadByKey(id, hints);
-            /*
+            *//*
             Because of set usage, if any field changed, order would change too. That is not good.
             So, we need to order it's manually. Why reversed? By new contract adding, we put it on the top of all contracts.
-             */
+             *//*
             Set<Contract> contractSet = new TreeSet<>(Comparator.comparing(Contract::getId).reversed());
 
             contractSet.addAll(customer.getContracts());
@@ -79,5 +79,5 @@ public class ShowCustomerController extends HttpServlet {
                 logger.error("Servlet exception", e);
             }
         }
-    }
+    }*/
 }

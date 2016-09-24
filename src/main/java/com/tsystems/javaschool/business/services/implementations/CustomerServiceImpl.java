@@ -9,6 +9,7 @@ import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityGraph;
@@ -19,20 +20,15 @@ import java.util.Map;
 /**
  * Created by alex on 17.08.16.
  */
+@Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private CustomerDao customerDao = CustomerDaoImpl.getInstance();
+    private final CustomerDao customerDao;
     private static final Logger logger = Logger.getLogger(CustomerServiceImpl.class);
 
-    private CustomerServiceImpl() {}
-
-    private static class CustomerServiceHolder {
-        private static final CustomerServiceImpl instance = new CustomerServiceImpl();
-        private CustomerServiceHolder() {}
-    }
-
-    public static CustomerServiceImpl getInstance() {
-        return CustomerServiceHolder.instance;
+    @Autowired
+    public CustomerServiceImpl(CustomerDao customerDao) {
+        this.customerDao = customerDao;
     }
 
     @Override

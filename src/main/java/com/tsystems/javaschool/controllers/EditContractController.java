@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 //@WebServlet({"/admin/edit_contract", "/edit_contract"})
 public class EditContractController extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(EditContractController.class);
+/*    private static final Logger logger = Logger.getLogger(EditContractController.class);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -89,5 +89,5 @@ public class EditContractController extends HttpServlet {
         } catch (IOException e) {
             logger.error("Get writer exception!", e);
         }
-    }
+    }*/
 }

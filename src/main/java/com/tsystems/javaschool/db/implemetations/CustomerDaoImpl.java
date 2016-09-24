@@ -2,7 +2,7 @@ package com.tsystems.javaschool.db.implemetations;
 
 import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.interfaces.CustomerDao;
-import com.tsystems.javaschool.util.EMU;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -14,18 +14,8 @@ import java.util.Map;
  *
  * JPA implementation of CustomerDao
  */
+@Repository
 public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implements CustomerDao {
-
-    private CustomerDaoImpl() {}
-
-    private static class CustomerDaoHolder {
-        private static final CustomerDaoImpl instance = new CustomerDaoImpl();
-        private CustomerDaoHolder() {}
-    }
-
-    public static CustomerDaoImpl getInstance() {
-        return CustomerDaoHolder.instance;
-    }
 
     @Override
     public List<Customer> read(Map<String, Object> kwargs) {
@@ -44,7 +34,7 @@ public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implement
             }
         }
 
-        TypedQuery<Customer> query = EMU.getEntityManager().createQuery(queryStr, Customer.class);
+        TypedQuery<Customer> query = em.createQuery(queryStr, Customer.class);
         if (where != null) {
             if (where.length == 1) {
                 query.setParameter("first", "%" + where[0] + "%");
@@ -76,7 +66,7 @@ public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implement
             }
         }
 
-        Query query = EMU.getEntityManager().createQuery(queryStr);
+        Query query = em.createQuery(queryStr);
         if (where != null) {
             if (where.length == 1) {
                 query.setParameter("first", "%" + where[0] + "%");

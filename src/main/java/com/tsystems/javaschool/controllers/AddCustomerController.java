@@ -1,46 +1,29 @@
 package com.tsystems.javaschool.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.tsystems.javaschool.business.services.implementations.ContractServiceImpl;
-import com.tsystems.javaschool.business.services.implementations.CustomerServiceImpl;
-import com.tsystems.javaschool.business.services.implementations.TariffServiceImpl;
-import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
-import com.tsystems.javaschool.db.entities.Contract;
-import com.tsystems.javaschool.db.entities.Customer;
-import com.tsystems.javaschool.db.entities.Tariff;
-import com.tsystems.javaschool.util.Validator;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.RollbackException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by alex on 19.08.16.
  * Add new customer
  * Returns json with either success:true, or success:false and object with errors
  */
-//@WebServlet("/admin/add_customer")
-public class AddCustomerController extends HttpServlet {
+@RestController
+public class AddCustomerController {
 
-    private final transient CustomerService service = CustomerServiceImpl.getInstance();
+    private final transient CustomerService service;
     private static final Logger logger = Logger.getLogger(AddCustomerController.class);
 
-    @Override
+    @Autowired
+    public AddCustomerController(CustomerService service) {
+        this.service = service;
+    }
+
+/*    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -167,5 +150,5 @@ public class AddCustomerController extends HttpServlet {
         } catch (IOException e){
             logger.error("Get writer exception!", e);
         }
-    }
+    }*/
 }
