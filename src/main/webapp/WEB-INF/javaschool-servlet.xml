@@ -38,6 +38,7 @@
 
     <mvc:view-controller path="/admin/new_tariff" view-name="new_tariff"/>
     <mvc:view-controller path="/admin/new_option" view-name="new_option"/>
+    <mvc:view-controller path="/admin/new_customer" view-name="new_customer"/>
 
     <jee:jndi-lookup id="dataSource"
                      jndi-name="jdbc/JS" />

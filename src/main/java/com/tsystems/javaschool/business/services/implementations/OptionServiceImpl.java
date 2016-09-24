@@ -35,11 +35,6 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public void addNew(OptionDto entity) {
-
-//        optionDao.create(entity);
-/*        Option option = entity.convertToOptionEntity(optionDao, contractDao, tariffDao);
-        optionDao.create(option);
-        logger.info("New option is created. Id = "+entity.getId());*/
         Option option = entity.convertToOptionEntity(optionDao, tariffDao);
         optionDao.create(option);
         logger.info("New option is created. Id = "+entity.getId());
@@ -57,9 +52,8 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public void remove(Integer key) {
-//        optionDao.delete(key);
-//        logger.info("Option is removed. Id = "+key);
-        throw new UnsupportedOperationException();
+        optionDao.delete(key);
+        logger.info("Option is removed. Id = "+key);
     }
 
     @Override

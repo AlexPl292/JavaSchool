@@ -1,11 +1,18 @@
 package com.tsystems.javaschool.controllers;
 
+import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
+import com.tsystems.javaschool.util.StatusResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServlet;
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Created by alex on 19.08.16.
@@ -13,14 +20,32 @@ import javax.servlet.http.HttpServlet;
  * Returns json with either success:true, or success:false and object with errors
  */
 @RestController
-public class AddCustomerController {
+public class CustomerRest {
 
     private final transient CustomerService service;
-    private static final Logger logger = Logger.getLogger(AddCustomerController.class);
+    private static final Logger logger = Logger.getLogger(CustomerRest.class);
 
     @Autowired
-    public AddCustomerController(CustomerService service) {
+    public CustomerRest(CustomerService service) {
         this.service = service;
+    }
+
+    @PostMapping
+    public StatusResponse addNewCustomer(@Valid @RequestBody CustomerDto customer, BindingResult bindingResult) {
+        StatusResponse response = new StatusResponse();
+
+        if (!bindingResult.hasErrors()) {
+            service.addNew(customer);
+        } else {
+            response.addBindingResult(bindingResult);
+        }
+
+        return response;
+    }
+
+    @GetMapping
+    public List<CustomerDto> loadAll() {
+        return service.loadAll();
     }
 
 /*    @Override

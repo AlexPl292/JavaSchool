@@ -23,7 +23,7 @@ import java.util.Map;
 @Transactional
 public class TariffServiceImpl implements TariffService{
 
-    private final TariffDao tariffDao;// = TariffDaoImpl.getInstance();
+    private final TariffDao tariffDao;
     private final OptionDao optionDao;
     private static final Logger logger = Logger.getLogger(TariffServiceImpl.class);
 
@@ -32,17 +32,6 @@ public class TariffServiceImpl implements TariffService{
         this.tariffDao = tariffDao;
         this.optionDao = optionDao;
     }
-
-/*
-    private static class TariffServiceHolder {
-        private static final TariffServiceImpl instance = new TariffServiceImpl();
-        private TariffServiceHolder() {}
-    }
-
-    public static TariffServiceImpl getInstance() {
-        return TariffServiceHolder.instance;
-    }
-*/
 
     @Override
     public void addNew(TariffDto tariffDto) {
@@ -73,9 +62,6 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public List<TariffDto> load(Map<String, Object> kwargs) {
-/*        List<Tariff> tariffs = tariffDao.read(kwargs);
-        EMU.closeEntityManager();
-        return tariffs;*/
         List<Tariff> tariff = tariffDao.read(kwargs);
         List<TariffDto> tariffDtos = new ArrayList<>();
         for (Tariff t:tariff) {
@@ -107,23 +93,4 @@ public class TariffServiceImpl implements TariffService{
         tariffDto.setDependencies(tariff);
         return tariffDto;
     }
-
-/*    @Override
-    @Transactional
-    public Tariff addNew(Tariff tariff, List<Integer> optionsIds) {
-        try {
-//            EMU.beginTransaction();
-            tariff.setPossibleOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
-            tariffDao.create(tariff);
-//            EMU.commit();
-            logger.info("New tariff with options is created. Id = "+tariff.getId());
-            return tariff;
-        } catch (RuntimeException re) {
-//            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-//                EMU.rollback();
-            throw re;
-        } finally {
-//            EMU.closeEntityManager();
-        }
-    }*/
 }
