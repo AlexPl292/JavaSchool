@@ -10,6 +10,7 @@ import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Option;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,7 +52,19 @@ public class OptionLoaderController extends HttpServlet {
         return service.loadAll();
     }
 
-    @RequestMapping(produces="application/json")
+    @RequestMapping("/{optionId}")
+    public OptionDto loadOption(@PathVariable Integer optionId) {
+        EntityGraph<Option> graph = service.getEntityGraph();
+
+        graph.addAttributeNodes("required", "forbidden");
+        Map<String, Object> hints = new HashMap<>();
+        hints.put("javax.persistence.loadgraph", graph);
+
+        return service.loadByKey(optionId, hints);
+    }
+
+
+//    @RequestMapping(produces="application/json")
     public ResponseHelper loadOptions(@RequestParam String loadtype,
                                      @RequestParam(required = false) Integer data,
                                      @RequestParam(required = false) String type,

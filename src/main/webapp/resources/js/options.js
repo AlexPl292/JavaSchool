@@ -166,11 +166,11 @@ function optionCheckedNewTariff(e) {
     var $item = $(this);
     var checked_val = parseInt($(this).val(), 10);
     if ($item.is(':checked')) {
-        $.getJSON("/load_option", {"loadtype": "getDependencies", data: checked_val}, function (response) {
+        $.getJSON("/admin/option/"+checked_val, {}, function (response) {
             var enableItIds = [];
             var enableIt = $();
 
-            $(response.required).each(function (i, obj) {
+            $(response.requiredFrom).each(function (i, obj) {
                 enableIt = $.merge(enableIt, $('#possibleOptions').find("input[value=" + obj.id + "]"));
                 enableItIds.push(obj.id);
             });
