@@ -2,20 +2,18 @@
  * Created by alex on 28.08.16.
  */
 
-function create_boxes(selobjs) {
+function create_boxes(selobj) {
     return function (data) {
-        $.each(selobjs, function (j, selobj) {
-            $(selobj).empty();
-            var checkboxs_name = selobj.attr('id');
-            $.each(data.data, function (i, obj) {
-                $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name, "data-cost":obj.connectCost}));
-                var name = obj.name;
-                if (obj.connectCost !== undefined)
-                    name += ' <p class="text-muted" style="display:inline">('+obj.connectCost+'<i class="fa fa-rub"></i>)</p>';
-                $(selobj).append($("<label/>", {"for": checkboxs_name+i, html:name}));
-                $(selobj).append($("<br/>"));
-            })
-        })
+        $(selobj).empty();
+        var checkboxs_name = selobj.attr('id');
+        $.each(data.data, function (i, obj) {
+            $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name, "data-cost":obj.connectCost}));
+            var name = obj.name;
+            if (obj.connectCost !== undefined)
+                name += ' <p class="text-muted" style="display:inline">('+obj.connectCost+'<i class="fa fa-rub"></i>)</p>';
+            $(selobj).append($("<label/>", {"for": checkboxs_name+i, html:name}));
+            $(selobj).append($("<br/>"));
+        });
     }
 }
 
@@ -221,7 +219,7 @@ function prepare_tariff_list(tariffList, options, selected_val) {
         $.getJSON("/load_option", {
             loadtype: "possibleOfTariff",
             tariff_id: $(this).val()
-        }, create_boxes([$(options)]));
+        }, create_boxes($(options)));
     });
     loadlist($(tariffList), "/load_tariffs", "name", "id", selected_val);
 
@@ -445,15 +443,19 @@ var prepare = {
         var forTariffs = $('#forTariffs');
 
         forTariffs.empty();
-        $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes([forTariffs]));
+        $.getJSON("/load_tariffs", {page:-1, updateCount:false, search:""}, create_boxes(forTariffs));
 
         $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
             e.preventDefault();
             requiredFrom.empty();
             forbiddenWith.empty();
             var data = $("#forTariffs").find("input").serializeArray();
-            data.push({"loadtype": "newOptionDependency"});
-            $.getJSON("/load_option", $.param(data), create_boxes([requiredFrom, forbiddenWith]));
+            // data.push({"loadtype": "newOptionDependency"});
+            data.push({name:"loadtype", value:"newOptionDependency"});
+            $.getJSON("/load_option", $.param(data), function(data) {
+                create_boxes(requiredFrom)(data);
+                create_boxes(forbiddenWith)(data);
+            });
         });
 
         $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
@@ -461,7 +463,7 @@ var prepare = {
     },
     "/admin/add_tariff" : function () {
         $('#possibleOptions').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
-        $.getJSON("/load_options_table", {}, create_boxes([$('#possibleOptions')]));
+        $.getJSON("/admin/option/getAll", {}, create_boxes($('#possibleOptions')));
     }
 };
 $(function () {
