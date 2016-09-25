@@ -122,17 +122,17 @@ function optionChecked(options) {
         var $item = $(this);
         var checked_val = parseInt($(this).val(), 10);
         if ($item.is(':checked')) {
-            $.getJSON("/load_option", {"loadtype": "getDependencies", data: checked_val}, function (response) {
+            $.getJSON("/rest/option/"+checked_val, {}, function (response) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
                 var enableIt = $();
 
-                $(response.required).each(function (i, obj) {
+                $(response.requiredFrom).each(function (i, obj) {
                     enableIt = $.merge(enableIt, $(options).find("input[value=" + obj.id + "]"));
                     enableItIds.push(obj.id);
                 });
-                $(response.forbidden).each(function (i, obj) {
+                $(response.forbiddenWith).each(function (i, obj) {
                     disableIt = $.merge(disableIt, $(options).find("input[value=" + obj.id + "]"));
                     disableItIds.push(obj.id);
                 });
@@ -226,8 +226,8 @@ function optionCheckedNewTariff(e) {
 
 function loadlist(selobj, url, nameattr, valattr, selected_val) {
     $(selobj).empty();
-    $.getJSON(url, {page: -1, updateCount: false, search: ""}, function (data) {
-        $.each(data.data, function (i, obj) {
+    $.getJSON(url, {}, function (data) {
+        $.each(data, function (i, obj) {
             $(selobj).append($("<option></option>").val(obj[valattr]).html(obj[nameattr]));
         });
         if (selected_val !== undefined)
@@ -239,12 +239,9 @@ function loadlist(selobj, url, nameattr, valattr, selected_val) {
 function prepare_tariff_list(tariffList, options, selected_val) {
     $(tariffList).change(function (e) {
         e.preventDefault();
-        $.getJSON("/load_option", {
-            loadtype: "possibleOfTariff",
-            tariff_id: $(this).val()
-        }, create_boxes($(options), $(options).id));
+        $.getJSON("/rest/tariff/"+$(this).val()+'/option', {}, create_boxes($(options), "contracts[usedOptions][][id]"));
     });
-    loadlist($(tariffList), "/load_tariffs", "name", "id", selected_val);
+    loadlist($(tariffList), "/rest/tariff", "name", "id", selected_val);
 
     $(options).on('change', 'input[type=checkbox]', optionChecked(options));
 }
@@ -457,7 +454,7 @@ var prepare = {
             }
         })
     },
-    "/admin/add_customer" : function() {
+    "/admin/new_customer" : function() {
         prepare_tariff_list($('#tariff'), $('#options'));
     },
     "/admin/new_option" : function () {

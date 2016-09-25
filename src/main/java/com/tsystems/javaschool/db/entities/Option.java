@@ -239,19 +239,27 @@ public class Option {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Option that = (Option) o;
+        Option option = (Option) o;
 
-        return id == that.id;
+        if (id != null ? !id.equals(option.id) : option.id != null) return false;
+        if (name != null ? !name.equals(option.name) : option.name != null) return false;
+        if (cost != null ? !cost.equals(option.cost) : option.cost != null) return false;
+        if (connectCost != null ? !connectCost.equals(option.connectCost) : option.connectCost != null) return false;
+        return description != null ? description.equals(option.description) : option.description == null;
+
     }
 
     @Override
     public int hashCode() {
-        return id;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (cost != null ? cost.hashCode() : 0);
+        result = 31 * result + (connectCost != null ? connectCost.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
     }
 
     @Override

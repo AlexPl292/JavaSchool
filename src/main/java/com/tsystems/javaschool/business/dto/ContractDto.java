@@ -36,14 +36,34 @@ public class ContractDto {
     }
 
     public Contract convertContractEntity(TariffDao tariffDao, OptionDao optionDao, CustomerDao customerDao) {
-        Contract contract = new Contract(id, number, customerDao.read(customer.getId()), tariffDao.read(tariff.getId()), isBlocked, balance);
-        contract.setUsedOptions(usedOptions.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
+//        Contract contract = new Contract(id, number, customerDao.read(customer.getId()), tariffDao.read(tariff.getId()), isBlocked, balance);
+        Contract contract = new Contract();
+        contract.setId(id);
+        contract.setNumber(number);
+        contract.setIsBlocked(isBlocked);
+        contract.setBalance(balance);
+        if (customer != null && customer.getId() != null && customerDao != null)
+            contract.setCustomer(customerDao.read(customer.getId()));
+        if (tariff != null && tariff.getId() != null && tariffDao != null)
+            contract.setTariff(tariffDao.read(tariff.getId()));
+        if (usedOptions != null && optionDao != null)
+            contract.setUsedOptions(usedOptions.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
         return contract;
     }
 
     public Contract convertContractEntity() {
-        Contract contract = new Contract(id, number, customer.convertCustomerEntity(), tariff.convertTariffEntity(), isBlocked, balance);
-        contract.setUsedOptions(usedOptions.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
+//        Contract contract = new Contract(id, number, customer.convertCustomerEntity(), tariff.convertTariffEntity(), isBlocked, balance);
+        Contract contract = new Contract();
+        contract.setId(id);
+        contract.setNumber(number);
+        contract.setIsBlocked(isBlocked);
+        contract.setBalance(balance);
+        if (customer != null)
+            contract.setCustomer(customer.convertCustomerEntity());
+        if (tariff != null)
+            contract.setTariff(tariff.convertTariffEntity());
+        if (usedOptions != null)
+            contract.setUsedOptions(usedOptions.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
         return contract;
     }
 

@@ -6,10 +6,7 @@ import com.tsystems.javaschool.util.StatusResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,6 +17,7 @@ import java.util.List;
  * Returns json with either success:true, or success:false and object with errors
  */
 @RestController
+@RequestMapping("/rest/customer")
 public class CustomerRest {
 
     private final transient CustomerService service;

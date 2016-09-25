@@ -106,26 +106,21 @@ public class Tariff {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Tariff that = (Tariff) o;
+        Tariff tariff = (Tariff) o;
 
-        if (!Objects.equals(id, that.id))
-            return false;
-        if (name != null ? !name.equals(that.name) : that.name != null)
-            return false;
-        if (cost != null ? !cost.equals(that.cost) : that.cost != null)
-            return false;
-        return description != null ? description.equals(that.description) : that.description == null;
+        if (id != null ? !id.equals(tariff.id) : tariff.id != null) return false;
+        if (name != null ? !name.equals(tariff.name) : tariff.name != null) return false;
+        if (cost != null ? !cost.equals(tariff.cost) : tariff.cost != null) return false;
+        return description != null ? description.equals(tariff.description) : tariff.description == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (cost != null ? cost.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);

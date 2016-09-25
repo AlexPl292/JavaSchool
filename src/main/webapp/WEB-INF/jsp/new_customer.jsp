@@ -22,6 +22,7 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/metisMenu/js/metisMenu.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
+    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/jquery.serialize-object.min.js"></script>
 
     <script src="<%=application.getContextPath() %>/resources/vendor/formhelpers/js/bootstrap-formhelpers-phone.js"></script>
     <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
@@ -40,7 +41,7 @@
                 <h1 class="page-header">Add new customer</h1>
             </div>
         </div>
-        <form class="form-horizontal" id="add_customer_form" action='add_customer' method="POST">
+        <form class="form-horizontal" id="add_customer_form" action='/rest/customer' method="POST">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -72,14 +73,14 @@
                                         <div class="control-group">
                                             <label class="control-label" for="passport_number">Passport number</label>
                                             <div class="controls">
-                                                <input type="text" id="passport_number" name="passport_number" placeholder="" class="form-control input-xlarge">
+                                                <input type="text" id="passport_number" name="passportNumber" placeholder="" class="form-control input-xlarge">
                                                 <span class="help-block">Enter number without spaces</span>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label" for="passport">Passport data</label>
                                             <div class="controls">
-                                                <textarea id="passport" name="passport" placeholder="" class="form-control textarea-xlarge"></textarea>
+                                                <textarea id="passport" name="passportData" placeholder="" class="form-control textarea-xlarge"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -89,7 +90,7 @@
                                             <label class="control-label" for="birthday">Day of birth</label>
                                             <div class="controls input-group">
                                                 <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
-                                                <input type="date" id="birthday" name="birthday" placeholder="" class="form-control input-xlarge">
+                                                <input type="date" id="birthday" name="dateOfBirth" placeholder="" class="form-control input-xlarge">
                                             </div>
                                             <span class="help-block">New customer should be 18 years of age or older</span>
                                         </div>
@@ -122,7 +123,28 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">New contract data</div>
                         <div class="panel-body">
-                            <c:import url="template_new_contract.jsp"/>
+                            <div class="control-group">
+                                <label class="control-label" for="tariff">Tariff</label>
+                                <div class="controls">
+                                    <select id="tariff" name="contracts[tariff][id]" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="options">Options</label>
+                                <div class="controls">
+                                    <div id="options" class="boxes"></div>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="number">Number</label>
+                                <div class="controls input-group">
+                                    <span class="input-group-addon"><i class="fa fa-phone"></i> </span>
+                                    <input type="text" id="number" name="contracts[number]" placeholder="" class="form-control input-xlarge bfh-phone" data-format="+7 (ddd) ddd-dddd">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

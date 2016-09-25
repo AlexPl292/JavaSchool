@@ -47,7 +47,7 @@
                     <a href="#"><i class="fa fa-group fa-fw"></i> Customers<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/admin/add_customer">Add new customer</a>
+                            <a href="/admin/new_customer">Add new customer</a>
                         </li>
                         <li>
                             <a href="/admin/customers">Show all customers</a>

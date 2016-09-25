@@ -2,9 +2,11 @@ package com.tsystems.javaschool.business.services.implementations;
 
 import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
+import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
-import com.tsystems.javaschool.db.interfaces.ContractDao;
 import com.tsystems.javaschool.db.interfaces.CustomerDao;
+import com.tsystems.javaschool.db.interfaces.OptionDao;
+import com.tsystems.javaschool.db.interfaces.TariffDao;
 import com.tsystems.javaschool.util.Email;
 import com.tsystems.javaschool.util.PassGen;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -14,10 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityGraph;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by alex on 17.08.16.
@@ -27,13 +28,15 @@ import java.util.Map;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerDao customerDao;
-    private final ContractDao contractDao;
+    private final TariffDao tariffDao;
+    private final OptionDao optionDao;
     private static final Logger logger = Logger.getLogger(CustomerServiceImpl.class);
 
     @Autowired
-    public CustomerServiceImpl(CustomerDao customerDao, ContractDao contractDao) {
+    public CustomerServiceImpl(CustomerDao customerDao, TariffDao tariffDao, OptionDao optionDao) {
         this.customerDao = customerDao;
-        this.contractDao = contractDao;
+        this.tariffDao = tariffDao;
+        this.optionDao = optionDao;
     }
 
     @Override
@@ -42,7 +45,17 @@ public class CustomerServiceImpl implements CustomerService {
         Пароль НЕ должен быть введен сотрудником.
         Будем его вручную генерировать, а потом посылать с помощью email или sms
          */
-        Customer customer = customerDto.convertCustomerEntity(contractDao);
+        Customer customer = customerDto.convertCustomerEntity();
+        Contract contract = customerDto.getContracts().get(0).convertContractEntity(tariffDao, optionDao, customerDao);
+        contract.setCustomer(customer);
+        contract.setBalance(new BigDecimal("100.00"));
+        contract.setIsBlocked(0);
+
+        Set<Contract> contracts = new HashSet<>();
+        contracts.add(contract);
+        customer.setContracts(contracts);
+
+
         String password = new PassGen(10).nextPassword();
         String hashed = DigestUtils.sha256Hex(password);
         String salt = new PassGen(8).nextPassword();

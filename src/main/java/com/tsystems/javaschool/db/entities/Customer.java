@@ -35,9 +35,9 @@ public class Customer extends User{
 
     @Column(name = "is_blocked")
     @Expose
-    private int isBlocked;
+    private Integer isBlocked;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<Contract> contracts;
 
     /**
@@ -91,11 +91,11 @@ public class Customer extends User{
         this.address = address;
     }
 
-    public int getIsBlocked() {
+    public Integer getIsBlocked() {
         return isBlocked;
     }
 
-    public void setIsBlocked(int isBlocked) {
+    public void setIsBlocked(Integer isBlocked) {
         this.isBlocked = isBlocked;
     }
 
