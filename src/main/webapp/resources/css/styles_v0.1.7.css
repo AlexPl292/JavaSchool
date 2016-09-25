@@ -26,3 +26,7 @@ textarea {
 tr.clickableRow {
     cursor: pointer;
 }
+
+.wrapper li {
+    cursor: pointer;
+}

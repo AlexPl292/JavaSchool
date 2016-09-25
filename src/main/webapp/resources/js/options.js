@@ -454,10 +454,10 @@ var prepare = {
             }
         })
     },
-    "/admin/new_customer" : function() {
+    "new_customer" : function() {
         prepare_tariff_list($('#tariff'), $('#options'));
     },
-    "/admin/new_option" : function () {
+    "new_option" : function () {
         var requiredFrom = $("#requiredFrom");
         var forbiddenWith = $("#forbiddenWith");
         var forTariffs = $('#forTariffs');
@@ -479,7 +479,7 @@ var prepare = {
         $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
         $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));
     },
-    "/admin/new_tariff" : function () {
+    "new_tariff" : function () {
         $('#possibleOptions').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
         $.getJSON("/rest/option", {}, create_boxes($('#possibleOptions'), "possibleOptions[][id]"));
     }

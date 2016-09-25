@@ -25,7 +25,7 @@
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/font-awesome/css/font-awesome.min.css">
 
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.6.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.7.css">
 
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/jquery/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -85,14 +85,6 @@
 
 <div class="wrapper">
     <c:set var="isCustomer" value="${\"customer\".equals(sessionScope.user)}"/>
-    <c:choose>
-        <c:when test="${isCustomer}">
-            <c:import url="/WEB-INF/jsp/template_customer_version.jsp"/>
-        </c:when>
-        <c:otherwise>
-            <c:import url="/WEB-INF/jsp/template.jsp"/>
-        </c:otherwise>
-    </c:choose>
     <div id="page-wrapper" style="min-height: 939px;">
         <div class="container">
             <div class="row">
