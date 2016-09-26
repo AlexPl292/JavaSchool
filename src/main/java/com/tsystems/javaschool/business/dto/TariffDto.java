@@ -41,23 +41,23 @@ public class TariffDto {
     }
 
     public void setDependencies(Tariff tariff) {
-        possibleOptions = tariff.getPossibleOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
+        if (tariff != null && tariff.getPossibleOptions() != null)
+            possibleOptions = tariff.getPossibleOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
     }
 
     public Tariff convertTariffEntity(OptionDao dao) {
         Tariff tariff = new Tariff(id, name, cost, description);
-        tariff.setPossibleOptions(possibleOptions.stream().map(e -> dao.read(e.getId())).collect(Collectors.toSet()));
+        if (dao != null && possibleOptions != null)
+            tariff.setPossibleOptions(possibleOptions.stream().map(e -> dao.read(e.getId())).collect(Collectors.toSet()));
         return tariff;
     }
 
     public Tariff convertTariffEntity() {
-        return new Tariff(id, name, cost, description);
+        Tariff tariff = new Tariff(id, name, cost, description);
+        if (possibleOptions != null)
+            tariff.setPossibleOptions(possibleOptions.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
+        return tariff;
     }
-
-    public Tariff getTariffEntityNoDependencies() {
-        return new Tariff(id, name, cost, description);
-    }
-
 
     public Integer getId() {
         return id;

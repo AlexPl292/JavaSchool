@@ -49,7 +49,8 @@ public class CustomerDto {
         customer.setPassword(password);
         customer.setSalt(salt);
         customer.setAddress(address);
-        customer.setContracts(contracts.stream().map(ContractDto::convertContractEntity).collect(Collectors.toSet()));
+        if (contracts != null)
+            customer.setContracts(contracts.stream().map(ContractDto::convertContractEntity).collect(Collectors.toSet()));
         return customer;
     }
 
@@ -60,12 +61,14 @@ public class CustomerDto {
         customer.setPassword(password);
         customer.setSalt(salt);
         customer.setAddress(address);
-        customer.setContracts(contracts.stream().map(e -> contractDao.read(e.getId())).collect(Collectors.toSet()));
+        if (contracts != null && contractDao != null)
+            customer.setContracts(contracts.stream().map(e -> contractDao.read(e.getId())).collect(Collectors.toSet()));
         return customer;
     }
 
     public void setDependencies(Customer customer) {
-        this.contracts = customer.getContracts().stream().map(ContractDto::new).collect(Collectors.toList());
+        if (customer != null && customer.getContracts() != null)
+            this.contracts = customer.getContracts().stream().map(ContractDto::new).collect(Collectors.toList());
     }
 
     public Integer getId() {

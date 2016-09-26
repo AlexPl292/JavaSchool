@@ -68,7 +68,8 @@ public class ContractDto {
     }
 
     public void setDependencies(Contract contract) {
-        this.usedOptions = contract.getUsedOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
+        if (contract != null && contract.getUsedOptions() != null)
+            this.usedOptions = contract.getUsedOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
     }
 
     public String getNumber() {

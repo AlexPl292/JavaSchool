@@ -52,28 +52,47 @@ public class OptionDto {
     }
 
     public void setDependencies(Option option) {
-        requiredFrom = option.getRequired().stream().map(OptionDto::new).collect(Collectors.toSet());
-        requiredMe = option.getRequiredMe().stream().map(OptionDto::new).collect(Collectors.toSet());
-        forbiddenWith = option.getForbidden().stream().map(OptionDto::new).collect(Collectors.toSet());
-        possibleTariffsOfOption = option.getPossibleTariffsOfOption().stream().map(TariffDto::new).collect(Collectors.toSet());
+        if (option != null) {
+            if (option.getRequired() != null)
+                requiredFrom = option.getRequired().stream().map(OptionDto::new).collect(Collectors.toSet());
+            if (option.getRequiredMe() != null)
+                requiredMe = option.getRequiredMe().stream().map(OptionDto::new).collect(Collectors.toSet());
+            if (option.getForbidden() != null)
+                forbiddenWith = option.getForbidden().stream().map(OptionDto::new).collect(Collectors.toSet());
+            if (option.getPossibleTariffsOfOption() != null)
+                possibleTariffsOfOption = option.getPossibleTariffsOfOption().stream().map(TariffDto::new).collect(Collectors.toSet());
+        }
     }
 
 
     public Option convertToOptionEntity(OptionDao optionDao, TariffDao tariffDao) {
         Option option = new Option(id, name, cost, connectCost, description);
-        option.setRequired(requiredFrom.stream().map(OptionDto::getId).filter(Objects::nonNull).map(optionDao::read).collect(Collectors.toSet()));
-        option.setRequiredMe(requiredMe.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
-        option.setForbidden(forbiddenWith.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
-        option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(e -> tariffDao.read(e.getId())).collect(Collectors.toSet()));
+
+        if (optionDao != null) {
+            if (requiredFrom != null)
+                option.setRequired(requiredFrom.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
+            if (requiredMe != null)
+                option.setRequiredMe(requiredMe.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
+            if (forbiddenWith != null)
+                option.setForbidden(forbiddenWith.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
+        }
+        if (tariffDao != null) {
+            if (possibleTariffsOfOption != null)
+                option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(e -> tariffDao.read(e.getId())).collect(Collectors.toSet()));
+        }
         return option;
     }
 
     public Option convertToOptionEntity() {
         Option option = new Option(id, name, cost, connectCost, description);
-        option.setRequired(requiredFrom.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
-        option.setRequiredMe(requiredMe.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
-        option.setForbidden(forbiddenWith.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
-        option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(TariffDto::convertTariffEntity).collect(Collectors.toSet()));
+        if (requiredFrom != null)
+            option.setRequired(requiredFrom.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
+        if (requiredMe != null)
+            option.setRequiredMe(requiredMe.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
+        if (forbiddenWith != null)
+            option.setForbidden(forbiddenWith.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
+        if (possibleTariffsOfOption != null)
+            option.setPossibleTariffsOfOption(possibleTariffsOfOption.stream().map(TariffDto::convertTariffEntity).collect(Collectors.toSet()));
         return option;
     }
 
