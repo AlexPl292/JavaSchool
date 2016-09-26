@@ -141,7 +141,11 @@
     });
 
     function loadpage(page) {
-        var element = $('#side-menu').find('#'+page+"_menu");
+        var $sidemenu = $('#side-menu');
+        var currentPage = Cookies.get("currentPage");
+        $sidemenu.find('#'+currentPage+"_menu").removeClass("active");
+
+        var element = $sidemenu.find('#'+page+"_menu");
         $(element).closest('ul').addClass('in').attr('aria-expanded', true);
         $(element).addClass("active");
         Cookies.set("currentPage", page, {expires: 1});
