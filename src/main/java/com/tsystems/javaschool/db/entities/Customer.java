@@ -41,26 +41,6 @@ public class Customer extends User{
     private Set<Contract> contracts;
 
     /**
-     * Constructor with only important data
-     * Used in Dao select queries
-     * @param id id of new entity
-     * @param name name of new entity
-     * @param surname surname of new entity
-     * @param email email of new entity
-     * @param isBlocked is this customer blocked or not
-     * @param passportNumber number of passport of new customer. Must be unique for every customer
-     */
-    public Customer(Integer id, String name, String surname, String email, int isBlocked, String passportNumber) {
-        this.setId(id);
-        this.setName(name);
-        this.setSurname(surname);
-        this.setEmail(email);
-        this.isBlocked = isBlocked;
-        this.passportNumber = passportNumber;
-    }
-
-
-    /**
      * Empty constructor
      */
     public Customer() {

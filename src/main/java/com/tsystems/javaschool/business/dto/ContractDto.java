@@ -31,8 +31,10 @@ public class ContractDto {
         this.number = contract.getNumber();
         this.isBlocked = contract.getIsBlocked();
         this.balance = contract.getBalance();
-        this.customer = new CustomerDto(contract.getCustomer());
-        this.tariff = new TariffDto(contract.getTariff());
+        if (contract.getCustomer() != null)
+            this.customer = new CustomerDto(contract.getCustomer());
+        if (contract.getTariff() != null)
+            this.tariff = new TariffDto(contract.getTariff());
     }
 
     public Contract convertContractEntity(TariffDao tariffDao, OptionDao optionDao, CustomerDao customerDao) {

@@ -21,8 +21,6 @@ public class CustomerDto {
     private String passportData;
     private String address;
     private String email;
-    private String password;
-    private String salt;
     private int isBlocked;
     private List<ContractDto> contracts = new ArrayList<>();
 
@@ -43,11 +41,15 @@ public class CustomerDto {
     }
 
     public Customer convertCustomerEntity() {
-        Customer customer = new Customer(id, name, surname, email, isBlocked, passportNumber);
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setName(name);
+        customer.setSurname(surname);
+        customer.setEmail(email);
+        customer.setIsBlocked(isBlocked);
+        customer.setPassportNumber(passportNumber);
         customer.setPassportData(passportData);
         customer.setDateOfBirth(dateOfBirth);
-        customer.setPassword(password);
-        customer.setSalt(salt);
         customer.setAddress(address);
         if (contracts != null)
             customer.setContracts(contracts.stream().map(ContractDto::convertContractEntity).collect(Collectors.toSet()));
@@ -55,11 +57,15 @@ public class CustomerDto {
     }
 
     public Customer convertCustomerEntity(ContractDao contractDao) {
-        Customer customer = new Customer(id, name, surname, email, isBlocked, passportNumber);
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setName(name);
+        customer.setSurname(surname);
+        customer.setEmail(email);
+        customer.setIsBlocked(isBlocked);
+        customer.setPassportNumber(passportNumber);
         customer.setPassportData(passportData);
         customer.setDateOfBirth(dateOfBirth);
-        customer.setPassword(password);
-        customer.setSalt(salt);
         customer.setAddress(address);
         if (contracts != null && contractDao != null)
             customer.setContracts(contracts.stream().map(e -> contractDao.read(e.getId())).collect(Collectors.toSet()));
@@ -133,22 +139,6 @@ public class CustomerDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public int getIsBlocked() {
