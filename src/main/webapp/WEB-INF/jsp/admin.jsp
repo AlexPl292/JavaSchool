@@ -116,7 +116,7 @@
                             <a href="#"><i class="fa fa-credit-card fa-fw"></i> Contracts<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="/admin/contracts">Show all contracts</a>
+                                    <a id="contract_menu" onclick="loadpage('contract')">Show all contracts</a>
                                 </li>
                             </ul>
                         </li>
@@ -225,6 +225,34 @@
                     {title:"Name", data:"name"},
                     {title:"Cost", data:"cost", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')},
                     {title:"Description", data:"description"}
+                ]
+            })
+        },
+        "contract" : function($page_wrapper) {
+            var link = document.querySelector('link[href$="pieces.html"]');
+            var content = link.import.querySelector('#piece_table');
+            $page_wrapper.append(content.cloneNode(true));
+            $page_wrapper.find('h1').text('Contracts');
+            $page_wrapper.find('div.panel-heading').text('Show all contracts');
+
+            $('#content_table').DataTable({
+                ajax:{
+                    url:"/rest/contract",
+                    dataSrc: ''
+                },
+                order: [[0, 'asc']],
+                columns: [
+                    {title:"Number", data:"number", render:function (data, type, row) {
+                        if (type === "filter") {
+                            return data.replace(/[^\/\d]/g,'');
+                        }
+                        return data;
+                    }},
+                    {title:"Customer", data:"customer", render:function (data, type, row) {
+                        return data.surname + ' ' + data.name
+                    }},
+                    {title:"Tariff", data:"tariff", render:"name"},
+                    {title:"Balance", data:"balance", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')}
                 ]
             })
         },
