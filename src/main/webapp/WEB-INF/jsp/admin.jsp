@@ -173,8 +173,8 @@
                     {title:"Name", data:null, render:function (data, type, row) { return data.surname + ' ' + data.name}},
                     {title:"Date ob birth", data:"dateOfBirth", render:function (data, type, row) {
                         if ( type === 'display' || type === 'filter' ) {
-                            var d = new Date( data * 1000 );
-                            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear();
+                            var d = new Date( data);
+                            return ('0'+d.getDate()).slice(-2) +'-'+ ('0'+d.getMonth()+1).slice(-2) +'-'+ d.getFullYear();
                         }
 
                         // Otherwise the data type requested (`type`) is type detection or
@@ -202,8 +202,8 @@
                 order: [[0, 'asc']],
                 columns: [
                     {title:"Name", data:"name"},
-                    {title:"Cost", data:"cost"},
-                    {title:"Connection cost", data:"connectCost"},
+                    {title:"Cost", data:"cost", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')},
+                    {title:"Connection cost", data:"connectCost", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')},
                     {title:"Description", data:"description"}
                 ]
             })
@@ -223,7 +223,7 @@
                 order: [[0, 'asc']],
                 columns: [
                     {title:"Name", data:"name"},
-                    {title:"Cost", data:"cost"},
+                    {title:"Cost", data:"cost", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')},
                     {title:"Description", data:"description"}
                 ]
             })
