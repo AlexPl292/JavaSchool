@@ -156,6 +156,8 @@
             var link = document.querySelector('link[href$="pieces.html"]');
             var content = link.import.querySelector('#piece_table');
             $page_wrapper.append(content.cloneNode(true));
+            $page_wrapper.find('h1').text('Customers');
+            $page_wrapper.find('div.panel-heading').text('Show all customers');
 
             $('#content_table').DataTable({
                 ajax:{
@@ -185,6 +187,8 @@
             var link = document.querySelector('link[href$="pieces.html"]');
             var content = link.import.querySelector('#piece_table');
             $page_wrapper.append(content.cloneNode(true));
+            $page_wrapper.find('h1').text('Options');
+            $page_wrapper.find('div.panel-heading').text('Show all options');
 
             $('#content_table').DataTable({
                 ajax:{
@@ -204,6 +208,8 @@
             var link = document.querySelector('link[href$="pieces.html"]');
             var content = link.import.querySelector('#piece_table');
             $page_wrapper.append(content.cloneNode(true));
+            $page_wrapper.find('h1').text('Tariffs');
+            $page_wrapper.find('div.panel-heading').text('Show all tariffs');
 
             $('#content_table').DataTable({
                 ajax:{
