@@ -10,6 +10,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <link rel="import" href="${pageContext.request.contextPath}/resources/public/pieces.html">
+
     <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA8oQPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREREQAAAAABAQEBAAAAAAEREREAAAAAAQEBAQAAAAABERERAAAAAAEBAQEAAAAAAQEBAQAAAAABERERAAAAAAEREREAAAAAAQAAAQAAAAABAAABAAAAAAEAAAEAAAAAAREREQAAAAABERERAAAAAAAAARAAAAAAAAABEAAADwHwAA9V8AAPAfAAD1XwAA8B8AAPVfAAD1XwAA8B8AAPAfAAD33wAA998AAPffAADwHwAA8B8AAP8/AAD/PwAA" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/metisMenu/css/metisMenu.min.css">
@@ -27,11 +30,10 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/js.cookie.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/datatable/datatables.min.js"></script>
 
-    <script src="<%=application.getContextPath() %>/resources/vendor/formhelpers/js/bootstrap-formhelpers-phone.js"></script>
     <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/vendor/formhelpers/js/bootstrap-formhelpers-phone.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
-    <script src="<%=application.getContextPath() %>/resources/js/customer_validate_rules.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
     <title>New customer</title>
 </head>
@@ -79,7 +81,7 @@
                                     <a id="new_customer_menu" onclick="loadpage('new_customer')">Add new customer</a>
                                 </li>
                                 <li>
-                                    <a href="/admin/customers">Show all customers</a>
+                                    <a id="customer_menu" onclick="loadpage('customer')">Show all customers</a>
                                 </li>
                             </ul>
                         </li>
@@ -144,15 +146,46 @@
         $(element).addClass("active");
         Cookies.set("currentPage", page, {expires: 1});
         var $page_wrapper = $('#page-wrapper');
+        $page_wrapper.empty();
 
-        $.get("/resources/public/" + page + ".html", {}, function (res) {
-            $page_wrapper.html(res);
-            prepare[page]();
-        })
+        prepare[page]($page_wrapper);
     }
 
     var prepare = {
-        "option" : function() {
+        "customer" : function($page_wrapper) {
+            var link = document.querySelector('link[href$="pieces.html"]');
+            var content = link.import.querySelector('#piece_table');
+            $page_wrapper.append(content.cloneNode(true));
+
+            $('#content_table').DataTable({
+                ajax:{
+                    url:"/rest/customer",
+                    dataSrc: ''
+                },
+                order: [[0, 'asc']],
+                columns: [
+                    {title:"Name", data:null, render:function (data, type, row) { return data.surname + ' ' + data.name}},
+                    {title:"Date ob birth", data:"dateOfBirth", render:function (data, type, row) {
+                        if ( type === 'display' || type === 'filter' ) {
+                            var d = new Date( data * 1000 );
+                            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear();
+                        }
+
+                        // Otherwise the data type requested (`type`) is type detection or
+                        // sorting data, for which we want to use the integer, so just return
+                        // that, unaltered
+                        return data;
+                    }},
+                    {title:"Passport number", data:"passportNumber"},
+                    {title:"Email", data:"email"}
+                ]
+            })
+        },
+        "option" : function($page_wrapper) {
+            var link = document.querySelector('link[href$="pieces.html"]');
+            var content = link.import.querySelector('#piece_table');
+            $page_wrapper.append(content.cloneNode(true));
+
             $('#content_table').DataTable({
                 ajax:{
                     url:"/rest/option",
@@ -163,11 +196,15 @@
                     {title:"Name", data:"name"},
                     {title:"Cost", data:"cost"},
                     {title:"Connection cost", data:"connectCost"},
-                    {title:"Description", data:"description"},
+                    {title:"Description", data:"description"}
                 ]
             })
         },
-        "tariff" : function() {
+        "tariff" : function($page_wrapper) {
+            var link = document.querySelector('link[href$="pieces.html"]');
+            var content = link.import.querySelector('#piece_table');
+            $page_wrapper.append(content.cloneNode(true));
+
             $('#content_table').DataTable({
                 ajax:{
                     url:"/rest/tariff",
@@ -177,83 +214,108 @@
                 columns: [
                     {title:"Name", data:"name"},
                     {title:"Cost", data:"cost"},
-                    {title:"Description", data:"description"},
+                    {title:"Description", data:"description"}
                 ]
             })
         },
-        "/customer" : function () {
-            prepare_tariff_list($('#tariff'), $('#options'));
+        "new_contract" : function ($page_wrapper) {
+            var link = document.querySelector('link[href$="pieces.html"]');
+            var content = link.import.querySelector('#piece_new_contract');
+            $page_wrapper.append(content.cloneNode(true));
 
-            $("#accordion").on("click", "ul[role='menu'] a", function (e) {
-                e.preventDefault();
-                if ($(this).find('p').hasClass("text-muted")) {
-                    return false;
-                }
-                var $panel = $(this).closest('.panel');
-                var id = $panel.find('input[type=hidden]').val();
-                var href = $(this).attr("href");
-                var $obj = $(this);
-
-                if (href === "/delete_contract") {
-                    $.post("/customer"+href, {id: id}, function () {
-                        $panel.remove();
-                    })
-                } else if (href === "/blockContract") {
-                    $.post("/customer"+href, {id: id}, function () {
-                        $panel.removeClass("panel-default").addClass("panel-red");
-                        $obj.attr("href", "/unblockContract").text("Unblock");
-                        $panel.find(":contains('Edit')").addClass("text-muted");
-                    });
-                } else if (href === "/unblockContract") {
-                    $.post("/customer"+href, {id: id}, function () {
-                        $panel.removeClass("panel-red").addClass("panel-default");
-                        $obj.attr("href", "/blockContract").text("Block");
-                        $panel.find(":contains('Edit')").removeClass("text-muted");
-                    });
-                } else if (href === "/editTariff") {
-                    edit_tariff($panel)
-                }
+            $('form#add_contract_form').validate({
+                rules: {
+                    number: {
+                        required: true,
+                        phone: true
+                    }
+                },
+                messages: {
+                    number: {
+                        required: "Please enter phone number",
+                        phone: "Wrong phone number format"
+                    }
+                },
+                submitHandler: submitting(create_accordion_node)
             })
         },
-        "/admin/customer" : function() {
-            prepare_tariff_list($('#tariff'), $('#options'));
+        "new_customer" : function($page_wrapper) {
+            var link = document.querySelector('link[href$="pieces.html"]');
+            var content = link.import.querySelector('#piece_new_customer');
+            $page_wrapper.append(content.cloneNode(true));
 
+            $('form input[type="text"].bfh-phone, form input[type="tel"].bfh-phone, span.bfh-phone').each(function () {
+                var $phone;
 
-            $("#accordion").on("click", "ul[role='menu'] a", function (e) {
-                e.preventDefault();
-                if ($(this).find('p').hasClass("text-muted")) {
-                    return false;
-                }
-                var $panel = $(this).closest('.panel');
-                var id = $panel.find('input[type=hidden]').val();
-                var href = $(this).attr("href");
-                var $obj = $(this);
+                $phone = $(this);
 
-                if (href === "/delete_contract") {
-                    $.post("/admin"+href, {id: id}, function () {
-                        $panel.remove();
-                    })
-                } else if (href === "/blockContract") {
-                    $.post("/admin"+href, {id: id}, function () {
-                        $panel.removeClass("panel-default").addClass("panel-red");
-                        $obj.attr("href", "/admin/unblockContract").text("Unblock");
-                        $panel.find(":contains('Edit')").addClass("text-muted");
-                    });
-                } else if (href === "/unblockContract") {
-                    $.post("/admin"+href, {id: id}, function () {
-                        $panel.removeClass("panel-red").addClass("panel-default");
-                        $obj.attr("href", "/admin/blockContract").text("Block");
-                        $panel.find(":contains('Edit')").removeClass("text-muted");
-                    });
-                } else if (href === "/editTariff") {
-                    edit_tariff($panel)
+                $phone.bfhphone($phone.data());
+            });
+
+            $('form#add_customer_form').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        no_spaces: true
+                    },
+                    surname: {
+                        required: true,
+                        no_spaces: true
+                    },
+                    passport_number: {
+                        required: true,
+                        no_spaces: true
+                    },
+                    birthday: {
+                        required: true,
+                        date: true,
+                        dateAb18: true
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    number: {
+                        required: true,
+                        phone: true
+                    },
+                    options: "required"
+                },
+                messages: {
+                    name: {
+                        required: 'Please enter name',
+                        no_spaces: 'Name should not contain spaces'
+                    },
+                    surname: {
+                        required: 'Please enter surname',
+                        no_spaces: 'Surname should not contain spaces'
+                    },
+                    passport_number: {
+                        required: 'Please enter passport number',
+                        no_spaces: "Passport number shouldn't contain spaces"
+                    },
+                    birthday: {
+                        required: "Please enter date of birth",
+                        dateAb18: "New customer should be 18 years of age or older"
+                    },
+                    email: {
+                        required: "Please enter email",
+                        email: "Email is invalid"
+                    },
+                    number: {
+                        required: "Please enter phone number",
+                        phone: "Wrong phone number format"
+                    },
+                    options: "Choose options"
                 }
             })
-        },
-        "new_customer" : function() {
             prepare_tariff_list($('#tariff'), $('#options'));
         },
-        "new_option" : function () {
+        "new_option" : function ($page_wrapper) {
+            var link = document.querySelector('link[href$="pieces.html"]');
+            var content = link.import.querySelector('#piece_new_option');
+            $page_wrapper.append(content.cloneNode(true));
+
             var requiredFrom = $("#requiredFrom");
             var forbiddenWith = $("#forbiddenWith");
             var forTariffs = $('#forTariffs');
@@ -274,11 +336,126 @@
 
             $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
             $(forbiddenWith).on('change', 'input[type=checkbox]', check_item("forbidden"));
+            $('form#add_option_form').validate({
+                rules: {
+                    name: "required",
+                    cost: {
+                        required: true,
+                        money: true
+                    },
+                    connect_cost: {
+                        required: true,
+                        money: true
+                    },
+                    forTariffs: "required"
+                },
+                messages: {
+                    name: 'Please enter name',
+                    cost: {
+                        required: 'Please enter cost',
+                        money: "Wrong money format"
+                    },
+                    connect_cost: {
+                        required: 'Please enter connection cost',
+                        money: "Wrong money format"
+                    },
+                    forTariffs: "You need to choose at least one tariff"
+                }
+            })
         },
-        "new_tariff" : function () {
+        "new_tariff" : function ($page_wrapper) {
+            var link = document.querySelector('link[href$="pieces.html"]');
+            var content = link.import.querySelector('#piece_new_tariff');
+            $page_wrapper.append(content.cloneNode(true));
+
             $('#possibleOptions').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
             $.getJSON("/rest/option", {}, create_boxes($('#possibleOptions'), "possibleOptions[][id]"));
+            $('form#add_tariff_form').validate({
+                rules: {
+                    name: "required",
+                    cost: {
+                        required: true,
+                        money: true
+                    }
+                },
+                messages: {
+                    name: 'Please enter name',
+                    cost: {
+                        required: 'Please enter cost',
+                        money: "Wrong money format"
+                    }
+                }
+            })
         }
+        /*        "/customer" : function () {
+         prepare_tariff_list($('#tariff'), $('#options'));
+
+         $("#accordion").on("click", "ul[role='menu'] a", function (e) {
+         e.preventDefault();
+         if ($(this).find('p').hasClass("text-muted")) {
+         return false;
+         }
+         var $panel = $(this).closest('.panel');
+         var id = $panel.find('input[type=hidden]').val();
+         var href = $(this).attr("href");
+         var $obj = $(this);
+
+         if (href === "/delete_contract") {
+         $.post("/customer"+href, {id: id}, function () {
+         $panel.remove();
+         })
+         } else if (href === "/blockContract") {
+         $.post("/customer"+href, {id: id}, function () {
+         $panel.removeClass("panel-default").addClass("panel-red");
+         $obj.attr("href", "/unblockContract").text("Unblock");
+         $panel.find(":contains('Edit')").addClass("text-muted");
+         });
+         } else if (href === "/unblockContract") {
+         $.post("/customer"+href, {id: id}, function () {
+         $panel.removeClass("panel-red").addClass("panel-default");
+         $obj.attr("href", "/blockContract").text("Block");
+         $panel.find(":contains('Edit')").removeClass("text-muted");
+         });
+         } else if (href === "/editTariff") {
+         edit_tariff($panel)
+         }
+         })
+         },
+         "/admin/customer" : function() {
+         prepare_tariff_list($('#tariff'), $('#options'));
+
+
+         $("#accordion").on("click", "ul[role='menu'] a", function (e) {
+         e.preventDefault();
+         if ($(this).find('p').hasClass("text-muted")) {
+         return false;
+         }
+         var $panel = $(this).closest('.panel');
+         var id = $panel.find('input[type=hidden]').val();
+         var href = $(this).attr("href");
+         var $obj = $(this);
+
+         if (href === "/delete_contract") {
+         $.post("/admin"+href, {id: id}, function () {
+         $panel.remove();
+         })
+         } else if (href === "/blockContract") {
+         $.post("/admin"+href, {id: id}, function () {
+         $panel.removeClass("panel-default").addClass("panel-red");
+         $obj.attr("href", "/admin/unblockContract").text("Unblock");
+         $panel.find(":contains('Edit')").addClass("text-muted");
+         });
+         } else if (href === "/unblockContract") {
+         $.post("/admin"+href, {id: id}, function () {
+         $panel.removeClass("panel-red").addClass("panel-default");
+         $obj.attr("href", "/admin/blockContract").text("Block");
+         $panel.find(":contains('Edit')").removeClass("text-muted");
+         });
+         } else if (href === "/editTariff") {
+         edit_tariff($panel)
+         }
+         })
+         },*/
     };
 </script>
 

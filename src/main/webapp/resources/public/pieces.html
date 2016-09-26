@@ -1,0 +1,319 @@
+<div id="piece_new_customer">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Add new customer</h1>
+        </div>
+    </div>
+    <form class="form-horizontal" id="add_customer_form" action='/rest/customer' method="POST">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">New customer data</div>
+                    <div class="panel-body">
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="control-group">
+                                        <label class="control-label" for="name">Name</label>
+                                        <div class="controls">
+                                            <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge startsUppercase">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="control-group">
+                                        <label class="control-label" for="surname">Surname</label>
+                                        <div class="controls">
+                                            <input type="text" id="surname" name="surname" placeholder="" class="form-control input-xlarge startsUppercase">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="control-group">
+                                        <label class="control-label" for="passport_number">Passport number</label>
+                                        <div class="controls">
+                                            <input type="text" id="passport_number" name="passportNumber" placeholder="" class="form-control input-xlarge">
+                                            <span class="help-block">Enter number without spaces</span>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="passport">Passport data</label>
+                                        <div class="controls">
+                                            <textarea id="passport" name="passportData" placeholder="" class="form-control textarea-xlarge"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="control-group">
+                                        <label class="control-label" for="birthday">Day of birth</label>
+                                        <div class="controls input-group">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+                                            <input type="date" id="birthday" name="dateOfBirth" placeholder="" class="form-control input-xlarge">
+                                        </div>
+                                        <span class="help-block">New customer should be 18 years of age or older</span>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <label class="control-label" for="address">Address</label>
+                                        <div class="controls">
+                                            <textarea id="address" name="address" placeholder="" class="form-control textarea-xlarge"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <!-- E-mail -->
+                                <label class="control-label" for="email">E-mail</label>
+                                <div class="controls input-group">
+                                    <span class="input-group-addon"><i class="fa fa-at"></i> </span>
+                                    <input type="email" id="email" name="email" placeholder="" class="form-control input-xlarge">
+                                    <span id="validEmail"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">New contract data</div>
+                    <div class="panel-body">
+                        <div class="control-group">
+                            <label class="control-label" for="tariff">Tariff</label>
+                            <div class="controls">
+                                <select id="tariff" name="contracts[tariff][id]" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="options">Options</label>
+                            <div class="controls">
+                                <div id="options" class="boxes"></div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="number">Number</label>
+                            <div class="controls input-group">
+                                <span class="input-group-addon"><i class="fa fa-phone"></i> </span>
+                                <input type="text" id="number" name="contracts[number]" placeholder="" class="form-control input-xlarge bfh-phone" data-format="+7 (ddd) ddd-dddd">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <!-- Button -->
+                        <div class="controls">
+                            <input type="submit" class="btn btn-success"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="piece_new_tariff">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Add new tariff</h1>
+        </div>
+    </div>
+    <form class="form-horizontal" id="add_tariff_form" action='/rest/tariff' method="POST">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">New tariff data</div>
+                    <div class="panel-body">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="name">Name</label>
+                                <div class="controls">
+                                    <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="cost">Cost</label>
+                                <div class="controls input-group">
+                                    <span class="input-group-addon"><i class="fa fa-rub"></i> </span>
+                                    <input type="text" id="cost" name="cost" placeholder="" class="form-control input-xlarge">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="description">Description</label>
+                                <div class="controls">
+                                    <textarea id="description" name="description" placeholder="" class="form-control textarea-xlarge"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">New tariff data</div>
+                    <div class="panel-body">
+                        <div class="control-group">
+                            <label class="control-label" for="possibleOptions">Options</label>
+                            <div class="controls">
+                                <div id="possibleOptions" class="boxes"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="panel-body">
+                            <!-- Button -->
+                            <div class="controls">
+                                <input type="submit" class="btn btn-success"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="piece_new_option">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Add new option</h1>
+        </div>
+    </div>
+    <form class="form-horizontal" id="add_option_form" action="/rest/option" method="POST">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">New option data</div>
+                    <div class="panel-body">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="name">Name</label>
+                                <div class="controls">
+                                    <input type="text" id="name" name="name" placeholder="" class="form-control input-xlarge">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="cost">Cost</label>
+                                <div class="controls input-group">
+                                    <span class="input-group-addon"><i class="fa fa-rub"></i> </span>
+                                    <input type="text" id="cost" name="cost" placeholder="" class="form-control input-xlarge">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="connect_cost">Connection cost</label>
+                                <div class="controls input-group">
+                                    <span class="input-group-addon"><i class="fa fa-rub"></i> </span>
+                                    <input type="text" id="connect_cost" name="connectCost" placeholder="" class="form-control input-xlarge">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="description">Description</label>
+                                <div class="controls">
+                                    <textarea id="description" name="description" placeholder="" class="form-control textarea-xlarge"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <!--<input type="hidden" name="tariff_list"/>-->
+                <div class="panel panel-default">
+                    <div class="panel-heading">Available for there tariffs</div>
+                    <div class="panel-body boxes">
+                        <div id="forTariffs"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Required from</div>
+                    <div class="panel-body boxes">
+                        <div id="requiredFrom"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Incompatible with</div>
+                    <div class="panel-body boxes">
+                        <div id="forbiddenWith"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <!-- Button -->
+                        <div class="controls">
+                            <input type="submit" class="btn btn-success"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="piece_table">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                    <table id="content_table" class="table table-striped">
+                        <thead>
+                        <tr>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
