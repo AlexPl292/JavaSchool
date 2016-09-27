@@ -235,13 +235,19 @@
             $page_wrapper.find('h1').text('Contracts');
             $page_wrapper.find('div.panel-heading').text('Show all contracts');
 
-            $('#content_table').DataTable({
+            var table = $('#content_table').DataTable({
                 ajax:{
                     url:"/rest/contract",
                     dataSrc: ''
                 },
-                order: [[0, 'asc']],
+                order: [[1, 'asc']],
                 columns: [
+                    {
+                        "className":      'details-control',
+                        "orderable":      false,
+                        "data":           null,
+                        "defaultContent": '+'
+                    },
                     {title:"Number", data:"number", render:function (data, type, row) {
                         if (type === "filter") {
                             return data.replace(/[^\/\d]/g,'');
@@ -254,7 +260,30 @@
                     {title:"Tariff", data:"tariff", render:"name"},
                     {title:"Balance", data:"balance", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')}
                 ]
-            })
+            });
+            function format ( d ) {
+                var list = '<ul>';
+                for (var i = 0; i < d.usedOptions.length; i++) {
+                    list += '<li>'+d.usedOptions[i].name+'</li>';
+                }
+                list += '</ul>';
+                return list;
+            }
+            $('#content_table').find('tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row( tr );
+
+                if ( row.child.isShown() ) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    row.child( format(row.data()) ).show();
+                    tr.addClass('shown');
+                }
+            } );
         },
         "new_contract" : function ($page_wrapper) {
             var link = document.querySelector('link[href$="pieces.html"]');
