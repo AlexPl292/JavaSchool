@@ -169,6 +169,8 @@
                     dataSrc: ''
                 },
                 order: [[0, 'asc']],
+                stateSave: true,
+                pagingType: "full_numbers",
                 columns: [
                     {title:"Name", data:null, render:function (data, type, row) { return data.surname + ' ' + data.name}},
                     {title:"Date ob birth", data:"dateOfBirth", render:function (data, type, row) {
@@ -200,6 +202,8 @@
                     dataSrc: ''
                 },
                 order: [[0, 'asc']],
+                stateSave: true,
+                pagingType: "full_numbers",
                 columns: [
                     {title:"Name", data:"name"},
                     {title:"Cost", data:"cost", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')},
@@ -221,6 +225,8 @@
                     dataSrc: ''
                 },
                 order: [[0, 'asc']],
+                stateSave: true,
+                pagingType: "full_numbers",
                 columns: [
                     {title:"Name", data:"name"},
                     {title:"Cost", data:"cost", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')},
@@ -241,6 +247,8 @@
                     dataSrc: ''
                 },
                 order: [[1, 'asc']],
+                stateSave: true,
+                pagingType: "full_numbers",
                 columns: [
                     {
                         "className":      'details-control',
