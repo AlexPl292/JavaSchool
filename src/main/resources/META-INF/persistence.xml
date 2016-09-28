@@ -17,13 +17,11 @@
         </properties>
     </persistence-unit>-->
 
-    <persistence-unit name="JSPool" transaction-type="JTA">
+    <persistence-unit name="JSPool"  transaction-type="JTA">
         <jta-data-source>jdbc/JS</jta-data-source>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" />
         </properties>
     </persistence-unit>
 </persistence>
