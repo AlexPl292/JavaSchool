@@ -3,16 +3,13 @@ package com.tsystems.javaschool.business.services.implementations;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.db.interfaces.ContractDao;
-import com.tsystems.javaschool.db.interfaces.OptionDao;
-import com.tsystems.javaschool.db.interfaces.TariffDao;
-import org.apache.log4j.Logger;
+import com.tsystems.javaschool.db.repository.OptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityGraph;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by alex on 27.08.16.
@@ -21,47 +18,32 @@ import java.util.*;
 @Transactional
 public class OptionServiceImpl implements OptionService{
 
-    private static final Logger logger = Logger.getLogger(OptionServiceImpl.class);
-    private final OptionDao optionDao;
-    private final TariffDao tariffDao;
-    private final ContractDao contractDao;
+    private final OptionRepository repository;
 
     @Autowired
-    public OptionServiceImpl(TariffDao tariffDao, OptionDao optionDao, ContractDao contractDao) {
-        this.tariffDao = tariffDao;
-        this.optionDao = optionDao;
-        this.contractDao = contractDao;
+    public OptionServiceImpl(OptionRepository optionRepository) {
+        this.repository = optionRepository;
     }
 
     @Override
-    public void addNew(OptionDto entity) {
-        Option option = entity.convertToOptionEntity(optionDao, tariffDao);
-        optionDao.create(option);
-        logger.info("New option is created. Id = "+entity.getId());
+    public OptionDto addNew(OptionDto entity) {
+        return new OptionDto(repository.saveAndFlush(entity.convertToEntity()));
     }
 
     @Override
     public OptionDto loadByKey(Integer key) {
-        return new OptionDto(optionDao.read(key));
-    }
-
-    @Override
-    public EntityGraph getEntityGraph() {
-        return optionDao.getEntityGraph();
+        Option option = repository.findOne(key);
+        return new OptionDto(option).addDependencies(option);
     }
 
     @Override
     public void remove(Integer key) {
-        optionDao.delete(key);
-        logger.info("Option is removed. Id = "+key);
+        repository.delete(key);
     }
 
     @Override
-    public OptionDto loadByKey(Integer key, Map<String, Object> hints) {
-        Option option = optionDao.read(key, hints);
-        OptionDto optionDto = new OptionDto(option);
-        optionDto.setDependencies(option);
-        return optionDto;
+    public List<OptionDto> loadAll() {
+        return repository.findAll().stream().map(e -> new OptionDto(e).addDependencies(e)).collect(Collectors.toList());
     }
 
 /*    @Override
@@ -114,48 +96,4 @@ public class OptionServiceImpl implements OptionService{
             EMU.closeEntityManager();
         }
     }*/
-
-    @Override
-    public List<OptionDto> loadOptionsByTariffs(List<Integer> tariffs) {
-        if (tariffs == null) {
-            return new ArrayList<>();
-        }
-        List<Option> options = optionDao.getOptionsOfTariffs(tariffs);
-        List<OptionDto> optionDtos = new ArrayList<>();
-        for (Option o:options) {
-            OptionDto od = new OptionDto(o);
-            od.setDependencies(o);
-            optionDtos.add(od);
-        }
-        return optionDtos;
-    }
-
-
-    @Override
-    public List<OptionDto> load(Map<String, Object> kwargs) {
-        List<Option> options = optionDao.read(kwargs);
-        List<OptionDto> optionDtos = new ArrayList<>();
-        for (Option o:options) {
-            OptionDto od = new OptionDto(o);
-            od.setDependencies(o);
-            optionDtos.add(od);
-        }
-        return optionDtos;
-    }
-
-    @Override
-    public long count(Map<String, Object> kwargs) {
-        return optionDao.count(kwargs);
-    }
-
-    @Override
-    public List<OptionDto> loadAll() {
-        List<Option> options = optionDao.read(new HashMap<>());
-        List<OptionDto> optionDtos = new ArrayList<>();
-        for (Option o:options) {
-            OptionDto od = new OptionDto(o);
-            optionDtos.add(od);
-        }
-        return optionDtos;
-    }
 }

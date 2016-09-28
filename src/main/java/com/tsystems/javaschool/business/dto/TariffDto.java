@@ -1,7 +1,6 @@
 package com.tsystems.javaschool.business.dto;
 
 import com.tsystems.javaschool.db.entities.Tariff;
-import com.tsystems.javaschool.db.interfaces.OptionDao;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Created by alex on 22.09.16.
  */
-public class TariffDto {
+public class TariffDto implements DtoMapper<Tariff>{
     private Integer id;
 
     @Size(min = 2, max = 45)
@@ -25,38 +24,39 @@ public class TariffDto {
     @NotNull
     private BigDecimal cost;
 
+    @Size(max = 255)
     private String description;
-    private Set<OptionDto> possibleOptions;
+    private Set<OptionDto> possibleOptions = new HashSet<>();
 
-    public TariffDto(){
-        this.possibleOptions = new HashSet<>();
-    }
+    public TariffDto() {}
 
     public TariffDto(Tariff tariff) {
-        this.id = tariff.getId();
-        this.name = tariff.getName();
-        this.cost = tariff.getCost();
-        this.description = tariff.getDescription();
-        this.possibleOptions = new HashSet<>();
+        convertToDto(tariff);
     }
 
-    public void setDependencies(Tariff tariff) {
+    @Override
+    public TariffDto addDependencies(Tariff tariff) {
         if (tariff != null && tariff.getPossibleOptions() != null)
-            possibleOptions = tariff.getPossibleOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
+            this.possibleOptions = tariff.getPossibleOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
+        return this;
     }
 
-    public Tariff convertTariffEntity(OptionDao dao) {
-        Tariff tariff = new Tariff(id, name, cost, description);
-        if (dao != null && possibleOptions != null)
-            tariff.setPossibleOptions(possibleOptions.stream().map(e -> dao.read(e.getId())).collect(Collectors.toSet()));
-        return tariff;
-    }
-
-    public Tariff convertTariffEntity() {
+    @Override
+    public Tariff convertToEntity() {
         Tariff tariff = new Tariff(id, name, cost, description);
         if (possibleOptions != null)
-            tariff.setPossibleOptions(possibleOptions.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
+            tariff.setPossibleOptions(possibleOptions.stream().map(OptionDto::convertToEntity).collect(Collectors.toSet()));
         return tariff;
+    }
+
+    @Override
+    public void convertToDto(Tariff entity) {
+        if (entity == null)
+            return;
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.cost = entity.getCost();
+        this.description = entity.getDescription();
     }
 
     public Integer getId() {

@@ -1,9 +1,6 @@
 package com.tsystems.javaschool.db.entities;
 
 import com.google.gson.annotations.Expose;
-import com.tsystems.javaschool.util.EMU;
-import com.tsystems.javaschool.util.PassGen;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
@@ -19,7 +16,7 @@ public abstract class User {
     private static final Logger logger = Logger.getLogger(User.class);
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     @Expose
     private Integer id;
 
@@ -117,13 +114,13 @@ public abstract class User {
         result = 31 * result + (salt != null ? salt.hashCode() : 0);
         return result;
     }
-
-    /**
+/*
+    *//**
      * Log in new user by email and password
      * @param email email of user
      * @param password password of user
      * @return logged user if positive, null if negative
-     */
+     *//*
     public static User login(String email, String password) {
 
         if (email != null && password != null) {
@@ -145,13 +142,13 @@ public abstract class User {
         return null;
     }
 
-    /**
+    *//**
      * Update password of user
      * @param id id of user
      * @param oldPassword old password to change
      * @param newPassword new password
      * @return "Success!" if positive, error message if negative
-     */
+     *//*
     public static String updatePassword(Integer id, String oldPassword, String newPassword) {
         try {
             User user = EMU.getEntityManager().find(User.class, id);
@@ -181,5 +178,5 @@ public abstract class User {
         } finally {
             EMU.closeEntityManager();
         }
-    }
+    }*/
 }

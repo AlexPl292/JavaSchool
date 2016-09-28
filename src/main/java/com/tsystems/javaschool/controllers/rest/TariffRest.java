@@ -1,19 +1,14 @@
-package com.tsystems.javaschool.controllers;
+package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
-import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.util.StatusResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityGraph;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -27,7 +22,6 @@ import java.util.*;
 public class TariffRest {
 
     private final transient TariffService service;
-    private static final Logger logger = Logger.getLogger(TariffRest.class);
 
     @Autowired
     public TariffRest(TariffService service) {
@@ -36,15 +30,12 @@ public class TariffRest {
 
     @PostMapping
     public StatusResponse addNewTariff(@Valid @RequestBody TariffDto tariff, BindingResult bindingResult) {
-        StatusResponse response = new StatusResponse();
-
-        if (!bindingResult.hasErrors()) {
-            service.addNew(tariff);
-        } else {
-            response.addBindingResult(bindingResult);
+        if (bindingResult.hasErrors()) {
+            return new StatusResponse(bindingResult);
         }
 
-        return response;
+        service.addNew(tariff);
+        return new StatusResponse();
     }
 
     @GetMapping
@@ -59,12 +50,7 @@ public class TariffRest {
 
     @GetMapping("/{tariffId}/option")
     public Set<OptionDto> loadOptions(@PathVariable Integer tariffId)  {
-        EntityGraph<Tariff> graph = service.getEntityGraph();
-
-        graph.addAttributeNodes("possibleOptions");
-        Map<String, Object> hints = new HashMap<>();
-        hints.put("javax.persistence.loadgraph", graph);
-        return service.loadByKey(tariffId, hints).getPossibleOptions();
+        return service.loadByKey(tariffId).getPossibleOptions();
     }
 }
 

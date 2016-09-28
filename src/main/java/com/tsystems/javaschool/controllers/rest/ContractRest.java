@@ -1,7 +1,8 @@
-package com.tsystems.javaschool.controllers;
+package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
+import com.tsystems.javaschool.controllers.rest.CustomerRest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

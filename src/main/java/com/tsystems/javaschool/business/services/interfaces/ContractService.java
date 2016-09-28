@@ -12,14 +12,6 @@ import java.util.Map;
  * Interface for contract service
  */
 public interface ContractService extends GenericService<ContractDto, Integer>{
-    /**
-     * Load contract by key with dependencies
-     * @param key id of contract
-     * @param hints dependencies
-     * @return contract with id = key
-     */
-    ContractDto loadByKey(Integer key, Map<String, Object> hints);
-
 /*    *//**
      * Set block level to contract
      * 0 - unblocked

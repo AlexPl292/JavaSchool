@@ -3,18 +3,13 @@ package com.tsystems.javaschool.business.services.implementations;
 import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
-import com.tsystems.javaschool.db.interfaces.OptionDao;
-import com.tsystems.javaschool.db.interfaces.TariffDao;
-import org.apache.log4j.Logger;
+import com.tsystems.javaschool.db.repository.TariffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityGraph;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by alex on 21.08.16.
@@ -23,74 +18,31 @@ import java.util.Map;
 @Transactional
 public class TariffServiceImpl implements TariffService{
 
-    private final TariffDao tariffDao;
-    private final OptionDao optionDao;
-    private static final Logger logger = Logger.getLogger(TariffServiceImpl.class);
+    private final TariffRepository repository;
 
     @Autowired
-    public TariffServiceImpl(TariffDao tariffDao, OptionDao optionDao) {
-        this.tariffDao = tariffDao;
-        this.optionDao = optionDao;
+    public TariffServiceImpl(TariffRepository tariffRepository) {
+        this.repository = tariffRepository;
     }
 
     @Override
-    public void addNew(TariffDto tariffDto) {
-        Tariff tariff = tariffDto.convertTariffEntity(optionDao);
-
-        tariffDao.create(tariff);
-        logger.info("New tariff is created. Id = "+tariff.getId());
+    public TariffDto addNew(TariffDto tariffDto) {
+        return new TariffDto(repository.saveAndFlush(tariffDto.convertToEntity()));
     }
 
     @Override
     public TariffDto loadByKey(Integer key) {
-/*        Tariff tariff = tariffDao.read(key);
-        EMU.closeEntityManager();
-        return tariff;*/
-        return new TariffDto(tariffDao.read(key));
-    }
-
-    @Override
-    public EntityGraph getEntityGraph() {
-        return tariffDao.getEntityGraph();
+        Tariff tariff = repository.findOne(key);
+        return new TariffDto(tariff).addDependencies(tariff);
     }
 
     @Override
     public void remove(Integer key) {
-        tariffDao.delete(key);
-        logger.info("Tariff is removed. Id = "+ key);
-    }
-
-    @Override
-    public List<TariffDto> load(Map<String, Object> kwargs) {
-        List<Tariff> tariff = tariffDao.read(kwargs);
-        List<TariffDto> tariffDtos = new ArrayList<>();
-        for (Tariff t:tariff) {
-            TariffDto td = new TariffDto(t);
-            td.setDependencies(t);
-            tariffDtos.add(td);
-        }
-        return tariffDtos;
-    }
-
-    @Override
-    public long count(Map<String, Object> kwargs) {
-        long count = tariffDao.count(kwargs);
-        return count;
+        repository.delete(key);
     }
 
     @Override
     public List<TariffDto> loadAll() {
-        return load(new HashMap<>());
-    }
-
-    @Override
-    public TariffDto loadByKey(Integer key, Map<String, Object> hints) {
-/*        Tariff tariff = tariffDao.read(key, hints);
-        EMU.closeEntityManager();
-        return tariff;*/
-        Tariff tariff = tariffDao.read(key, hints);
-        TariffDto tariffDto = new TariffDto(tariff);
-        tariffDto.setDependencies(tariff);
-        return tariffDto;
+        return repository.findAll().stream().map(e -> new TariffDto(e).addDependencies(e)).collect(Collectors.toList());
     }
 }

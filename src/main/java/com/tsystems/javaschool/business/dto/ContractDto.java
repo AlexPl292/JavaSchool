@@ -1,10 +1,11 @@
 package com.tsystems.javaschool.business.dto;
 
 import com.tsystems.javaschool.db.entities.Contract;
-import com.tsystems.javaschool.db.interfaces.CustomerDao;
-import com.tsystems.javaschool.db.interfaces.OptionDao;
-import com.tsystems.javaschool.db.interfaces.TariffDao;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,10 +14,17 @@ import java.util.stream.Collectors;
 /**
  * Created by alex on 08.09.16.
  */
-public class ContractDto {
+public class ContractDto implements DtoMapper<Contract>{
     private Integer id;
+
+    @NotNull
+    @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$")
     private String number;
+
+    @Min(0)
+    @Max(2)
     private Integer isBlocked;
+
     private CustomerDto customer;
     private TariffDto tariff;
     private BigDecimal balance;
@@ -37,41 +45,42 @@ public class ContractDto {
             this.tariff = new TariffDto(contract.getTariff());
     }
 
-    public Contract convertContractEntity(TariffDao tariffDao, OptionDao optionDao, CustomerDao customerDao) {
-//        Contract contract = new Contract(id, number, customerDao.read(customer.getId()), tariffDao.read(tariff.getId()), isBlocked, balance);
-        Contract contract = new Contract();
-        contract.setId(id);
-        contract.setNumber(number);
-        contract.setIsBlocked(isBlocked);
-        contract.setBalance(balance);
-        if (customer != null && customer.getId() != null && customerDao != null)
-            contract.setCustomer(customerDao.read(customer.getId()));
-        if (tariff != null && tariff.getId() != null && tariffDao != null)
-            contract.setTariff(tariffDao.read(tariff.getId()));
-        if (usedOptions != null && optionDao != null)
-            contract.setUsedOptions(usedOptions.stream().map(e -> optionDao.read(e.getId())).collect(Collectors.toSet()));
-        return contract;
-    }
-
-    public Contract convertContractEntity() {
-//        Contract contract = new Contract(id, number, customer.convertCustomerEntity(), tariff.convertTariffEntity(), isBlocked, balance);
+    @Override
+    public Contract convertToEntity() {
         Contract contract = new Contract();
         contract.setId(id);
         contract.setNumber(number);
         contract.setIsBlocked(isBlocked);
         contract.setBalance(balance);
         if (customer != null)
-            contract.setCustomer(customer.convertCustomerEntity());
+            contract.setCustomer(customer.convertToEntity());
         if (tariff != null)
-            contract.setTariff(tariff.convertTariffEntity());
+            contract.setTariff(tariff.convertToEntity());
         if (usedOptions != null)
-            contract.setUsedOptions(usedOptions.stream().map(OptionDto::convertToOptionEntity).collect(Collectors.toSet()));
+            contract.setUsedOptions(usedOptions.stream().map(OptionDto::convertToEntity).collect(Collectors.toSet()));
         return contract;
     }
 
-    public void setDependencies(Contract contract) {
-        if (contract != null && contract.getUsedOptions() != null)
-            this.usedOptions = contract.getUsedOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
+    @Override
+    public void convertToDto(Contract entity) {
+        if (entity == null)
+            return;
+
+        this.id = entity.getId();
+        this.number = entity.getNumber();
+        this.isBlocked = entity.getIsBlocked();
+        this.balance = entity.getBalance();
+        if (entity.getCustomer() != null)
+            this.customer = new CustomerDto(entity.getCustomer());
+        if (entity.getTariff() != null)
+            this.tariff = new TariffDto(entity.getTariff());
+    }
+
+    @Override
+    public ContractDto addDependencies(Contract entity) {
+        if (entity != null && entity.getUsedOptions() != null)
+            this.usedOptions = entity.getUsedOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
+        return this;
     }
 
     public String getNumber() {
