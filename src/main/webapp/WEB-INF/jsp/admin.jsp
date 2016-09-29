@@ -165,7 +165,7 @@
 
             $('#content_table').DataTable({
                 ajax:{
-                    url:"/rest/customer",
+                    url:"/rest/customers",
                     dataSrc: ''
                 },
                 order: [[0, 'asc']],
@@ -198,7 +198,7 @@
 
             $('#content_table').DataTable({
                 ajax:{
-                    url:"/rest/option",
+                    url:"/rest/options",
                     dataSrc: ''
                 },
                 order: [[0, 'asc']],
@@ -221,7 +221,7 @@
 
             $('#content_table').DataTable({
                 ajax:{
-                    url:"/rest/tariff",
+                    url:"/rest/tariffs",
                     dataSrc: ''
                 },
                 order: [[0, 'asc']],
@@ -243,7 +243,7 @@
 
             var table = $('#content_table').DataTable({
                 ajax:{
-                    url:"/rest/contract",
+                    url:"/rest/contracts",
                     dataSrc: ''
                 },
                 order: [[1, 'asc']],
@@ -396,14 +396,14 @@
             var forTariffs = $('#forTariffs');
 
             forTariffs.empty();
-            $.getJSON("/rest/tariff", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
+            $.getJSON("/rest/tariffs", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
 
             $(forTariffs).on('change', 'input[type=checkbox]',  function (e) {
                 e.preventDefault();
                 requiredFrom.empty();
                 forbiddenWith.empty();
                 var data = $("#forTariffs").find("input").serializeArray();
-                $.getJSON("/rest/option/forTariffs", $.param(data), function(data) {
+                $.getJSON("/rest/options/forTariffs", $.param(data), function(data) {
                     create_boxes(requiredFrom, "requiredFrom[][id]")(data);
                     create_boxes(forbiddenWith, "forbiddenWith[][id]")(data);
                 });
@@ -444,7 +444,7 @@
             $page_wrapper.append(content.cloneNode(true));
 
             $('#possibleOptions').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
-            $.getJSON("/rest/option", {}, create_boxes($('#possibleOptions'), "possibleOptions[][id]"));
+            $.getJSON("/rest/options", {}, create_boxes($('#possibleOptions'), "possibleOptions[][id]"));
             $('form#add_tariff_form').validate({
                 rules: {
                     name: "required",

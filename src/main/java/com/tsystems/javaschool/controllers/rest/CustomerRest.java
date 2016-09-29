@@ -17,7 +17,7 @@ import java.util.List;
  * Returns json with either success:true, or success:false and object with errors
  */
 @RestController
-@RequestMapping("/rest/customer")
+@RequestMapping("/rest/customers")
 public class CustomerRest {
 
     private final transient CustomerService service;

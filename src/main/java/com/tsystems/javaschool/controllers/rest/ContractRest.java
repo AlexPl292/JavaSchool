@@ -15,7 +15,7 @@ import java.util.List;
  * Created by alex on 27.09.16.
  */
 @RestController
-@RequestMapping("/rest/contract")
+@RequestMapping("/rest/contracts")
 public class ContractRest {
 
     private final transient ContractService service;

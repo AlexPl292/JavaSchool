@@ -23,7 +23,7 @@ function check_item(type) {
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':'+type;
         if ($(this).is(':checked')) {
-            $.getJSON("/rest/option/"+checked_val, {}, function (res) {
+            $.getJSON("/rest/options/"+checked_val, {}, function (res) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
@@ -122,7 +122,7 @@ function optionChecked(options) {
         var $item = $(this);
         var checked_val = parseInt($(this).val(), 10);
         if ($item.is(':checked')) {
-            $.getJSON("/rest/option/"+checked_val, {}, function (response) {
+            $.getJSON("/rest/options/"+checked_val, {}, function (response) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
@@ -189,7 +189,7 @@ function optionCheckedNewTariff(e) {
     var $item = $(this);
     var checked_val = parseInt($(this).val(), 10);
     if ($item.is(':checked')) {
-        $.getJSON("/rest/option/"+checked_val, {}, function (response) {
+        $.getJSON("/rest/options/"+checked_val, {}, function (response) {
             var enableItIds = [];
             var enableIt = $();
 
@@ -239,9 +239,9 @@ function loadlist(selobj, url, nameattr, valattr, selected_val) {
 function prepare_tariff_list(tariffList, options, selected_val) {
     $(tariffList).change(function (e) {
         e.preventDefault();
-        $.getJSON("/rest/tariff/"+$(this).val()+'/option', {}, create_boxes($(options), "contracts[usedOptions][][id]"));
+        $.getJSON("/rest/tariffs/"+$(this).val()+'/option', {}, create_boxes($(options), "contracts[usedOptions][][id]"));
     });
-    loadlist($(tariffList), "/rest/tariff", "name", "id", selected_val);
+    loadlist($(tariffList), "/rest/tariffs", "name", "id", selected_val);
 
     $(options).on('change', 'input[type=checkbox]', optionChecked(options));
 }

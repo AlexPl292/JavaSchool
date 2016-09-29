@@ -17,7 +17,7 @@ import java.util.List;
  * Returns json with either success:true, or success:false and object with errors
  */
 @RestController
-@RequestMapping("/rest/option")
+@RequestMapping("/rest/options")
 public class OptionRest {
 
     private final OptionService service;

@@ -18,7 +18,7 @@ import java.util.*;
  * Returns json with either success:true, or success:false and object with errors
  */
 @RestController
-@RequestMapping("/rest/tariff")
+@RequestMapping("/rest/tariffs")
 public class TariffRest {
 
     private final transient TariffService service;
