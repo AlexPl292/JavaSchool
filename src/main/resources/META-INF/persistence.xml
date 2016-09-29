@@ -18,10 +18,16 @@
     </persistence-unit>-->
 
     <persistence-unit name="JSPool"  transaction-type="JTA">
-        <jta-data-source>jdbc/JS</jta-data-source>
+        <jta-data-source>java:/jdbc/JS</jta-data-source>
+        <class>com.tsystems.javaschool.db.entities.Contract</class>
+        <class>com.tsystems.javaschool.db.entities.Customer</class>
+        <class>com.tsystems.javaschool.db.entities.Option</class>
+        <class>com.tsystems.javaschool.db.entities.Staff</class>
+        <class>com.tsystems.javaschool.db.entities.Tariff</class>
+        <class>com.tsystems.javaschool.db.entities.User</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
-            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" />
+            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />
         </properties>
     </persistence-unit>
 </persistence>

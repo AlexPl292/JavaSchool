@@ -36,7 +36,7 @@
 
 
     <jee:jndi-lookup id="dataSource"
-                     jndi-name="jdbc/JS"/>
+                     jndi-name="java:/jdbc/JS"/>
     <bean id="hibernateJpaVendorAdapter"
           class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 
