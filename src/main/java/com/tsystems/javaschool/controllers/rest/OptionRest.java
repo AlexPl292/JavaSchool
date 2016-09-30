@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.ResourceNotFoundException;
+import com.tsystems.javaschool.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.util.ErrorResponse;
@@ -32,6 +33,10 @@ public class OptionRest {
 
     @PostMapping
     public ResponseEntity addOption(@Valid @RequestBody OptionDto optionDto) {
+        List<OptionDto> existings = service.findByName(optionDto.getName());
+        if (existings.size() > 0) {
+            throw new UniqueFieldDuplicateException("Name", optionDto.getName(), "/rest/options/"+existings.get(0).getId());
+        }
         OptionDto newOption = service.addNew(optionDto);
         return ResponseEntity.created(URI.create("/rest/options/"+newOption.getId())).body(newOption);
     }

@@ -43,6 +43,19 @@ public class TariffServiceImpl implements TariffService{
 
     @Override
     public List<TariffDto> loadAll() {
-        return repository.findAll().stream().map(e -> new TariffDto(e).addDependencies(e)).collect(Collectors.toList());
+        return repository
+                .findAll()
+                .stream()
+                .map(e -> new TariffDto(e).addDependencies(e))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TariffDto> findByName(String name) {
+        return repository
+                .findByName(name)
+                .stream()
+                .map(TariffDto::new)
+                .collect(Collectors.toList());
     }
 }

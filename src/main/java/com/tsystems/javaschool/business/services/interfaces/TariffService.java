@@ -10,4 +10,5 @@ import java.util.Map;
  * Created by alex on 21.08.16.
  */
 public interface TariffService extends GenericService<TariffDto, Integer> {
+    List<TariffDto> findByName(String name);
 }

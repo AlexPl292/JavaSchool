@@ -44,6 +44,19 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public List<ContractDto> loadAll() {
-        return repository.findAll().stream().map(e -> new ContractDto(e).addDependencies(e)).collect(Collectors.toList());
+        return repository
+                .findAll()
+                .stream()
+                .map(e -> new ContractDto(e).addDependencies(e))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ContractDto> findByNumber(String number) {
+        return repository
+                .findByNumber(number)
+                .stream()
+                .map(ContractDto::new)
+                .collect(Collectors.toList());
     }
 }

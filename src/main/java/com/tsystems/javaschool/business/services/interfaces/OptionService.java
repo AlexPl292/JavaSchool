@@ -10,4 +10,5 @@ import java.util.Map;
  * Created by alex on 27.08.16.
  */
 public interface OptionService extends GenericService<OptionDto, Integer> {
+    List<OptionDto> findByName(String name);
 }

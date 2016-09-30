@@ -43,7 +43,20 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public List<OptionDto> loadAll() {
-        return repository.findAll().stream().map(e -> new OptionDto(e).addDependencies(e)).collect(Collectors.toList());
+        return repository
+                .findAll()
+                .stream()
+                .map(e -> new OptionDto(e).addDependencies(e))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OptionDto> findByName(String name) {
+        return repository
+                .findByName(name)
+                .stream()
+                .map(OptionDto::new)
+                .collect(Collectors.toList());
     }
 
 /*    @Override

@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.ResourceNotFoundException;
+import com.tsystems.javaschool.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.util.ErrorResponse;
@@ -32,6 +33,13 @@ public class CustomerRest {
 
     @PostMapping
     public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) {
+        List<CustomerDto> existings = service.findByPassportNumberOrEmail(customer.getPassportNumber(), customer.getEmail());
+        if (existings.size() > 0) {
+            if (existings.get(0).getEmail().equalsIgnoreCase(customer.getEmail()))
+                throw new UniqueFieldDuplicateException("Email", customer.getEmail(), "/rest/options/"+existings.get(0).getId());
+            else
+                throw new UniqueFieldDuplicateException("PassportNumber", customer.getPassportNumber(), "/rest/options/"+existings.get(0).getId());
+        }
         CustomerDto newCustomer = service.addNew(customer);
         return ResponseEntity.created(URI.create("/rest/customers/"+newCustomer.getId())).body(newCustomer);
     }

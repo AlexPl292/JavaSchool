@@ -69,6 +69,18 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDto> loadAll() {
-        return repository.findAll().stream().map(e -> new CustomerDto(e).addDependencies(e)).collect(Collectors.toList());
+        return repository
+                .findAll()
+                .stream().map(e -> new CustomerDto(e).addDependencies(e))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CustomerDto> findByPassportNumberOrEmail(String passportNumber, String email) {
+        return repository
+                .findByPassportNumberOrEmail(passportNumber, email)
+                .stream()
+                .map(CustomerDto::new)
+                .collect(Collectors.toList());
     }
 }

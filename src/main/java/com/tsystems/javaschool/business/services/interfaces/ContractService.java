@@ -30,4 +30,5 @@ public interface ContractService extends GenericService<ContractDto, Integer>{
      * @return updated contract
      *//*
     ContractDto updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds);*/
+    List<ContractDto> findByNumber(String number);
 }

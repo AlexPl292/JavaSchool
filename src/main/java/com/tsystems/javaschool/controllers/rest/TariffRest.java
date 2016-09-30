@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.ResourceNotFoundException;
+import com.tsystems.javaschool.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
@@ -31,6 +32,10 @@ public class TariffRest {
 
     @PostMapping
     public ResponseEntity addNewTariff(@Valid @RequestBody TariffDto tariff) {
+        List<TariffDto> existings = service.findByName(tariff.getName());
+        if (existings.size() > 0) {
+            throw new UniqueFieldDuplicateException("Name", tariff.getName(), "/rest/tariffs/"+existings.get(0).getId());
+        }
         TariffDto newTariff = service.addNew(tariff);
         return ResponseEntity.created(URI.create("/rest/tariffs/"+newTariff.getId())).body(newTariff);
     }

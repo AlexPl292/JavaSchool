@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.controllers;
 
 import com.tsystems.javaschool.ResourceNotFoundException;
+import com.tsystems.javaschool.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.util.ErrorResponse;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -24,11 +25,21 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(UniqueFieldDuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleUniqueFieldDuplicateException(UniqueFieldDuplicateException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .location(ex.getPathToDuplicatedEntity())
+                .body(new ErrorResponse("Message", "Entity with '"+
+                        ex.getDuplicatedField()+"' == '"+ex.getDuplicatedValue()+
+                        "' already exists. This field must be unique."));
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return new ErrorResponse("No entity", "Entity '" +
+        return new ErrorResponse("Message", "Entity '" +
                 ex.getResourceName() + "' with id " + ex.getResourceId() + " does not exist");
     }
 
