@@ -2,6 +2,7 @@ package com.tsystems.javaschool.controllers;
 
 import com.tsystems.javaschool.ResourceNotFoundException;
 import com.tsystems.javaschool.util.ErrorResponse;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -60,5 +62,15 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         return ResponseEntity
                 .status(status)
                 .body(new ErrorResponse("Message", message.substring(0, message.indexOf("(") - 1).replace("\"", "'")));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String requiredType = ex.getRequiredType().toString();
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorResponse("Message", "Wrong value '"+ex.getValue()+
+                        "' for argument '"+((MethodArgumentTypeMismatchException) ex).getName()+
+                        "'. It have to be ["+requiredType.substring(requiredType.lastIndexOf(".")+1)+"]"));
     }
 }
