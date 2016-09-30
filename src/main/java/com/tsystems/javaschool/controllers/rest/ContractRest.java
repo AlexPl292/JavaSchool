@@ -5,8 +5,10 @@ import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.controllers.rest.CustomerRest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,7 +21,6 @@ import java.util.List;
 public class ContractRest {
 
     private final transient ContractService service;
-    private static final Logger logger = Logger.getLogger(CustomerRest.class);
 
     @Autowired
     public ContractRest(ContractService service) {
@@ -27,6 +28,7 @@ public class ContractRest {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<ContractDto> loadAll() {
         return service.loadAll();
     }

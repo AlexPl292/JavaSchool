@@ -1,15 +1,16 @@
 package com.tsystems.javaschool.controllers.rest;
 
+import com.tsystems.javaschool.ResourceNotFoundException;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
-import com.tsystems.javaschool.util.StatusResponse;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.*;
 
 /**
@@ -21,7 +22,7 @@ import java.util.*;
 @RequestMapping("/rest/tariffs")
 public class TariffRest {
 
-    private final transient TariffService service;
+    private final TariffService service;
 
     @Autowired
     public TariffRest(TariffService service) {
@@ -29,28 +30,35 @@ public class TariffRest {
     }
 
     @PostMapping
-    public StatusResponse addNewTariff(@Valid @RequestBody TariffDto tariff, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new StatusResponse(bindingResult);
-        }
-
-        service.addNew(tariff);
-        return new StatusResponse();
+    public ResponseEntity addNewTariff(@Valid @RequestBody TariffDto tariff) {
+        TariffDto newTariff = service.addNew(tariff);
+        return ResponseEntity.created(URI.create("/rest/tariffs/"+newTariff.getId())).body(newTariff);
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<TariffDto> loadAll() {
         return service.loadAll();
     }
 
     @GetMapping("/{tariffId}")
-    public TariffDto loadTariff(@PathVariable Integer tariffId)  {
-        return service.loadByKey(tariffId);
+    @ResponseStatus(HttpStatus.OK)
+    public TariffDto loadTariff(@PathVariable Integer tariffId) {
+        TariffDto entity = service.loadByKey(tariffId);
+        if (entity.getId() == null) {
+            throw new ResourceNotFoundException("tariff", tariffId);
+        }
+        return entity;
     }
 
-    @GetMapping("/{tariffId}/option")
+    @GetMapping("/{tariffId}/options")
+    @ResponseStatus(HttpStatus.OK)
     public Set<OptionDto> loadOptions(@PathVariable Integer tariffId)  {
-        return service.loadByKey(tariffId).getPossibleOptions();
+        TariffDto entity = service.loadByKey(tariffId);
+        if (entity.getId() == null) {
+            throw new ResourceNotFoundException("tariff", tariffId);
+        }
+        return entity.getPossibleOptions();
     }
 }
 

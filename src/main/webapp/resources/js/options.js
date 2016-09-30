@@ -239,7 +239,7 @@ function loadlist(selobj, url, nameattr, valattr, selected_val) {
 function prepare_tariff_list(tariffList, options, selected_val) {
     $(tariffList).change(function (e) {
         e.preventDefault();
-        $.getJSON("/rest/tariffs/"+$(this).val()+'/option', {}, create_boxes($(options), "contracts[usedOptions][][id]"));
+        $.getJSON("/rest/tariffs/"+$(this).val()+'/options', {}, create_boxes($(options), "contracts[usedOptions][][id]"));
     });
     loadlist($(tariffList), "/rest/tariffs", "name", "id", selected_val);
 

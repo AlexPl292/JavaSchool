@@ -1,14 +1,17 @@
 package com.tsystems.javaschool.controllers.rest;
 
+import com.tsystems.javaschool.ResourceNotFoundException;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
-import com.tsystems.javaschool.util.StatusResponse;
-import org.apache.log4j.Logger;
+import com.tsystems.javaschool.util.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -28,22 +31,24 @@ public class OptionRest {
     }
 
     @PostMapping
-    public StatusResponse addOption(@Valid @RequestBody OptionDto optionDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new StatusResponse(bindingResult);
-        }
-
-        service.addNew(optionDto);
-        return new StatusResponse();
+    public ResponseEntity addOption(@Valid @RequestBody OptionDto optionDto) {
+        OptionDto newOption = service.addNew(optionDto);
+        return ResponseEntity.created(URI.create("/rest/options/"+newOption.getId())).body(newOption);
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<OptionDto> loadAdd() {
         return service.loadAll();
     }
 
     @GetMapping("/{optionId}")
+    @ResponseStatus(HttpStatus.OK)
     public OptionDto loadOption(@PathVariable Integer optionId) {
-        return service.loadByKey(optionId);
+        OptionDto entity = service.loadByKey(optionId);
+        if (entity.getId() == null) {
+            throw new ResourceNotFoundException("options", optionId);
+        }
+        return entity;
     }
 }
