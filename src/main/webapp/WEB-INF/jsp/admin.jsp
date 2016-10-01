@@ -18,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/metisMenu/css/metisMenu.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/datatable/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/datatable/css/datatables.min.css">
 
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.7.css">
 
@@ -28,7 +28,7 @@
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/jquery.serialize-object.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/js.cookie.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/datatable/datatables.min.js"></script>
+    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/datatable/js/datatables.min.js"></script>
 
     <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
