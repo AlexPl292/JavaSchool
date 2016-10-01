@@ -1,4 +1,4 @@
-package com.tsystems.javaschool;
+package com.tsystems.javaschool.exceptions;
 
 import java.net.URI;
 

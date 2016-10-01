@@ -1,7 +1,7 @@
 package com.tsystems.javaschool.controllers;
 
-import com.tsystems.javaschool.ResourceNotFoundException;
-import com.tsystems.javaschool.UniqueFieldDuplicateException;
+import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
+import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.util.ErrorResponse;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;

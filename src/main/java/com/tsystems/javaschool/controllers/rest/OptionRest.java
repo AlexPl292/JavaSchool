@@ -1,14 +1,12 @@
 package com.tsystems.javaschool.controllers.rest;
 
-import com.tsystems.javaschool.ResourceNotFoundException;
-import com.tsystems.javaschool.UniqueFieldDuplicateException;
+import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
+import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
-import com.tsystems.javaschool.util.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

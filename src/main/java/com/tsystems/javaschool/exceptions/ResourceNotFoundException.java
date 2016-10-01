@@ -1,4 +1,4 @@
-package com.tsystems.javaschool;
+package com.tsystems.javaschool.exceptions;
 
 /**
  * Created by alex on 30.09.16.
