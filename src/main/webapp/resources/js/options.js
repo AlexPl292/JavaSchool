@@ -25,49 +25,34 @@ function check_item(type) {
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':'+type;
         if ($(this).is(':checked')) {
-            $.getJSON("/rest/options/"+checked_val, {}, function (res) {
+            $.getJSON("/rest/options/"+checked_val, {}, function (data) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
                 var enableIt = $();
 
                 if (type === "requiredFrom") {
-                    $(res.requiredFrom).each(function (i, obj) {
+                    $(data.requiredFrom).each(function (i, obj) {
                         disableIt = $.merge(disableIt, $('#forbiddenWith').find("input[value=" + obj.id + "]"));
                         disableItIds.push(obj.id+":"+"forbiddenWith");
 
                         enableIt = $.merge(enableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
                         enableItIds.push(obj.id);
                     });
-                    $(res.forbiddenWith).each(function (i, obj) {
+                    $(data.forbiddenWith).each(function (i, obj) {
                         disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
                         disableItIds.push(obj.id+":"+"requiredFrom");
                     });
                     disableIt = $.merge(disableIt, $('#forbiddenWith').find("input[value=" + checked_val + "]"));
                     disableItIds.push(checked_val+":"+"forbiddenWith");
                 } else {
-                    $(res.requiredMe).each(function (i, obj) {
+                    $(data.requiredMe).each(function (i, obj) {
                         disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
                         disableItIds.push(obj.id+":"+"requiredFrom");
                     });
                     disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + checked_val + "]"));
                     disableItIds.push(checked_val+":"+"requiredFrom");
                 }
-
-/*                $(e.not_forbidden).each(function (i, obj) {
-                    disableIt = $.merge(disableIt, $('#forbiddenWith').find("input[value=" + obj.id + "]"));
-                    disableItIds.push(obj.id+":"+"forbiddenWith");
-                });
-                $(e.not_required_from).each(function (i, obj) {
-                    disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
-                    disableItIds.push(obj.id+":"+"requiredFrom");
-                });
-                $(e.not_forbidden).each(function (i, obj) {
-                    if (obj.id === checked_val)
-                        return;
-                    enableIt = $.merge(enableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
-                    enableItIds.push(obj.id);
-                });*/
 
                 enableIt.prop('checked', true).attr("disabled", true);
                 $(disableIt).attr("disabled", true);
@@ -430,6 +415,20 @@ function addTableAdditional(table, field, title, empty) {
     } );
 }
 
+function chooseOptionsForTariff($tariffs) {
+    var checkedTariffs = $tariffs.find(':checked');
+    if (checkedTariffs.length === 0)
+        return [];
+    var options = $(checkedTariffs[0]).data('boxData').possibleOptions;
+    for (var i = 1; i < checkedTariffs.length; i++) {
+        options = options.filter(function (n) {
+            return $(checkedTariffs[i]).data('boxData').possibleOptions.map(function(e) {return e.id}).indexOf(n.id) != -1;
+        })
+    }
+
+    return options;
+}
+
 var prepare = {
     "customer" : function($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -664,11 +663,9 @@ var prepare = {
             e.preventDefault();
             requiredFrom.empty();
             forbiddenWith.empty();
-            var data = $("#forTariffs").find("input").serializeArray();
-            $.getJSON("/rest/options/forTariffs", $.param(data), function(data) {
-                create_boxes(requiredFrom, "requiredFrom[][id]")(data);
-                create_boxes(forbiddenWith, "forbiddenWith[][id]")(data);
-            });
+            var options = chooseOptionsForTariff($(forTariffs));
+            create_boxes(requiredFrom, "requiredFrom[][id]")(options);
+            create_boxes(forbiddenWith, "forbiddenWith[][id]")(options);
         });
 
         $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));
