@@ -382,20 +382,20 @@ function loadpage(page) {
     prepare[page]($page_wrapper);
 }
 
-function formatAdditionalData (d, field, title, empty) {
+function formatAdditionalData (d, field, prop, title, empty) {
     var list = '<h4><small>'+title+'</small></h4><ul>';
     if (d[field].length === 0) {
         list += '</ul>'+empty;
         return list;
     }
     for (var i = 0; i < d[field].length; i++) {
-        list += '<li>'+d[field][i].name+'</li>';
+        list += '<li>'+d[field][i][prop]+'</li>';
     }
     list += '</ul>';
     return list;
 }
 
-function addTableAdditional(table, field, title, empty) {
+function addTableAdditional(table, field, prop, title, empty) {
     $('#content_table').find('tbody').on('click', 'td i.fa', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );
@@ -409,7 +409,7 @@ function addTableAdditional(table, field, title, empty) {
         else {
             // Open this row
             $(this).removeClass('fa-plus-square').addClass('fa-minus-square');
-            row.child( formatAdditionalData(row.data(), field, title, empty) ).show();
+            row.child( formatAdditionalData(row.data(), field, prop, title, empty) ).show();
             tr.addClass('shown');
         }
     } );
@@ -437,7 +437,7 @@ var prepare = {
         $page_wrapper.find('h1').text('Customers');
         $page_wrapper.find('div.panel-heading').text('Show all customers');
 
-        $('#content_table').DataTable({
+        var table = $('#content_table').DataTable({
             ajax:{
                 url:"/rest/customers",
                 dataSrc: ''
@@ -446,7 +446,12 @@ var prepare = {
             stateSave: true,
             pagingType: "full_numbers",
             columns: [
-                {title:"Name", data:null, render:function (data, type, row) { return data.surname + ' ' + data.name}},
+                {title:"Name", data:null, render:function (data, type, row) {
+                    if (type === "display") {
+                        return '<i class="fa fa-plus-square" style="padding-right: 1.8em"></i>'+data.surname+' '+data.name;
+                    }
+                    return data.surname + ' ' + data.name;
+                }},
                 {title:"Date ob birth", data:"dateOfBirth", render:function (data, type, row) {
                     if ( type === 'display' || type === 'filter' ) {
                         var d = new Date( data);
@@ -461,7 +466,8 @@ var prepare = {
                 {title:"Passport number", data:"passportNumber"},
                 {title:"Email", data:"email"}
             ]
-        })
+        });
+        addTableAdditional(table, 'contracts', 'number', 'Contracts', 'No contracts')
     },
     "option" : function($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -490,7 +496,7 @@ var prepare = {
                 {title:"Description", data:"description"}
             ]
         });
-        addTableAdditional(table, 'possibleTariffsOfOption', 'Available for this tariffs', 'No tariffs')
+        addTableAdditional(table, 'possibleTariffsOfOption', 'name', 'Available for this tariffs', 'No tariffs')
     },
     "tariff" : function($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -518,7 +524,7 @@ var prepare = {
                 {title:"Description", data:"description"}
             ]
         });
-        addTableAdditional(table, 'possibleOptions', 'Available options', 'No options')
+        addTableAdditional(table, 'possibleOptions', 'name', 'Available options', 'No options')
     },
     "contract" : function($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -552,7 +558,7 @@ var prepare = {
                 {title:"Balance", data:"balance", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')}
             ]
         });
-        addTableAdditional(table, 'usedOptions', 'Used options', 'No used options');
+        addTableAdditional(table, 'usedOptions', 'name', 'Used options', 'No used options');
     },
     "new_contract" : function ($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
