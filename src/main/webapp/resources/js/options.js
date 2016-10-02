@@ -7,7 +7,9 @@ function create_boxes(selobj, checkboxs_name) {
         $(selobj).empty();
         // var checkboxs_name = selobj.attr('id');
         $.each(data, function (i, obj) {
-            $(selobj).append($("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name, "data-cost":obj.connectCost}));
+            var $box = $("<input />", {type:"checkbox", id:checkboxs_name+i, value:obj.id, name:checkboxs_name, "data-cost":obj.connectCost});
+            $box.data('boxData', obj);
+            $(selobj).append($box);
             var name = obj.name;
             if (obj.connectCost !== undefined)
                 name += ' <p class="text-muted" style="display:inline">('+obj.connectCost+'<i class="fa fa-rub"></i>)</p>';
@@ -188,35 +190,30 @@ function optionCheckedNewTariff(e) {
     e.preventDefault();
     var $item = $(this);
     var checked_val = parseInt($(this).val(), 10);
+    var data = $item.data('boxData');
     if ($item.is(':checked')) {
-        $.getJSON("/rest/options/"+checked_val, {}, function (response) {
-            var enableItIds = [];
-            var enableIt = $();
+        var enableIt = $();
 
-            $(response.requiredFrom).each(function (i, obj) {
-                enableIt = $.merge(enableIt, $('#possibleOptions').find("input[value=" + obj.id + "]"));
-                enableItIds.push(obj.id);
-            });
+        $(data.requiredFrom).each(function (i, obj) {
+            enableIt = $.merge(enableIt, $('#possibleOptions').find("input[value=" + obj.id + "]"));
+        });
 
-            enableIt.prop('checked', true).attr("disabled", true); //.attr('onclick', 'return false');
+        enableIt.prop('checked', true).attr("disabled", true); //.attr('onclick', 'return false');
 
-            $(enableIt).each(function (i, obj) {
-                if ($(obj).data('enabledBy') === undefined) { // DisabledBy is not set (this checkbox is disabled first time
-                    $(obj).data('enabledBy', [checked_val]);
-                } else {
-                    $(obj).data('enabledBy').push(checked_val);
-                }
-            });
-
-            $item.data("enableIt", enableItIds);
-        })
+        $(enableIt).each(function (i, obj) {
+            if ($(obj).data('enabledBy') === undefined) { // DisabledBy is not set (this checkbox is disabled first time
+                $(obj).data('enabledBy', [checked_val]);
+            } else {
+                $(obj).data('enabledBy').push(checked_val);
+            }
+        });
     } else {
         var uncheck = $();
-        $($(this).data("enableIt")).each(function (i, obj) {
-            var maybeEnable = $('#possibleOptions').find("input[value="+obj+"]");
+        $(data.requiredFrom).each(function (i, obj) {
+            var maybeEnable = $('#possibleOptions').find("input[value="+obj.id+"]");
             if (maybeEnable.length === 0)
                 return;
-            $(maybeEnable).data("enabledBy").splice($.inArray(obj, $(maybeEnable).data("enabledBy")), 1);
+            $(maybeEnable).data("enabledBy").splice($.inArray(obj.id, $(maybeEnable).data("enabledBy")), 1);
             if ($(maybeEnable).data("enabledBy").length === 0)
                 uncheck = $.merge(uncheck, maybeEnable);
         });
@@ -648,7 +645,7 @@ var prepare = {
                 },
                 options: "Choose options"
             }
-        })
+        });
         prepare_tariff_list($('#tariff'), $('#options'));
     },
     "new_option" : function ($page_wrapper) {
