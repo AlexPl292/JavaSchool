@@ -400,6 +400,39 @@ function loadpage(page) {
     prepare[page]($page_wrapper);
 }
 
+function formatAdditionalData (d, field, title, empty) {
+    var list = '<h4><small>'+title+'</small></h4><ul>';
+    if (d[field].length === 0) {
+        list += '</ul>'+empty;
+        return list;
+    }
+    for (var i = 0; i < d[field].length; i++) {
+        list += '<li>'+d[field][i].name+'</li>';
+    }
+    list += '</ul>';
+    return list;
+}
+
+function addTableAdditional(table, field, title, empty) {
+    $('#content_table').find('tbody').on('click', 'td i.fa', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            $(this).removeClass('fa-minus-square').addClass('fa-plus-square');
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            $(this).removeClass('fa-plus-square').addClass('fa-minus-square');
+            row.child( formatAdditionalData(row.data(), field, title, empty) ).show();
+            tr.addClass('shown');
+        }
+    } );
+}
+
 var prepare = {
     "customer" : function($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -441,7 +474,7 @@ var prepare = {
         $page_wrapper.find('h1').text('Options');
         $page_wrapper.find('div.panel-heading').text('Show all options');
 
-        $('#content_table').DataTable({
+        var table = $('#content_table').DataTable({
             ajax:{
                 url:"/rest/options",
                 dataSrc: ''
@@ -450,12 +483,18 @@ var prepare = {
             stateSave: true,
             pagingType: "full_numbers",
             columns: [
-                {title:"Name", data:"name"},
+                {title:"Name", data:"name", render:function(data, type, row) {
+                    if (type === "display") {
+                        return '<i class="fa fa-plus-square" style="padding-right: 1.8em"></i>'+data;
+                    }
+                    return data;
+                }},
                 {title:"Cost", data:"cost", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')},
                 {title:"Connection cost", data:"connectCost", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')},
                 {title:"Description", data:"description"}
             ]
-        })
+        });
+        addTableAdditional(table, 'possibleTariffsOfOption', 'Available for this tariffs', 'No tariffs')
     },
     "tariff" : function($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -464,7 +503,7 @@ var prepare = {
         $page_wrapper.find('h1').text('Tariffs');
         $page_wrapper.find('div.panel-heading').text('Show all tariffs');
 
-        $('#content_table').DataTable({
+        var table = $('#content_table').DataTable({
             ajax:{
                 url:"/rest/tariffs",
                 dataSrc: ''
@@ -473,11 +512,17 @@ var prepare = {
             stateSave: true,
             pagingType: "full_numbers",
             columns: [
-                {title:"Name", data:"name"},
+                {title:"Name", data:"name", render:function (data, type, row) {
+                    if (type === "display") {
+                        return '<i class="fa fa-plus-square" style="padding-right: 1.8em"></i>'+data;
+                    }
+                    return data;
+                }},
                 {title:"Cost", data:"cost", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')},
                 {title:"Description", data:"description"}
             ]
-        })
+        });
+        addTableAdditional(table, 'possibleOptions', 'Available options', 'No options')
     },
     "contract" : function($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -511,31 +556,7 @@ var prepare = {
                 {title:"Balance", data:"balance", render:$.fn.dataTable.render.number( ',', '.', 2, '', ' ₽')}
             ]
         });
-        function format ( d ) {
-            var list = '<ul>';
-            for (var i = 0; i < d.usedOptions.length; i++) {
-                list += '<li>'+d.usedOptions[i].name+'</li>';
-            }
-            list += '</ul>';
-            return list;
-        }
-        $('#content_table').find('tbody').on('click', 'td i.fa', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row( tr );
-
-            if ( row.child.isShown() ) {
-                // This row is already open - close it
-                $(this).removeClass('fa-minus-square').addClass('fa-plus-square');
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                // Open this row
-                $(this).removeClass('fa-plus-square').addClass('fa-minus-square');
-                row.child( format(row.data()) ).show();
-                tr.addClass('shown');
-            }
-        } );
+        addTableAdditional(table, 'usedOptions', 'Used options', 'No used options');
     },
     "new_contract" : function ($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
