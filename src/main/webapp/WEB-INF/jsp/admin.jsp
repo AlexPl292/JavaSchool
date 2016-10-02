@@ -20,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/datatable/css/datatables.min.css">
 
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.7.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.8.1.css">
 
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/jquery/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -254,7 +254,8 @@
                         "className":      'details-control',
                         "orderable":      false,
                         "data":           null,
-                        "defaultContent": '+'
+                        "defaultContent": '<i class="fa fa-plus-square"></i>',
+                        width:'1%'
                     },
                     {title:"Number", data:"number", render:function (data, type, row) {
                         if (type === "filter") {
@@ -283,11 +284,13 @@
 
                 if ( row.child.isShown() ) {
                     // This row is already open - close it
+                    $(this).find('i').removeClass('fa-minus-square').addClass('fa-plus-square');
                     row.child.hide();
                     tr.removeClass('shown');
                 }
                 else {
                     // Open this row
+                    $(this).find('i').removeClass('fa-plus-square').addClass('fa-minus-square');
                     row.child( format(row.data()) ).show();
                     tr.addClass('shown');
                 }
