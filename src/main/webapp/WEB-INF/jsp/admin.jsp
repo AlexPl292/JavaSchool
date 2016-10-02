@@ -250,16 +250,19 @@
                 stateSave: true,
                 pagingType: "full_numbers",
                 columns: [
-                    {
+/*                    {
                         "className":      'details-control',
                         "orderable":      false,
                         "data":           null,
                         "defaultContent": '<i class="fa fa-plus-square"></i>',
                         width:'1%'
-                    },
+                    },*/
                     {title:"Number", data:"number", render:function (data, type, row) {
                         if (type === "filter") {
                             return data.replace(/[^\/\d]/g,'');
+                        }
+                        if (type === "display") {
+                            return '<i class="fa fa-plus-square" style="padding-right: 1.8em"></i>'+data;
                         }
                         return data;
                     }},
@@ -278,7 +281,7 @@
                 list += '</ul>';
                 return list;
             }
-            $('#content_table').find('tbody').on('click', 'td.details-control', function () {
+            $('#content_table').find('tbody').on('click', 'td i.fa', function () {
                 var tr = $(this).closest('tr');
                 var row = table.row( tr );
 
