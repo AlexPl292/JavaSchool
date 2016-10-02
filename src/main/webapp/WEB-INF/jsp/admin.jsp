@@ -81,7 +81,7 @@
                                     <a id="new_customer_menu" onclick="loadpage('new_customer')">Add new customer</a>
                                 </li>
                                 <li>
-                                    <a id="customer_menu" onclick="loadpage('customer')">Show all customers</a>
+                                    <a id="customers_menu" onclick="loadpage('customers')">Show all customers</a>
                                 </li>
                             </ul>
                         </li>
@@ -94,7 +94,7 @@
                                     <a id="new_tariff_menu" onclick="loadpage('new_tariff')">Add new tariff</a>
                                 </li>
                                 <li>
-                                    <a id="tariff_menu" onclick="loadpage('tariff')">Show all tariffs</a>
+                                    <a id="tariffs_menu" onclick="loadpage('tariffs')">Show all tariffs</a>
                                 </li>
                             </ul>
                         </li>
@@ -107,7 +107,7 @@
                                     <a id="new_option_menu" onclick="loadpage('new_option')">Add new option</a>
                                 </li>
                                 <li>
-                                    <a id="option_menu" onclick="loadpage('option')">Show all options</a>
+                                    <a id="options_menu" onclick="loadpage('options')">Show all options</a>
                                 </li>
                             </ul>
                         </li>
@@ -116,7 +116,7 @@
                             <a href="#"><i class="fa fa-credit-card fa-fw"></i> Contracts<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a id="contract_menu" onclick="loadpage('contract')">Show all contracts</a>
+                                    <a id="contracts_menu" onclick="loadpage('contracts')">Show all contracts</a>
                                 </li>
                             </ul>
                         </li>
