@@ -781,19 +781,36 @@ var prepare = {
             $page_wrapper.find('#customerPassportData').append(data.passportData.replace(/\n/g, '<br/>'));
             $page_wrapper.find('#customerAddress').html(data.address.replace(/\n/g, '<br/>'));
 
-            $(data.contracts).each(function (i, contract) {
+            $(data.contracts).each(function (j, contract) {
                 var nodes = link.import.querySelector('#piece_accordion_node').cloneNode(true);
                 $(nodes).find('#contractNumber')
                     .html(contract.number)
                     .attr('href', '#collapse'+contract.id);
+
+                // if (contract.isBlocked !== 2) {
+                var menu = link.import.querySelector('#piece_node_menu').cloneNode(true);
+                // if (contract.isBlocked === 1) {
+                // $(menu).find('p:contains("Edit")').addClass('text-muted');
+                // $(menu).find('a:contains("Edit")').attr('href', '');
+                // }
+                $(menu).find('#menuBlock').append('<a><p>'+(contract.isBlocked === 0? 'Block':'Unblock')+'</p></a>');
+                $(nodes).find('#nodeTitle').append($(menu).contents());
+                // }
+
                 $(nodes).find('#contractBalance')
                     .html(contract.balance.toFixed(2)+' <i class="fa fa-rub"></i>')
                     .data('balance', contract.balance);
                 $(nodes).find('#contractNode').addClass(contract.isBlocked === 0 ? 'panel-default': 'panel-red');
                 $(nodes).find('#collapse').attr('id', 'collapse'+contract.id);
                 $(nodes).find('#tariffName').html(contract.tariff.name).data('tariffId', contract.tariff.id);
+                var opts = '';
+                for (var i = 0; i < contract.usedOptions.length; i++) {
+                    opts += '<li>'+contract.usedOptions[i].name+'</li>';
+                }
+                $(nodes).find('#usedOptions').append(opts);
+
                 $page_wrapper.find('#accordion').append($(nodes).contents());
-            })
+            });
         });
     }
 /*    "/customer": function () {

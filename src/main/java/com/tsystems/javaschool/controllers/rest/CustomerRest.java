@@ -32,7 +32,7 @@ public class CustomerRest {
     @PostMapping
     public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) {
         List<CustomerDto> existings = service.findByPassportNumberOrEmail(customer.getPassportNumber(), customer.getEmail());
-        if (existings.size() > 0) {
+        if (existings.size() > 0) { // TODO провека существования номера контракта
             if (existings.get(0).getEmail().equalsIgnoreCase(customer.getEmail()))
                 throw new UniqueFieldDuplicateException("Email", customer.getEmail(), "/rest/options/"+existings.get(0).getId());
             else
