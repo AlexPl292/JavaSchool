@@ -461,7 +461,7 @@ var prepare = {
                 {
                     title: "Name",
                     data: null,
-                    className: 'clicableRow',
+                    className: 'clickableRow',
                     render: function (data, type, row) {
                     if (type === "display") {
                         return '<i class="fa fa-plus-square" style="padding-right: 1.8em"></i>' + data.surname + ' ' + data.name;
@@ -483,15 +483,21 @@ var prepare = {
                 }
                 },
                 {title: "Passport number", data: "passportNumber"},
-                {title: "Email", data: "email"}
+                {title: "Email", data: "email"},
+                {
+                    "className":      'showCustomer',
+                    "orderable":      false,
+                    "data":           null,
+                    "defaultContent": '<button type="button" class="btn btn-outline btn-default btn-xs">Show</button>'
+                }
             ]
         });
-        addTableAdditional(table, 'contracts', 'number', 'Contracts', 'No contracts');
-        $('#content_table').on('click', 'tr', function () {
+        $('#content_table').on('click', '.showCustomer', function () {
             var data = table.row( this ).data();
             Cookies.set("lastSeenUserId", data.id, {expires: 1});
             loadpage("customer");
         });
+        addTableAdditional(table, 'contracts', 'number', 'Contracts', 'No contracts');
     },
     "options": function ($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -774,6 +780,20 @@ var prepare = {
             $page_wrapper.find('#customerPassportNumber').html(data.passportNumber);
             $page_wrapper.find('#customerPassportData').append(data.passportData.replace(/\n/g, '<br/>'));
             $page_wrapper.find('#customerAddress').html(data.address.replace(/\n/g, '<br/>'));
+
+            $(data.contracts).each(function (i, contract) {
+                var nodes = link.import.querySelector('#piece_accordion_node').cloneNode(true);
+                $(nodes).find('#contractNumber')
+                    .html(contract.number)
+                    .attr('href', '#collapse'+contract.id);
+                $(nodes).find('#contractBalance')
+                    .html(contract.balance.toFixed(2)+' <i class="fa fa-rub"></i>')
+                    .data('balance', contract.balance);
+                $(nodes).find('#contractNode').addClass(contract.isBlocked === 0 ? 'panel-default': 'panel-red');
+                $(nodes).find('#collapse').attr('id', 'collapse'+contract.id);
+                $(nodes).find('#tariffName').html(contract.tariff.name).data('tariffId', contract.tariff.id);
+                $page_wrapper.find('#accordion').append($(nodes).contents());
+            })
         });
     }
 /*    "/customer": function () {

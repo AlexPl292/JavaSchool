@@ -23,6 +23,10 @@ textarea {
     text-overflow: ellipsis;
 }
 
+td.clickableRow {
+    cursor: pointer;
+}
+
 .wrapper li {
     cursor: pointer;
 }
