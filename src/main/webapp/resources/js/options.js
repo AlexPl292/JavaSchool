@@ -459,7 +459,10 @@ var prepare = {
             pagingType: "full_numbers",
             columns: [
                 {
-                    title: "Name", data: null, render: function (data, type, row) {
+                    title: "Name",
+                    data: null,
+                    className: 'clicableRow',
+                    render: function (data, type, row) {
                     if (type === "display") {
                         return '<i class="fa fa-plus-square" style="padding-right: 1.8em"></i>' + data.surname + ' ' + data.name;
                     }
@@ -483,7 +486,12 @@ var prepare = {
                 {title: "Email", data: "email"}
             ]
         });
-        addTableAdditional(table, 'contracts', 'number', 'Contracts', 'No contracts')
+        addTableAdditional(table, 'contracts', 'number', 'Contracts', 'No contracts');
+        $('#content_table').on('click', 'tr', function () {
+            var data = table.row( this ).data();
+            Cookies.set("lastSeenUserId", data.id, {expires: 1});
+            loadpage("customer");
+        });
     },
     "options": function ($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -754,6 +762,19 @@ var prepare = {
                 }
             }
         })
+    },
+    "customer": function ($page_wrapper) {
+        var link = document.querySelector('link[href$="pieces.html"]');
+        var content = link.import.querySelector('#piece_customer');
+        var customerId = Cookies.get('lastSeenUserId');
+        $.get('/rest/customers/'+customerId, {}, function (data) {
+            $page_wrapper.append(content.cloneNode(true));
+            $page_wrapper.find('#customerName').html(data.surname + ' ' + data.name);
+            $page_wrapper.find('#customerEmail').html(data.email);
+            $page_wrapper.find('#customerPassportNumber').html(data.passportNumber);
+            $page_wrapper.find('#customerPassportData').append(data.passportData.replace(/\n/g, '<br/>'));
+            $page_wrapper.find('#customerAddress').html(data.address.replace(/\n/g, '<br/>'));
+        });
     }
 /*    "/customer": function () {
         prepare_tariff_list($('#tariff'), $('#options'));
