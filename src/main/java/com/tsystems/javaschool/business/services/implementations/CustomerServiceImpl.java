@@ -1,5 +1,6 @@
 package com.tsystems.javaschool.business.services.implementations;
 
+import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Contract;
@@ -59,7 +60,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto loadByKey(Integer key) {
         Customer customer = repository.findOne(key);
-        return new CustomerDto(customer).addDependencies(customer);
+        CustomerDto customerDto = new CustomerDto(customer).addDependencies(customer);
+        return customerDto;
     }
 
     @Override

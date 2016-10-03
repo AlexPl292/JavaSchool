@@ -86,7 +86,7 @@ public class CustomerDto implements DtoMapper<Customer>{
     @Override
     public CustomerDto addDependencies(Customer entity) {
         if (entity != null && entity.getContracts() != null)
-            this.contracts = entity.getContracts().stream().map(ContractDto::new).collect(Collectors.toList());
+            this.contracts = entity.getContracts().stream().map(e -> new ContractDto(e).addDependencies(e)).collect(Collectors.toList());
         return this;
     }
 
