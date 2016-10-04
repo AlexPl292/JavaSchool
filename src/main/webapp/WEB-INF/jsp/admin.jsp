@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: alex
@@ -62,7 +63,7 @@
                         <%--                <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                                         </li>--%>
                         <li class="divider"></li>
-                        <li><a href="/sign_out"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->

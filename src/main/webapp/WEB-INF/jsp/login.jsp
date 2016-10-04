@@ -20,31 +20,21 @@
     <title>Login</title>
 
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/metisMenu/css/metisMenu.min.css">
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/vendor/font-awesome/css/font-awesome.min.css">
 
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.8.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.8.3.css">
 
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/jquery/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/metisMenu/js/metisMenu.min.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/vendor/notify/notify.min.js"></script>
 
     <script>
         $(function () {
-            var $form = $('#loginForm');
-            $form.submit(function (e) {
-                e.preventDefault();
-                $.post($form.attr("action"), $form.serialize(), function (res) {
-                    if (res.success) {
-                        window.location = "/";
-                    } else {
-                        $.notify('Error!');
-                    }
-                });
-            });
+            var path = window.location.href;
+            var arg = path.substring(path.indexOf("?")+1);
+            if (arg === "error") {
+                $('input[type=submit]').notify('Error!', {position:'bottom center'});
+            }
         })
     </script>
 </head>
@@ -62,7 +52,7 @@
                     <form role="form" action="/login" method="POST" id="loginForm">
                         <fieldset>
                             <div class="form-group">
-                                <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+                                <input class="form-control" placeholder="E-mail" name="username" type="email" autofocus>
                             </div>
                             <div class="form-group">
                                 <input class="form-control" placeholder="Password" name="password" type="password" value="">
