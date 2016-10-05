@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.SchemaOutputResolver;
 import java.security.Principal;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class ContractRest {
     public void delete(@PathVariable Integer id) {
         ContractDto entity = service.loadByKey(id);
         if (entity.getId() == null) {
-            throw new ResourceNotFoundException("customer", id);
+            throw new ResourceNotFoundException("contract", id);
         }
         service.remove(id);
     }
@@ -52,7 +53,7 @@ public class ContractRest {
         }
         ContractDto entity = service.setBlock(id, blockLevel);
         if (entity.getId() == null) {
-            throw new ResourceNotFoundException("customer", id);
+            throw new ResourceNotFoundException("contract", id);
         }
     }
 
@@ -60,7 +61,18 @@ public class ContractRest {
     public void unblock(@PathVariable Integer id, HttpServletRequest request) {
         ContractDto entity = service.setBlock(id, 0);
         if (entity.getId() == null) {
-            throw new ResourceNotFoundException("customer", id);
+            throw new ResourceNotFoundException("contract", id);
         }
+    }
+
+    @PutMapping("/{id}")
+    public ContractDto modify(@RequestParam("tariff") Integer tariffId,
+                       @RequestParam(value = "usedOptions", required = false) List<Integer> options,
+                       @PathVariable Integer id) {
+        ContractDto entity = service.updateContract(id, tariffId, options);
+        if (entity.getId() == null) {
+            throw new ResourceNotFoundException("contract", id);
+        }
+        return service.loadByKey(id);
     }
 }

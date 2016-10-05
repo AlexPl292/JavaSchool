@@ -3,13 +3,15 @@ package com.tsystems.javaschool.business.services.implementations;
 import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.db.entities.Contract;
+import com.tsystems.javaschool.db.entities.Option;
+import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.repository.ContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -56,6 +58,42 @@ public class ContractServiceImpl implements ContractService{
         Contract contract = repository.findOne(id);
         contract.setIsBlocked(blockLevel);
         return new ContractDto(contract);
+    }
+
+    @Override
+    public ContractDto updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds) {
+        Contract contract = repository.findOne(contractId);
+        if (contract == null) {
+            return new ContractDto();
+        }
+
+        contract.getUsedOptions().size();
+        Set<Option> oldOptions = contract.getUsedOptions();
+
+        Tariff tariff = new Tariff();
+        tariff.setId(tariffId);
+        contract.setTariff(tariff);
+
+        Set<Option> options = new HashSet<>();
+        if (optionIds != null) {
+            for (Integer id : optionIds) {
+                Option opt = new Option();
+                opt.setId(id);
+                options.add(opt);
+            }
+        }
+        contract.setUsedOptions(options);
+        contract = repository.saveAndFlush(contract);
+
+        Set<Option> newOptions = contract.getUsedOptions();
+        BigDecimal summ = newOptions.stream()
+                .filter(e -> !oldOptions.contains(e))
+                .map(Option::getConnectCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        contract.setBalance(contract.getBalance().subtract(summ));
+
+        return new ContractDto(contract).addDependencies(contract);
     }
 
     @Override

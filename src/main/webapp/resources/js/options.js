@@ -224,10 +224,10 @@ function loadlist(selobj, url, nameattr, valattr, selected_val) {
     });
 }
 
-function prepare_tariff_list(tariffList, options, selected_val) {
+function prepare_tariff_list(tariffList, options, selected_val, boxes_name) {
     $(tariffList).change(function (e) {
         e.preventDefault();
-        $.getJSON("/rest/tariffs/" + $(this).val() + '/options', {}, create_boxes($(options), "contracts[usedOptions][][id]"));
+        $.getJSON("/rest/tariffs/" + $(this).val() + '/options', {}, create_boxes($(options), boxes_name));
     });
     loadlist($(tariffList), "/rest/tariffs", "name", "id", selected_val);
 
@@ -622,7 +622,7 @@ var prepare = {
                 options: "Choose options"
             }
         });
-        prepare_tariff_list($('#tariff'), $('#options'));
+        prepare_tariff_list($('#tariff'), $('#options'), "contracts[usedOptions][][id]");
     },
     "new_option": function ($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -822,7 +822,7 @@ function edit_tariff(panel) {
     var rightPanel = $(panel).find('.col-lg-6:last .well');
     leftPanel.html(tariff);
     rightPanel.html(options);
-    prepare_tariff_list($('#tariffEdit' + id), $('#optionsEdit' + id), usedTariff);
+    prepare_tariff_list($('#tariffEdit' + id), $('#optionsEdit' + id), usedTariff, "usedOptions");
 
     $(panel).find('.panel-heading .pull-right').html('<button type="button" class="btn btn-outline btn-danger btn-xs">Exit editing</button>');
     $(panel).find('button:contains("Exit editing")').click(function (e) {
@@ -841,13 +841,13 @@ function edit_handler(e) {
     var usedOptions = e.data.usedOptions;
     var form = panel.find("form");
     $(form).find("input[type=checkbox]").prop("disabled", false);
-    var cost = 0;
+/*    var cost = 0;
     $(form).find("input[type=checkbox]:checked").each(function (i, item) {
         if ($.inArray(parseInt($(item).val()), usedOptions) === -1) {
             cost += $(item).data("cost");
         }
-    });
-    $.post($(form).attr("action"), $(form).serialize(), function (e) {
+    });*/
+/*    $.post($(form).attr("action"), $(form).serialize(), function (e) {
         if (e.success) {
             $.notify("Success!", {position: "top right", className: "success"});
             var filling = fill_accordion_node(e.data);
@@ -864,6 +864,24 @@ function edit_handler(e) {
             $.each(e.errors, function (prop, val) {
                 $.notify("Error: in " + prop + "\n" + val, {position: "top right", className: "error"});
             });
+        }
+    });*/
+
+    $.ajax({
+        url: '/rest/contracts/'+$(panel).find('input[name=contractId]').val(),
+        type: "PUT",
+        // contentType:"application/json; charset=utf-8",
+        data: $(form).find(':not([type=hidden])').serialize(),
+        success: function (data) {
+            $.notify("Success!", {position: "top right", className: "success"});
+            var filling = fill_accordion_node(data);
+            $(panel).find(".panel-body").empty();
+            $(panel).find(".panel-body").append(filling[0]);
+            $(panel).find(".panel-body").append(filling[1]);
+            $(panel).find(".panel-body").append(filling[2]);
+            $(panel).find(".panel-title .pull-right").empty();
+            $(panel).find(".panel-title .pull-right").append(create_panel_menu(data));
+            $(panel).find("#contractBalance").html(data.balance.toFixed(2) + ' <i class="fa fa-rub"></i>');
         }
     });
     $(form).find(":input").prop("disabled", true);
