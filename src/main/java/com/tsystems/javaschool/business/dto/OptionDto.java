@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.business.dto;
 
 import com.tsystems.javaschool.db.entities.Option;
+import org.apache.commons.lang3.ObjectUtils;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -167,6 +168,6 @@ public class OptionDto implements DtoMapper<Option>, Comparable<OptionDto> {
 
     @Override
     public int compareTo(OptionDto o) {
-        return id - o.getId();
+        return ObjectUtils.compare(this.id, o.getId());
     }
 }

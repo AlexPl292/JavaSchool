@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.business.dto;
 
 import com.tsystems.javaschool.db.entities.Tariff;
+import org.apache.commons.lang3.ObjectUtils;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -104,6 +105,6 @@ public class TariffDto implements DtoMapper<Tariff>, Comparable<TariffDto> {
 
     @Override
     public int compareTo(TariffDto o) {
-        return id - o.getId();
+        return ObjectUtils.compare(this.id, o.getId());
     }
 }

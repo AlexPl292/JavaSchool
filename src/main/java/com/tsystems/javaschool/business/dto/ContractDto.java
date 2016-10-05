@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.business.dto;
 
 import com.tsystems.javaschool.db.entities.Contract;
+import org.apache.commons.lang3.ObjectUtils;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -144,6 +145,6 @@ public class ContractDto implements DtoMapper<Contract>, Comparable<ContractDto>
 
     @Override
     public int compareTo(ContractDto o) {
-        return id - o.getId();
+        return ObjectUtils.compare(this.id, o.getId());
     }
 }

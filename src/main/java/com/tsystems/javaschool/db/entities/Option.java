@@ -46,21 +46,21 @@ public class Option {
         @JoinColumn(name = "id_first", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "id_second", referencedColumnName = "id")
     })
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Option> required = new HashSet<>();
 
     @JoinTable(name = "Required_option_relationships", joinColumns = { // By using 'mappedby' there dependencies
             @JoinColumn(name = "id_second", referencedColumnName = "id")}, inverseJoinColumns = {  // will not persist
             @JoinColumn(name = "id_first", referencedColumnName = "id")
     })
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Option> requiredMe = new HashSet<>();
 
     @JoinTable(name = "Forbidden_option_relationships", joinColumns = {
         @JoinColumn(name = "id_first", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "id_second", referencedColumnName = "id", nullable = false)
     })
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Option> forbidden = new HashSet<>();
 
     @JoinTable(name = "Possible_options_of_tariffs", joinColumns = {
@@ -74,7 +74,7 @@ public class Option {
             @JoinColumn(name = "option_id", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "contract_id", referencedColumnName = "id", nullable = false)
     })
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Contract> contractsThoseUseOption = new HashSet<>();
 
     /**

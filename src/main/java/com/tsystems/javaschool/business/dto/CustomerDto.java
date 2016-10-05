@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.business.dto;
 
 import com.tsystems.javaschool.db.entities.Customer;
+import org.apache.commons.lang3.ObjectUtils;
 
 import javax.validation.constraints.*;
 import java.util.ArrayList;
@@ -175,6 +176,6 @@ public class CustomerDto implements DtoMapper<Customer>, Comparable<CustomerDto>
 
     @Override
     public int compareTo(CustomerDto o) {
-        return id - o.getId();
+        return ObjectUtils.compare(this.id, o.getId());
     }
 }

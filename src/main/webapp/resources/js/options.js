@@ -622,7 +622,7 @@ var prepare = {
                 options: "Choose options"
             }
         });
-        prepare_tariff_list($('#tariff'), $('#options'), "contracts[usedOptions][][id]");
+        prepare_tariff_list($('#tariff'), $('#options'), 1, "contracts[usedOptions][][id]");
     },
     "new_option": function ($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
@@ -841,31 +841,6 @@ function edit_handler(e) {
     var usedOptions = e.data.usedOptions;
     var form = panel.find("form");
     $(form).find("input[type=checkbox]").prop("disabled", false);
-/*    var cost = 0;
-    $(form).find("input[type=checkbox]:checked").each(function (i, item) {
-        if ($.inArray(parseInt($(item).val()), usedOptions) === -1) {
-            cost += $(item).data("cost");
-        }
-    });*/
-/*    $.post($(form).attr("action"), $(form).serialize(), function (e) {
-        if (e.success) {
-            $.notify("Success!", {position: "top right", className: "success"});
-            var filling = fill_accordion_node(e.data);
-            $(panel).find(".panel-body").empty();
-            $(panel).find(".panel-body").append(filling[0]);
-            $(panel).find(".panel-body").append(filling[1]);
-            $(panel).find(".panel-body").append(filling[2]);
-            $(panel).find(".panel-title .pull-right").empty();
-            $(panel).find(".panel-title .pull-right").append(create_panel_menu(e.data));
-            var balance = $(panel).find("#balance");
-            var res_balance = $(balance).data("balance") - cost;
-            $(balance).html(res_balance.toFixed(2) + ' <i class="fa fa-rub"></i>').data("balance", res_balance);
-        } else {
-            $.each(e.errors, function (prop, val) {
-                $.notify("Error: in " + prop + "\n" + val, {position: "top right", className: "error"});
-            });
-        }
-    });*/
 
     $.ajax({
         url: '/rest/contracts/'+$(panel).find('input[name=contractId]').val(),
@@ -886,72 +861,3 @@ function edit_handler(e) {
     });
     $(form).find(":input").prop("disabled", true);
 }
-/*    "/customer": function () {
-        prepare_tariff_list($('#tariff'), $('#options'));
-
-        $("#accordion").on("click", "ul[role='menu'] a", function (e) {
-            e.preventDefault();
-            if ($(this).find('p').hasClass("text-muted")) {
-                return false;
-            }
-            var $panel = $(this).closest('.panel');
-            var id = $panel.find('input[type=hidden]').val();
-            var href = $(this).attr("href");
-            var $obj = $(this);
-
-            if (href === "/delete_contract") {
-                $.post("/customer" + href, {id: id}, function () {
-                    $panel.remove();
-                })
-            } else if (href === "/blockContract") {
-                $.post("/customer" + href, {id: id}, function () {
-                    $panel.removeClass("panel-default").addClass("panel-red");
-                    $obj.attr("href", "/unblockContract").text("Unblock");
-                    $panel.find(":contains('Edit')").addClass("text-muted");
-                });
-            } else if (href === "/unblockContract") {
-                $.post("/customer" + href, {id: id}, function () {
-                    $panel.removeClass("panel-red").addClass("panel-default");
-                    $obj.attr("href", "/blockContract").text("Block");
-                    $panel.find(":contains('Edit')").removeClass("text-muted");
-                });
-            } else if (href === "/editTariff") {
-                edit_tariff($panel)
-            }
-        })
-    },
-    "/admin/customer": function () {
-        prepare_tariff_list($('#tariff'), $('#options'));
-
-
-        $("#accordion").on("click", "ul[role='menu'] a", function (e) {
-            e.preventDefault();
-            if ($(this).find('p').hasClass("text-muted")) {
-                return false;
-            }
-            var $panel = $(this).closest('.panel');
-            var id = $panel.find('input[type=hidden]').val();
-            var href = $(this).attr("href");
-            var $obj = $(this);
-
-            if (href === "/delete_contract") {
-                $.post("/admin" + href, {id: id}, function () {
-                    $panel.remove();
-                })
-            } else if (href === "/blockContract") {
-                $.post("/admin" + href, {id: id}, function () {
-                    $panel.removeClass("panel-default").addClass("panel-red");
-                    $obj.attr("href", "/admin/unblockContract").text("Unblock");
-                    $panel.find(":contains('Edit')").addClass("text-muted");
-                });
-            } else if (href === "/unblockContract") {
-                $.post("/admin" + href, {id: id}, function () {
-                    $panel.removeClass("panel-red").addClass("panel-default");
-                    $obj.attr("href", "/admin/blockContract").text("Block");
-                    $panel.find(":contains('Edit')").removeClass("text-muted");
-                });
-            } else if (href === "/editTariff") {
-                edit_tariff($panel)
-            }
-        })
-    },*/

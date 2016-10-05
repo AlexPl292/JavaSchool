@@ -37,7 +37,7 @@ public class Customer extends User{
     @Expose
     private Integer isBlocked;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.MERGE)
     private Set<Contract> contracts;
 
     /**

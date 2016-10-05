@@ -74,20 +74,20 @@ function submitting(full_success) {
             method: "POST",
             contentType: "application/json",
             success : function (response) {
-            if (response.success) {
-                $.notify("Success!", {position: "top right", className: "success"});
-                $(form).find("input[type=checkbox]").removeData();
-                $(form)[0].reset();
-                if (full_success !== undefined) {
-                    full_success(response);
-                }
-            } else {
-                $.each(response.errors, function (prop, val) {
+            $.notify("Success!", {position: "top right", className: "success"});
+            // $(form).find("input[type=checkbox]").removeData();
+            $(form)[0].reset();
+            if (full_success !== undefined) {
+                full_success(response);
+            }
+            $(form).find(":input").prop("disabled", false); },
+            error: function (jqXHR) {
+                $.each(jqXHR.responseJSON.errors, function (prop, val) {
                     $.notify("Error: in " + prop + "\n" + val, {position: "top right", className: "error"});
                 });
+                $(form).find(":input").prop("disabled", false);
             }
-            $(form).find(":input").prop("disabled", false);
-        }});
+        });
         $(form).find(":input").prop("disabled", true);
         return false;
     }
