@@ -786,6 +786,7 @@ var prepare = {
                 $(nodes).find('#contractNumber')
                     .html(contract.number)
                     .attr('href', '#collapse' + contract.id);
+                $(nodes).find('input[name=contractId]').val(contract.id);
 
                 // if (contract.isBlocked !== 2) {
                 var menu = link.import.querySelector('#piece_node_menu').cloneNode(true);
@@ -811,9 +812,32 @@ var prepare = {
 
                 $page_wrapper.find('#accordion').append($(nodes).contents());
             });
+            $("#accordion").on("click", "ul[role='menu'] a", function (e) {
+                e.preventDefault();
+                if ($(this).find('p').hasClass("text-muted")) {
+                    return false;
+                }
+                var $panel = $(this).closest('.panel');
+                var id = $panel.find('input[type=hidden]').val();
+                var href = $(this).attr("href");
+                var $obj = $(this);
+
+                if (href === "/delete") {
+                    /*                        $.post("/customer" + href, {id: id}, function () {
+                     $panel.remove();
+                     })*/
+                    $.ajax({
+                        url:"/rest/contracts/"+id,
+                        type:"DELETE",
+                        success:function (data) {
+                            $panel.remove();
+                        }
+                    })
+                }
+            })
         });
     },
-    "me": function ($page_wrapper) {
+    "me": function($page_wrapper) {
         if (Cookies.get('lastSeenUserId') === undefined) {
             Cookies.set("lastSeenUserId", window.userId, {expires: 1});
         }
