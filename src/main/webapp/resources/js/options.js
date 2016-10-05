@@ -439,7 +439,7 @@ function chooseOptionsForTariff($tariffs) {
     }
 
     return options;
-}
+};
 
 var prepare = {
     "customers": function ($page_wrapper) {
@@ -463,11 +463,11 @@ var prepare = {
                     data: null,
                     className: 'clickableRow',
                     render: function (data, type, row) {
-                    if (type === "display") {
-                        return '<i class="fa fa-plus-square" style="padding-right: 1.8em"></i>' + data.surname + ' ' + data.name;
+                        if (type === "display") {
+                            return '<i class="fa fa-plus-square" style="padding-right: 1.8em"></i>' + data.surname + ' ' + data.name;
+                        }
+                        return data.surname + ' ' + data.name;
                     }
-                    return data.surname + ' ' + data.name;
-                }
                 },
                 {
                     title: "Date ob birth", data: "dateOfBirth", render: function (data, type, row) {
@@ -485,15 +485,15 @@ var prepare = {
                 {title: "Passport number", data: "passportNumber"},
                 {title: "Email", data: "email"},
                 {
-                    "className":      'showCustomer',
-                    "orderable":      false,
-                    "data":           null,
+                    "className": 'showCustomer',
+                    "orderable": false,
+                    "data": null,
                     "defaultContent": '<button type="button" class="btn btn-outline btn-default btn-xs">Show</button>'
                 }
             ]
         });
         $('#content_table').on('click', '.showCustomer', function () {
-            var data = table.row( this ).data();
+            var data = table.row(this).data();
             Cookies.set("lastSeenUserId", data.id, {expires: 1});
             loadpage("customer");
         });
@@ -773,7 +773,7 @@ var prepare = {
         var link = document.querySelector('link[href$="pieces.html"]');
         var content = link.import.querySelector('#piece_customer');
         var customerId = Cookies.get('lastSeenUserId');
-        $.get('/rest/customers/'+customerId, {}, function (data) {
+        $.get('/rest/customers/' + customerId, {}, function (data) {
             $page_wrapper.append(content.cloneNode(true));
             $page_wrapper.find('#customerName').html(data.surname + ' ' + data.name);
             $page_wrapper.find('#customerEmail').html(data.email);
@@ -785,7 +785,7 @@ var prepare = {
                 var nodes = link.import.querySelector('#piece_accordion_node').cloneNode(true);
                 $(nodes).find('#contractNumber')
                     .html(contract.number)
-                    .attr('href', '#collapse'+contract.id);
+                    .attr('href', '#collapse' + contract.id);
 
                 // if (contract.isBlocked !== 2) {
                 var menu = link.import.querySelector('#piece_node_menu').cloneNode(true);
@@ -793,26 +793,33 @@ var prepare = {
                 // $(menu).find('p:contains("Edit")').addClass('text-muted');
                 // $(menu).find('a:contains("Edit")').attr('href', '');
                 // }
-                $(menu).find('#menuBlock').append('<a><p>'+(contract.isBlocked === 0? 'Block':'Unblock')+'</p></a>');
+                $(menu).find('#menuBlock').append('<a><p>' + (contract.isBlocked === 0 ? 'Block' : 'Unblock') + '</p></a>');
                 $(nodes).find('#nodeTitle').append($(menu).contents());
                 // }
 
                 $(nodes).find('#contractBalance')
-                    .html(contract.balance.toFixed(2)+' <i class="fa fa-rub"></i>')
+                    .html(contract.balance.toFixed(2) + ' <i class="fa fa-rub"></i>')
                     .data('balance', contract.balance);
-                $(nodes).find('#contractNode').addClass(contract.isBlocked === 0 ? 'panel-default': 'panel-red');
-                $(nodes).find('#collapse').attr('id', 'collapse'+contract.id);
+                $(nodes).find('#contractNode').addClass(contract.isBlocked === 0 ? 'panel-default' : 'panel-red');
+                $(nodes).find('#collapse').attr('id', 'collapse' + contract.id);
                 $(nodes).find('#tariffName').html(contract.tariff.name).data('tariffId', contract.tariff.id);
                 var opts = '';
                 for (var i = 0; i < contract.usedOptions.length; i++) {
-                    opts += '<li>'+contract.usedOptions[i].name+'</li>';
+                    opts += '<li>' + contract.usedOptions[i].name + '</li>';
                 }
                 $(nodes).find('#usedOptions').append(opts);
 
                 $page_wrapper.find('#accordion').append($(nodes).contents());
             });
         });
+    },
+    "me": function ($page_wrapper) {
+        if (Cookies.get('lastSeenUserId') === undefined) {
+            Cookies.set("lastSeenUserId", window.userId, {expires: 1});
+        }
+        prepare["customer"]($page_wrapper);
     }
+};
 /*    "/customer": function () {
         prepare_tariff_list($('#tariff'), $('#options'));
 
@@ -882,4 +889,3 @@ var prepare = {
             }
         })
     },*/
-};

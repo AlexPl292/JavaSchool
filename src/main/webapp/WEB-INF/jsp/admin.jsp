@@ -74,6 +74,11 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
+                        <security:authorize access="!hasRole('ROLE_ADMIN')">
+                            <li>
+                                <a id="me_menu" onclick="loadpage('me')"><i class="fa fa-group fa-fw"></i> Me</a>
+                            </li>
+                        </security:authorize>
                         <li>
                             <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
                             <a href="#"><i class="fa fa-group fa-fw"></i> Customers<span class="fa arrow"></span></a>
@@ -141,6 +146,9 @@
         if (currentPage !== undefined) {
             loadpage(currentPage);
         }
+        <security:authorize access="!hasRole('ROLE_ADMIN')">
+            window.userId = <security:authentication property="principal.id" />;
+        </security:authorize>
     });
 
 </script>
