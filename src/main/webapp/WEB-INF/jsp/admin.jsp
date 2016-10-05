@@ -94,9 +94,11 @@
                                 <li>
                                     <a id="new_tariff_menu" onclick="loadpage('new_tariff')">Add new tariff</a>
                                 </li>
-                                <li>
-                                    <a id="tariffs_menu" onclick="loadpage('tariffs')">Show all tariffs</a>
-                                </li>
+                                <security:authorize access="hasRole('ROLE_ADMIN')">
+                                    <li>
+                                        <a id="tariffs_menu" onclick="loadpage('tariffs')">Show all tariffs</a>
+                                    </li>
+                                </security:authorize>
                             </ul>
                         </li>
 

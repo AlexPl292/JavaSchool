@@ -13,6 +13,7 @@
         <!--<intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')" />-->
         <intercept-url pattern="/**" access="isAuthenticated()" />
         <form-login login-page="/login" login-processing-url="/login"/>
+        <logout delete-cookies="currentPage,lastSeenUserId"/>
         <csrf disabled="true"/>
     </http>
 
