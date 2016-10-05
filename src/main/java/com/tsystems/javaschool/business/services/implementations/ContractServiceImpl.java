@@ -30,7 +30,10 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public ContractDto addNew(ContractDto contractDto) {
-        return new ContractDto(repository.saveAndFlush(contractDto.convertToEntity()));
+        Contract contract = contractDto.convertToEntity();
+        contract.setBalance(new BigDecimal("100.00"));
+        contract.setIsBlocked(0);
+        return new ContractDto(repository.saveAndFlush(contract));
     }
 
     @Override

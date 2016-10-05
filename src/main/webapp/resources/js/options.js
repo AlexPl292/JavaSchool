@@ -5,14 +5,12 @@
 function create_boxes(selobj, checkboxs_name) {
     return function (data) {
         $(selobj).empty();
-        // var checkboxs_name = selobj.attr('id');
         $.each(data, function (i, obj) {
             var $box = $("<input />", {
                 type: "checkbox",
                 id: checkboxs_name + i,
                 value: obj.id,
                 name: checkboxs_name,
-                "data-cost": obj.connectCost
             });
             $box.data('boxData', obj);
             $(selobj).append($box);
@@ -234,9 +232,6 @@ function prepare_tariff_list(tariffList, options, selected_val, boxes_name) {
     $(options).on('change', 'input[type=checkbox]', optionChecked(options));
 }
 
-
-
-
 function fill_accordion_node(data) {
     var $used_options = $('<ul></ul>');
     for (var i = 0; i < data.usedOptions.length; i++) {
@@ -260,14 +255,12 @@ function fill_accordion_node(data) {
     return [id, col_lg1, col_lg2];
 }
 
-function create_accordion_node(res) {
-    var data = res.data;
-
+function create_accordion_node(data) {
     var $node = $('<div class="panel panel-success">' +
         '<div class="panel-heading">' +
         '<h4 class="panel-title">' +
         '<a data-toggle="collapse" data-parent="#accordion" href="#collapse' + data.id + '" >' + data.number + '</a> ' +
-        '<small id="balance" data-balance="' + data.balance + '">' + data.balance + ' <i class="fa fa-rub"></i></small>' +
+        '<small id="balance" >' + (data.balance).toFixed(2) + ' <i class="fa fa-rub"></i></small>' +
         '<div class="pull-right"></div>' +
         '</h4>' +
         '</div>' +
@@ -531,27 +524,6 @@ var prepare = {
         });
         addTableAdditional(table, 'usedOptions', 'name', 'Used options', 'No used options');
     },
-    "new_contract": function ($page_wrapper) {
-        var link = document.querySelector('link[href$="pieces.html"]');
-        var content = link.import.querySelector('#piece_new_contract');
-        $page_wrapper.append(content.cloneNode(true));
-
-        $('form#add_contract_form').validate({
-            rules: {
-                number: {
-                    required: true,
-                    phone: true
-                }
-            },
-            messages: {
-                number: {
-                    required: "Please enter phone number",
-                    phone: "Wrong phone number format"
-                }
-            },
-            submitHandler: submitting(create_accordion_node)
-        })
-    },
     "new_customer": function ($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
         var content = link.import.querySelector('#piece_new_customer');
@@ -717,11 +689,6 @@ var prepare = {
                     .attr('href', '#collapse' + contract.id);
                 $(nodes).find('input[name=contractId]').val(contract.id);
 
-                // if (contract.isBlocked !== 2) {
-                // if (contract.isBlocked === 1) {
-                // $(menu).find('p:contains("Edit")').addClass('text-muted');
-                // $(menu).find('a:contains("Edit")').attr('href', '');
-                // }
                 if (window.userRole !==1 || contract.isBlocked !== 2) {
                     var menu = link.import.querySelector('#piece_node_menu').cloneNode(true);
                     $(menu).find('#menuBlock')
@@ -784,9 +751,56 @@ var prepare = {
                 } else if (href === "/edit") {
                     edit_tariff($panel);
                 }
-            })
+            });
+
+            if (window.userRole === 2) {
+                var contractNode = link.import.querySelector('#piece_node_contract').cloneNode(true);
+                $(contractNode).find('form input[type="text"].bfh-phone, form input[type="tel"].bfh-phone, span.bfh-phone').each(function () {
+                    var $phone = $(this);
+                    $phone.bfhphone($phone.data());
+                });
+                $(contractNode).find("input[name='customer[id]']").val(customerId);
+                $page_wrapper.find('#accordion').append($(contractNode).contents());
+                prepare_tariff_list($('#tariff'), $('#options'), 1, "usedOptions[][id]");
+                $('form#add_contract_form').validate({
+                    rules: {
+                        number: {
+                            required: true,
+                            phone: true
+                        }
+                    },
+                    messages: {
+                        number: {
+                            required: "Please enter phone number",
+                            phone: "Wrong phone number format"
+                        }
+                    },
+                    submitHandler: submitting(create_accordion_node)
+                })
+            }
         });
     },
+/*    "new_contract": function ($page_wrapper) {
+        var link = document.querySelector('link[href$="pieces.html"]');
+        var content = link.import.querySelector('#piece_new_contract');
+        $page_wrapper.append(content.cloneNode(true));
+
+        $('form#add_contract_form').validate({
+            rules: {
+                number: {
+                    required: true,
+                    phone: true
+                }
+            },
+            messages: {
+                number: {
+                    required: "Please enter phone number",
+                    phone: "Wrong phone number format"
+                }
+            },
+            submitHandler: submitting(create_accordion_node)
+        })
+    },*/
     "me": function($page_wrapper) {
         if (Cookies.get('lastSeenUserId') === undefined) {
             Cookies.set("lastSeenUserId", window.userId, {expires: 1});

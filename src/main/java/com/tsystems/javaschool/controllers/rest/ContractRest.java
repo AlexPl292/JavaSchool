@@ -4,13 +4,17 @@ import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.controllers.rest.CustomerRest;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
+import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import javax.xml.bind.SchemaOutputResolver;
+import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 
@@ -32,6 +36,17 @@ public class ContractRest {
     @ResponseStatus(HttpStatus.OK)
     public List<ContractDto> loadAll() {
         return service.loadAll();
+    }
+
+    @PostMapping
+    public ResponseEntity addNew(@Valid @RequestBody ContractDto contract) {
+        List<ContractDto> existings = service.findByNumber(contract.getNumber());
+        if (existings.size() > 0) {
+            throw new UniqueFieldDuplicateException("Name", contract.getNumber(), "/rest/contracts/"+existings.get(0).getId());
+        }
+        contract = service.addNew(contract);
+        ContractDto newContract = service.loadByKey(contract.getId());
+        return ResponseEntity.created(URI.create("/rest/contracts/"+newContract.getId())).body(newContract);
     }
 
     @DeleteMapping("/{id}")

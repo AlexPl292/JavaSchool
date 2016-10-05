@@ -430,6 +430,57 @@
         </div>
     </div>
 </div>
+
+<div id="piece_node_contract">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#newContract">Add new
+                    contract</a>
+            </h4>
+        </div>
+        <div id="newContract" class="panel-collapse collapse" style="height: 0px;">
+            <div class="panel-body">
+                <div class="col-lg-12">
+                    <form class="form-horizontal" id="add_contract_form" action='/rest/contracts'
+                          method="POST">
+                        <input type="hidden" name="customer[id]">
+                        <div class="control-group">
+                            <label class="control-label" for="tariff">Tariff</label>
+                            <div class="controls">
+                                <select id="tariff" name="tariff[id]" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="options">Options</label>
+                            <div class="controls">
+                                <div id="options" class="boxes"></div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="number">Number</label>
+                            <div class="controls input-group">
+                                <span class="input-group-addon"><i class="fa fa-phone"></i> </span>
+                                <input type="text" id="number" name="number" placeholder="" class="form-control input-xlarge bfh-phone" data-format="+7 (ddd) ddd-dddd">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="panel-body">
+                                <!--&lt;!&ndash; Button &ndash;&gt;-->
+                                <div class="controls">
+                                    <input type="submit" class="btn btn-success"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!--&lt;!&ndash;<c:forEach items="${customer.getContracts()}" var="contract">&ndash;&gt;
 &lt;!&ndash;<c:set var="blocked" value="${contract.getIsBlocked()}"/>&ndash;&gt;
 <div class="panel ${blocked == 0 ? " panel-default" : "panel-red"}">
