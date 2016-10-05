@@ -15,8 +15,15 @@ import javax.persistence.*;
 public abstract class User {
     private static final Logger logger = Logger.getLogger(User.class);
 
+    @TableGenerator(
+            name="empGen",
+            table="ID_GEN",
+            pkColumnName="GEN_KEY",
+            valueColumnName="GEN_VALUE",
+            pkColumnValue="EMP_ID",
+            allocationSize=1)
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "empGen")
     @Expose
     private Integer id;
 
