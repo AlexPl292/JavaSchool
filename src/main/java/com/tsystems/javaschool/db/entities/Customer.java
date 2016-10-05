@@ -18,23 +18,18 @@ import java.util.Set;
 public class Customer extends User{
 
     @Column(name = "date_of_birth")
-    @Expose
     private Date dateOfBirth;
 
     @Column(name = "passport_number")
-    @Expose
     private String passportNumber;
 
     @Column(name = "passport_data")
-    @Expose
     private String passportData;
 
     @Column(name = "address")
-    @Expose
     private String address;
 
     @Column(name = "is_blocked")
-    @Expose
     private Integer isBlocked;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)

@@ -24,27 +24,21 @@ public abstract class User {
             allocationSize=1)
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "empGen")
-    @Expose
     private Integer id;
 
     @Basic
-    @Expose
     private String name;
 
     @Basic
-    @Expose
     private String surname;
 
     @Basic
-    @Expose
     private String email;
 
     @Basic
-    @Expose
     private String password;
 
     @Basic
-    @Expose
     private String salt;
 
     public Integer getId() {

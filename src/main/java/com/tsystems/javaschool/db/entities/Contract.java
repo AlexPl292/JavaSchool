@@ -24,27 +24,23 @@ public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @Expose
     private Integer id;
+
     @Column(name = "number")
-    @Expose
     private String number;
+
     @Column(name = "is_blocked")
-    @Expose
     private Integer isBlocked;
 
     @Column(name = "balance")
-    @Expose
     private BigDecimal balance;
 
     @ManyToOne
     @JoinColumn(name = "customer")
-    @Expose
     private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "tariff")
-    @Expose
     private Tariff tariff;
 
     @JoinTable(name = "Used_options_of_tariff", joinColumns = {
