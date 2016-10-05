@@ -9,12 +9,13 @@ import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
  * Created by alex on 08.09.16.
  */
-public class ContractDto implements DtoMapper<Contract>{
+public class ContractDto implements DtoMapper<Contract>, Comparable<ContractDto>{
     private Integer id;
 
     @NotNull
@@ -28,7 +29,7 @@ public class ContractDto implements DtoMapper<Contract>{
     private CustomerDto customer;
     private TariffDto tariff;
     private BigDecimal balance;
-    private Set<OptionDto> usedOptions = new HashSet<>();
+    private TreeSet<OptionDto> usedOptions = new TreeSet<>();
 
     public ContractDto() {
 
@@ -79,7 +80,9 @@ public class ContractDto implements DtoMapper<Contract>{
     @Override
     public ContractDto addDependencies(Contract entity) {
         if (entity != null && entity.getUsedOptions() != null)
-            this.usedOptions = entity.getUsedOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
+            this.usedOptions = entity.getUsedOptions().stream()
+                    .map(OptionDto::new)
+                    .collect(Collectors.toCollection(TreeSet::new));
         return this;
     }
 
@@ -115,11 +118,11 @@ public class ContractDto implements DtoMapper<Contract>{
         this.tariff = tariff;
     }
 
-    public Set<OptionDto> getUsedOptions() {
+    public TreeSet<OptionDto> getUsedOptions() {
         return usedOptions;
     }
 
-    public void setUsedOptions(Set<OptionDto> usedOptions) {
+    public void setUsedOptions(TreeSet<OptionDto> usedOptions) {
         this.usedOptions = usedOptions;
     }
 
@@ -137,5 +140,10 @@ public class ContractDto implements DtoMapper<Contract>{
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    @Override
+    public int compareTo(ContractDto o) {
+        return id - o.getId();
     }
 }

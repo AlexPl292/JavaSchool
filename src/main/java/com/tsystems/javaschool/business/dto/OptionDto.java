@@ -8,12 +8,13 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
  * Created by alex on 08.09.16.
  */
-public class OptionDto implements DtoMapper<Option>{
+public class OptionDto implements DtoMapper<Option>, Comparable<OptionDto> {
 
     private Integer id;
 
@@ -31,10 +32,10 @@ public class OptionDto implements DtoMapper<Option>{
 
     @Size(max = 255)
     private String description;
-    private Set<OptionDto> requiredFrom = new HashSet<>();
-    private Set<OptionDto> requiredMe = new HashSet<>();
-    private Set<OptionDto> forbiddenWith = new HashSet<>();
-    private Set<TariffDto> possibleTariffsOfOption = new HashSet<>();
+    private TreeSet<OptionDto> requiredFrom = new TreeSet<>();
+    private TreeSet<OptionDto> requiredMe = new TreeSet<>();
+    private TreeSet<OptionDto> forbiddenWith = new TreeSet<>();
+    private TreeSet<TariffDto> possibleTariffsOfOption = new TreeSet<>();
 
     public OptionDto() {}
 
@@ -48,13 +49,21 @@ public class OptionDto implements DtoMapper<Option>{
             return this;
 
         if (option.getRequired() != null)
-            requiredFrom = option.getRequired().stream().map(OptionDto::new).collect(Collectors.toSet());
+            requiredFrom = option.getRequired().stream()
+                    .map(OptionDto::new)
+                    .collect(Collectors.toCollection(TreeSet::new));
         if (option.getRequiredMe() != null)
-            requiredMe = option.getRequiredMe().stream().map(OptionDto::new).collect(Collectors.toSet());
+            requiredMe = option.getRequiredMe().stream()
+                    .map(OptionDto::new)
+                    .collect(Collectors.toCollection(TreeSet::new));
         if (option.getForbidden() != null)
-            forbiddenWith = option.getForbidden().stream().map(OptionDto::new).collect(Collectors.toSet());
+            forbiddenWith = option.getForbidden().stream()
+                    .map(OptionDto::new)
+                    .collect(Collectors.toCollection(TreeSet::new));
         if (option.getPossibleTariffsOfOption() != null)
-            possibleTariffsOfOption = option.getPossibleTariffsOfOption().stream().map(TariffDto::new).collect(Collectors.toSet());
+            possibleTariffsOfOption = option.getPossibleTariffsOfOption().stream()
+                    .map(TariffDto::new)
+                    .collect(Collectors.toCollection(TreeSet::new));
 
         return this;
     }
@@ -124,35 +133,40 @@ public class OptionDto implements DtoMapper<Option>{
         this.description = description;
     }
 
-    public Set<OptionDto> getRequiredFrom() {
+    public TreeSet<OptionDto> getRequiredFrom() {
         return requiredFrom;
     }
 
-    public void setRequiredFrom(Set<OptionDto> requiredFrom) {
+    public void setRequiredFrom(TreeSet<OptionDto> requiredFrom) {
         this.requiredFrom = requiredFrom;
     }
 
-    public Set<OptionDto> getRequiredMe() {
+    public TreeSet<OptionDto> getRequiredMe() {
         return requiredMe;
     }
 
-    public void setRequiredMe(Set<OptionDto> requiredMe) {
+    public void setRequiredMe(TreeSet<OptionDto> requiredMe) {
         this.requiredMe = requiredMe;
     }
 
-    public Set<OptionDto> getForbiddenWith() {
+    public TreeSet<OptionDto> getForbiddenWith() {
         return forbiddenWith;
     }
 
-    public void setForbiddenWith(Set<OptionDto> forbiddenWith) {
+    public void setForbiddenWith(TreeSet<OptionDto> forbiddenWith) {
         this.forbiddenWith = forbiddenWith;
     }
 
-    public Set<TariffDto> getPossibleTariffsOfOption() {
+    public TreeSet<TariffDto> getPossibleTariffsOfOption() {
         return possibleTariffsOfOption;
     }
 
-    public void setPossibleTariffsOfOption(Set<TariffDto> possibleTariffsOfOption) {
+    public void setPossibleTariffsOfOption(TreeSet<TariffDto> possibleTariffsOfOption) {
         this.possibleTariffsOfOption = possibleTariffsOfOption;
+    }
+
+    @Override
+    public int compareTo(OptionDto o) {
+        return id - o.getId();
     }
 }

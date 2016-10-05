@@ -8,12 +8,13 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
  * Created by alex on 22.09.16.
  */
-public class TariffDto implements DtoMapper<Tariff>{
+public class TariffDto implements DtoMapper<Tariff>, Comparable<TariffDto> {
     private Integer id;
 
     @Size(min = 2, max = 45)
@@ -26,7 +27,7 @@ public class TariffDto implements DtoMapper<Tariff>{
 
     @Size(max = 255)
     private String description;
-    private Set<OptionDto> possibleOptions = new HashSet<>();
+    private TreeSet<OptionDto> possibleOptions = new TreeSet<>();
 
     public TariffDto() {}
 
@@ -37,7 +38,9 @@ public class TariffDto implements DtoMapper<Tariff>{
     @Override
     public TariffDto addDependencies(Tariff tariff) {
         if (tariff != null && tariff.getPossibleOptions() != null)
-            this.possibleOptions = tariff.getPossibleOptions().stream().map(OptionDto::new).collect(Collectors.toSet());
+            this.possibleOptions = tariff.getPossibleOptions().stream()
+                    .map(OptionDto::new)
+                    .collect(Collectors.toCollection(TreeSet::new));
         return this;
     }
 
@@ -91,12 +94,16 @@ public class TariffDto implements DtoMapper<Tariff>{
         this.description = description;
     }
 
-    public Set<OptionDto> getPossibleOptions() {
+    public TreeSet<OptionDto> getPossibleOptions() {
         return possibleOptions;
     }
 
-    public void setPossibleOptions(Set<OptionDto> possibleOptions) {
+    public void setPossibleOptions(TreeSet<OptionDto> possibleOptions) {
         this.possibleOptions = possibleOptions;
     }
 
+    @Override
+    public int compareTo(TariffDto o) {
+        return id - o.getId();
+    }
 }

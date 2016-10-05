@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
         Будем его вручную генерировать, а потом посылать с помощью email или sms
          */
         Customer customer = customerDto.convertToEntity();
-        Contract contract = customerDto.getContracts().get(0).convertToEntity();
+        Contract contract = customerDto.getContracts().first().convertToEntity();
         contract.setCustomer(customer);
         contract.setBalance(new BigDecimal("100.00"));
         contract.setIsBlocked(0);
@@ -60,8 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto loadByKey(Integer key) {
         Customer customer = repository.findOne(key);
-        CustomerDto customerDto = new CustomerDto(customer).addDependencies(customer);
-        return customerDto;
+        return new CustomerDto(customer).addDependencies(customer);
     }
 
     @Override

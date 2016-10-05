@@ -6,12 +6,13 @@ import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
  * Created by alex on 08.09.16.
  */
-public class CustomerDto implements DtoMapper<Customer>{
+public class CustomerDto implements DtoMapper<Customer>, Comparable<CustomerDto> {
 
     private Integer id;
 
@@ -43,7 +44,7 @@ public class CustomerDto implements DtoMapper<Customer>{
     @Min(0)
     @Max(2)
     private int isBlocked;
-    private List<ContractDto> contracts = new ArrayList<>();
+    private TreeSet<ContractDto> contracts = new TreeSet<>();
 
     public CustomerDto() {}
 
@@ -86,7 +87,9 @@ public class CustomerDto implements DtoMapper<Customer>{
     @Override
     public CustomerDto addDependencies(Customer entity) {
         if (entity != null && entity.getContracts() != null)
-            this.contracts = entity.getContracts().stream().map(e -> new ContractDto(e).addDependencies(e)).collect(Collectors.toList());
+            this.contracts = entity.getContracts().stream()
+                    .map(e -> new ContractDto(e).addDependencies(e))
+                    .collect(Collectors.toCollection(TreeSet::new));
         return this;
     }
 
@@ -162,11 +165,16 @@ public class CustomerDto implements DtoMapper<Customer>{
         this.isBlocked = isBlocked;
     }
 
-    public List<ContractDto> getContracts() {
+    public TreeSet<ContractDto> getContracts() {
         return contracts;
     }
 
-    public void setContracts(List<ContractDto> contracts) {
+    public void setContracts(TreeSet<ContractDto> contracts) {
         this.contracts = contracts;
+    }
+
+    @Override
+    public int compareTo(CustomerDto o) {
+        return id - o.getId();
     }
 }
