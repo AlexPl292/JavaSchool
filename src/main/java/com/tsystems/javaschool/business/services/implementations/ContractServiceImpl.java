@@ -52,6 +52,13 @@ public class ContractServiceImpl implements ContractService{
     }
 
     @Override
+    public ContractDto setBlock(Integer id, Integer blockLevel) {
+        Contract contract = repository.findOne(id);
+        contract.setIsBlocked(blockLevel);
+        return new ContractDto(contract);
+    }
+
+    @Override
     public List<ContractDto> findByNumber(String number) {
         return repository
                 .findByNumber(number)

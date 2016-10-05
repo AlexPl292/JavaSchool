@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -38,5 +40,27 @@ public class ContractRest {
             throw new ResourceNotFoundException("customer", id);
         }
         service.remove(id);
+    }
+
+    @PostMapping("/{id}/block")
+    public void block(@PathVariable Integer id, HttpServletRequest request) {
+        int blockLevel;
+        if (request.isUserInRole("ROLE_ADMIN")) {
+            blockLevel = 2;
+        } else {
+            blockLevel = 1;
+        }
+        ContractDto entity = service.setBlock(id, blockLevel);
+        if (entity.getId() == null) {
+            throw new ResourceNotFoundException("customer", id);
+        }
+    }
+
+    @PostMapping("/{id}/unblock")
+    public void unblock(@PathVariable Integer id, HttpServletRequest request) {
+        ContractDto entity = service.setBlock(id, 0);
+        if (entity.getId() == null) {
+            throw new ResourceNotFoundException("customer", id);
+        }
     }
 }

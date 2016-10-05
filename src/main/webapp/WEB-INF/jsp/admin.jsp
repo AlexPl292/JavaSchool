@@ -146,6 +146,11 @@
         if (currentPage !== undefined) {
             loadpage(currentPage);
         }
+        window.userRole = 1;
+        <security:authorize access="hasRole('ROLE_ADMIN')">
+            window.userRole = 2;
+        </security:authorize>
+
         <security:authorize access="!hasRole('ROLE_ADMIN')">
             window.userId = <security:authentication property="principal.id" />;
         </security:authorize>
