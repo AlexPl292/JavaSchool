@@ -30,8 +30,8 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-<!--    <mvc:view-controller path="/" view-name="admin"/>
-    <mvc:view-controller path="/login" view-name="login"/>-->
+    <mvc:view-controller path="/" view-name="index"/>
+    <mvc:view-controller path="/login" view-name="login"/>
 
     <tx:jta-transaction-manager/>
     <tx:annotation-driven/>
