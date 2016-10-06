@@ -20,6 +20,6 @@ public class ViewController {
 
     @RequestMapping("/")
     public String home(HttpServletRequest request, Principal principal) {
-        return "admin";
+        return "index";
     }
 }
