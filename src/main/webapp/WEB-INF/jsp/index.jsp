@@ -148,10 +148,7 @@
 
     $(function () {
         $('#side-menu').metisMenu();
-        var currentPage = Cookies.get("currentPage");
-        if (currentPage !== undefined) {
-            loadpage(currentPage);
-        }
+
         window.userRole = 1;
         <security:authorize access="hasRole('ROLE_ADMIN')">
             window.userRole = 2;
@@ -160,6 +157,17 @@
         <security:authorize access="!hasRole('ROLE_ADMIN')">
             window.userId = <security:authentication property="principal.id" />;
         </security:authorize>
+
+        var currentPage = Cookies.get("currentPage");
+        if (currentPage !== undefined) {
+            loadpage(currentPage);
+        } else {
+            if (window.userRole === 1) {
+                loadpage('me')
+            } else if (window.userRole === 2) {
+                loadpage("customers")
+            }
+        }
     });
 
 </script>
