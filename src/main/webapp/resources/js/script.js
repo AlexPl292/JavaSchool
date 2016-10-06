@@ -644,7 +644,11 @@ var prepare = {
                     money: "Wrong money format"
                 },
                 forTariffs: "You need to choose at least one tariff"
-            }
+            },
+            submitHandler: submitting(function () {
+                requiredFrom.empty();
+                forbiddenWith.empty();
+            })
         })
     },
     "new_tariff": function ($page_wrapper) {
