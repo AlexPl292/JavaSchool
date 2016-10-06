@@ -5,6 +5,7 @@ import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +33,18 @@ public class CustomerRest {
     @PostMapping
     public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) {
         List<CustomerDto> existings = service.findByPassportNumberOrEmail(customer.getPassportNumber(), customer.getEmail());
-        if (existings.size() > 0) { // TODO провека существования номера контракта
+        if (existings.size() > 0) {
             if (existings.get(0).getEmail().equalsIgnoreCase(customer.getEmail()))
                 throw new UniqueFieldDuplicateException("Email", customer.getEmail(), "/rest/options/"+existings.get(0).getId());
             else
                 throw new UniqueFieldDuplicateException("PassportNumber", customer.getPassportNumber(), "/rest/options/"+existings.get(0).getId());
         }
-        CustomerDto newCustomer = service.addNew(customer);
+        CustomerDto newCustomer = new CustomerDto();
+        try {
+            newCustomer = service.addNew(customer);
+        } catch (DataIntegrityViolationException e) { // Duplicate number
+            throw new UniqueFieldDuplicateException("Number", customer.getContracts().first().getNumber(), "/rest/contracts/"+customer.getContracts().first().getId());
+        }
         return ResponseEntity.created(URI.create("/rest/customers/"+newCustomer.getId())).body(newCustomer);
     }
 
