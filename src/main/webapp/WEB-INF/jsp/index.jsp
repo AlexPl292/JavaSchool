@@ -35,7 +35,7 @@
     <script src="<%=application.getContextPath() %>/resources/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="<%=application.getContextPath() %>/resources/vendor/formhelpers/js/bootstrap-formhelpers-phone.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
-    <script src="<%=application.getContextPath() %>/resources/js/options.js"></script>
+    <script src="<%=application.getContextPath() %>/resources/js/script.js"></script>
     <title>New customer</title>
 </head>
 <body>
