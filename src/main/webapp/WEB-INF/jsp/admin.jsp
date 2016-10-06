@@ -78,56 +78,62 @@
                             <li>
                                 <a id="me_menu" onclick="loadpage('me')"><i class="fa fa-group fa-fw"></i> Me</a>
                             </li>
+                            <li>
+                                <a id="tariffs_menu" onclick="loadpage('tariffs')"><i class="fa fa-cog fa-fw"></i> Show all tariffs</a>
+                            </li>
+                            <li>
+                                <a id="options_menu" onclick="loadpage('options')"><i class="fa fa-cogs fa-fw"></i> Show all options</a>
+                            </li>
                         </security:authorize>
-                        <li>
-                            <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
-                            <a href="#"><i class="fa fa-group fa-fw"></i> Customers<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a id="new_customer_menu" onclick="loadpage('new_customer')">Add new customer</a>
-                                </li>
-                                <li>
-                                    <a id="customers_menu" onclick="loadpage('customers')">Show all customers</a>
-                                </li>
-                            </ul>
-                        </li>
+                        <security:authorize access="hasRole('ROLE_ADMIN')">
+                            <li>
+                                <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
+                                <a href="#"><i class="fa fa-group fa-fw"></i> Customers<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a id="new_customer_menu" onclick="loadpage('new_customer')">Add new customer</a>
+                                    </li>
+                                    <li>
+                                        <a id="customers_menu" onclick="loadpage('customers')">Show all customers</a>
+                                    </li>
+                                </ul>
+                            </li>
 
-                        <li>
-                            <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
-                            <a href="#"><i class="fa fa-cog fa-fw"></i> Tariffs<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a id="new_tariff_menu" onclick="loadpage('new_tariff')">Add new tariff</a>
-                                </li>
-                                <security:authorize access="hasRole('ROLE_ADMIN')">
+                            <li>
+                                <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
+                                <a href="#"><i class="fa fa-cog fa-fw"></i> Tariffs<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a id="new_tariff_menu" onclick="loadpage('new_tariff')">Add new tariff</a>
+                                    </li>
                                     <li>
                                         <a id="tariffs_menu" onclick="loadpage('tariffs')">Show all tariffs</a>
                                     </li>
-                                </security:authorize>
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>
 
-                        <li>
-                            <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
-                            <a href="#"><i class="fa fa-cogs fa-fw"></i> Options<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a id="new_option_menu" onclick="loadpage('new_option')">Add new option</a>
-                                </li>
-                                <li>
-                                    <a id="options_menu" onclick="loadpage('options')">Show all options</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
-                            <a href="#"><i class="fa fa-credit-card fa-fw"></i> Contracts<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a id="contracts_menu" onclick="loadpage('contracts')">Show all contracts</a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li>
+                                <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
+                                <a href="#"><i class="fa fa-cogs fa-fw"></i> Options<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a id="new_option_menu" onclick="loadpage('new_option')">Add new option</a>
+                                    </li>
+                                    <li>
+                                        <a id="options_menu" onclick="loadpage('options')">Show all options</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <%--<a href="/index"><i class="fa fa-fax fa-fw"></i> Users</a>--%>
+                                <a href="#"><i class="fa fa-credit-card fa-fw"></i> Contracts<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a id="contracts_menu" onclick="loadpage('contracts')">Show all contracts</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </security:authorize>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
