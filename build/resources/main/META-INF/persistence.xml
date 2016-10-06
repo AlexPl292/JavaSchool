@@ -5,7 +5,7 @@
                                  http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
              version="1.0">
 
-    <persistence-unit name="JavaSchool" transaction-type="RESOURCE_LOCAL">
+<!--    <persistence-unit name="JavaSchool" transaction-type="RESOURCE_LOCAL">
 
         <properties>
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
@@ -14,6 +14,23 @@
             <property name="hibernate.connection.password" value="keinerverstehtdeutsch"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>-->
+
+    <persistence-unit name="JSPool"  transaction-type="JTA">
+        <jta-data-source>java:/jdbc/JS</jta-data-source>
+        <class>com.tsystems.javaschool.db.entities.Contract</class>
+        <class>com.tsystems.javaschool.db.entities.Customer</class>
+        <class>com.tsystems.javaschool.db.entities.Option</class>
+        <class>com.tsystems.javaschool.db.entities.Staff</class>
+        <class>com.tsystems.javaschool.db.entities.Tariff</class>
+        <class>com.tsystems.javaschool.db.entities.User</class>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />
+            <property name="hibernate.id.new_generator_mappings" value="false" />
+            <property name="hibernate.show_sql" value="true"/>
+            <!--<property name="hibernate.hbm2ddl.auto" value="create"/>-->
         </properties>
     </persistence-unit>
 </persistence>
