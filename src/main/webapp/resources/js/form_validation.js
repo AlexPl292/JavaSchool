@@ -75,7 +75,6 @@ function submitting(full_success) {
             contentType: "application/json",
             success : function (response) {
             $.notify("Success!", {position: "top right", className: "success"});
-            // $(form).find("input[type=checkbox]").removeData();
             $(form)[0].reset();
             if (full_success !== undefined) {
                 full_success(response);

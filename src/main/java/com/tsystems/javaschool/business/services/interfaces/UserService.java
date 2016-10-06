@@ -7,4 +7,6 @@ import com.tsystems.javaschool.db.entities.User;
  */
 public interface UserService {
     User findByEmail(String email);
+
+    Boolean changePassword(Integer id, String oldPassword, String newPassword);
 }

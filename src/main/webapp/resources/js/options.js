@@ -311,7 +311,8 @@ function loadpage(page) {
     var $page_wrapper = $('#page-wrapper');
     $page_wrapper.empty();
 
-    prepare[page]($page_wrapper);
+    if (prepare[page] !== undefined)
+        prepare[page]($page_wrapper);
 }
 
 function formatAdditionalData(d, field, prop, title, empty) {
@@ -596,7 +597,7 @@ var prepare = {
         });
         prepare_tariff_list($('#tariff'), $('#options'), 1, "contracts[usedOptions][][id]");
     },
-    "new_option": function ($page_wrapper) {
+    "new_option": function ($page_wrapper) {  // TODO clean checkboxes with full_success
         var link = document.querySelector('link[href$="pieces.html"]');
         var content = link.import.querySelector('#piece_new_option');
         $page_wrapper.append(content.cloneNode(true));
@@ -780,32 +781,67 @@ var prepare = {
             }
         });
     },
-/*    "new_contract": function ($page_wrapper) {
-        var link = document.querySelector('link[href$="pieces.html"]');
-        var content = link.import.querySelector('#piece_new_contract');
-        $page_wrapper.append(content.cloneNode(true));
-
-        $('form#add_contract_form').validate({
-            rules: {
-                number: {
-                    required: true,
-                    phone: true
-                }
-            },
-            messages: {
-                number: {
-                    required: "Please enter phone number",
-                    phone: "Wrong phone number format"
-                }
-            },
-            submitHandler: submitting(create_accordion_node)
-        })
-    },*/
     "me": function($page_wrapper) {
         if (Cookies.get('lastSeenUserId') === undefined) {
             Cookies.set("lastSeenUserId", window.userId, {expires: 1});
         }
         prepare["customer"]($page_wrapper);
+    },
+    "change_password": function ($page_wrapper) {
+        var link = document.querySelector('link[href$="pieces.html"]');
+        var content = link.import.querySelector('#piece_change_password');
+        $page_wrapper.append(content.cloneNode(true));
+
+        var $form = $('#changePassword');
+        $form.validate({
+            rules: {
+                oldPassword: {
+                    required:true,
+                },
+                newPassword:{
+                    required:true,
+                    minlength: 8
+                },
+                newPasswordRepeat: {
+                    required: true,
+                    equalTo: '#newPassword'
+                }
+            },
+            messages: {
+                oldPassword: {
+                    required: "Please enter old password"
+                },
+                newPassword:{
+                    required: "Please enter new password",
+                    minlength: "New password should contain at least 8 characters!"
+                },
+                newPasswordRepeat: {
+                    required: "Please repeat new password",
+                    equalTo: "Passwords are not equal!"
+                }
+            },
+            submitHandler: function (form, e) {
+                e.preventDefault();
+                $.notify("Sending data..", {position: "top right", className: "success"});
+                $.ajax({
+                    url: '/rest/users/'+window.userId,
+                    type: 'PUT',
+                    data: $(form).serialize(),
+                    success: function (data) {
+                        $.notify("Success!", {position: "top right", className: "success"});
+                        $(form)[0].reset();
+                        $(form).find(":input").prop("disabled", false);
+                    },
+                    error: function (jqXHR) {
+                        $.each(jqXHR.responseJSON.errors, function (prop, val) {
+                            $.notify("Error: in " + prop + "\n" + val, {position: "top right", className: "error"});
+                        });
+                        $(form).find(":input").prop("disabled", false);
+                    }
+                });
+                $(form).find(":input").prop("disabled", true);
+            }
+        });
     }
 };
 
