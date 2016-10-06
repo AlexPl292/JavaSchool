@@ -5,6 +5,7 @@ import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.controllers.rest.CustomerRest;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
+import com.tsystems.javaschool.util.DataBaseValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,10 +41,8 @@ public class ContractRest {
 
     @PostMapping
     public ResponseEntity addNew(@Valid @RequestBody ContractDto contract) {
-        List<ContractDto> existings = service.findByNumber(contract.getNumber());
-        if (existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", contract.getNumber(), "/rest/contracts/"+existings.get(0).getId());
-        }
+        DataBaseValidator.checkUnique(contract);
+
         contract = service.addNew(contract);
         ContractDto newContract = service.loadByKey(contract.getId());
         return ResponseEntity.created(URI.create("/rest/contracts/"+newContract.getId())).body(newContract);

@@ -4,6 +4,7 @@ import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
+import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +32,8 @@ public class OptionRest {
 
     @PostMapping
     public ResponseEntity addOption(@Valid @RequestBody OptionDto optionDto) {
-        List<OptionDto> existings = service.findByName(optionDto.getName());
-        if (existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", optionDto.getName(), "/rest/options/"+existings.get(0).getId());
-        }
+        DataBaseValidator.checkUnique(optionDto);
+
         OptionDto newOption = service.addNew(optionDto);
         return ResponseEntity.created(URI.create("/rest/options/"+newOption.getId())).body(newOption);
     }

@@ -1,10 +1,10 @@
 package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
-import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
+import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +32,8 @@ public class TariffRest {
 
     @PostMapping
     public ResponseEntity addNewTariff(@Valid @RequestBody TariffDto tariff) {
-        List<TariffDto> existings = service.findByName(tariff.getName());
-        if (existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", tariff.getName(), "/rest/tariffs/"+existings.get(0).getId());
-        }
+        DataBaseValidator.checkUnique(tariff);
+
         TariffDto newTariff = service.addNew(tariff);
         return ResponseEntity.created(URI.create("/rest/tariffs/"+newTariff.getId())).body(newTariff);
     }
