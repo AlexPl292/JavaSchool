@@ -154,9 +154,7 @@
             window.userRole = 2;
         </security:authorize>
 
-        <security:authorize access="!hasRole('ROLE_ADMIN')">
-            window.userId = <security:authentication property="principal.id" />;
-        </security:authorize>
+        window.userId = <security:authentication property="principal.id" />;
 
         var currentPage = Cookies.get("currentPage");
         if (currentPage !== undefined) {
