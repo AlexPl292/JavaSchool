@@ -799,7 +799,7 @@ var prepare = {
         });
     },
     "me": function ($page_wrapper) {
-        if (Cookies.get('lastSeenUserId') === undefined) {
+        if (Cookies.get('lastSeenUserId') === undefined || Cookies.get('lastSeenUserId') !== window.userId) {
             Cookies.set("lastSeenUserId", window.userId, {expires: 1});
         }
         prepare["customer"]($page_wrapper);

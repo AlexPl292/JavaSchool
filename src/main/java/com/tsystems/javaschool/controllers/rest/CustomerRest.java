@@ -2,16 +2,23 @@ package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
+import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by alex on 19.08.16.
@@ -45,7 +52,11 @@ public class CustomerRest {
 
     @GetMapping("/{customerId}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDto loadCustomer(@PathVariable Integer customerId) {
+    public CustomerDto loadCustomer(@PathVariable Integer customerId, Principal principal, HttpServletRequest request) {
+        if (!request.isUserInRole("ROLE_ADMIN") &&
+                !Objects.equals(((Customer) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getId(), customerId)) {
+            return null;
+        }
         CustomerDto entity = service.loadByKey(customerId);
         if (entity.getId() == null) {
             throw new ResourceNotFoundException("customer", customerId);
