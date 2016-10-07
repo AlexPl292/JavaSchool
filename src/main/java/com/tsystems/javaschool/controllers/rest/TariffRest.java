@@ -1,9 +1,9 @@
 package com.tsystems.javaschool.controllers.rest;
 
-import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
+import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
@@ -35,7 +36,7 @@ public class TariffRest {
         DataBaseValidator.checkUnique(tariff);
 
         TariffDto newTariff = service.addNew(tariff);
-        return ResponseEntity.created(URI.create("/rest/tariffs/"+newTariff.getId())).body(newTariff);
+        return ResponseEntity.created(URI.create("/rest/tariffs/" + newTariff.getId())).body(newTariff);
     }
 
     @GetMapping
@@ -56,7 +57,7 @@ public class TariffRest {
 
     @GetMapping("/{tariffId}/options")
     @ResponseStatus(HttpStatus.OK)
-    public Set<OptionDto> loadOptions(@PathVariable Integer tariffId)  {
+    public Set<OptionDto> loadOptions(@PathVariable Integer tariffId) {
         TariffDto entity = service.loadByKey(tariffId);
         if (entity.getId() == null) {
             throw new ResourceNotFoundException("tariff", tariffId);

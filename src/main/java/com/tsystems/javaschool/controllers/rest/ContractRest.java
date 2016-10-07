@@ -2,11 +2,8 @@ package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
-import com.tsystems.javaschool.controllers.rest.CustomerRest;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
-import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.util.DataBaseValidator;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.xml.bind.SchemaOutputResolver;
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
 
 /**
@@ -45,7 +40,7 @@ public class ContractRest {
 
         contract = service.addNew(contract);
         ContractDto newContract = service.loadByKey(contract.getId());
-        return ResponseEntity.created(URI.create("/rest/contracts/"+newContract.getId())).body(newContract);
+        return ResponseEntity.created(URI.create("/rest/contracts/" + newContract.getId())).body(newContract);
     }
 
     @DeleteMapping("/{id}")
@@ -81,8 +76,8 @@ public class ContractRest {
 
     @PutMapping("/{id}")
     public ContractDto modify(@RequestParam("tariff") Integer tariffId,
-                       @RequestParam(value = "usedOptions", required = false) List<Integer> options,
-                       @PathVariable Integer id) {
+                              @RequestParam(value = "usedOptions", required = false) List<Integer> options,
+                              @PathVariable Integer id) {
         ContractDto entity = service.updateContract(id, tariffId, options);
         if (entity.getId() == null) {
             throw new ResourceNotFoundException("contract", id);

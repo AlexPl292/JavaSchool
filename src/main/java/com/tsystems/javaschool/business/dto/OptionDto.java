@@ -7,8 +7,6 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -38,7 +36,8 @@ public class OptionDto implements DtoMapper<Option>, Comparable<OptionDto> {
     private TreeSet<OptionDto> forbiddenWith = new TreeSet<>();
     private TreeSet<TariffDto> possibleTariffsOfOption = new TreeSet<>();
 
-    public OptionDto() {}
+    public OptionDto() {
+    }
 
     public OptionDto(Option option) {
         convertToDto(option);

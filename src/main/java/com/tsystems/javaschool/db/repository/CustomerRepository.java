@@ -8,6 +8,6 @@ import java.util.List;
 /**
  * Created by alex on 28.09.16.
  */
-public interface CustomerRepository extends JpaRepository<Customer, Integer>{
+public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     List<Customer> findByPassportNumberOrEmail(String passportNumber, String email);
 }

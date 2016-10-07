@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class TariffServiceImpl implements TariffService{
+public class TariffServiceImpl implements TariffService {
 
     private final TariffRepository repository;
 

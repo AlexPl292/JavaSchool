@@ -37,13 +37,13 @@ public class UserRest {
         if (res == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("Message", "No user found with 'id' = "+id));
+                    .body(new ErrorResponse("Message", "No user found with 'id' = " + id));
         } else if (!res) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Message", "Wrong old password"));
         } else {
-          return ResponseEntity.ok().body("");
+            return ResponseEntity.ok().body("");
         }
     }
 }

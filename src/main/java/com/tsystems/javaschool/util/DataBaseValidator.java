@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Created by alex on 06.10.16.
- *
+ * <p>
  * Static validators for DataBase entries
  */
 @Component
@@ -38,21 +38,21 @@ public class DataBaseValidator {
     public static void checkUnique(TariffDto tariffDto) {
         List<TariffDto> existings = tariffService.findByName(tariffDto.getName());
         if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", tariffDto.getName(), "/rest/tariffs/"+existings.get(0).getId());
+            throw new UniqueFieldDuplicateException("Name", tariffDto.getName(), "/rest/tariffs/" + existings.get(0).getId());
         }
     }
 
     public static void checkUnique(OptionDto optionDto) {
         List<OptionDto> existings = optionService.findByName(optionDto.getName());
         if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", optionDto.getName(), "/rest/options/"+existings.get(0).getId());
+            throw new UniqueFieldDuplicateException("Name", optionDto.getName(), "/rest/options/" + existings.get(0).getId());
         }
     }
 
     public static void checkUnique(ContractDto contractDto) {
         List<ContractDto> existings = contractService.findByNumber(contractDto.getNumber());
         if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", contractDto.getNumber(), "/rest/contracts/"+existings.get(0).getId());
+            throw new UniqueFieldDuplicateException("Name", contractDto.getNumber(), "/rest/contracts/" + existings.get(0).getId());
         }
     }
 
@@ -60,16 +60,16 @@ public class DataBaseValidator {
         List<CustomerDto> existings = customerService.findByPassportNumberOrEmail(customerDto.getPassportNumber(), customerDto.getEmail());
         if (existings != null && existings.size() > 0) {
             if (existings.get(0).getEmail().equalsIgnoreCase(customerDto.getEmail()))
-                throw new UniqueFieldDuplicateException("Email", customerDto.getEmail(), "/rest/options/"+existings.get(0).getId());
+                throw new UniqueFieldDuplicateException("Email", customerDto.getEmail(), "/rest/options/" + existings.get(0).getId());
             else
-                throw new UniqueFieldDuplicateException("PassportNumber", customerDto.getPassportNumber(), "/rest/options/"+existings.get(0).getId());
+                throw new UniqueFieldDuplicateException("PassportNumber", customerDto.getPassportNumber(), "/rest/options/" + existings.get(0).getId());
         }
 
         if (customerDto.getContracts() != null) {
             for (ContractDto contract : customerDto.getContracts()) {
                 List<ContractDto> existingsContracts = contractService.findByNumber(contract.getNumber());
                 if (existingsContracts != null && existingsContracts.size() > 0) {
-                    throw new UniqueFieldDuplicateException("Name", contract.getNumber(), "/rest/contracts/"+existingsContracts.get(0).getId());
+                    throw new UniqueFieldDuplicateException("Name", contract.getNumber(), "/rest/contracts/" + existingsContracts.get(0).getId());
                 }
             }
         }

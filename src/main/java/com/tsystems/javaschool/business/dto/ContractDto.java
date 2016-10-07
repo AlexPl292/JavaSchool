@@ -8,15 +8,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
  * Created by alex on 08.09.16.
  */
-public class ContractDto implements DtoMapper<Contract>, Comparable<ContractDto>{
+public class ContractDto implements DtoMapper<Contract>, Comparable<ContractDto> {
     private Integer id;
 
     @NotNull

@@ -1,6 +1,5 @@
 package com.tsystems.javaschool.business.services.implementations;
 
-import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Contract;
@@ -13,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

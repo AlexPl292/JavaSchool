@@ -20,13 +20,13 @@
         <mvc:message-converters>
             <!-- Jackson converter for HTTP messages -->
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="objectMapper" ref="jacksonObjectMapper" />
+                <property name="objectMapper" ref="jacksonObjectMapper"/>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
@@ -37,10 +37,10 @@
     <tx:jta-transaction-manager/>
     <tx:annotation-driven/>
     <!-- Convert single values to list -->
-    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetObject" ref="jacksonObjectMapper" />
-        <property name="targetMethod" value="configure" />
+        <property name="targetObject" ref="jacksonObjectMapper"/>
+        <property name="targetMethod" value="configure"/>
         <property name="arguments">
             <list>
                 <value type="com.fasterxml.jackson.databind.DeserializationFeature">ACCEPT_SINGLE_VALUE_AS_ARRAY</value>
@@ -50,22 +50,22 @@
     </bean>
 
     <context:component-scan base-package="com.tsystems.javaschool"/>
-    <jpa:repositories base-package="com.tsystems.javaschool.db.repository" />
+    <jpa:repositories base-package="com.tsystems.javaschool.db.repository"/>
 
     <jee:jndi-lookup id="dataSource"
                      jndi-name="java:/jdbc/JS"/>
     <bean id="hibernateJpaVendorAdapter"
           class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" >
-        <property name="DataSource" ref="dataSource" />
-        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="DataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
         <property name="jpaProperties">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
             </props>
         </property>
         <property name="packagesToScan" value="com.tsystems.javaschool.db"/>
-        <property name="persistenceUnitName" value="JSPool" />
+        <property name="persistenceUnitName" value="JSPool"/>
     </bean>
 </beans>

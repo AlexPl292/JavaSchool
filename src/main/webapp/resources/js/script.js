@@ -707,7 +707,7 @@ var prepare = {
                     .attr('href', '#collapse' + contract.id);
                 $(nodes).find('input[name=contractId]').val(contract.id);
 
-                if (window.userRole !==1 || contract.isBlocked !== 2) {
+                if (window.userRole !== 1 || contract.isBlocked !== 2) {
                     var menu = link.import.querySelector('#piece_node_menu').cloneNode(true);
                     $(menu).find('#menuBlock')
                         .append('<a href=' + (contract.isBlocked === 0 ? '"/block"' : '"/unblock"')
@@ -748,20 +748,20 @@ var prepare = {
 
                 if (href === "/delete") {
                     $.ajax({
-                        url:"/rest/contracts/"+id,
-                        type:"DELETE",
-                        success:function (data) {
+                        url: "/rest/contracts/" + id,
+                        type: "DELETE",
+                        success: function (data) {
                             $panel.remove();
                         }
                     })
                 } else if (href === "/block") {
-                    $.post("/rest/contracts/"+id+"/block", {}, function (data) {
+                    $.post("/rest/contracts/" + id + "/block", {}, function (data) {
                         $panel.removeClass("panel-default").addClass("panel-red");
                         $obj.attr("href", "/unblock").text("Unblock");
                         $panel.find('#menuEdit a').attr('href', '').find('p').addClass('text-muted');
                     })
                 } else if (href === "/unblock") {
-                    $.post("/rest/contracts/"+id+"/unblock", {}, function (data) {
+                    $.post("/rest/contracts/" + id + "/unblock", {}, function (data) {
                         $panel.removeClass("panel-red").addClass("panel-default");
                         $obj.attr("href", "/block").text("Block");
                         $panel.find('#menuEdit a').attr('href', '/edit').find('p').removeClass('text-muted');
@@ -798,7 +798,7 @@ var prepare = {
             }
         });
     },
-    "me": function($page_wrapper) {
+    "me": function ($page_wrapper) {
         if (Cookies.get('lastSeenUserId') === undefined) {
             Cookies.set("lastSeenUserId", window.userId, {expires: 1});
         }
@@ -813,10 +813,10 @@ var prepare = {
         $form.validate({
             rules: {
                 oldPassword: {
-                    required:true,
+                    required: true,
                 },
-                newPassword:{
-                    required:true,
+                newPassword: {
+                    required: true,
                     minlength: 8
                 },
                 newPasswordRepeat: {
@@ -828,7 +828,7 @@ var prepare = {
                 oldPassword: {
                     required: "Please enter old password"
                 },
-                newPassword:{
+                newPassword: {
                     required: "Please enter new password",
                     minlength: "New password should contain at least 8 characters!"
                 },
@@ -841,7 +841,7 @@ var prepare = {
                 e.preventDefault();
                 $.notify("Sending data..", {position: "top right", className: "success"});
                 $.ajax({
-                    url: '/rest/users/'+window.userId,
+                    url: '/rest/users/' + window.userId,
                     type: 'PUT',
                     data: $(form).serialize(),
                     success: function (data) {
@@ -910,7 +910,7 @@ function edit_handler(e) {
     $(form).find("input[type=checkbox]").prop("disabled", false);
 
     $.ajax({
-        url: '/rest/contracts/'+$(panel).find('input[name=contractId]').val(),
+        url: '/rest/contracts/' + $(panel).find('input[name=contractId]').val(),
         type: "PUT",
         // contentType:"application/json; charset=utf-8",
         data: $(form).find(':not([type=hidden])').serialize(),

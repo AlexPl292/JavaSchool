@@ -2,37 +2,37 @@ package com.tsystems.javaschool.exceptions;
 
 /**
  * Created by alex on 07.10.16.
- *
+ * <p>
  * "#" (forbidden)
  * -> (required)
- *
+ * <p>
  * Codes:
- *
+ * <p>
  * Code 1:
- *    new
- *   /#
- *  v#
- *  1
- *
+ * new
+ * /#
+ * v#
+ * 1
+ * <p>
  * Code 2:
- *
- *    new
- *   /   \
- *  v     v
- *  1 ### 2
- *
- *
+ * <p>
+ * new
+ * /   \
+ * v     v
+ * 1 ### 2
+ * <p>
+ * <p>
  * Code 3:
- *    new
- *   /   #
- *  v     #
- *  1 ---> 2
+ * new
+ * /   #
+ * v     #
+ * 1 ---> 2
  */
-public class WrongOptionConfigurationException extends RuntimeException{
+public class WrongOptionConfigurationException extends RuntimeException {
     private Integer errorCode;
 
     public WrongOptionConfigurationException(Integer errorCode) {
-        super("Error code: "+ errorCode+ ". Check docs");
+        super("Error code: " + errorCode + ". Check docs");
         this.errorCode = errorCode;
     }
 

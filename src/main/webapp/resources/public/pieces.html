@@ -421,8 +421,8 @@
                     aria-expanded="false"> Actions <span class="caret"></span></button>
             <ul class="dropdown-menu pull-right" role="menu">
                 <!--${blocked !=0 || contract.getBalance() < 0 ? "class=\"text-muted\"":""}-->
-                <li id="menuEdit"><a href="/edit"><p >Edit</p></a></li>
-                <li id="menuBlock"> </li>
+                <li id="menuEdit"><a href="/edit"><p>Edit</p></a></li>
+                <li id="menuBlock"></li>
                 <li class="divider"></li>
                 <li><a href="/delete"><p class="text-danger">Delete</p></a>
                 </li>
@@ -464,7 +464,8 @@
                             <label class="control-label" for="number">Number</label>
                             <div class="controls input-group">
                                 <span class="input-group-addon"><i class="fa fa-phone"></i> </span>
-                                <input type="text" id="number" name="number" placeholder="" class="form-control input-xlarge bfh-phone" data-format="+7 (ddd) ddd-dddd">
+                                <input type="text" id="number" name="number" placeholder=""
+                                       class="form-control input-xlarge bfh-phone" data-format="+7 (ddd) ddd-dddd">
                             </div>
                         </div>
                         <div class="row">
@@ -494,13 +495,16 @@
                         <form role="form" action="/change_password" method="POST" id="changePassword">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Old password" name="oldPassword" type="password" autofocus>
+                                    <input class="form-control" placeholder="Old password" name="oldPassword"
+                                           type="password" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input id="newPassword" class="form-control" placeholder="New password" name="newPassword" type="password" value="">
+                                    <input id="newPassword" class="form-control" placeholder="New password"
+                                           name="newPassword" type="password" value="">
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Repeat new password" name="newPasswordRepeat" type="password" value="">
+                                    <input class="form-control" placeholder="Repeat new password"
+                                           name="newPasswordRepeat" type="password" value="">
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
                                 <input type="submit" class="btn btn-lg btn-success btn-block" title="Login"/>

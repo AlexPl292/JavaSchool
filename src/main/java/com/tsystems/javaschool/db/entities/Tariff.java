@@ -1,15 +1,12 @@
 package com.tsystems.javaschool.db.entities;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
- *
+ * <p>
  * Entity for tariff table access
  */
 @Entity
@@ -48,9 +45,10 @@ public class Tariff {
     /**
      * Constructor with only important data
      * Used in Dao select queries
-     * @param id id of new entity
-     * @param name name of new entity
-     * @param cost cost of new entity
+     *
+     * @param id          id of new entity
+     * @param name        name of new entity
+     * @param cost        cost of new entity
      * @param description description of new entity
      */
     public Tariff(Integer id, String name, BigDecimal cost, String description) {

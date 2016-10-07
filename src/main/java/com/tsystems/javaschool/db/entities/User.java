@@ -1,13 +1,12 @@
 package com.tsystems.javaschool.db.entities;
 
-import com.google.gson.annotations.Expose;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 
 /**
  * Created by alex on 10.09.16.
- *
+ * <p>
  * Define a default user
  */
 @Entity
@@ -16,12 +15,12 @@ public abstract class User {
     private static final Logger logger = Logger.getLogger(User.class);
 
     @TableGenerator(
-            name="empGen",
-            table="ID_GEN",
-            pkColumnName="GEN_KEY",
-            valueColumnName="GEN_VALUE",
-            pkColumnValue="EMP_ID",
-            allocationSize=1)
+            name = "empGen",
+            table = "ID_GEN",
+            pkColumnName = "GEN_KEY",
+            valueColumnName = "GEN_VALUE",
+            pkColumnValue = "EMP_ID",
+            allocationSize = 1)
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "empGen")
     private Integer id;

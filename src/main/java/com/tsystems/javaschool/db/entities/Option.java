@@ -1,7 +1,5 @@
 package com.tsystems.javaschool.db.entities;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -9,7 +7,7 @@ import java.util.Set;
 
 /**
  * Created by alex on 25.08.16.
- *
+ * <p>
  * Entity for access option table
  */
 @Entity
@@ -38,8 +36,8 @@ public class Option {
     private String description;
 
     @JoinTable(name = "Required_option_relationships", joinColumns = {
-        @JoinColumn(name = "id_first", referencedColumnName = "id")}, inverseJoinColumns = {
-        @JoinColumn(name = "id_second", referencedColumnName = "id")
+            @JoinColumn(name = "id_first", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "id_second", referencedColumnName = "id")
     })
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Option> required = new HashSet<>();
@@ -52,8 +50,8 @@ public class Option {
     private Set<Option> requiredMe = new HashSet<>();
 
     @JoinTable(name = "Forbidden_option_relationships", joinColumns = {
-        @JoinColumn(name = "id_first", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "id_second", referencedColumnName = "id", nullable = false)
+            @JoinColumn(name = "id_first", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "id_second", referencedColumnName = "id", nullable = false)
     })
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Option> forbidden = new HashSet<>();
@@ -75,9 +73,10 @@ public class Option {
     /**
      * Constructor with only important data
      * Used in Dao select queries
-     * @param id id of new entity
-     * @param name name of new entity
-     * @param cost cost of new entity
+     *
+     * @param id          id of new entity
+     * @param name        name of new entity
+     * @param cost        cost of new entity
      * @param connectCost connection cost of new eity
      * @param description description of new entity
      */
@@ -101,6 +100,7 @@ public class Option {
 
     /**
      * Add option, this option required from
+     *
      * @param option required option
      */
     public void addRequiredFromOptions(Option option) {
@@ -109,6 +109,7 @@ public class Option {
 
     /**
      * Add option, that requires this
+     *
      * @param option option, that requires this
      */
     public void addRequiredMeOptions(Option option) {
@@ -118,6 +119,7 @@ public class Option {
     /**
      * Add incompatible dependency with this option
      * This dependency works in both sides
+     *
      * @param option incompatible option
      */
     public void addForbiddenWithOptions(Option option) {
@@ -127,6 +129,7 @@ public class Option {
 
     /**
      * Add set of options, this option required from
+     *
      * @param options required options
      */
     public void addRequiredFromOptions(Set<Option> options) {
@@ -135,6 +138,7 @@ public class Option {
 
     /**
      * Add options, those requires this
+     *
      * @param options options, those requires this
      */
     public void addRequiredMeOptions(Set<Option> options) {
@@ -144,12 +148,13 @@ public class Option {
     /**
      * Add incompatible dependencies with this option
      * This dependencies work in both sides
+     *
      * @param options incompatible options
      */
     public void addForbiddenWithOptions(Set<Option> options) {
         this.getForbidden().addAll(options);
         for (Option opt : options)
-           opt.getForbidden().add(this);
+            opt.getForbidden().add(this);
     }
 
     public Integer getId() {

@@ -16,7 +16,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -74,15 +75,15 @@ public class OptionServiceImplTest {
     /**
      * "#" (forbidden)
      * -> (required)
-     *
+     * <p>
      * Add option to required with required:
      * new --> 1 --> 2
-     *
+     * <p>
      * Expected:
-     *      new
-     *     /   \
-     *    v     v
-     *    1 --> 2
+     * new
+     * /   \
+     * v     v
+     * 1 --> 2
      */
     @Test
     public void testAddReqWithReq() throws Exception {
@@ -121,14 +122,14 @@ public class OptionServiceImplTest {
     /**
      * "#" (forbidden)
      * -> (required)
-     *
+     * <p>
      * Add option to required with forbidden:
      * new -> 1 ## 2
-     *
+     * <p>
      * Expected:
-     *      new
-     *     /   #
-     *   1 #### 2
+     * new
+     * /   #
+     * 1 #### 2
      */
     @Test
     public void testAddReqWithForb() {
@@ -189,8 +190,8 @@ public class OptionServiceImplTest {
 
     /**
      * Add option, that is forbidden and required
-     *
-     *  Expected: Exception errorCode = 1
+     * <p>
+     * Expected: Exception errorCode = 1
      */
     @Test
     public void testAddReqForb() {
@@ -215,7 +216,7 @@ public class OptionServiceImplTest {
 
 
     /**
-     *  Expected: Exception errorCode = 3
+     * Expected: Exception errorCode = 3
      */
     @Test
     public void testAddReqForbAreReq() {
@@ -243,15 +244,15 @@ public class OptionServiceImplTest {
     /**
      * "#" (forbidden)
      * -> (required)
-     *
+     * <p>
      * Add option to forbidden with required:
      * new ### 1 --> 2
-     *
+     * <p>
      * Expected:
-     *      new
-     *     #   #
-     *    #     #
-     *    1 --> 2
+     * new
+     * #   #
+     * #     #
+     * 1 --> 2
      */
     @Test
     public void testAddForbWithReq() {
@@ -290,15 +291,15 @@ public class OptionServiceImplTest {
     /**
      * "#" (forbidden)
      * -> (required)
-     *
+     * <p>
      * Add option to forbidden with required:
      * new ### 1 <-- 2
-     *
+     * <p>
      * Expected:
-     *      new
-     *     #   #
-     *    #     #
-     *    1 <-- 2
+     * new
+     * #   #
+     * #     #
+     * 1 <-- 2
      */
     @Test
     public void testAddForbWithReqMe() {

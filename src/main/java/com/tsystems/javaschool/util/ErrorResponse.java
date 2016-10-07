@@ -3,7 +3,8 @@ package com.tsystems.javaschool.util;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by alex on 22.09.16.

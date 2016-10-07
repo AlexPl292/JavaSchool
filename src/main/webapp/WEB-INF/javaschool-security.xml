@@ -9,19 +9,19 @@
 
     <http security="none" pattern="/resources/**"/>
     <http auto-config="true">
-        <intercept-url pattern="/login" access="isAnonymous()" />
+        <intercept-url pattern="/login" access="isAnonymous()"/>
         <!--<intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')" />-->
-        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
         <form-login login-page="/login" login-processing-url="/login"/>
         <logout delete-cookies="currentPage,lastSeenUserId"/>
         <csrf disabled="true"/>
     </http>
 
-<!--
-    <user-service id="userService">
-        <user name="alex@ts.ru" password="alex" authorities="ROLE_ADMIN"/>
-    </user-service>
--->
+    <!--
+        <user-service id="userService">
+            <user name="alex@ts.ru" password="alex" authorities="ROLE_ADMIN"/>
+        </user-service>
+    -->
 
     <authentication-manager>
         <authentication-provider ref="jsAuthenticationProvider"/>

@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
@@ -30,8 +28,8 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .location(ex.getPathToDuplicatedEntity())
-                .body(new ErrorResponse("Message", "Entity with '"+
-                        ex.getDuplicatedField()+"' == '"+ex.getDuplicatedValue()+
+                .body(new ErrorResponse("Message", "Entity with '" +
+                        ex.getDuplicatedField() + "' == '" + ex.getDuplicatedValue() +
                         "' already exists. This field must be unique."));
     }
 
@@ -70,8 +68,8 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         String requiredType = ex.getRequiredType().toString();
         return ResponseEntity
                 .status(status)
-                .body(new ErrorResponse("Message", "Wrong value '"+ex.getValue()+
-                        "' for argument '"+((MethodArgumentTypeMismatchException) ex).getName()+
-                        "'. It have to be ["+requiredType.substring(requiredType.lastIndexOf(".")+1)+"]"));
+                .body(new ErrorResponse("Message", "Wrong value '" + ex.getValue() +
+                        "' for argument '" + ((MethodArgumentTypeMismatchException) ex).getName() +
+                        "'. It have to be [" + requiredType.substring(requiredType.lastIndexOf(".") + 1) + "]"));
     }
 }

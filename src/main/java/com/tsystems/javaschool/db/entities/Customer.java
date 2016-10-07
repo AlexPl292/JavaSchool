@@ -1,7 +1,5 @@
 package com.tsystems.javaschool.db.entities;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -9,13 +7,13 @@ import java.util.Set;
 
 /**
  * Created by alex on 17.08.16.
- *
+ * <p>
  * Entity for access customer table
  */
 
 @Entity
 @Table(name = "Customers")
-public class Customer extends User{
+public class Customer extends User {
 
     @Column(name = "date_of_birth")
     private Date dateOfBirth;

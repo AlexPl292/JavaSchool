@@ -1,17 +1,14 @@
 package com.tsystems.javaschool.db.entities;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
- *
+ * <p>
  * Entity for access contract table
- *
+ * <p>
  * Block levels:
  * 0 - unblocked
  * 1 - blocked by customer
@@ -57,12 +54,13 @@ public class Contract {
     /**
      * Constructor with only important data
      * Used in Dao select queries
-     * @param id id of new entity
-     * @param number number of new entity
-     * @param customer customer of new entity
-     * @param tariff tariff of new entity
+     *
+     * @param id        id of new entity
+     * @param number    number of new entity
+     * @param customer  customer of new entity
+     * @param tariff    tariff of new entity
      * @param isBlocked if this contract blocked or not
-     * @param balance balance of new contract
+     * @param balance   balance of new contract
      */
     public Contract(Integer id, String number, Customer customer, Tariff tariff, Integer isBlocked, BigDecimal balance) {
         this.id = id;

@@ -25,7 +25,7 @@ public class JsAuthenticationProvider implements AuthenticationProvider {
     private final UserService service;
 
     @Autowired
-    JsAuthenticationProvider(UserService service){
+    JsAuthenticationProvider(UserService service) {
         this.service = service;
     }
 

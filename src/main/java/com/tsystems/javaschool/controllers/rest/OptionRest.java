@@ -1,9 +1,8 @@
 package com.tsystems.javaschool.controllers.rest;
 
-import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
-import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
+import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +34,7 @@ public class OptionRest {
         DataBaseValidator.checkUnique(optionDto);
 
         OptionDto newOption = service.addNew(optionDto);
-        return ResponseEntity.created(URI.create("/rest/options/"+newOption.getId())).body(newOption);
+        return ResponseEntity.created(URI.create("/rest/options/" + newOption.getId())).body(newOption);
     }
 
     @GetMapping

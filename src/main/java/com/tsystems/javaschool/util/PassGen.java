@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * Created by alex on 20.08.16.
- *
+ * <p>
  * Password generator
  */
 public class PassGen {
@@ -26,6 +26,7 @@ public class PassGen {
 
     /**
      * Init password generator
+     *
      * @param length length of passwords
      */
     public PassGen(int length) {
@@ -36,6 +37,7 @@ public class PassGen {
 
     /**
      * Generate new password
+     *
      * @return password
      */
     public String nextPassword() {

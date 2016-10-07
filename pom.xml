@@ -35,9 +35,9 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>commons-codec</groupId>-->
-            <!--<artifactId>commons-codec</artifactId>-->
-            <!--<version>1.4</version>-->
+        <!--<groupId>commons-codec</groupId>-->
+        <!--<artifactId>commons-codec</artifactId>-->
+        <!--<version>1.4</version>-->
         <!--</dependency>-->
 
         <dependency>
@@ -165,9 +165,6 @@
             <artifactId>spring-security-taglibs</artifactId>
             <version>4.1.3.RELEASE</version>
         </dependency>
-
-
-
 
 
     </dependencies>

@@ -10,11 +10,11 @@ textarea {
 }
 
 .startsUppercase {
-    text-transform:capitalize;
+    text-transform: capitalize;
 }
 
 .table {
-    table-layout:fixed;
+    table-layout: fixed;
 }
 
 .table td {

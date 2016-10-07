@@ -4,9 +4,7 @@ import com.tsystems.javaschool.db.entities.Customer;
 import org.apache.commons.lang3.ObjectUtils;
 
 import javax.validation.constraints.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -47,7 +45,8 @@ public class CustomerDto implements DtoMapper<Customer>, Comparable<CustomerDto>
     private int isBlocked;
     private TreeSet<ContractDto> contracts = new TreeSet<>();
 
-    public CustomerDto() {}
+    public CustomerDto() {
+    }
 
     public CustomerDto(Customer customer) {
         convertToDto(customer);
