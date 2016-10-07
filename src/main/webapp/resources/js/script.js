@@ -702,7 +702,7 @@ var prepare = {
                         .append('<a href=' + (contract.isBlocked === 0 ? '"/block"' : '"/unblock"')
                             + '><p>' + (contract.isBlocked === 0 ? 'Block' : 'Unblock') + '</p></a>');
 
-                    if (contract.isBlocked !== 0) {
+                    if (contract.isBlocked !== 0 || contract.balance < 0) {
                         $(menu).find('#menuEdit a').attr('href', '').find('p').addClass('text-muted');
                     }
                     $(nodes).find('#nodeTitle').append($(menu).contents());
