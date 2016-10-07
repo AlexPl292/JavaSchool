@@ -52,6 +52,6 @@ public class JsAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return true;
+        return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(aClass));
     }
 }
