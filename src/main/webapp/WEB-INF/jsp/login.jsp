@@ -54,7 +54,7 @@
                     <h3 class="panel-title">Please Sign In</h3>
                 </div>
                 <div class="panel-body">
-                    <form role="form" action="/login" method="POST" id="loginForm">
+                    <form role="form" action="<%=application.getContextPath() %>/login" method="POST" id="loginForm">
                         <fieldset>
                             <div class="form-group">
                                 <input class="form-control" placeholder="E-mail" name="username" type="email" autofocus>

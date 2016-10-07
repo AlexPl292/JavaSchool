@@ -29,7 +29,7 @@ function check_item(type) {
         var checked_val = parseInt($(this).val(), 10);
         var disabledBy = checked_val + ':' + type;
         if ($(this).is(':checked')) {
-            $.getJSON("/rest/options/" + checked_val, {}, function (data) {
+            $.getJSON(window.contextPath + "/rest/options/" + checked_val, {}, function (data) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
@@ -113,7 +113,7 @@ function optionChecked(options) {
         var $item = $(this);
         var checked_val = parseInt($(this).val(), 10);
         if ($item.is(':checked')) {
-            $.getJSON("/rest/options/" + checked_val, {}, function (response) {
+            $.getJSON(window.contextPath + "/rest/options/" + checked_val, {}, function (response) {
                 var disableItIds = [];
                 var disableIt = $();
                 var enableItIds = [];
@@ -225,9 +225,9 @@ function loadlist(selobj, url, nameattr, valattr, selected_val) {
 function prepare_tariff_list(tariffList, options, selected_val, boxes_name) {
     $(tariffList).change(function (e) {
         e.preventDefault();
-        $.getJSON("/rest/tariffs/" + $(this).val() + '/options', {}, create_boxes($(options), boxes_name));
+        $.getJSON(window.contextPath + "/rest/tariffs/" + $(this).val() + '/options', {}, create_boxes($(options), boxes_name));
     });
-    loadlist($(tariffList), "/rest/tariffs", "name", "id", selected_val);
+    loadlist($(tariffList), window.contextPath + "/rest/tariffs", "name", "id", selected_val);
 
     $(options).on('change', 'input[type=checkbox]', optionChecked(options));
 }
@@ -307,7 +307,7 @@ function loadpage(page) {
         $(element).closest('ul').addClass('in').attr('aria-expanded', true);
         $(element).addClass("active");
     }
-    Cookies.set("currentPage", page, {expires: 1});
+    Cookies.set("currentPage", page, {expires: 1, path:window.contextPath});
     var $page_wrapper = $('#page-wrapper');
     $page_wrapper.empty();
 
@@ -374,7 +374,7 @@ var prepare = {
 
         var table = $('#content_table').DataTable({
             ajax: {
-                url: "/rest/customers",
+                url: window.contextPath + "/rest/customers",
                 dataSrc: ''
             },
             order: [[0, 'asc']],
@@ -417,7 +417,7 @@ var prepare = {
         });
         $('#content_table').on('click', '.showCustomer', function () {
             var data = table.row(this).data();
-            Cookies.set("lastSeenUserId", data.id, {expires: 1});
+            Cookies.set("lastSeenUserId", data.id, {expires: 1, path:window.contextPath});
             loadpage("customer");
         });
         addTableAdditional(table, 'contracts', 'number', 'Contracts', 'No contracts');
@@ -431,7 +431,7 @@ var prepare = {
 
         var table = $('#content_table').DataTable({
             ajax: {
-                url: "/rest/options",
+                url: window.contextPath + "/rest/options",
                 dataSrc: ''
             },
             order: [[0, 'asc']],
@@ -466,7 +466,7 @@ var prepare = {
 
         var table = $('#content_table').DataTable({
             ajax: {
-                url: "/rest/tariffs",
+                url: window.contextPath + "/rest/tariffs",
                 dataSrc: ''
             },
             order: [[0, 'asc']],
@@ -496,7 +496,7 @@ var prepare = {
 
         var table = $('#content_table').DataTable({
             ajax: {
-                url: "/rest/contracts",
+                url: window.contextPath + "/rest/contracts",
                 dataSrc: ''
             },
             order: [[1, 'asc']],
@@ -531,7 +531,7 @@ var prepare = {
         });
         $('#content_table').on('click', '.showCustomer', function () {
             var data = table.row(this).data();
-            Cookies.set("lastSeenUserId", data.customer.id, {expires: 1});
+            Cookies.set("lastSeenUserId", data.customer.id, {expires: 1, path:window.contextPath});
             loadpage("customer");
         });
         addTableAdditional(table, 'usedOptions', 'name', 'Used options', 'No used options');
@@ -618,7 +618,7 @@ var prepare = {
         var forTariffs = $('#forTariffs');
 
         forTariffs.empty();
-        $.getJSON("/rest/tariffs", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
+        $.getJSON(window.contextPath + "/rest/tariffs", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
 
         $(forTariffs).on('change', 'input[type=checkbox]', function (e) {
             e.preventDefault();
@@ -660,7 +660,7 @@ var prepare = {
                 requiredFrom.empty();
                 forbiddenWith.empty();
                 forTariffs.empty();
-                $.getJSON("/rest/tariffs", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
+                $.getJSON(window.contextPath + "/rest/tariffs", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
             })
         })
     },
@@ -670,7 +670,7 @@ var prepare = {
         $page_wrapper.append(content.cloneNode(true));
 
         $('#possibleOptions').on('change', 'input[type=checkbox]', optionCheckedNewTariff);
-        $.getJSON("/rest/options", {}, create_boxes($('#possibleOptions'), "possibleOptions[][id]"));
+        $.getJSON(window.contextPath + "/rest/options", {}, create_boxes($('#possibleOptions'), "possibleOptions[][id]"));
         $('form#add_tariff_form').validate({
             rules: {
                 name: "required",
@@ -692,7 +692,7 @@ var prepare = {
         var link = document.querySelector('link[href$="pieces.html"]');
         var content = link.import.querySelector('#piece_customer');
         var customerId = Cookies.get('lastSeenUserId');
-        $.get('/rest/customers/' + customerId, {}, function (data) {
+        $.get(window.contextPath + '/rest/customers/' + customerId, {}, function (data) {
             $page_wrapper.append(content.cloneNode(true));
             $page_wrapper.find('#customerName').html(data.surname + ' ' + data.name);
             $page_wrapper.find('#customerEmail').html(data.email);
@@ -748,20 +748,20 @@ var prepare = {
 
                 if (href === "/delete") {
                     $.ajax({
-                        url: "/rest/contracts/" + id,
+                        url: window.contextPath + "/rest/contracts/" + id,
                         type: "DELETE",
                         success: function (data) {
                             $panel.remove();
                         }
                     })
                 } else if (href === "/block") {
-                    $.post("/rest/contracts/" + id + "/block", {}, function (data) {
+                    $.post(window.contextPath + "/rest/contracts/" + id + "/block", {}, function (data) {
                         $panel.removeClass("panel-default").addClass("panel-red");
                         $obj.attr("href", "/unblock").text("Unblock");
                         $panel.find('#menuEdit a').attr('href', '').find('p').addClass('text-muted');
                     })
                 } else if (href === "/unblock") {
-                    $.post("/rest/contracts/" + id + "/unblock", {}, function (data) {
+                    $.post(window.contextPath + "/rest/contracts/" + id + "/unblock", {}, function (data) {
                         $panel.removeClass("panel-red").addClass("panel-default");
                         $obj.attr("href", "/block").text("Block");
                         $panel.find('#menuEdit a').attr('href', '/edit').find('p').removeClass('text-muted');
@@ -800,7 +800,7 @@ var prepare = {
     },
     "me": function ($page_wrapper) {
         if (Cookies.get('lastSeenUserId') === undefined || Cookies.get('lastSeenUserId') !== window.userId) {
-            Cookies.set("lastSeenUserId", window.userId, {expires: 1});
+            Cookies.set("lastSeenUserId", window.userId, {expires: 1, path:window.contextPath});
         }
         prepare["customer"]($page_wrapper);
     },
@@ -841,7 +841,7 @@ var prepare = {
                 e.preventDefault();
                 $.notify("Sending data..", {position: "top right", className: "success"});
                 $.ajax({
-                    url: '/rest/users/' + window.userId,
+                    url: window.contextPath + '/rest/users/' + window.userId,
                     type: 'PUT',
                     data: $(form).serialize(),
                     success: function (data) {
@@ -910,7 +910,7 @@ function edit_handler(e) {
     $(form).find("input[type=checkbox]").prop("disabled", false);
 
     $.ajax({
-        url: '/rest/contracts/' + $(panel).find('input[name=contractId]').val(),
+        url: window.contextPath + '/rest/contracts/' + $(panel).find('input[name=contractId]').val(),
         type: "PUT",
         // contentType:"application/json; charset=utf-8",
         data: $(form).find(':not([type=hidden])').serialize(),

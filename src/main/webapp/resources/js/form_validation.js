@@ -69,7 +69,7 @@ function submitting(full_success) {
 
         $(form).find("input[type=checkbox]").prop("disabled", false);
         $.ajax({
-            url: $(form).attr("action"),
+            url: window.contextPath + $(form).attr("action"),
             data: JSON.stringify($(form).serializeObject()),
             method: "POST",
             contentType: "application/json",

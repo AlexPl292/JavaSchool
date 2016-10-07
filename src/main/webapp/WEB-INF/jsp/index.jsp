@@ -73,7 +73,7 @@
                     <li><a onclick="loadpage('change_password')"><i class="fa fa-gear fa-fw"></i> Change passwordt </a>
                     </li>
                     <li class="divider"></li>
-                    <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    <li><a href="<%=application.getContextPath() %>/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                     </li>
                 </ul>
                 <!-- /.dropdown-user -->
@@ -167,6 +167,7 @@
         </security:authorize>
 
         window.userId = <security:authentication property="principal.id" />;
+        window.contextPath = "<%=application.getContextPath() %>";
 
         var currentPage = Cookies.get("currentPage");
         if (currentPage !== undefined) {
