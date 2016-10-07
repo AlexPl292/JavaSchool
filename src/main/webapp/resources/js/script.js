@@ -520,8 +520,19 @@ var prepare = {
                 }
                 },
                 {title: "Tariff", data: "tariff", render: "name"},
-                {title: "Balance", data: "balance", render: $.fn.dataTable.render.number(',', '.', 2, '', ' ₽')}
+                {title: "Balance", data: "balance", render: $.fn.dataTable.render.number(',', '.', 2, '', ' ₽')},
+                {
+                    "className": 'showCustomer',
+                    "orderable": false,
+                    "data": null,
+                    "defaultContent": '<button type="button" class="btn btn-outline btn-default btn-xs">Show</button>'
+                }
             ]
+        });
+        $('#content_table').on('click', '.showCustomer', function () {
+            var data = table.row(this).data();
+            Cookies.set("lastSeenUserId", data.customer.id, {expires: 1});
+            loadpage("customer");
         });
         addTableAdditional(table, 'usedOptions', 'name', 'Used options', 'No used options');
     },
