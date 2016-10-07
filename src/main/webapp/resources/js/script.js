@@ -10,7 +10,7 @@ function create_boxes(selobj, checkboxs_name) {
                 type: "checkbox",
                 id: checkboxs_name + i,
                 value: obj.id,
-                name: checkboxs_name,
+                name: checkboxs_name
             });
             $box.data('boxData', obj);
             $(selobj).append($box);
@@ -648,6 +648,8 @@ var prepare = {
             submitHandler: submitting(function () {
                 requiredFrom.empty();
                 forbiddenWith.empty();
+                forTariffs.empty();
+                $.getJSON("/rest/tariffs", {}, create_boxes(forTariffs, "possibleTariffsOfOption[][id]"));
             })
         })
     },
