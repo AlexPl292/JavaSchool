@@ -30,7 +30,9 @@ public class ContractRest {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ContractDto> loadAll() {
+    public List<ContractDto> loadAll(@RequestParam(value = "tariff", required = false) String tariff) {
+        if (tariff != null)
+            return service.findByTariffName(tariff);
         return service.loadAll();
     }
 

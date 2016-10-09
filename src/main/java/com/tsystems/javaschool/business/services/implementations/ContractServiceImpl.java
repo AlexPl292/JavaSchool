@@ -109,4 +109,13 @@ public class ContractServiceImpl implements ContractService {
                 .map(ContractDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ContractDto> findByTariffName(String name) {
+        return repository
+                .findByTariff_Name(name)
+                .stream()
+                .map(ContractDto::new)
+                .collect(Collectors.toList());
+    }
 }
