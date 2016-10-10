@@ -34,7 +34,7 @@ public class JsAuthenticationProvider implements AuthenticationProvider {
         List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
         User user = service.findByEmail(authentication.getName());
 
-        if (user == null || !user.isPasswordEnabled())
+        if (user == null)
             return null;
 
         String password = authentication.getCredentials().toString();

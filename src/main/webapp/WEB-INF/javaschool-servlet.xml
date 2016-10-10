@@ -33,6 +33,7 @@
 
     <mvc:view-controller path="/" view-name="index"/>
     <mvc:view-controller path="/login" view-name="login"/>
+    <mvc:view-controller path="/restore" view-name="restore"/>
 
     <tx:jta-transaction-manager/>
     <tx:annotation-driven/>

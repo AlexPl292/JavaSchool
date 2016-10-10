@@ -9,4 +9,6 @@ public interface UserService {
     User findByEmail(String email);
 
     Boolean changePassword(Integer id, String oldPassword, String newPassword);
+
+    Boolean disablePassword(String email);
 }

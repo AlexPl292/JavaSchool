@@ -30,3 +30,7 @@ td.clickableRow {
 .wrapper li {
     cursor: pointer;
 }
+
+.form-gap {
+    padding-top: 70px;
+}

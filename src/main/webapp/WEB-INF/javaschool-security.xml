@@ -10,6 +10,8 @@
     <http security="none" pattern="/resources/**"/>
     <http auto-config="true">
         <intercept-url pattern="/login" access="isAnonymous()"/>
+        <intercept-url pattern="/restore" access="isAnonymous()"/>
+        <intercept-url pattern="/rest/users/reset" access="isAnonymous()"/>
 
         <intercept-url pattern="/rest/customers" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/rest/contracts" access="hasRole('ROLE_ADMIN')"/>

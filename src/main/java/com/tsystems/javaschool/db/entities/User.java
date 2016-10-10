@@ -38,7 +38,7 @@ public abstract class User {
     private String salt;
 
     @Basic
-    private boolean passwordEnabled;
+    private String tmpPassword;
 
     public Integer getId() {
         return id;
@@ -88,12 +88,12 @@ public abstract class User {
         this.salt = salt;
     }
 
-    public boolean isPasswordEnabled() {
-        return passwordEnabled;
+    public String getTmpPassword() {
+        return tmpPassword;
     }
 
-    public void setPasswordEnabled(boolean passwordEnabled) {
-        this.passwordEnabled = passwordEnabled;
+    public void setTmpPassword(String tmpPassword) {
+        this.tmpPassword = tmpPassword;
     }
 
     @Override
@@ -103,7 +103,6 @@ public abstract class User {
 
         User user = (User) o;
 
-        if (passwordEnabled != user.passwordEnabled) return false;
         if (id != null ? !id.equals(user.id) : user.id != null) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
@@ -121,7 +120,6 @@ public abstract class User {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (salt != null ? salt.hashCode() : 0);
-        result = 31 * result + (passwordEnabled ? 1 : 0);
         return result;
     }
 }

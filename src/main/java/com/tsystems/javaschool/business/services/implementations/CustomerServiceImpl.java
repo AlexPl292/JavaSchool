@@ -54,7 +54,6 @@ public class CustomerServiceImpl implements CustomerService {
 
         customer.setPassword(DigestUtils.sha256Hex(hashed + salt));
         customer.setSalt(salt);
-        customer.setPasswordEnabled(true);
 
         return new CustomerDto(repository.saveAndFlush(customer));
     }

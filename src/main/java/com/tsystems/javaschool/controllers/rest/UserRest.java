@@ -46,4 +46,21 @@ public class UserRest {
             return ResponseEntity.ok().body("");
         }
     }
+
+    @PostMapping("/reset")
+    public ResponseEntity resetPassword(@RequestParam(required = false) String email) {
+        if (email == null || email.equals("")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("Message", "Empty email"));
+        }
+        boolean result = service.disablePassword(email);
+        if (!result) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Message", "User not found"));
+        } else {
+            return ResponseEntity.ok().body("");
+        }
+    }
 }
