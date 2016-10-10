@@ -25,8 +25,12 @@ public class Email {
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
     public static void Send(String recipientEmail, String title, String message) throws AddressException, MessagingException {
-        ResourceBundle rb = ResourceBundle.getBundle("resources.bundle");
-        Send(rb.getString("username"), rb.getString("password"), recipientEmail, "", title, message);
+        try {
+            ResourceBundle rb = ResourceBundle.getBundle("resources.bundle");
+            Send(rb.getString("username"), rb.getString("password"), recipientEmail, "", title, message);
+        } catch (MissingResourceException e) {
+            throw new RuntimeException("Please check 'Caused by' section and write to alexpl292@gmail.com if you need resource file");
+        }
     }
 
     /**
