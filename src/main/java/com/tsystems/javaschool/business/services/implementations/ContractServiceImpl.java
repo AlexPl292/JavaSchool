@@ -115,7 +115,7 @@ public class ContractServiceImpl implements ContractService {
         return repository
                 .findByTariff_Name(name)
                 .stream()
-                .map(ContractDto::new)
+                .map(e -> new ContractDto(e).addDependencies(e))
                 .collect(Collectors.toList());
     }
 }
