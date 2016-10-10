@@ -2,7 +2,7 @@
  * Created by alex on 28.08.16.
  */
 
-function create_boxes(selobj, checkboxs_name) {
+function create_boxes(selobj, checkboxs_name, checked) {
     return function (data) {
         $(selobj).empty();
         $.each(data, function (i, obj) {
@@ -20,6 +20,11 @@ function create_boxes(selobj, checkboxs_name) {
             $(selobj).append($("<label/>", {"for": checkboxs_name + i, html: name}));
             $(selobj).append($("<br/>"));
         });
+        if (checked !== undefined) {
+            $(checked).each(function () {
+                $(selobj).find("input[value="+this+"]").prop('checked', true).change();
+            })
+        }
     }
 }
 
@@ -222,14 +227,13 @@ function loadlist(selobj, url, nameattr, valattr, selected_val) {
     });
 }
 
-function prepare_tariff_list(tariffList, options, selected_val, boxes_name) {
+function prepare_tariff_list(tariffList, options, selected_val, boxes_name, checked) {
+    $(options).on('change', 'input[type=checkbox]', optionChecked(options));
     $(tariffList).change(function (e) {
         e.preventDefault();
-        $.getJSON(window.contextPath + "/rest/tariffs/" + $(this).val() + '/options', {}, create_boxes($(options), boxes_name));
+        $.getJSON(window.contextPath + "/rest/tariffs/" + $(this).val() + '/options', {}, create_boxes($(options), boxes_name, checked));
     });
     loadlist($(tariffList), window.contextPath + "/rest/tariffs", "name", "id", selected_val);
-
-    $(options).on('change', 'input[type=checkbox]', optionChecked(options));
 }
 
 function fill_accordion_node(data) {
@@ -692,8 +696,10 @@ var prepare = {
         var link = document.querySelector('link[href$="pieces.html"]');
         var content = link.import.querySelector('#piece_customer');
         var customerId = Cookies.get('lastSeenUserId');
-        if (customerId === undefined)
+        if (customerId === undefined) {
             customerId = window.userId;
+            Cookies.set('lastSeenUserId', window.userId)
+        }
         $.get(window.contextPath + '/rest/customers/' + customerId, {}, function (data) {
             $page_wrapper.append(content.cloneNode(true));
             $page_wrapper.find('#customerName').html(data.surname + ' ' + data.name);
@@ -737,6 +743,10 @@ var prepare = {
                 }
 
                 $page_wrapper.find('#accordion').append($(nodes).contents());
+                if (localStorage.getItem("contractId") == contract.id) {
+                    localStorage.setItem("editing", 2);
+                    edit_tariff($page_wrapper.find('#accordion .panel:last'));
+                }
             });
             $("#accordion").on("click", "ul[role='menu'] a", function (e) {
                 e.preventDefault();
@@ -866,24 +876,43 @@ var prepare = {
 
 
 function edit_tariff(panel) {
+    if (localStorage.getItem("editing") == 1) {
+        $.notify("You are editing another contract\nCheck basket", {position: "top right", className: "error"});
+        return;
+    } else if (localStorage.getItem("editing") == 2) {
+        var checkedOptions = getArray("usedOptions");
+    } else {
+        localStorage.setItem("editing", 1);
+    }
+
+    var customerId = Cookies.get('lastSeenUserId');
+
     var panel_backup = $(panel).clone(true).children();
     var id = $(panel).find('input[name=contractId]').val();
     var usedOptions = $(panel).find('#usedOptions > li').map(function () {
         return $(this).data('id')
     });
-    var usedTariff = $(panel).find('#tariffName').data('tariffId');
+    var usedTariff;
+    if (localStorage.getItem("editing") == 2)
+        usedTariff = localStorage.getItem("usedTariff");
+    else
+        usedTariff = $(panel).find('#tariffName').data('tariffId');
+
+    localStorage.setItem("userID", customerId);
+    localStorage.setItem("usedTariff", usedTariff);
+    localStorage.setItem("contractId", id);
 
     var tariff = $('<div class="control-group">' +
-        '<label class="control-label" for="tariffEdit' + id + '" >Tariff</label>' +
+        '<label class="control-label" for="tariffEdit" >Tariff</label>' +
         '<div class="controls">' +
-        '<select id="tariffEdit' + id + '" name="tariff" class="form-control"></select>' +
+        '<select id="tariffEdit" name="tariff" class="form-control"></select>' +
         "</div>" +
         '</div>');
 
     var options = $('<div class="control-group">' +
-        '<label class="control-label" for="optionsEdit' + id + '">Options</label>' +
+        '<label class="control-label" for="optionsEdit">Options</label>' +
         '<div class="controls">' +
-        '<div id="optionsEdit' + id + '" class="boxes"></div>' +
+        '<div id="optionsEdit" class="boxes"></div>' +
         '</div>' +
         '</div>');
 
@@ -891,23 +920,67 @@ function edit_tariff(panel) {
     var rightPanel = $(panel).find('.col-lg-6:last .well');
     leftPanel.html(tariff);
     rightPanel.html(options);
-    prepare_tariff_list($('#tariffEdit' + id), $('#optionsEdit' + id), usedTariff, "usedOptions");
+    var optionDiv = $('#optionsEdit');
+    var tariffList = $('#tariffEdit');
+    if (localStorage.getItem("editing") == 2) {
+        prepare_tariff_list($('#tariffEdit'), optionDiv, usedTariff, "usedOptions", checkedOptions);
+    } else {
+        prepare_tariff_list($('#tariffEdit'), optionDiv, usedTariff, "usedOptions");
+    }
 
-    $(panel).find('.panel-heading .pull-right').html('<button type="button" class="btn btn-outline btn-danger btn-xs">Exit editing</button>');
-    $(panel).find('button:contains("Exit editing")').click(function (e) {
-        e.preventDefault();
-        $(panel).html(panel_backup);
+    saveArray("usedOptions", []);
+    optionDiv.on('change', 'input[type=checkbox]', function () {
+        var saved = getArray("usedOptions");
+        if ($(this).is(":checked")) {
+            saved.push($(this).val());
+        } else {
+            var index = saved.indexOf($(this).val());
+            if (index > -1) {
+                saved.splice(index, 1);
+            }
+        }
+        saveArray("usedOptions", saved);
     });
-    $(panel).find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
-    $(panel).find('.panel-body').wrapInner('<form class="form-horizontal" action="edit_contract" method="POST"></form>');
+    tariffList.change(function (e) {
+        e.preventDefault();
+        saveArray("usedOptions", []);
+        localStorage.setItem("usedTariff", $(this).val());
+    });
 
-    $(panel).find('form').submit({panel: $(panel), usedOptions: usedOptions}, edit_handler);
+
+    panel.find('.panel-heading .pull-right').html('<button type="button" class="btn btn-outline btn-danger btn-xs">Exit editing</button>');
+    panel.find('button:contains("Exit editing")').click(function (e) {
+        e.preventDefault();
+        panel.html(panel_backup);
+        cleanStorage();
+    });
+    panel.find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
+    panel.find('.panel-body').wrapInner('<form class="form-horizontal" action="edit_contract" method="POST"></form>');
+
+    panel.find('form').submit({panel: panel, usedOptions: usedOptions}, edit_handler);
+}
+
+function cleanStorage() {
+    localStorage.removeItem("usedOptions");
+    localStorage.removeItem("editing");
+    localStorage.removeItem("userID");
+    localStorage.removeItem("usedTariff");
+    localStorage.removeItem("contractId");
+}
+
+function saveArray(name, array) {
+    localStorage.setItem(name, JSON.stringify(array));
+}
+
+function getArray(name) {
+    var array = JSON.parse(localStorage.getItem(name));
+    return array == null ? [] : array;
 }
 
 function edit_handler(e) {
     e.preventDefault();
     var panel = e.data.panel;
-    var usedOptions = e.data.usedOptions;
+    cleanStorage();
     var form = panel.find("form");
     $(form).find("input[type=checkbox]").prop("disabled", false);
 
