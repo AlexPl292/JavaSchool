@@ -63,4 +63,38 @@ public class UserRest {
             return ResponseEntity.ok().body("");
         }
     }
+
+    @PostMapping("/password")
+    public ResponseEntity changePassword(@RequestParam(required = false) String email,
+                                         @RequestParam(required = false) String code,
+                                         @RequestParam(required = false) String newPassword,
+                                         @RequestParam(required = false) String repeatPassword) {
+        if (email == null || email.equals("")||
+                code == null || code.equals("")||
+                newPassword == null || newPassword.equals("")||
+                repeatPassword == null || repeatPassword.equals("")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("Message", "All fields are required"));
+        }
+
+        if (!newPassword.equals(repeatPassword)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("Message", "Passwords are different"));
+        }
+        Boolean res = service.changePasswordWithCode(email, code, newPassword);
+
+        if (res == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Message", "No user found"));
+        } else if (!res) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Message", "Wrong code"));
+        } else {
+            return ResponseEntity.ok().body("");
+        }
+    }
 }

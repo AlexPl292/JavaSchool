@@ -23,12 +23,24 @@
             var form = $('#reset-form');
             form.submit(function (e) {
                 e.preventDefault();
+                var action = form.attr("action");
                 $.ajax({
-                    url: "<%=application.getContextPath() %>/rest/users/reset",
+                    url: action,
                     type: "POST",
                     data: form.serialize(),
                     success: function (data) {
-
+                        if (action === "<%=application.getContextPath() %>/rest/users/reset") {
+                            $(".pass-change").show();
+                            $("#submit").val("Change password");
+                            form.attr("action", "<%=application.getContextPath() %>/rest/users/password")
+                        } else {
+                            $.notify("Success!", {position: "top right", className: "success"});
+                            $('#toLoginDiv').show();
+                            $('#toLogin').click(function (e) {
+                                e.preventDefault();
+                                window.location = "login";
+                            });
+                        }
                     },
                     error: function (jqXHR) {
                         $.each(jqXHR.responseJSON.errors, function (prop, val) {
@@ -49,24 +61,41 @@
                 <div class="panel-body">
                     <div class="text-center">
                         <h3><i class="fa fa-lock fa-4x"></i></h3>
-                        <h2 class="text-center">Forgot Password?</h2>
-                        <p>You can reset your password here.</p>
+                        <h2 class="text-center">Have no password?</h2>
+                        <p>You can get your password here.</p>
                         <div class="panel-body">
 
-                            <form id="reset-form" role="form" autocomplete="off" class="form" method="post">
+                            <form id="reset-form" role="form" autocomplete="off" class="form" method="post" action="<%=application.getContextPath() %>/rest/users/reset">
 
                                 <div class="form-group">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-envelope color-blue"></i></span>
                                         <input id="email" name="email" placeholder="email address" class="form-control"  type="email">
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <input name="recover-submit" class="btn btn-lg btn-primary btn-block" value="Reset Password" type="submit">
+
                                 </div>
 
-                                <input type="hidden" class="hide" name="token" id="token" value="">
+                                <div class="pass-change" style="display: none;">
+                                    <div class="form-group">
+                                        <input id="code" name="code" placeholder="Code" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" id="newPassword" name="newPassword" placeholder="Password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" id="repeatPassword" name="repeatPassword" placeholder="Repeat password" class="form-control">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <input id="submit" name="recover-submit" class="btn btn-lg btn-primary btn-block" value="Get code" type="submit">
+                                </div>
                             </form>
+
+                            <div class="form-group" id="toLoginDiv" style="display: none;">
+                                <input id="toLogin" class="btn btn-lg btn-success btn-block" value="Go to login page" type="button">
+                            </div>
 
                         </div>
                     </div>

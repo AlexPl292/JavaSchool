@@ -692,6 +692,8 @@ var prepare = {
         var link = document.querySelector('link[href$="pieces.html"]');
         var content = link.import.querySelector('#piece_customer');
         var customerId = Cookies.get('lastSeenUserId');
+        if (customerId === undefined)
+            customerId = window.userId;
         $.get(window.contextPath + '/rest/customers/' + customerId, {}, function (data) {
             $page_wrapper.append(content.cloneNode(true));
             $page_wrapper.find('#customerName').html(data.surname + ' ' + data.name);

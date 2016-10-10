@@ -40,6 +40,10 @@
             if (arg === "error") {
                 $('input[type=submit]').notify('Error!', {position: 'bottom center'});
             }
+            $("#forgot").click(function (e) {
+                e.preventDefault();
+                window.location = "restore";
+            })
         })
     </script>
 </head>
@@ -66,6 +70,9 @@
                             <input type="submit" class="btn btn-lg btn-success btn-block" title="Login"/>
                         </fieldset>
                     </form>
+                    <div class="form-group" style="margin-top: 5%">
+                        <input id="forgot" class="btn btn-lg btn-primary btn-block" value="First time/forgot password?" type="button">
+                    </div>
                 </div>
             </div>
         </div>

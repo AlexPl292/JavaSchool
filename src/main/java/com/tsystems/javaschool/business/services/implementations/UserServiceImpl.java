@@ -49,6 +49,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Boolean changePasswordWithCode(String email, String code, String newPassword) {
+        User user = repository.findByEmail(email);
+
+        if (user == null)
+            return null;
+
+        String hashedCode = DigestUtils.sha256Hex(DigestUtils.sha256Hex(code) + user.getSalt());
+
+        if (!hashedCode.equals(user.getTmpPassword())) {
+            return false;
+        }
+
+        String salt = new PassGen(8).nextPassword();
+        user.setSalt(salt);
+        user.setPassword(DigestUtils.sha256Hex(DigestUtils.sha256Hex(newPassword) + salt));
+        user.setTmpPassword("");
+        return true;
+    }
+
+    @Override
     public Boolean disablePassword(String email) {
         User user = repository.findByEmail(email);
 
@@ -59,7 +79,7 @@ public class UserServiceImpl implements UserService {
         String tmpPass = new PassGen(8).nextPassword();
 
         user.setTmpPassword(DigestUtils.sha256Hex(DigestUtils.sha256Hex(tmpPass) + user.getSalt()));
-        EmailHelper.Send(user.getEmail(), "Reset password", "Code: "+tmpPass);
+        EmailHelper.Send(user.getEmail(), "Reset password", "Code: "+tmpPass+"\nUse this code to change password or ignore it.");
         return true;
     }
 }

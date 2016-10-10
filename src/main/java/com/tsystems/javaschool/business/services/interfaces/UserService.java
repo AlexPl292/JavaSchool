@@ -10,5 +10,7 @@ public interface UserService {
 
     Boolean changePassword(Integer id, String oldPassword, String newPassword);
 
+    Boolean changePasswordWithCode(String email, String code, String newPassword);
+
     Boolean disablePassword(String email);
 }
