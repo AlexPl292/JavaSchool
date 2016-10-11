@@ -878,13 +878,14 @@ var prepare = {
 
 function edit_tariff(panel) {
     if (localStorage.getItem("editing") == 1) {
-        $.notify("You are editing another contract\nCheck basket", {position: "top right", className: "error"});
+        $.notify("You are editing another contract", {position: "top right", className: "error"});
         return;
     } else if (localStorage.getItem("editing") == 2) {
         var checkedOptions = getArray("usedOptions");
-    } else {
-        localStorage.setItem("editing", 1);
+        var restore = true;
     }
+
+    localStorage.setItem("editing", 1);
 
     var customerId = Cookies.get('lastSeenUserId');
 
@@ -894,7 +895,7 @@ function edit_tariff(panel) {
         return $(this).data('id')
     });
     var usedTariff;
-    if (localStorage.getItem("editing") == 2)
+    if (restore)
         usedTariff = localStorage.getItem("usedTariff");
     else
         usedTariff = $(panel).find('#tariffName').data('tariffId');
@@ -902,6 +903,8 @@ function edit_tariff(panel) {
     localStorage.setItem("userID", customerId);
     localStorage.setItem("usedTariff", usedTariff);
     localStorage.setItem("contractId", id);
+    localStorage.setItem("userName", $('#customerName').text());
+    localStorage.setItem("contractNumber", $('#contractNumber').text());
 
     var tariff = $('<div class="control-group">' +
         '<label class="control-label" for="tariffEdit" >Tariff</label>' +
@@ -923,7 +926,7 @@ function edit_tariff(panel) {
     rightPanel.html(options);
     var optionDiv = $('#optionsEdit');
     var tariffList = $('#tariffEdit');
-    if (localStorage.getItem("editing") == 2) {
+    if (restore) {
         prepare_tariff_list($('#tariffEdit'), optionDiv, usedTariff, "usedOptions", checkedOptions);
     } else {
         prepare_tariff_list($('#tariffEdit'), optionDiv, usedTariff, "usedOptions");
@@ -954,11 +957,13 @@ function edit_tariff(panel) {
         e.preventDefault();
         panel.html(panel_backup);
         cleanStorage();
+        hideBasket();
     });
     panel.find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
     panel.find('.panel-body').wrapInner('<form class="form-horizontal" action="edit_contract" method="POST"></form>');
 
     panel.find('form').submit({panel: panel, usedOptions: usedOptions}, edit_handler);
+    showBasket();
 }
 
 function cleanStorage() {
@@ -980,8 +985,9 @@ function getArray(name) {
 
 function edit_handler(e) {
     e.preventDefault();
-    var panel = e.data.panel;
     cleanStorage();
+    hideBasket();
+    var panel = e.data.panel;
     var form = panel.find("form");
     $(form).find("input[type=checkbox]").prop("disabled", false);
 
@@ -1003,4 +1009,28 @@ function edit_handler(e) {
         }
     });
     $(form).find(":input").prop("disabled", true);
+}
+
+function showBasket() {
+    if (localStorage.getItem("editing") != 1 &&
+        localStorage.getItem("editing") != 2) {
+        return;
+    }
+
+    $('#basketName').html(localStorage.getItem("userName"));
+    $('#basketText').html(localStorage.getItem("contractNumber"));
+    $('#basket').show();
+}
+
+function hideBasket() {
+    $('#basket').hide();
+}
+
+function basketContinue() {
+    if (window.userRole == 1) {
+        loadpage("me");
+    } else {
+        Cookies.set("lastSeenUserId", localStorage.getItem("userID"), {expires: 1, path:window.contextPath});
+        loadpage("customer");
+    }
 }
