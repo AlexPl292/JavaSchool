@@ -254,7 +254,7 @@ function fill_accordion_node(data) {
         '</div>');
     col_lg2.find(".well").append($used_options);
 
-    var id = '<input type="hidden" name="contract_id" value="' + data.id + '"/>';
+    var id = '<input type="hidden" name="contractId" value="' + data.id + '"/>';
 
     return [id, col_lg1, col_lg2];
 }
@@ -290,12 +290,12 @@ function create_panel_menu(data) {
         ' <span class="caret"></span>' +
         '</button>' +
         '<ul class="dropdown-menu pull-right" role="menu">' +
-        '<li><a href="/editTariff"><p ' + (disable_edit ? 'class="text-muted"' : '') + '>Edit</p></a>' +
+        '<li id="menuEdit"><a href="/edit"><p ' + (disable_edit ? 'class="text-muted"' : '') + '>Edit</p></a>' +
         '</li>' +
-        '<li><a href=\"/blockContract\"><p>Block</p></a>' +
+        '<li id="menuBlock"><a href=\"/block\"><p>Block</p></a>' +
         '</li>' +
         '<li class="divider"></li>' +
-        '<li><a href="/delete_contract"><p class="text-danger">Delete</p></a>' +
+        '<li><a href="/delete"><p class="text-danger">Delete</p></a>' +
         '</li>' +
         '</ul>' +
         '</div>');
@@ -366,7 +366,7 @@ function chooseOptionsForTariff($tariffs) {
     }
 
     return options;
-};
+}
 
 var prepare = {
     "customers": function ($page_wrapper) {
@@ -734,6 +734,7 @@ var prepare = {
                 $(nodes).find('#contractNode').addClass(contract.isBlocked === 0 ? 'panel-default' : 'panel-red');
                 $(nodes).find('#collapse').attr('id', 'collapse' + contract.id);
                 $(nodes).find('#tariffName').html(contract.tariff.name).data('tariffId', contract.tariff.id);
+                $(nodes).find('#tariffDescription').html(contract.tariff.description);
                 // var opts = '';
                 var $usedOptions = $(nodes).find('#usedOptions');
                 for (var i = 0; i < contract.usedOptions.length; i++) {
