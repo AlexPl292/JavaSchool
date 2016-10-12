@@ -1,14 +1,18 @@
 package com.tsystems.javaschool.controllers.rest;
 
+import com.tsystems.javaschool.business.dto.UserDto;
 import com.tsystems.javaschool.business.services.interfaces.UserService;
 import com.tsystems.javaschool.util.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -103,9 +107,16 @@ public class UserRest {
         }
     }
 
-    @GetMapping("/role")
-    public ResponseEntity getRole() {
+    @GetMapping("/me")
+    public ResponseEntity getMe(Principal principal) {
+        UserDto user = (UserDto)((UsernamePasswordAuthenticationToken)principal).getPrincipal();
         List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        return ResponseEntity.ok().body(authorities);
+        List<String> roles = new ArrayList<>();
+
+        for (SimpleGrantedAuthority auth : authorities) {
+            roles.add(auth.getAuthority());
+        }
+        user.setRoles(roles);
+        return ResponseEntity.ok().body(user);
     }
 }

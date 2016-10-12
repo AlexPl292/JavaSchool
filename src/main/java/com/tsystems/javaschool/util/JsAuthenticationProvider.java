@@ -1,5 +1,6 @@
 package com.tsystems.javaschool.util;
 
+import com.tsystems.javaschool.business.dto.UserDto;
 import com.tsystems.javaschool.business.services.interfaces.UserService;
 import com.tsystems.javaschool.db.entities.Staff;
 import com.tsystems.javaschool.db.entities.User;
@@ -46,7 +47,7 @@ public class JsAuthenticationProvider implements AuthenticationProvider {
                 grantedAuths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             }
 
-            return new UsernamePasswordAuthenticationToken(user, password, grantedAuths);
+            return new UsernamePasswordAuthenticationToken(new UserDto(user), password, grantedAuths);
         }
         return null;
     }

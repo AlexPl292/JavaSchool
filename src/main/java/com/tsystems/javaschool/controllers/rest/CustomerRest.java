@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.business.dto.CustomerDto;
+import com.tsystems.javaschool.business.dto.UserDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
@@ -54,7 +55,7 @@ public class CustomerRest {
     @ResponseStatus(HttpStatus.OK)
     public CustomerDto loadCustomer(@PathVariable Integer customerId, Principal principal, HttpServletRequest request) {
         if (!request.isUserInRole("ROLE_ADMIN") &&
-                !Objects.equals(((Customer) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getId(), customerId)) {
+                !Objects.equals(((UserDto)((UsernamePasswordAuthenticationToken)principal).getPrincipal()).getId(), customerId)) {
             return null;
         }
         CustomerDto entity = service.loadByKey(customerId);
