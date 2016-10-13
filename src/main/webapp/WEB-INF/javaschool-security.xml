@@ -23,7 +23,7 @@
         <intercept-url pattern="/**" access="isAuthenticated()"/>
 
         <form-login login-page="/login" login-processing-url="/login"/>
-        <logout logout-url="/logout" delete-cookies="currentPage,lastSeenUserId" invalidate-session="true"/>
+        <logout logout-url="/logout" invalidate-session="true"/>
         <csrf disabled="true"/>
     </http>
 

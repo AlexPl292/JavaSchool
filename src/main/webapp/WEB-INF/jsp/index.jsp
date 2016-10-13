@@ -39,7 +39,6 @@
             src="<%=application.getContextPath() %>/resources/vendor/sb-admin/js/sb-admin-2.min.js"></script>
     <script type="text/javascript"
             src="<%=application.getContextPath() %>/resources/vendor/jquery.serialize-object.min.js"></script>
-    <script type="text/javascript" src="<%=application.getContextPath() %>/resources/vendor/js.cookie.js"></script>
     <script type="text/javascript"
             src="<%=application.getContextPath() %>/resources/vendor/datatable/js/datatables.min.js"></script>
 
@@ -192,7 +191,7 @@
         window.userId = <security:authentication property="principal.id" />;
         window.contextPath = "<%=application.getContextPath() %>";
 
-        var currentPage = Cookies.get("currentPage");
+        var currentPage = getFromSessionStorage("currentPage");
         if (currentPage !== undefined) {
             loadpage(currentPage);
         } else {
@@ -202,7 +201,7 @@
                 loadpage("customers")
             }
         }
-        showBasket();
+//        showBasket();
     });
 
 </script>

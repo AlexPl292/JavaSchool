@@ -303,7 +303,7 @@ function create_panel_menu(data) {
 
 function loadpage(page) {
     var $sidemenu = $('#side-menu');
-    var currentPage = Cookies.get("currentPage");
+    var currentPage = getFromSessionStorage("currentPage");
     $sidemenu.find('#' + currentPage + "_menu").removeClass("active");
 
     var element = $sidemenu.find('#' + page + "_menu");
@@ -311,7 +311,7 @@ function loadpage(page) {
         $(element).closest('ul').addClass('in').attr('aria-expanded', true);
         $(element).addClass("active");
     }
-    Cookies.set("currentPage", page, {expires: 1, path:window.contextPath});
+    storeToSessionStorage("currentPage", page);
     var $page_wrapper = $('#page-wrapper');
     $page_wrapper.empty();
 
@@ -421,7 +421,7 @@ var prepare = {
         });
         $('#content_table').on('click', '.showCustomer', function () {
             var data = table.row(this).data();
-            Cookies.set("lastSeenUserId", data.id, {expires: 1, path:window.contextPath});
+            storeToSessionStorage("lastSeenUserId", data.id);
             loadpage("customer");
         });
         addTableAdditional(table, 'contracts', 'number', 'Contracts', 'No contracts');
@@ -535,7 +535,7 @@ var prepare = {
         });
         $('#content_table').on('click', '.showCustomer', function () {
             var data = table.row(this).data();
-            Cookies.set("lastSeenUserId", data.customer.id, {expires: 1, path:window.contextPath});
+            storeToSessionStorage("lastSeenUserId", data.customer.id);
             loadpage("customer");
         });
         addTableAdditional(table, 'usedOptions', 'name', 'Used options', 'No used options');
@@ -695,10 +695,10 @@ var prepare = {
     "customer": function ($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
         var content = link.import.querySelector('#piece_customer');
-        var customerId = Cookies.get('lastSeenUserId');
-        if (customerId === undefined) {
+        var customerId = getFromSessionStorage('lastSeenUserId');
+        if (customerId === null) {
             customerId = window.userId;
-            Cookies.set('lastSeenUserId', window.userId)
+            storeToSessionStorage('lastSeenUserId', window.userId)
         }
         $.get(window.contextPath + '/rest/customers/' + customerId, {}, function (data) {
             $page_wrapper.append(content.cloneNode(true));
@@ -744,10 +744,10 @@ var prepare = {
                 }
 
                 $page_wrapper.find('#accordion').append($(nodes).contents());
-                if (localStorage.getItem("contractId") == contract.id) {
+/*                if (localStorage.getItem("contractId") == contract.id) {
                     localStorage.setItem("editing", 2);
                     edit_tariff($page_wrapper.find('#accordion .panel:last'));
-                }
+                }*/
             });
             $("#accordion").on("click", "ul[role='menu'] a", function (e) {
                 e.preventDefault();
@@ -812,8 +812,8 @@ var prepare = {
         });
     },
     "me": function ($page_wrapper) {
-        if (Cookies.get('lastSeenUserId') === undefined || Cookies.get('lastSeenUserId') !== window.userId) {
-            Cookies.set("lastSeenUserId", window.userId, {expires: 1, path:window.contextPath});
+        if (getFromSessionStorage('lastSeenUserId') === undefined || getFromSessionStorage('lastSeenUserId') !== window.userId) {
+            storeToSessionStorage("lastSeenUserId", window.userId);
         }
         prepare["customer"]($page_wrapper);
     },
@@ -877,17 +877,17 @@ var prepare = {
 
 
 function edit_tariff(panel) {
-    if (localStorage.getItem("editing") == 1) {
+/*    if (localStorage.getItem("editing") == 1) {
         $.notify("You are editing another contract", {position: "top right", className: "error"});
         return;
     } else if (localStorage.getItem("editing") == 2) {
         var checkedOptions = getArray("usedOptions");
         var restore = true;
-    }
+    }*/
 
-    localStorage.setItem("editing", 1);
+    // localStorage.setItem("editing", 1);
 
-    var customerId = Cookies.get('lastSeenUserId');
+    var customerId = getFromSessionStorage('lastSeenUserId');
 
     var panel_backup = $(panel).clone(true).children();
     var id = $(panel).find('input[name=contractId]').val();
@@ -895,16 +895,18 @@ function edit_tariff(panel) {
         return $(this).data('id')
     });
     var usedTariff;
-    if (restore)
+/*    if (restore)
         usedTariff = localStorage.getItem("usedTariff");
-    else
-        usedTariff = $(panel).find('#tariffName').data('tariffId');
+    else*/
+    usedTariff = $(panel).find('#tariffName').data('tariffId');
 
+/*
     localStorage.setItem("userID", customerId);
     localStorage.setItem("usedTariff", usedTariff);
     localStorage.setItem("contractId", id);
     localStorage.setItem("userName", $('#customerName').text());
     localStorage.setItem("contractNumber", $('#contractNumber').text());
+*/
 
     var tariff = $('<div class="control-group">' +
         '<label class="control-label" for="tariffEdit" >Tariff</label>' +
@@ -926,12 +928,13 @@ function edit_tariff(panel) {
     rightPanel.html(options);
     var optionDiv = $('#optionsEdit');
     var tariffList = $('#tariffEdit');
-    if (restore) {
+/*    if (restore) {
         prepare_tariff_list($('#tariffEdit'), optionDiv, usedTariff, "usedOptions", checkedOptions);
-    } else {
-        prepare_tariff_list($('#tariffEdit'), optionDiv, usedTariff, "usedOptions");
-    }
+    } else {*/
+    prepare_tariff_list($('#tariffEdit'), optionDiv, usedTariff, "usedOptions");
+    // }
 
+/*
     saveArray("usedOptions", []);
     optionDiv.on('change', 'input[type=checkbox]', function () {
         var saved = getArray("usedOptions");
@@ -950,43 +953,99 @@ function edit_tariff(panel) {
         saveArray("usedOptions", []);
         localStorage.setItem("usedTariff", $(this).val());
     });
+*/
 
 
     panel.find('.panel-heading .pull-right').html('<button type="button" class="btn btn-outline btn-danger btn-xs">Exit editing</button>');
     panel.find('button:contains("Exit editing")').click(function (e) {
         e.preventDefault();
         panel.html(panel_backup);
-        cleanStorage();
-        hideBasket();
+/*        cleanStorage();
+        hideBasket();*/
     });
     panel.find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
     panel.find('.panel-body').wrapInner('<form class="form-horizontal" action="edit_contract" method="POST"></form>');
 
     panel.find('form').submit({panel: panel, usedOptions: usedOptions}, edit_handler);
-    showBasket();
+    // showBasket();
+    storeToBasket({contractId:id, data:"xxx"})
 }
 
-function cleanStorage() {
+function storeToBasket(dataToStore) {
+    var basket = localStorage.getItem("basket");
+    if (basket == null) {
+        var store = {};
+        store[window.userId] = [dataToStore];
+        localStorage.setItem("basket", JSON.stringify(store));
+    } else {
+        basket = JSON.parse(basket);
+        var existingData = basket[window.userId];
+        if (existingData === undefined) {
+            basket[window.userId] = [dataToStore];
+            localStorage.setItem("basket", JSON.stringify(basket));
+        } else {
+            for (var i = 0; i < basket[window.userId].length; i++) {
+                if (basket[window.userId][i]["contractId"] === dataToStore.contractId) {
+                    basket[window.userId][i] = dataToStore;
+                    localStorage.setItem("basket", JSON.stringify(basket));
+                    return;
+                }
+            }
+            basket[window.userId].push(dataToStore);
+            localStorage.setItem("basket", JSON.stringify(basket));
+        }
+    }
+}
+
+function storeToSessionStorage(key, value) {
+    var saved = sessionStorage.getItem("store");
+    var data = {};
+    data[key] = value;
+    if (saved == null) {
+        saved = {};
+        saved[window.userId] = data;
+    } else {
+        saved = JSON.parse(saved);
+        var userData = saved[window.userId];
+        if (userData === undefined) {
+            saved[window.userId] = data;
+        } else {
+            saved[window.userId][key] = value;
+        }
+    }
+    sessionStorage.setItem("store", JSON.stringify(saved))
+}
+
+function getFromSessionStorage(key) {
+    var saved = sessionStorage.getItem("store");
+    if (saved == null)
+        return undefined;
+    saved = JSON.parse(saved);
+    if (saved[window.userId] === undefined)
+        return undefined;
+    return saved[window.userId][key];
+}
+/*function cleanStorage() {
     localStorage.removeItem("usedOptions");
     localStorage.removeItem("editing");
     localStorage.removeItem("userID");
     localStorage.removeItem("usedTariff");
     localStorage.removeItem("contractId");
-}
+}*/
 
-function saveArray(name, array) {
+/*function saveArray(name, array) {
     localStorage.setItem(name, JSON.stringify(array));
 }
 
 function getArray(name) {
     var array = JSON.parse(localStorage.getItem(name));
     return array == null ? [] : array;
-}
+}*/
 
 function edit_handler(e) {
     e.preventDefault();
-    cleanStorage();
-    hideBasket();
+/*    cleanStorage();
+    hideBasket();*/
     var panel = e.data.panel;
     var form = panel.find("form");
     $(form).find("input[type=checkbox]").prop("disabled", false);
@@ -1011,6 +1070,7 @@ function edit_handler(e) {
     $(form).find(":input").prop("disabled", true);
 }
 
+/*
 function showBasket() {
     if (localStorage.getItem("editing") != 1 &&
         localStorage.getItem("editing") != 2) {
@@ -1033,4 +1093,4 @@ function basketContinue() {
         Cookies.set("lastSeenUserId", localStorage.getItem("userID"), {expires: 1, path:window.contextPath});
         loadpage("customer");
     }
-}
+}*/
