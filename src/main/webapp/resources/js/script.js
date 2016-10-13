@@ -708,6 +708,8 @@ var prepare = {
             $page_wrapper.find('#customerPassportData').append(data.passportData.replace(/\n/g, '<br/>'));
             $page_wrapper.find('#customerAddress').html(data.address.replace(/\n/g, '<br/>'));
 
+            var fadeOutContract = sessionStorage.getItem("fadeOutContract");
+
             $(data.contracts).each(function (j, contract) {
                 var nodes = link.import.querySelector('#piece_accordion_node').cloneNode(true);
                 $(nodes).find('#contractNumber')
@@ -744,11 +746,19 @@ var prepare = {
                 }
 
                 $page_wrapper.find('#accordion').append($(nodes).contents());
-/*                if (localStorage.getItem("contractId") == contract.id) {
-                    localStorage.setItem("editing", 2);
+                if (getFromBasketByContract(contract.id) !== undefined) {
                     edit_tariff($page_wrapper.find('#accordion .panel:last'));
-                }*/
+                }
+
+                if (fadeOutContract == contract.id) {
+                    $page_wrapper.find('#accordion .panel:last .panel-heading').stop().animate({opacity: 0.25},600,function(){
+                        $(this).animate({opacity: 1},600);
+                    });
+
+                }
+
             });
+            sessionStorage.removeItem("fadeOutContract");
             $("#accordion").on("click", "ul[role='menu'] a", function (e) {
                 e.preventDefault();
                 if ($(this).find('p').hasClass("text-muted")) {
@@ -877,48 +887,40 @@ var prepare = {
 
 
 function edit_tariff(panel) {
-/*    if (localStorage.getItem("editing") == 1) {
-        $.notify("You are editing another contract", {position: "top right", className: "error"});
-        return;
-    } else if (localStorage.getItem("editing") == 2) {
-        var checkedOptions = getArray("usedOptions");
-        var restore = true;
-    }*/
-
-    // localStorage.setItem("editing", 1);
+    var id = $(panel).find('input[name=contractId]').val();
+    var basket = getFromBasketByContract(id);
+    if (basket === undefined)
+        basket = {};
 
     var customerId = getFromSessionStorage('lastSeenUserId');
-
     var panel_backup = $(panel).clone(true).children();
-    var id = $(panel).find('input[name=contractId]').val();
-    var usedOptions = $(panel).find('#usedOptions > li').map(function () {
-        return $(this).data('id')
-    });
-    var usedTariff;
-/*    if (restore)
-        usedTariff = localStorage.getItem("usedTariff");
-    else*/
-    usedTariff = $(panel).find('#tariffName').data('tariffId');
 
-/*
-    localStorage.setItem("userID", customerId);
-    localStorage.setItem("usedTariff", usedTariff);
-    localStorage.setItem("contractId", id);
-    localStorage.setItem("userName", $('#customerName').text());
-    localStorage.setItem("contractNumber", $('#contractNumber').text());
-*/
+
+    var usedOptions;
+    if (basket["contractId"] !== undefined) {
+        usedOptions = basket["usedOptions"];
+    } else {
+        usedOptions = $(panel).find('#usedOptions > li').map(function () {
+            return $(this).data('id');
+        });
+    }
+    var usedTariff;
+    if (basket["contractId"] !== undefined)
+        usedTariff = basket["usedTariff"];
+    else
+        usedTariff = $(panel).find('#tariffName').data('tariffId');
 
     var tariff = $('<div class="control-group">' +
-        '<label class="control-label" for="tariffEdit" >Tariff</label>' +
+        '<label class="control-label" for="tariffEdit'+id+'">Tariff</label>' +
         '<div class="controls">' +
-        '<select id="tariffEdit" name="tariff" class="form-control"></select>' +
+        '<select id="tariffEdit'+id+'" name="tariff" class="form-control"></select>' +
         "</div>" +
         '</div>');
 
     var options = $('<div class="control-group">' +
-        '<label class="control-label" for="optionsEdit">Options</label>' +
+        '<label class="control-label" for="optionsEdit'+id+'">Options</label>' +
         '<div class="controls">' +
-        '<div id="optionsEdit" class="boxes"></div>' +
+        '<div id="optionsEdit'+id+'" class="boxes"></div>' +
         '</div>' +
         '</div>');
 
@@ -926,18 +928,12 @@ function edit_tariff(panel) {
     var rightPanel = $(panel).find('.col-lg-6:last .well');
     leftPanel.html(tariff);
     rightPanel.html(options);
-    var optionDiv = $('#optionsEdit');
-    var tariffList = $('#tariffEdit');
-/*    if (restore) {
-        prepare_tariff_list($('#tariffEdit'), optionDiv, usedTariff, "usedOptions", checkedOptions);
-    } else {*/
-    prepare_tariff_list($('#tariffEdit'), optionDiv, usedTariff, "usedOptions");
-    // }
+    var optionDiv = $('#optionsEdit'+id);
+    var tariffList = $('#tariffEdit'+id);
+    prepare_tariff_list($('#tariffEdit'+id), optionDiv, usedTariff, "usedOptions", usedOptions);
 
-/*
-    saveArray("usedOptions", []);
     optionDiv.on('change', 'input[type=checkbox]', function () {
-        var saved = getArray("usedOptions");
+        var saved = basket["usedOptions"];
         if ($(this).is(":checked")) {
             saved.push($(this).val());
         } else {
@@ -946,29 +942,38 @@ function edit_tariff(panel) {
                 saved.splice(index, 1);
             }
         }
-        saveArray("usedOptions", saved);
+        basket["usedOptions"] = saved;
+        storeToBasket(basket);
     });
     tariffList.change(function (e) {
         e.preventDefault();
-        saveArray("usedOptions", []);
-        localStorage.setItem("usedTariff", $(this).val());
+        basket["usedOptions"] = [];
+        basket["usedTariff"] = $(this).val();
+        storeToBasket(basket);
     });
-*/
 
 
     panel.find('.panel-heading .pull-right').html('<button type="button" class="btn btn-outline btn-danger btn-xs">Exit editing</button>');
     panel.find('button:contains("Exit editing")').click(function (e) {
         e.preventDefault();
         panel.html(panel_backup);
-/*        cleanStorage();
-        hideBasket();*/
+        deleteFromBasket(id);
+        updateBasketIcon();
     });
     panel.find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
     panel.find('.panel-body').wrapInner('<form class="form-horizontal" action="edit_contract" method="POST"></form>');
 
-    panel.find('form').submit({panel: panel, usedOptions: usedOptions}, edit_handler);
-    // showBasket();
-    storeToBasket({contractId:id, data:"xxx"})
+    panel.find('form').submit({contractId:id, panel: panel, usedOptions: usedOptions}, edit_handler);
+    if (basket["contractId"] === undefined) {
+        basket["customerId"] = customerId;
+        basket["usedTariff"] = usedTariff;
+        basket["contractId"] = id;
+        basket["userName"] = $('#customerName').text();
+        basket["contractNumber"] = $(panel).find('#contractNumber').text();
+        basket["usedOptions"] = usedOptions;
+        storeToBasket(basket);
+    }
+    updateBasketIcon();
 }
 
 function storeToBasket(dataToStore) {
@@ -985,7 +990,7 @@ function storeToBasket(dataToStore) {
             localStorage.setItem("basket", JSON.stringify(basket));
         } else {
             for (var i = 0; i < basket[window.userId].length; i++) {
-                if (basket[window.userId][i]["contractId"] === dataToStore.contractId) {
+                if (basket[window.userId][i]["contractId"] == dataToStore.contractId) {
                     basket[window.userId][i] = dataToStore;
                     localStorage.setItem("basket", JSON.stringify(basket));
                     return;
@@ -995,6 +1000,53 @@ function storeToBasket(dataToStore) {
             localStorage.setItem("basket", JSON.stringify(basket));
         }
     }
+}
+
+function getFromBasket() {
+    var basket = localStorage.getItem("basket");
+    if (basket == null)
+        return undefined;
+    basket = JSON.parse(basket);
+    return basket[window.userId];
+}
+
+function getFromBasketByContract(contractId) {
+    var basket = localStorage.getItem("basket");
+    if (basket == null)
+        return undefined;
+    basket = JSON.parse(basket);
+    var userBasket = basket[window.userId];
+    if (userBasket === undefined)
+        return undefined;
+    for (var i = 0; i < userBasket.length; i++) {
+        if (userBasket[i]["contractId"] == contractId)
+            return userBasket[i];
+    }
+    return undefined;
+}
+
+function deleteFromBasket(contractId) {
+    var basket = localStorage.getItem("basket");
+    if (basket == null)
+        return;
+    basket = JSON.parse(basket);
+    var userBasket = basket[window.userId];
+    if (userBasket === undefined)
+        return;
+
+    basket[window.userId] = basket[window.userId].filter(function (item) {
+        return item.contractId != contractId;
+    });
+    for (var property in basket) {
+        if (basket.hasOwnProperty(property) && basket[property].length > 0) {
+            // Basket is not empty
+            localStorage.setItem("basket", JSON.stringify(basket));
+            return;
+        }
+    }
+    // Basket is empty
+    localStorage.removeItem("basket");
+    hideBasket();
 }
 
 function storeToSessionStorage(key, value) {
@@ -1025,27 +1077,11 @@ function getFromSessionStorage(key) {
         return undefined;
     return saved[window.userId][key];
 }
-/*function cleanStorage() {
-    localStorage.removeItem("usedOptions");
-    localStorage.removeItem("editing");
-    localStorage.removeItem("userID");
-    localStorage.removeItem("usedTariff");
-    localStorage.removeItem("contractId");
-}*/
-
-/*function saveArray(name, array) {
-    localStorage.setItem(name, JSON.stringify(array));
-}
-
-function getArray(name) {
-    var array = JSON.parse(localStorage.getItem(name));
-    return array == null ? [] : array;
-}*/
 
 function edit_handler(e) {
     e.preventDefault();
-/*    cleanStorage();
-    hideBasket();*/
+    deleteFromBasket(e.data.contractId);
+    updateBasketIcon();
     var panel = e.data.panel;
     var form = panel.find("form");
     $(form).find("input[type=checkbox]").prop("disabled", false);
@@ -1070,27 +1106,48 @@ function edit_handler(e) {
     $(form).find(":input").prop("disabled", true);
 }
 
-/*
-function showBasket() {
-    if (localStorage.getItem("editing") != 1 &&
-        localStorage.getItem("editing") != 2) {
+function updateBasketIcon() {
+    var basket = getFromBasket();
+    if (basket === undefined || basket.length === 0) {
+        hideBasket();
         return;
     }
 
-    $('#basketName').html(localStorage.getItem("userName"));
-    $('#basketText').html(localStorage.getItem("contractNumber"));
-    $('#basket').show();
+    var link = document.querySelector('link[href$="pieces.html"]');
+    var content = link.import.querySelector('#piece_basket_item');
+
+    var $basket = $('#basket');
+
+    var list = $basket.find('#basket_list').empty();
+    for (var i = 0; i<basket.length; i++) {
+        var basket_item = content.cloneNode(true);
+        $(basket_item).find('.basketName').html(basket[i]['userName']);
+        $(basket_item).find('.basketText').html(basket[i]['contractNumber']);
+        $(basket_item).find('.basketContractId').val(basket[i]['contractId']);
+        $(basket_item).find('a').click(basketContinue);
+        list.append($(basket_item).children());
+    }
+    list.append('<li><a class="text-center" onclick="basketContinue()"><strong>Edited contracts</strong></a></li>');
+    $basket.show();
 }
 
 function hideBasket() {
     $('#basket').hide();
 }
 
-function basketContinue() {
+function basketContinue(e) {
+    e.preventDefault();
+    var contractId = $(this).find(".basketContractId").val();
+    var basket = getFromBasketByContract(contractId);
+    if (basket === undefined)
+        return;
+
     if (window.userRole == 1) {
         loadpage("me");
     } else {
-        Cookies.set("lastSeenUserId", localStorage.getItem("userID"), {expires: 1, path:window.contextPath});
+        storeToSessionStorage("lastSeenUserId", basket["customerId"]);
         loadpage("customer");
     }
-}*/
+
+    sessionStorage.setItem("fadeOutContract", contractId);
+}

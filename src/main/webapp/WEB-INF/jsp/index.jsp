@@ -63,27 +63,19 @@
         </div>
         <!-- /.navbar-header -->
 
-        <ul class="nav navbar-top-links navbar-right">
+        <ul id="right-menu" class="nav navbar-top-links navbar-right">
             <li class="dropdown" id="basket" style="display:none">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-pencil fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-messages">
-                    <li>
-                        <a>
-                            <div>
-                                <strong id="basketName"></strong>
-                            </div>
-                            <div id="basketText"></div>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
+                <ul class="dropdown-menu dropdown-messages" id="basket_list">
+<%--                    <li class="divider"></li>
                     <li>
                         <a class="text-center" onclick="basketContinue()">
                             <strong>Continue editing</strong>
                             <i class="fa fa-angle-right"></i>
                         </a>
-                    </li>
+                    </li>--%>
                 </ul>
                 <!-- /.dropdown-messages -->
             </li>
@@ -201,7 +193,7 @@
                 loadpage("customers")
             }
         }
-//        showBasket();
+        updateBasketIcon();
     });
 
 </script>
