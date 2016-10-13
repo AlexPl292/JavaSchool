@@ -38,7 +38,7 @@ public class ContractRest {
 
     @PostMapping
     public ResponseEntity addNew(@Valid @RequestBody ContractDto contract) {
-        DataBaseValidator.checkUnique(contract);
+        DataBaseValidator.checkUnique(contract); // TODO move to service
 
         contract = service.addNew(contract);
         ContractDto newContract = service.loadByKey(contract.getId());

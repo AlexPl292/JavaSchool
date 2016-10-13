@@ -49,7 +49,7 @@ public class ContractServiceImpl implements ContractService {
         repository.delete(key);
     }
 
-    @Override
+    @Override // TODO readpnly
     public List<ContractDto> loadAll() {
         return repository
                 .findAll()

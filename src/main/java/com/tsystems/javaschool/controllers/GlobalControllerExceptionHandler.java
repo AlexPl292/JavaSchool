@@ -33,7 +33,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
                         "' already exists. This field must be unique."));
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)  //TODO option exception
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException ex) {
