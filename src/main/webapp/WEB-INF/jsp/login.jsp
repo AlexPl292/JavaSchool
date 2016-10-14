@@ -25,7 +25,7 @@
     <link rel="stylesheet" type="text/css"
           href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
 
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.9.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.2.2.css">
 
     <script type="text/javascript"
             src="<%=application.getContextPath() %>/resources/vendor/jquery/jquery-3.1.0.min.js"></script>

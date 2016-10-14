@@ -17,7 +17,7 @@
 
     <link rel="stylesheet" type="text/css"
           href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.1.9.css">
+    <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.2.2.css">
     <script>
         $(function () {
             var form = $('#reset-form');
