@@ -1,10 +1,12 @@
 package com.tsystems.javaschool.business.services.implementations;
 
+import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.repository.CustomerRepository;
+import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto addNew(CustomerDto customerDto) {
+    public CustomerDto addNew(CustomerDto customerDto) throws UniqueFieldDuplicateException {
+        List<Customer> existings = repository.findByPassportNumberOrEmail(customerDto.getPassportNumber(), customerDto.getEmail());
+        if (existings != null && existings.size() > 0) {
+            if (existings.get(0).getEmail().equalsIgnoreCase(customerDto.getEmail()))
+                throw new UniqueFieldDuplicateException("Email", customerDto.getEmail(), "/rest/options/" + existings.get(0).getId());
+            else
+                throw new UniqueFieldDuplicateException("PassportNumber", customerDto.getPassportNumber(), "/rest/options/" + existings.get(0).getId());
+        }
+
+        if (customerDto.getContracts() != null) {
+            for (ContractDto contract : customerDto.getContracts()) {
+                Customer existingsContracts = repository.findByContracts_Number(contract.getNumber());
+                if (existingsContracts != null) {
+                    throw new UniqueFieldDuplicateException("Number", contract.getNumber(), "/rest/customers/" + existingsContracts.getId());
+                }
+            }
+        }
         /*
         Пароль НЕ должен быть введен сотрудником.
         Будем его вручную генерировать, а потом посылать с помощью email или sms

@@ -29,7 +29,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .location(ex.getPathToDuplicatedEntity())
-                .body(new ErrorResponse("Message", "Entity with '" +
+                .body(new ErrorResponse("Message", "Resource with '" +
                         ex.getDuplicatedField() + "' == '" + ex.getDuplicatedValue() +
                         "' already exists. This field must be unique."));
     }

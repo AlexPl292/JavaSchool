@@ -4,7 +4,6 @@ import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
-import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +38,6 @@ public class ContractRest {
 
     @PostMapping
     public ResponseEntity addNew(@Valid @RequestBody ContractDto contract) throws UniqueFieldDuplicateException {
-        DataBaseValidator.checkUnique(contract); // TODO move to service
-
         contract = service.addNew(contract);
         ContractDto newContract = service.loadByKey(contract.getId());
         return ResponseEntity.created(URI.create("/rest/contracts/" + newContract.getId())).body(newContract);

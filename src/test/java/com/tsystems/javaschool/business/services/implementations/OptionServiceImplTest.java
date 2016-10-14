@@ -4,6 +4,7 @@ import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.repository.OptionRepository;
+import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.exceptions.WrongOptionConfigurationException;
 import org.junit.After;
 import org.junit.Before;
@@ -132,7 +133,7 @@ public class OptionServiceImplTest {
      * 1 #### 2
      */
     @Test
-    public void testAddReqWithForb() {
+    public void testAddReqWithForb() throws UniqueFieldDuplicateException {
         OptionDto optionDto = new OptionDto();
         optionDto.setId(200);
 
@@ -168,7 +169,7 @@ public class OptionServiceImplTest {
      * Expected: Exception errorCode = 2
      */
     @Test
-    public void testAddReqReqAreForb() {
+    public void testAddReqReqAreForb() throws UniqueFieldDuplicateException {
         thrown.expect(WrongOptionConfigurationException.class);
         thrown.expectMessage("Error code: 2. Check docs");
 
@@ -194,7 +195,7 @@ public class OptionServiceImplTest {
      * Expected: Exception errorCode = 1
      */
     @Test
-    public void testAddReqForb() {
+    public void testAddReqForb() throws UniqueFieldDuplicateException {
         thrown.expect(WrongOptionConfigurationException.class);
         thrown.expectMessage("Error code: 1. Check docs");
 
@@ -219,7 +220,7 @@ public class OptionServiceImplTest {
      * Expected: Exception errorCode = 3
      */
     @Test
-    public void testAddReqForbAreReq() {
+    public void testAddReqForbAreReq() throws UniqueFieldDuplicateException {
         thrown.expect(WrongOptionConfigurationException.class);
         thrown.expectMessage("Error code: 3. Check docs");
 
@@ -255,7 +256,7 @@ public class OptionServiceImplTest {
      * 1 --> 2
      */
     @Test
-    public void testAddForbWithReq() {
+    public void testAddForbWithReq() throws UniqueFieldDuplicateException {
         OptionDto optionDto = new OptionDto();
         optionDto.setId(200);
 
@@ -302,7 +303,7 @@ public class OptionServiceImplTest {
      * 1 <-- 2
      */
     @Test
-    public void testAddForbWithReqMe() {
+    public void testAddForbWithReqMe() throws UniqueFieldDuplicateException {
         OptionDto optionDto = new OptionDto();
         optionDto.setId(200);
 

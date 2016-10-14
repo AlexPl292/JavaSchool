@@ -1,21 +1,16 @@
 package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.business.dto.CustomerDto;
-import com.tsystems.javaschool.business.dto.UserDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
-import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.entities.User;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
-import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
@@ -41,7 +36,6 @@ public class CustomerRest {
 
     @PostMapping
     public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) throws UniqueFieldDuplicateException {
-        DataBaseValidator.checkUnique(customer);
 
         CustomerDto newCustomer = service.addNew(customer);
         return ResponseEntity.created(URI.create("/rest/customers/" + newCustomer.getId())).body(newCustomer);

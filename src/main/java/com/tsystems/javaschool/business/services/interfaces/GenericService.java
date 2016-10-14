@@ -1,5 +1,7 @@
 package com.tsystems.javaschool.business.services.interfaces;
 
+import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public interface GenericService<T, PK extends Serializable> {
      *
      * @param entity entity to add
      */
-    T addNew(T entity);
+    T addNew(T entity) throws UniqueFieldDuplicateException;
 
     /**
      * @param key id of entity

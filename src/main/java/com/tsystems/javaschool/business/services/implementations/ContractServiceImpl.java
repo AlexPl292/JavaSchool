@@ -6,6 +6,7 @@ import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.repository.ContractRepository;
+import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,12 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public ContractDto addNew(ContractDto contractDto) {
+    public ContractDto addNew(ContractDto contractDto) throws UniqueFieldDuplicateException {
+        List<Contract> existings = repository.findByNumber(contractDto.getNumber());
+        if (existings != null && existings.size() > 0) {
+            throw new UniqueFieldDuplicateException("Name", contractDto.getNumber(), "/rest/contracts/" + existings.get(0).getId());
+        }
+
         Contract contract = contractDto.convertToEntity();
         contract.setBalance(new BigDecimal("100.00"));
         contract.setIsBlocked(0);
