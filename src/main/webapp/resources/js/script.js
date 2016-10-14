@@ -24,7 +24,10 @@ function create_boxes(selobj, checkboxs_name, checked) {
         });
         if (checked !== undefined) {
             $(checked).each(function () {
-                $(selobj).find("input[value="+this+"]").prop('checked', true).change();
+                var opt = $(selobj).find("input[value="+this+"]");
+                if (!$(opt).is(':disabled')) {
+                    $(opt).prop('checked', true).change();
+                }
             })
         }
     }
@@ -110,11 +113,10 @@ function check_item(type) {
             });
             $(uncheck)
                 .prop('checked', false)
-                .prop('disabled', false)
+                .prop('disabled', false).change()
                 .closest('.checkbox')
                 .addClass("checkbox-prime")
-                .removeClass("checkbox-success")
-                .change();
+                .removeClass("checkbox-success");
         }
     }
 }
@@ -186,10 +188,10 @@ function optionChecked(options) {
             $(uncheck)
                 .prop('checked', false)
                 .prop('disabled', false)
+                .change()
                 .closest('.checkbox')
                 .addClass("checkbox-prime")
-                .removeClass("checkbox-success")
-                .change();
+                .removeClass("checkbox-success");
         }
     }
 }
@@ -225,10 +227,9 @@ function optionCheckedNewTariff(e) {
             if ($(maybeEnable).data("enabledBy").length === 0)
                 uncheck = $.merge(uncheck, maybeEnable);
         });
-        $(uncheck).prop('checked', false).prop('disabled', false).closest('.checkbox')
+        $(uncheck).prop('checked', false).prop('disabled', false).change().closest('.checkbox')
                 .addClass("checkbox-prime")
-                .removeClass("checkbox-success")
-                .change();//.removeAttr('onclick').change();
+                .removeClass("checkbox-success");
     }
 }
 
