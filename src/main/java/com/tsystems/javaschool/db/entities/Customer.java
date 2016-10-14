@@ -30,7 +30,7 @@ public class Customer extends User {
     @Column(name = "is_blocked")
     private Integer isBlocked;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<Contract> contracts;
 
     /**
@@ -86,21 +86,6 @@ public class Customer extends User {
 
     public void setContracts(Set<Contract> contracts) {
         this.contracts = contracts;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + getId() +
-                ", name='" + getName() + '\'' +
-                ", surname='" + getSurname() + '\'' +
-                ", day_of_birth=" + dateOfBirth +
-                ", passport_data='" + passportData + '\'' +
-                ", passport_number='" + passportNumber + '\'' +
-                ", address='" + address + '\'' +
-                ", email='" + getEmail() + '\'' +
-                ", is_blocked=" + isBlocked +
-                '}';
     }
 
     @Override

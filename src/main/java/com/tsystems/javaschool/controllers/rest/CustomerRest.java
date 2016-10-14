@@ -4,6 +4,7 @@ import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.dto.UserDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Customer;
+import com.tsystems.javaschool.db.entities.User;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class CustomerRest {
     @ResponseStatus(HttpStatus.OK)
     public CustomerDto loadCustomer(@PathVariable Integer customerId, Principal principal, HttpServletRequest request) {
         if (!request.isUserInRole("ROLE_ADMIN") &&
-                !Objects.equals(((UserDto)((UsernamePasswordAuthenticationToken)principal).getPrincipal()).getId(), customerId)) {
+                !Objects.equals(((User)((UsernamePasswordAuthenticationToken)principal).getPrincipal()).getId(), customerId)) {
             return null;
         }
         CustomerDto entity = service.loadByKey(customerId);

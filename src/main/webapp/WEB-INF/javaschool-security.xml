@@ -25,10 +25,15 @@
         <form-login login-page="/login" login-processing-url="/login"/>
         <logout logout-url="/logout" invalidate-session="true"/>
         <csrf disabled="true"/>
+        <remember-me remember-me-parameter="remember-me" key="JS" token-validity-seconds="2419200"/>
     </http>
 
     <authentication-manager>
-        <authentication-provider ref="jsAuthenticationProvider"/>
+        <authentication-provider user-service-ref="userServiceImpl">
+            <password-encoder ref="bcryptEncoder"/>
+        </authentication-provider>
     </authentication-manager>
+
+    <beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
 </beans:beans>

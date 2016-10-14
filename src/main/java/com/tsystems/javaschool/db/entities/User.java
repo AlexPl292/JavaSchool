@@ -1,6 +1,14 @@
 package com.tsystems.javaschool.db.entities;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by alex on 10.09.16.
@@ -9,7 +17,7 @@ import javax.persistence.*;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class User {
+public abstract class User implements UserDetails {
 
     @TableGenerator(
             name = "empGen",
@@ -33,9 +41,6 @@ public abstract class User {
 
     @Basic
     private String password;
-
-    @Basic
-    private String salt;
 
     @Basic
     private String tmpPassword;
@@ -72,20 +77,47 @@ public abstract class User {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> grantedAuths = new ArrayList<>();
+        grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if (this instanceof Staff) {
+            grantedAuths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+        return grantedAuths;
+    }
+
     public String getPassword() {
         return password;
     }
 
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getTmpPassword() {
@@ -108,7 +140,7 @@ public abstract class User {
         if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        return salt != null ? salt.equals(user.salt) : user.salt == null;
+        return tmpPassword != null ? tmpPassword.equals(user.tmpPassword) : user.tmpPassword == null;
 
     }
 
@@ -119,7 +151,7 @@ public abstract class User {
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (salt != null ? salt.hashCode() : 0);
+        result = 31 * result + (tmpPassword != null ? tmpPassword.hashCode() : 0);
         return result;
     }
 }

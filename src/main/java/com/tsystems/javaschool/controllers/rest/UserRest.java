@@ -2,6 +2,7 @@ package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.business.dto.UserDto;
 import com.tsystems.javaschool.business.services.interfaces.UserService;
+import com.tsystems.javaschool.db.entities.User;
 import com.tsystems.javaschool.util.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -109,14 +110,7 @@ public class UserRest {
 
     @GetMapping("/me")
     public ResponseEntity getMe(Principal principal) {
-        UserDto user = (UserDto)((UsernamePasswordAuthenticationToken)principal).getPrincipal();
-        List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        List<String> roles = new ArrayList<>();
-
-        for (SimpleGrantedAuthority auth : authorities) {
-            roles.add(auth.getAuthority());
-        }
-        user.setRoles(roles);
-        return ResponseEntity.ok().body(user);
+        User user = (User)((UsernamePasswordAuthenticationToken)principal).getPrincipal();
+        return ResponseEntity.ok().body(new UserDto(user));
     }
 }

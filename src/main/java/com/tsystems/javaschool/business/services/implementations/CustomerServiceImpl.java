@@ -5,8 +5,6 @@ import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.repository.CustomerRepository;
-import com.tsystems.javaschool.util.PassGen;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,13 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
         contracts.add(contract);
         customer.setContracts(contracts);
 
-
-        String password = new PassGen(10).nextPassword();
-        String hashed = DigestUtils.sha256Hex(password);
-        String salt = new PassGen(8).nextPassword();
-
-        customer.setPassword(DigestUtils.sha256Hex(hashed + salt));
-        customer.setSalt(salt);
+        customer.setPassword("no pass");
 
         return new CustomerDto(repository.saveAndFlush(customer));
     }

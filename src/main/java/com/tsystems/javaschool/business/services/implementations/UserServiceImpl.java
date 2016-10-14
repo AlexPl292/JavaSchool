@@ -5,17 +5,23 @@ import com.tsystems.javaschool.db.entities.User;
 import com.tsystems.javaschool.db.repository.UserRepository;
 import com.tsystems.javaschool.util.EmailHelper;
 import com.tsystems.javaschool.util.PassGen;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by alex on 04.10.16.
  */
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     public final UserRepository repository;
 
@@ -36,15 +42,12 @@ public class UserServiceImpl implements UserService {
         if (user == null)
             return null;
 
-        String hashedOld = DigestUtils.sha256Hex(DigestUtils.sha256Hex(oldPassword) + user.getSalt());
 
-        if (!hashedOld.equals(user.getPassword())) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             return false;
         }
-
-        String salt = new PassGen(8).nextPassword();
-        user.setSalt(salt);
-        user.setPassword(DigestUtils.sha256Hex(DigestUtils.sha256Hex(newPassword) + salt));
+        user.setPassword(passwordEncoder.encode(newPassword));
         return true;
     }
 
@@ -55,15 +58,12 @@ public class UserServiceImpl implements UserService {
         if (user == null)
             return null;
 
-        String hashedCode = DigestUtils.sha256Hex(DigestUtils.sha256Hex(code) + user.getSalt());
-
-        if (!hashedCode.equals(user.getTmpPassword())) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(code, user.getTmpPassword())) {
             return false;
         }
 
-        String salt = new PassGen(8).nextPassword();
-        user.setSalt(salt);
-        user.setPassword(DigestUtils.sha256Hex(DigestUtils.sha256Hex(newPassword) + salt));
+        user.setPassword(passwordEncoder.encode(newPassword));
         user.setTmpPassword("");
         return true;
     }
@@ -78,8 +78,17 @@ public class UserServiceImpl implements UserService {
 
         String tmpPass = new PassGen(8).nextPassword();
 
-        user.setTmpPassword(DigestUtils.sha256Hex(DigestUtils.sha256Hex(tmpPass) + user.getSalt()));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setTmpPassword(passwordEncoder.encode(tmpPass));
         EmailHelper.Send(user.getEmail(), "Reset password", "Code: "+tmpPass+"\nUse this code to change password or ignore it.");
         return true;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User user = repository.findByEmail(s);
+        if (user == null)
+            throw new UsernameNotFoundException("User "+s+" not found");
+        return user;
     }
 }

@@ -24,6 +24,8 @@
           href="<%=application.getContextPath() %>/resources/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css"
           href="<%=application.getContextPath() %>/resources/vendor/sb-admin/css/sb-admin-2.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="<%=application.getContextPath() %>/resources/vendor/font-awesome/css/font-awesome.min.css">
 
     <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/styles_v0.2.2.css">
 
@@ -66,6 +68,10 @@
                             <div class="form-group">
                                 <input class="form-control" placeholder="Password" name="password" type="password"
                                        value="">
+                            </div>
+                            <div class="checkbox checkbox-primary">
+                                <input id="remember_me" name="remember-me" type="checkbox">
+                                <label for="remember_me">Remember me</label>
                             </div>
                             <input type="submit" class="btn btn-lg btn-success btn-block" title="Login"/>
                         </fieldset>

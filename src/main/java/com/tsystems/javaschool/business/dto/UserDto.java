@@ -1,7 +1,9 @@
 package com.tsystems.javaschool.business.dto;
 
 import com.tsystems.javaschool.db.entities.User;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +19,7 @@ public class UserDto {
 
     private String email;
 
-    private List<String> roles;
+    private List<String> roles = new ArrayList<>();
 
     public UserDto() {}
 
@@ -30,6 +32,9 @@ public class UserDto {
         this.name = entity.getName();
         this.surname = entity.getSurname();
         this.email = entity.getEmail();
+        for (GrantedAuthority auth : entity.getAuthorities()){
+            roles.add(auth.getAuthority());
+        }
     }
 
     public Integer getId() {
