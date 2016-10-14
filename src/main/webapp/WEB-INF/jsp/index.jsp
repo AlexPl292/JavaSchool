@@ -69,13 +69,6 @@
                     <i class="fa fa-pencil fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-messages" id="basket_list">
-<%--                    <li class="divider"></li>
-                    <li>
-                        <a class="text-center" onclick="basketContinue()">
-                            <strong>Continue editing</strong>
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                    </li>--%>
                 </ul>
                 <!-- /.dropdown-messages -->
             </li>
@@ -84,7 +77,7 @@
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
-                    <li><a onclick="loadpage('change_password')"><i class="fa fa-gear fa-fw"></i> Change passwordt </a>
+                    <li><a onclick="loadpage('change_password')"><i class="fa fa-gear fa-fw"></i> Change password</a>
                     </li>
                     <li class="divider"></li>
                     <li><a href="<%=application.getContextPath() %>/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>

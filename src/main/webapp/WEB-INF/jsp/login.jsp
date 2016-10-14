@@ -73,7 +73,7 @@
                                 <input id="remember_me" name="remember-me" type="checkbox">
                                 <label for="remember_me">Remember me</label>
                             </div>
-                            <input type="submit" class="btn btn-lg btn-success btn-block" title="Login"/>
+                            <input type="submit" class="btn btn-lg btn-success btn-block" title="Login" value="Login"/>
                         </fieldset>
                     </form>
                     <div class="form-group" style="margin-top: 5%">
