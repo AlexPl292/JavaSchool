@@ -1,5 +1,6 @@
 package com.tsystems.javaschool.controllers;
 
+import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.exceptions.WrongOptionConfigurationException;
@@ -50,6 +51,12 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         return new ErrorResponse("Message", ex.getMessage());
     }
 
+    @ExceptionHandler(JSException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleJSException(JSException ex) {
+        return new ErrorResponse("Message", ex.getMessage());
+    }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return ResponseEntity

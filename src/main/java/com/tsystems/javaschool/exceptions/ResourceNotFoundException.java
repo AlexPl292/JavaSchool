@@ -3,7 +3,7 @@ package com.tsystems.javaschool.exceptions;
 /**
  * Created by alex on 30.09.16.
  */
-public class ResourceNotFoundException extends Exception {
+public class ResourceNotFoundException extends JSException {
     private String resourceName;
     private Integer resourceId;
 

@@ -6,7 +6,9 @@ import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.repository.ContractRepository;
+import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
+import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,11 +34,8 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public ContractDto addNew(ContractDto contractDto) throws UniqueFieldDuplicateException {
-        List<Contract> existings = repository.findByNumber(contractDto.getNumber());
-        if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", contractDto.getNumber(), "/rest/contracts/" + existings.get(0).getId());
-        }
+    public ContractDto addNew(ContractDto contractDto) throws JSException {
+        DataBaseValidator.check(contractDto);
 
         Contract contract = contractDto.convertToEntity();
         contract.setBalance(new BigDecimal("100.00"));
@@ -74,7 +73,9 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public ContractDto updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds) {
+    public ContractDto updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds) throws JSException {
+        DataBaseValidator.checkAllOptions(tariffId, optionIds);
+
         Contract contract = repository.findOne(contractId);
         if (contract == null) {
             return new ContractDto();

@@ -4,7 +4,7 @@ import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.repository.OptionRepository;
-import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
+import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.WrongOptionConfigurationException;
 import org.junit.After;
 import org.junit.Before;
@@ -81,8 +81,8 @@ public class OptionServiceImplTest {
      * new --> 1 --> 2
      * <p>
      * Expected:
-     * new
-     * /   \
+     * ..new
+     * ./   \
      * v     v
      * 1 --> 2
      */
@@ -128,12 +128,12 @@ public class OptionServiceImplTest {
      * new -> 1 ## 2
      * <p>
      * Expected:
-     * new
-     * /   #
-     * 1 #### 2
+     * ..new
+     * ./   #
+     * 1 ### 2
      */
     @Test
-    public void testAddReqWithForb() throws UniqueFieldDuplicateException {
+    public void testAddReqWithForb() throws JSException {
         OptionDto optionDto = new OptionDto();
         optionDto.setId(200);
 
@@ -169,7 +169,7 @@ public class OptionServiceImplTest {
      * Expected: Exception errorCode = 2
      */
     @Test
-    public void testAddReqReqAreForb() throws UniqueFieldDuplicateException {
+    public void testAddReqReqAreForb() throws JSException {
         thrown.expect(WrongOptionConfigurationException.class);
         thrown.expectMessage("Error code: 2. Check docs");
 
@@ -195,7 +195,7 @@ public class OptionServiceImplTest {
      * Expected: Exception errorCode = 1
      */
     @Test
-    public void testAddReqForb() throws UniqueFieldDuplicateException {
+    public void testAddReqForb() throws JSException {
         thrown.expect(WrongOptionConfigurationException.class);
         thrown.expectMessage("Error code: 1. Check docs");
 
@@ -220,7 +220,7 @@ public class OptionServiceImplTest {
      * Expected: Exception errorCode = 3
      */
     @Test
-    public void testAddReqForbAreReq() throws UniqueFieldDuplicateException {
+    public void testAddReqForbAreReq() throws JSException {
         thrown.expect(WrongOptionConfigurationException.class);
         thrown.expectMessage("Error code: 3. Check docs");
 
@@ -250,13 +250,13 @@ public class OptionServiceImplTest {
      * new ### 1 --> 2
      * <p>
      * Expected:
-     * new
-     * #   #
+     * ..new
+     * .#   #
      * #     #
      * 1 --> 2
      */
     @Test
-    public void testAddForbWithReq() throws UniqueFieldDuplicateException {
+    public void testAddForbWithReq() throws JSException {
         OptionDto optionDto = new OptionDto();
         optionDto.setId(200);
 
@@ -297,13 +297,13 @@ public class OptionServiceImplTest {
      * new ### 1 <-- 2
      * <p>
      * Expected:
-     * new
-     * #   #
+     * ..new
+     * .#   #
      * #     #
      * 1 <-- 2
      */
     @Test
-    public void testAddForbWithReqMe() throws UniqueFieldDuplicateException {
+    public void testAddForbWithReqMe() throws JSException {
         OptionDto optionDto = new OptionDto();
         optionDto.setId(200);
 

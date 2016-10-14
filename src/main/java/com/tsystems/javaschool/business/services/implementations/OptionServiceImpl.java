@@ -4,8 +4,10 @@ import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.repository.OptionRepository;
+import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.exceptions.WrongOptionConfigurationException;
+import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +32,8 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public OptionDto addNew(OptionDto entity) throws UniqueFieldDuplicateException {
-        List<Option> existings = repository.findByName(entity.getName());
-        if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", entity.getName(), "/rest/options/" + existings.get(0).getId());
-        }
+    public OptionDto addNew(OptionDto entity) throws JSException {
+        DataBaseValidator.check(entity);
 
         Option option = entity.convertToEntity();
 

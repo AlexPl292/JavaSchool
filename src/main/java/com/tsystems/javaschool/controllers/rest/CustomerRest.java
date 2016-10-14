@@ -3,6 +3,7 @@ package com.tsystems.javaschool.controllers.rest;
 import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.User;
+import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,7 @@ public class CustomerRest {
     }
 
     @PostMapping
-    public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) throws UniqueFieldDuplicateException {
-
+    public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) throws JSException {
         CustomerDto newCustomer = service.addNew(customer);
         return ResponseEntity.created(URI.create("/rest/customers/" + newCustomer.getId())).body(newCustomer);
     }

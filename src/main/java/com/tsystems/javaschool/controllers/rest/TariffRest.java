@@ -3,6 +3,7 @@ package com.tsystems.javaschool.controllers.rest;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
+import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class TariffRest {
     }
 
     @PostMapping
-    public ResponseEntity addNewTariff(@Valid @RequestBody TariffDto tariff) throws UniqueFieldDuplicateException {
+    public ResponseEntity addNewTariff(@Valid @RequestBody TariffDto tariff) throws JSException {
         TariffDto newTariff = service.addNew(tariff);
         return ResponseEntity.created(URI.create("/rest/tariffs/" + newTariff.getId())).body(newTariff);
     }

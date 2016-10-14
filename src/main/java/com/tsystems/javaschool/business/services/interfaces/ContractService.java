@@ -1,6 +1,7 @@
 package com.tsystems.javaschool.business.services.interfaces;
 
 import com.tsystems.javaschool.business.dto.ContractDto;
+import com.tsystems.javaschool.exceptions.JSException;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public interface ContractService extends GenericService<ContractDto, Integer> {
      * @param optionIds  ids of new options
      * @return updated contract
      */
-    ContractDto updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds);
+    ContractDto updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds) throws JSException;
 
     List<ContractDto> findByNumber(String number);
 

@@ -2,6 +2,7 @@ package com.tsystems.javaschool.controllers.rest;
 
 import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
+import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class ContractRest {
     }
 
     @PostMapping
-    public ResponseEntity addNew(@Valid @RequestBody ContractDto contract) throws UniqueFieldDuplicateException {
+    public ResponseEntity addNew(@Valid @RequestBody ContractDto contract) throws JSException {
         contract = service.addNew(contract);
         ContractDto newContract = service.loadByKey(contract.getId());
         return ResponseEntity.created(URI.create("/rest/contracts/" + newContract.getId())).body(newContract);
@@ -77,7 +78,7 @@ public class ContractRest {
     @PutMapping("/{id}")
     public ContractDto modify(@RequestParam("tariff") Integer tariffId,
                               @RequestParam(value = "usedOptions", required = false) List<Integer> options,
-                              @PathVariable Integer id) throws ResourceNotFoundException {
+                              @PathVariable Integer id) throws JSException {
         ContractDto entity = service.updateContract(id, tariffId, options);
         if (entity.getId() == null) {
             throw new ResourceNotFoundException("contract", id);

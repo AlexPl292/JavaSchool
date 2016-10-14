@@ -4,7 +4,9 @@ import com.tsystems.javaschool.business.dto.TariffDto;
 import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.repository.TariffRepository;
+import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
+import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,11 +29,8 @@ public class TariffServiceImpl implements TariffService {
     }
 
     @Override
-    public TariffDto addNew(TariffDto tariffDto) throws UniqueFieldDuplicateException {
-        List<Tariff> existings = repository.findByName(tariffDto.getName());
-        if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", tariffDto.getName(), "/rest/tariffs/" + existings.get(0).getId());
-        }
+    public TariffDto addNew(TariffDto tariffDto) throws JSException {
+        DataBaseValidator.check(tariffDto);
 
         return new TariffDto(repository.saveAndFlush(tariffDto.convertToEntity()));
     }
