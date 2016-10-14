@@ -629,7 +629,7 @@ var prepare = {
         });
         prepare_tariff_list($('#tariff'), $('#options'), 1, "contracts[usedOptions][][id]");
     },
-    "new_option": function ($page_wrapper) {  // TODO clean checkboxes with full_success
+    "new_option": function ($page_wrapper) {
         var link = document.querySelector('link[href$="pieces.html"]');
         var content = link.import.querySelector('#piece_new_option');
         $page_wrapper.append(content.cloneNode(true));
