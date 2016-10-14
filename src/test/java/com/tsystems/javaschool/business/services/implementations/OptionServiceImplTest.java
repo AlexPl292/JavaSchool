@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.AdditionalAnswers;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -25,7 +24,6 @@ import java.util.TreeSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
@@ -35,7 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
  * Created by alex on 07.10.16.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ DataBaseValidator.class })
+@PrepareForTest({DataBaseValidator.class})
 public class OptionServiceImplTest {
 
     @Rule
