@@ -10,9 +10,9 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
+            /WEB-INF/applicationContext.xml
             /WEB-INF/javaschool-servlet.xml
             /WEB-INF/javaschool-security.xml
-            /WEB-INF/applicationContext.xml
         </param-value>
     </context-param>
 
