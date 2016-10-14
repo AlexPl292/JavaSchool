@@ -12,5 +12,5 @@ public interface UserService {
 
     Boolean changePasswordWithCode(String email, String code, String newPassword);
 
-    Boolean disablePassword(String email);
+    Boolean generateTempPassword(String email);
 }

@@ -59,7 +59,7 @@ public class UserRest {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse("Message", "Empty email"));
         }
-        boolean result = service.disablePassword(email);
+        boolean result = service.generateTempPassword(email);
         if (!result) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)

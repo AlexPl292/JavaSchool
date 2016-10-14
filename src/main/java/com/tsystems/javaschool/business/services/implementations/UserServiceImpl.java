@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Boolean disablePassword(String email) {
+    public Boolean generateTempPassword(String email) {
         User user = repository.findByEmail(email);
 
         if (user == null) {
@@ -86,7 +86,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = repository.findByEmail(s);
         if (user == null)
