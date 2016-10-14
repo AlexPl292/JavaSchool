@@ -5,7 +5,7 @@ import java.net.URI;
 /**
  * Created by alex on 30.09.16.
  */
-public class UniqueFieldDuplicateException extends RuntimeException {
+public class UniqueFieldDuplicateException extends Exception {
 
     private String duplicatedField;
     private String duplicatedValue;

@@ -3,6 +3,7 @@ package com.tsystems.javaschool.controllers.rest;
 import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
+import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class OptionRest {
     }
 
     @PostMapping
-    public ResponseEntity addOption(@Valid @RequestBody OptionDto optionDto) {
+    public ResponseEntity addOption(@Valid @RequestBody OptionDto optionDto) throws UniqueFieldDuplicateException {
         DataBaseValidator.checkUnique(optionDto);
 
         OptionDto newOption = service.addNew(optionDto);
@@ -45,7 +46,7 @@ public class OptionRest {
 
     @GetMapping("/{optionId}")
     @ResponseStatus(HttpStatus.OK)
-    public OptionDto loadOption(@PathVariable Integer optionId) {
+    public OptionDto loadOption(@PathVariable Integer optionId) throws ResourceNotFoundException {
         OptionDto entity = service.loadByKey(optionId);
         if (entity.getId() == null) {
             throw new ResourceNotFoundException("options", optionId);

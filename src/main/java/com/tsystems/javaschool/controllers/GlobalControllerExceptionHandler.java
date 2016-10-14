@@ -2,6 +2,7 @@ package com.tsystems.javaschool.controllers;
 
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
+import com.tsystems.javaschool.exceptions.WrongOptionConfigurationException;
 import com.tsystems.javaschool.util.ErrorResponse;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -33,12 +34,20 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
                         "' already exists. This field must be unique."));
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)  //TODO option exception
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return new ErrorResponse("Message", "Entity '" +
+        return new ErrorResponse("Message", "Resource '" +
                 ex.getResourceName() + "' with id " + ex.getResourceId() + " does not exist");
+    }
+
+
+    @ExceptionHandler(WrongOptionConfigurationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleWrongOptionConfigurationException(WrongOptionConfigurationException ex) {
+        return new ErrorResponse("Message", ex.getMessage());
     }
 
     @Override

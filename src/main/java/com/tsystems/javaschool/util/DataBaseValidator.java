@@ -35,28 +35,28 @@ public class DataBaseValidator {
         DataBaseValidator.customerService = customerService;
     }
 
-    public static void checkUnique(TariffDto tariffDto) {
+    public static void checkUnique(TariffDto tariffDto) throws UniqueFieldDuplicateException {
         List<TariffDto> existings = tariffService.findByName(tariffDto.getName());
         if (existings != null && existings.size() > 0) {
             throw new UniqueFieldDuplicateException("Name", tariffDto.getName(), "/rest/tariffs/" + existings.get(0).getId());
         }
     }
 
-    public static void checkUnique(OptionDto optionDto) {
+    public static void checkUnique(OptionDto optionDto) throws UniqueFieldDuplicateException {
         List<OptionDto> existings = optionService.findByName(optionDto.getName());
         if (existings != null && existings.size() > 0) {
             throw new UniqueFieldDuplicateException("Name", optionDto.getName(), "/rest/options/" + existings.get(0).getId());
         }
     }
 
-    public static void checkUnique(ContractDto contractDto) {
+    public static void checkUnique(ContractDto contractDto) throws UniqueFieldDuplicateException {
         List<ContractDto> existings = contractService.findByNumber(contractDto.getNumber());
         if (existings != null && existings.size() > 0) {
             throw new UniqueFieldDuplicateException("Name", contractDto.getNumber(), "/rest/contracts/" + existings.get(0).getId());
         }
     }
 
-    public static void checkUnique(CustomerDto customerDto) {
+    public static void checkUnique(CustomerDto customerDto) throws UniqueFieldDuplicateException {
         List<CustomerDto> existings = customerService.findByPassportNumberOrEmail(customerDto.getPassportNumber(), customerDto.getEmail());
         if (existings != null && existings.size() > 0) {
             if (existings.get(0).getEmail().equalsIgnoreCase(customerDto.getEmail()))

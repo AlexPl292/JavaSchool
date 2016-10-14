@@ -32,7 +32,7 @@ public class WrongOptionConfigurationException extends RuntimeException {
     private Integer errorCode;
 
     public WrongOptionConfigurationException(Integer errorCode) {
-        super("Error code: " + errorCode + ". Check docs");
+        super("Wrong option configuration. Error code: " + errorCode + ". Check docs");
         this.errorCode = errorCode;
     }
 

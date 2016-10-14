@@ -6,6 +6,7 @@ import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Customer;
 import com.tsystems.javaschool.db.entities.User;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
+import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -39,7 +40,7 @@ public class CustomerRest {
     }
 
     @PostMapping
-    public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) {
+    public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) throws UniqueFieldDuplicateException {
         DataBaseValidator.checkUnique(customer);
 
         CustomerDto newCustomer = service.addNew(customer);
@@ -54,7 +55,7 @@ public class CustomerRest {
 
     @GetMapping("/{customerId}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDto loadCustomer(@PathVariable Integer customerId, Principal principal, HttpServletRequest request) {
+    public CustomerDto loadCustomer(@PathVariable Integer customerId, Principal principal, HttpServletRequest request) throws ResourceNotFoundException {
         if (!request.isUserInRole("ROLE_ADMIN") &&
                 !Objects.equals(((User)((UsernamePasswordAuthenticationToken)principal).getPrincipal()).getId(), customerId)) {
             return null;
