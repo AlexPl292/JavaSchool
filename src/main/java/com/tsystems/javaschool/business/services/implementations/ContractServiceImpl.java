@@ -45,6 +45,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ContractDto loadByKey(Integer key) {
         Contract contract = repository.findOne(key);
         return new ContractDto(contract).addDependencies(contract);
@@ -55,7 +56,8 @@ public class ContractServiceImpl implements ContractService {
         repository.delete(key);
     }
 
-    @Override // TODO readpnly
+    @Override
+    @Transactional(readOnly = true)
     public List<ContractDto> loadAll() {
         return repository
                 .findAll()
@@ -108,6 +110,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ContractDto> findByNumber(String number) {
         return repository
                 .findByNumber(number)
@@ -117,6 +120,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ContractDto> findByTariffName(String name) {
         return repository
                 .findByTariff_Name(name)

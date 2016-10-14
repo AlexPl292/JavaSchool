@@ -49,10 +49,6 @@ public class CustomerServiceImpl implements CustomerService {
                 }
             }
         }
-        /*
-        Пароль НЕ должен быть введен сотрудником.
-        Будем его вручную генерировать, а потом посылать с помощью email или sms
-         */
         Customer customer = customerDto.convertToEntity();
         Contract contract = customerDto.getContracts().first().convertToEntity();
         contract.setCustomer(customer);
@@ -69,6 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CustomerDto loadByKey(Integer key) {
         Customer customer = repository.findOne(key);
         return new CustomerDto(customer).addDependencies(customer);
@@ -80,6 +77,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CustomerDto> loadAll() {
         return repository
                 .findAll()
@@ -88,6 +86,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CustomerDto> findByPassportNumberOrEmail(String passportNumber, String email) {
         return repository
                 .findByPassportNumberOrEmail(passportNumber, email)

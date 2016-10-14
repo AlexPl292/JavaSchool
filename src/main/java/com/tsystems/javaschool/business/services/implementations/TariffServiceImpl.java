@@ -37,6 +37,7 @@ public class TariffServiceImpl implements TariffService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TariffDto loadByKey(Integer key) {
         Tariff tariff = repository.findOne(key);
         return new TariffDto(tariff).addDependencies(tariff);
@@ -48,6 +49,7 @@ public class TariffServiceImpl implements TariffService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TariffDto> loadAll() {
         return repository
                 .findAll()
@@ -57,6 +59,7 @@ public class TariffServiceImpl implements TariffService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TariffDto> findByName(String name) {
         return repository
                 .findByName(name)

@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return repository.findByEmail(email);
     }
@@ -85,6 +86,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = repository.findByEmail(s);
         if (user == null)
