@@ -80,6 +80,11 @@ function submitting(full_success) {
                     full_success(response);
                 }
                 $(form).find(":input").prop("disabled", false);
+                $(form).find('form input[type="text"].bfh-phone, form input[type="tel"].bfh-phone, span.bfh-phone').each(function () {
+                    var $phone = $(this);
+                    $phone.bfhphone($phone.data());
+                });
+                $(form).find(".checkbox-danger").addClass("checkbox-primary").removeClass("checkbox-danger no");
             },
             error: function (jqXHR) {
                 $.each(jqXHR.responseJSON.errors, function (prop, val) {

@@ -68,8 +68,8 @@ function check_item(type) {
                     disableItIds.push(checked_val + ":" + "requiredFrom");
                 }
 
-                enableIt.prop('checked', true).attr("disabled", true).closest('.checkbox').addClass("checkbox-success").removeClass("checkbox-prime");
-                $(disableIt).attr("disabled", true).closest('.checkbox').addClass("no checkbox-danger").removeClass("checkbox-prime");
+                enableIt.prop('checked', true).attr("disabled", true).closest('.checkbox').addClass("checkbox-success").removeClass("checkbox-primary");
+                $(disableIt).attr("disabled", true).closest('.checkbox').addClass("no checkbox-danger").removeClass("checkbox-primary");
 
                 $(disableIt).each(function (i, obj) {
                     if ($(obj).data('disabledBy') === undefined) { // DisabledBy is not set (this checkbox is disabled first time
@@ -100,7 +100,7 @@ function check_item(type) {
                     enable = $.merge(enable, maybeEnable);
             });
 
-            $(enable).prop('disabled', false).closest('.checkbox').addClass("checkbox-prime").removeClass("checkbox-danger no");
+            $(enable).prop('disabled', false).closest('.checkbox').addClass("checkbox-primary").removeClass("checkbox-danger no");
 
             var uncheck = $();
             $($(this).data("enableIt")).each(function (i, obj) {
@@ -115,7 +115,7 @@ function check_item(type) {
                 .prop('checked', false)
                 .prop('disabled', false).change()
                 .closest('.checkbox')
-                .addClass("checkbox-prime")
+                .addClass("checkbox-primary")
                 .removeClass("checkbox-success");
         }
     }
@@ -143,8 +143,8 @@ function optionChecked(options) {
                     disableItIds.push(obj.id);
                 });
 
-                enableIt.prop('checked', true).attr("disabled", true).closest('.checkbox').addClass("checkbox-success").removeClass("checkbox-prime");
-                disableIt.attr("disabled", true).closest('.checkbox').addClass("no checkbox-danger").removeClass("checkbox-prime");
+                enableIt.prop('checked', true).attr("disabled", true).closest('.checkbox').addClass("checkbox-success").removeClass("checkbox-primary");
+                disableIt.attr("disabled", true).closest('.checkbox').addClass("no checkbox-danger").removeClass("checkbox-primary");
 
                 $(disableIt).each(function (i, obj) {
                     if ($(obj).data('disabledBy') === undefined) { // DisabledBy is not set (this checkbox is disabled first time
@@ -174,7 +174,7 @@ function optionChecked(options) {
                 if ($(maybeEnable).data("disabledBy").length === 0)
                     enable = $.merge(enable, maybeEnable);
             });
-            $(enable).prop('disabled', false).closest('.checkbox').addClass("checkbox-prime").removeClass("checkbox-danger no");
+            $(enable).prop('disabled', false).closest('.checkbox').addClass("checkbox-primary").removeClass("checkbox-danger no");
 
             var uncheck = $();
             $($(this).data("enableIt")).each(function (i, obj) {
@@ -190,7 +190,7 @@ function optionChecked(options) {
                 .prop('disabled', false)
                 .change()
                 .closest('.checkbox')
-                .addClass("checkbox-prime")
+                .addClass("checkbox-primary")
                 .removeClass("checkbox-success");
         }
     }
@@ -208,7 +208,7 @@ function optionCheckedNewTariff(e) {
             enableIt = $.merge(enableIt, $('#possibleOptions').find("input[value=" + obj.id + "]"));
         });
 
-        enableIt.prop('checked', true).attr("disabled", true).closest('.checkbox').addClass("checkbox-success").removeClass("checkbox-prime");
+        enableIt.prop('checked', true).attr("disabled", true).closest('.checkbox').addClass("checkbox-success").removeClass("checkbox-primary");
 
         $(enableIt).each(function (i, obj) {
             if ($(obj).data('enabledBy') === undefined) { // DisabledBy is not set (this checkbox is disabled first time
@@ -228,7 +228,7 @@ function optionCheckedNewTariff(e) {
                 uncheck = $.merge(uncheck, maybeEnable);
         });
         $(uncheck).prop('checked', false).prop('disabled', false).change().closest('.checkbox')
-                .addClass("checkbox-prime")
+                .addClass("checkbox-primary")
                 .removeClass("checkbox-success");
     }
 }
@@ -626,7 +626,11 @@ var prepare = {
                     phone: "Wrong phone number format"
                 },
                 options: "Choose options"
-            }
+            },
+            submitHandler: submitting(function () {
+                $('#options').empty();
+                $('#tariff').change();
+            })
         });
         prepare_tariff_list($('#tariff'), $('#options'), 1, "contracts[usedOptions][][id]");
     },
@@ -751,7 +755,7 @@ var prepare = {
                 $(nodes).find('#contractBalance')
                     .html(contract.balance.toFixed(2) + ' <i class="fa fa-rub"></i>')
                     .data('balance', contract.balance);
-                $(nodes).find('#contractNode').addClass(contract.isBlocked === 0 ? 'panel-default' : 'panel-red');
+                $(nodes).find('.contractNode').addClass(contract.isBlocked === 0 ? 'panel-default' : 'panel-red');
                 $(nodes).find('#collapse').attr('id', 'collapse' + contract.id);
                 $(nodes).find('#tariffName').html(contract.tariff.name).data('tariffId', contract.tariff.id);
                 $(nodes).find('#tariffDescription').html(contract.tariff.description);

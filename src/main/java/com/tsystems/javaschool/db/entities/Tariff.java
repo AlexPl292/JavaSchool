@@ -19,15 +19,15 @@ public class Tariff {
     private Integer id;
 
     @Basic
-    @Column(name = "name", nullable = true, length = 45)
+    @Column(name = "name")
     private String name;
 
     @Basic
-    @Column(name = "cost", nullable = true, precision = 2)
+    @Column(name = "cost")
     private BigDecimal cost;
 
     @Basic
-    @Column(name = "description", nullable = true, length = 255)
+    @Column(name = "description")
     private String description;
 
     @JoinTable(name = "Possible_options_of_tariffs", joinColumns = {

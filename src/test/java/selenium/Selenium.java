@@ -7,10 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -26,17 +23,42 @@ public class Selenium {
 
     @BeforeClass
     public static void before() {
-        System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
     }
 
     @BeforeMethod
     public void beforeMethod() {
-        driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, 10);
     }
 
     @AfterMethod
     public void afterMethod() {
+    }
+
+    @BeforeSuite
+    public void beforeSuite() {
+    }
+
+    @BeforeGroups(groups = "admin")
+    public void adminTests() {
+        System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
+
+        driver = new ChromeDriver();
+        wait = new WebDriverWait(driver, 10);
+
+        driver.get("http://localhost:8080/JavaSchool/");
+        WebElement form = driver.findElement(By.id("loginForm"));
+        form.findElement(By.name("username")).sendKeys("admin@ts.ru");
+        form.findElement(By.name("password")).sendKeys("adminadmin");
+        form.submit();
+        waitJquery();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("customers_menu")));
+        WebElement menu = driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[2]/a"));
+        menu.click();
+        menu.click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("customers_menu")));
+    }
+
+    @AfterGroups(groups = "admin")
+    public void adminAfter() {
         driver.quit();
     }
 
@@ -57,76 +79,51 @@ public class Selenium {
         assertEquals("eCare", driver.getTitle());
     }
 
-    @Test
+    @Test(groups = {"admin"})
     public void customerTable() {
-        driver.get("http://localhost:8080/JavaSchool/");
-        WebElement form = driver.findElement(By.id("loginForm"));
-        form.findElement(By.name("username")).sendKeys("admin@ts.ru");
-        form.findElement(By.name("password")).sendKeys("adminadmin");
-        form.submit();
+        driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[1]/a")).click();
+        WebElement menu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"customers_menu\"]")));
+        menu.click();
         waitJquery();
-
-        driver.findElement(By.xpath("/[@id=\"customers_menu\"]")).click();
-        waitJquery();
-        WebElement tableBody = driver.findElement(By.xpath("/[@id=\"content_table\"]/tbody"));
+        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
-        assertEquals("Customers", driver.findElement(By.xpath("/[@id=\"piece_table\"]/div[1]/div/h1")).getText());
+        assertEquals("Customers", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
     }
 
-    @Test
+    @Test(groups = {"admin"})
     public void optionsTable() {
-        driver.get("http://localhost:8080/JavaSchool/");
-        WebElement form = driver.findElement(By.id("loginForm"));
-        form.findElement(By.name("username")).sendKeys("admin@ts.ru");
-        form.findElement(By.name("password")).sendKeys("adminadmin");
-        form.submit();
-        waitJquery();
-
-        driver.findElement(By.xpath("/[@id=\"side-menu\"]/li[3]/a")).click();
-        WebElement menu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/[@id=\"options_menu\"]")));
+        driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[3]/a")).click();
+        WebElement menu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"options_menu\"]")));
         menu.click();
         waitJquery();
-        WebElement tableBody = driver.findElement(By.xpath("/[@id=\"content_table\"]/tbody"));
+        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
-        assertEquals("Options", driver.findElement(By.xpath("/[@id=\"piece_table\"]/div[1]/div/h1")).getText());
+        assertEquals("Options", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
     }
 
-    @Test
+    @Test(groups = {"admin"})
     public void contractsTable() {
-        driver.get("http://localhost:8080/JavaSchool/");
-        WebElement form = driver.findElement(By.id("loginForm"));
-        form.findElement(By.name("username")).sendKeys("admin@ts.ru");
-        form.findElement(By.name("password")).sendKeys("adminadmin");
-        form.submit();
-        waitJquery();
-
-        driver.findElement(By.xpath("/[@id=\"side-menu\"]/li[4]/a")).click();
-        WebElement menu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/[@id=\"contracts_menu\"]")));
+        driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[4]/a")).click();
+        WebElement menu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"contracts_menu\"]")));
         menu.click();
         waitJquery();
-        WebElement tableBody = driver.findElement(By.xpath("/[@id=\"content_table\"]/tbody"));
+        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
-        assertEquals("Contracts", driver.findElement(By.xpath("/[@id=\"piece_table\"]/div[1]/div/h1")).getText());
+        assertEquals("Contracts", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
     }
 
-    @Test
+    @Test(groups = {"admin"})
     public void tariffsTable() {
-        driver.get("http://localhost:8080/JavaSchool/");
-        WebElement form = driver.findElement(By.id("loginForm"));
-        form.findElement(By.name("username")).sendKeys("admin@ts.ru");
-        form.findElement(By.name("password")).sendKeys("adminadmin");
-        form.submit();
-        waitJquery();
-
-        driver.findElement(By.xpath("/[@id=\"side-menu\"]/li[2]/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[2]/a")).click();
         WebElement menu = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.xpath("/[@id=\"tariffs_menu\"]")));
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tariffs_menu\"]")));
         menu.click();
         waitJquery();
-        WebElement tableBody = driver.findElement(By.xpath("/[@id=\"content_table\"]/tbody"));
+        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
-        assertEquals("Tariffs", driver.findElement(By.xpath("/[@id=\"piece_table\"]/div[1]/div/h1")).getText());
+        assertEquals("Tariffs", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
     }
+
 
 
 

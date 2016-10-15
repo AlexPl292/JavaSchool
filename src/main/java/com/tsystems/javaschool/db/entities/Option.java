@@ -20,19 +20,19 @@ public class Option {
     private Integer id;
 
     @Basic
-    @Column(name = "name", nullable = true, length = 45)
+    @Column(name = "name", length = 45)
     private String name;
 
     @Basic
-    @Column(name = "cost", nullable = true, precision = 2)
+    @Column(name = "cost")
     private BigDecimal cost;
 
     @Basic
-    @Column(name = "connect_cost", nullable = true, precision = 2)
+    @Column(name = "connect_cost")
     private BigDecimal connectCost;
 
     @Basic
-    @Column(name = "description", nullable = true, length = 255)
+    @Column(name = "description", length = 255)
     private String description;
 
     @JoinTable(name = "Required_option_relationships", joinColumns = {
