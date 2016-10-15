@@ -61,8 +61,11 @@ function check_item(type) {
                     disableItIds.push(checked_val + ":" + "forbiddenWith");
                 } else {
                     $(data.requiredMe).each(function (i, obj) {
-                        disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + obj.id + "]"));
-                        disableItIds.push(obj.id + ":" + "requiredFrom");
+                        var el = $('#requiredFrom').find("input[value=" + obj.id + "]");
+                        if (el !== undefined) {
+                            disableIt = $.merge(disableIt, el);
+                            disableItIds.push(obj.id + ":" + "requiredFrom");
+                        }
                     });
                     disableIt = $.merge(disableIt, $('#requiredFrom').find("input[value=" + checked_val + "]"));
                     disableItIds.push(checked_val + ":" + "requiredFrom");
@@ -370,7 +373,7 @@ function addTableAdditional(table, field, prop, title, empty) {
     });
 }
 
-function chooseOptionsForTariff($tariffs) {
+function chooseOptionsForTariffAnd($tariffs) {
     var checkedTariffs = $tariffs.find(':checked');
     if (checkedTariffs.length === 0)
         return [];
@@ -381,6 +384,24 @@ function chooseOptionsForTariff($tariffs) {
                     return e.id
                 }).indexOf(n.id) != -1;
         })
+    }
+
+    return options;
+}
+
+function chooseOptionsForTariffOr($tariffs) {
+    var checkedTariffs = $tariffs.find(':checked');
+    if (checkedTariffs.length === 0)
+        return [];
+    var options = [];
+
+    for (var i = 0; i < checkedTariffs.length; i++) {
+        options = options.concat($(checkedTariffs[i]).data("boxData").possibleOptions);
+        options = options.filter(function (item, pos) {
+            return options.map(function (e) {
+                    return e.id
+                }).indexOf(item.id) === pos;
+        });
     }
 
     return options;
@@ -650,9 +671,8 @@ var prepare = {
             e.preventDefault();
             requiredFrom.empty();
             forbiddenWith.empty();
-            var options = chooseOptionsForTariff($(forTariffs));
-            create_boxes(requiredFrom, "requiredFrom[][id]")(options);
-            create_boxes(forbiddenWith, "forbiddenWith[][id]")(options);
+            create_boxes(requiredFrom, "requiredFrom[][id]")(chooseOptionsForTariffAnd($(forTariffs)));
+            create_boxes(forbiddenWith, "forbiddenWith[][id]")(chooseOptionsForTariffOr($(forTariffs)));
         });
 
         $(requiredFrom).on('change', 'input[type=checkbox]', check_item("requiredFrom"));

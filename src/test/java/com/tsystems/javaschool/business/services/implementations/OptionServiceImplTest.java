@@ -275,14 +275,10 @@ public class OptionServiceImplTest extends PowerMockTestCase{
         assertEquals(savedDto.getId(), Integer.valueOf(200));
 
         // Check: dependencies are added
-        assertEquals(savedDto.getForbiddenWith().size(), 3);
+        assertEquals(savedDto.getForbiddenWith().size(), 1);
 
         // Check: 'option1' is added
         assertTrue(savedDto.getForbiddenWith().stream().filter(e -> e.getId().equals(1)).findFirst().isPresent());
-
-        // Check: 'plainOption's are added
-        assertTrue(savedDto.getForbiddenWith().stream().filter(e -> e.getId().equals(100)).findFirst().isPresent());
-        assertTrue(savedDto.getForbiddenWith().stream().filter(e -> e.getId().equals(101)).findFirst().isPresent());
 
         // Check: forbidden set is empty
         assertTrue(savedDto.getRequiredFrom().isEmpty());

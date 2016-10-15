@@ -58,7 +58,6 @@ public class OptionServiceImpl implements OptionService {
 
         for (Option forb : forbiddens) {
             option.addForbiddenWithOptions(forb);
-            option.addForbiddenWithOptions(forb.getRequired());
             option.addForbiddenWithOptions(forb.getRequiredMe());
 
             // This case exists already in required for block, but let it be

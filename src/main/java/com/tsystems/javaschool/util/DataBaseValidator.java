@@ -60,7 +60,7 @@ public class DataBaseValidator {
         checkAllTariffs(possibleTariffs);
         checkAllOptions(option.getRequiredFrom(), possibleTariffs);
         checkAllOptions(option.getRequiredMe(), possibleTariffs);
-        checkAllOptions(option.getForbiddenWith(), possibleTariffs);
+        checkAllOptions(option.getForbiddenWith());
     }
 
     static public void check(CustomerDto customer) throws JSException {
