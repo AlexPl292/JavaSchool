@@ -1,18 +1,20 @@
 package selenium;
 
-import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
 
 /**
  * Created by alex on 15.10.16.
@@ -27,13 +29,13 @@ public class Selenium {
         System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
     }
 
-    @Before
+    @BeforeMethod
     public void beforeMethod() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, 10);
     }
 
-    @After
+    @AfterMethod
     public void afterMethod() {
         driver.quit();
     }
@@ -64,11 +66,11 @@ public class Selenium {
         form.submit();
         waitJquery();
 
-        driver.findElement(By.xpath("//*[@id=\"customers_menu\"]")).click();
+        driver.findElement(By.xpath("/[@id=\"customers_menu\"]")).click();
         waitJquery();
-        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
+        WebElement tableBody = driver.findElement(By.xpath("/[@id=\"content_table\"]/tbody"));
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
-        assertEquals("Customers", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
+        assertEquals("Customers", driver.findElement(By.xpath("/[@id=\"piece_table\"]/div[1]/div/h1")).getText());
     }
 
     @Test
@@ -80,13 +82,13 @@ public class Selenium {
         form.submit();
         waitJquery();
 
-        driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[3]/a")).click();
-        WebElement menu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"options_menu\"]")));
+        driver.findElement(By.xpath("/[@id=\"side-menu\"]/li[3]/a")).click();
+        WebElement menu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/[@id=\"options_menu\"]")));
         menu.click();
         waitJquery();
-        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
+        WebElement tableBody = driver.findElement(By.xpath("/[@id=\"content_table\"]/tbody"));
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
-        assertEquals("Options", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
+        assertEquals("Options", driver.findElement(By.xpath("/[@id=\"piece_table\"]/div[1]/div/h1")).getText());
     }
 
     @Test
@@ -98,13 +100,13 @@ public class Selenium {
         form.submit();
         waitJquery();
 
-        driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[4]/a")).click();
-        WebElement menu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"contracts_menu\"]")));
+        driver.findElement(By.xpath("/[@id=\"side-menu\"]/li[4]/a")).click();
+        WebElement menu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/[@id=\"contracts_menu\"]")));
         menu.click();
         waitJquery();
-        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
+        WebElement tableBody = driver.findElement(By.xpath("/[@id=\"content_table\"]/tbody"));
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
-        assertEquals("Contracts", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
+        assertEquals("Contracts", driver.findElement(By.xpath("/[@id=\"piece_table\"]/div[1]/div/h1")).getText());
     }
 
     @Test
@@ -116,14 +118,14 @@ public class Selenium {
         form.submit();
         waitJquery();
 
-        driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[2]/a")).click();
+        driver.findElement(By.xpath("/[@id=\"side-menu\"]/li[2]/a")).click();
         WebElement menu = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tariffs_menu\"]")));
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("/[@id=\"tariffs_menu\"]")));
         menu.click();
         waitJquery();
-        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
+        WebElement tableBody = driver.findElement(By.xpath("/[@id=\"content_table\"]/tbody"));
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
-        assertEquals("Tariffs", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
+        assertEquals("Tariffs", driver.findElement(By.xpath("/[@id=\"piece_table\"]/div[1]/div/h1")).getText());
     }
 
 

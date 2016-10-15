@@ -7,36 +7,36 @@ import com.tsystems.javaschool.db.entities.Option;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.repository.ContractRepository;
 import com.tsystems.javaschool.util.DataBaseValidator;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+//import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Created by alex on 14.10.16.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({DataBaseValidator.class})
-public class ContractServiceImplTest {
+//@RunWith(PowerMockRunner.class)
+@PrepareForTest(DataBaseValidator.class)
+public class ContractServiceImplTest extends PowerMockTestCase{
 
     private ContractService service;
 
     private ContractRepository contractRepository;
 
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
         contractRepository = mock(ContractRepository.class);
 

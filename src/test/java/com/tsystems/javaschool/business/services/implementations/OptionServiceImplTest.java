@@ -7,41 +7,35 @@ import com.tsystems.javaschool.db.repository.OptionRepository;
 import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.WrongOptionConfigurationException;
 import com.tsystems.javaschool.util.DataBaseValidator;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.AdditionalAnswers;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Created by alex on 07.10.16.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({DataBaseValidator.class})
-public class OptionServiceImplTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+@PrepareForTest(DataBaseValidator.class)
+public class OptionServiceImplTest extends PowerMockTestCase{
 
     private OptionService service;
 
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
         OptionRepository optionRepository = mock(OptionRepository.class);
         //------ test options
@@ -79,7 +73,7 @@ public class OptionServiceImplTest {
         doNothing().when(DataBaseValidator.class);
     }
 
-    @After
+    @AfterMethod
     public void tearDown() throws Exception {
 
     }
@@ -179,11 +173,8 @@ public class OptionServiceImplTest {
      * Add 2 required options, that are forbidden
      * Expected: Exception errorCode = 2
      */
-    @Test
+    @Test(expectedExceptions = {WrongOptionConfigurationException.class}, expectedExceptionsMessageRegExp = ".*Error code: 2.*")
     public void testAddReqReqAreForb() throws JSException {
-        thrown.expect(WrongOptionConfigurationException.class);
-        thrown.expectMessage("Error code: 2. Check docs");
-
         OptionDto optionDto = new OptionDto();
         optionDto.setId(200);
 
@@ -205,10 +196,10 @@ public class OptionServiceImplTest {
      * <p>
      * Expected: Exception errorCode = 1
      */
-    @Test
+    @Test(expectedExceptions = {WrongOptionConfigurationException.class}, expectedExceptionsMessageRegExp = ".*Error code: 1.*")
     public void testAddReqForb() throws JSException {
-        thrown.expect(WrongOptionConfigurationException.class);
-        thrown.expectMessage("Error code: 1. Check docs");
+//        thrown.expect(WrongOptionConfigurationException.class);
+//        thrown.expectMessage("Error code: 1. Check docs");
 
         OptionDto optionDto = new OptionDto();
         optionDto.setId(200);
@@ -230,10 +221,10 @@ public class OptionServiceImplTest {
     /**
      * Expected: Exception errorCode = 3
      */
-    @Test
+    @Test(expectedExceptions = {WrongOptionConfigurationException.class}, expectedExceptionsMessageRegExp = ".*Error code: 3.*")
     public void testAddReqForbAreReq() throws JSException {
-        thrown.expect(WrongOptionConfigurationException.class);
-        thrown.expectMessage("Error code: 3. Check docs");
+//        thrown.expect(WrongOptionConfigurationException.class);
+//        thrown.expectMessage("Error code: 3. Check docs");
 
         OptionDto optionDto = new OptionDto();
         optionDto.setId(200);
