@@ -51,4 +51,14 @@ public class OptionRest {
         }
         return entity;
     }
+
+    @DeleteMapping("/{optionId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteOption(@PathVariable Integer optionId) throws ResourceNotFoundException {
+        OptionDto entity = service.loadByKey(optionId);
+        if (entity.getId() == null) {
+            throw new ResourceNotFoundException("option", optionId);
+        }
+        service.remove(optionId);
+    }
 }

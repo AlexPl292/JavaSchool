@@ -60,4 +60,14 @@ public class CustomerRest {
         }
         return entity;
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteCustomer(@PathVariable Integer id) throws ResourceNotFoundException {
+        CustomerDto entity = service.loadByKey(id);
+        if (entity.getId() == null) {
+            throw new ResourceNotFoundException("customer", id);
+        }
+        service.remove(id);
+    }
 }

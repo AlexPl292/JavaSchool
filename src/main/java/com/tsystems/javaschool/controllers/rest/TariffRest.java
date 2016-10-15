@@ -63,5 +63,15 @@ public class TariffRest {
         }
         return entity.getPossibleOptions();
     }
+
+    @DeleteMapping("/{tariffId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteTariff(@PathVariable Integer tariffId) throws ResourceNotFoundException {
+        TariffDto entity = service.loadByKey(tariffId);
+        if (entity.getId() == null) {
+            throw new ResourceNotFoundException("tariff", tariffId);
+        }
+        service.remove(tariffId);
+    }
 }
 
