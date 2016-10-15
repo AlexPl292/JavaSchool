@@ -56,6 +56,13 @@ public class Option {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Option> forbidden = new HashSet<>();
 
+    @JoinTable(name = "Forbidden_option_relationships", joinColumns = {
+            @JoinColumn(name = "id_second", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "id_first", referencedColumnName = "id", nullable = false)
+    })
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    private Set<Option> forbiddenMirror = new HashSet<>();
+
     @JoinTable(name = "Possible_options_of_tariffs", joinColumns = {
             @JoinColumn(name = "option_id", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "tariff_id", referencedColumnName = "id", nullable = false)
@@ -124,7 +131,7 @@ public class Option {
      */
     public void addForbiddenWithOptions(Option option) {
         this.getForbidden().add(option);
-        option.getForbidden().add(this);
+        this.forbiddenMirror.add(option);
     }
 
     /**
@@ -153,8 +160,7 @@ public class Option {
      */
     public void addForbiddenWithOptions(Set<Option> options) {
         this.getForbidden().addAll(options);
-        for (Option opt : options)
-            opt.getForbidden().add(this);
+        this.forbiddenMirror.addAll(options);
     }
 
     public Integer getId() {
