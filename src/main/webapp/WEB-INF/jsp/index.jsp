@@ -47,7 +47,7 @@
     <script src="<%=application.getContextPath() %>/resources/vendor/formhelpers/js/bootstrap-formhelpers-phone.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/form_validation.js"></script>
     <script src="<%=application.getContextPath() %>/resources/js/script.js"></script>
-    <title>New customer</title>
+    <title>eCare</title>
 </head>
 <body>
 <div class="wrapper">
