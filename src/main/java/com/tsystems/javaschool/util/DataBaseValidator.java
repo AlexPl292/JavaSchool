@@ -92,7 +92,7 @@ public class DataBaseValidator {
     static public void check(ContractDto contract) throws JSException {
         List<Contract> existings = contractRepository.findByNumber(contract.getNumber());
         if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", contract.getNumber(), "/rest/contracts/" + existings.get(0).getId());
+            throw new UniqueFieldDuplicateException("Number", contract.getNumber(), "/rest/contracts/" + existings.get(0).getId());
         }
 
         if (contract.getCustomer() == null || customerRepository.findOne(contract.getCustomer().getId()) == null) {
