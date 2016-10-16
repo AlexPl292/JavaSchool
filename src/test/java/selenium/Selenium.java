@@ -156,7 +156,7 @@ public class Selenium {
     }
 
 
-    @Test(groups = {"admin"})
+    @Test(groups = {"admin"}, enabled = false)
     public void addTariff() {
         proxy.newHar();
 
@@ -173,6 +173,7 @@ public class Selenium {
         costInput.sendKeys("abc");
         form.submit();
 
+        // Check no request
         assertEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
 
         costInput.clear();
@@ -208,6 +209,90 @@ public class Selenium {
         assertEquals(409, har2.getResponse().getStatus());
 
         deleteEntity(har);
+        clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[2]/a")), By.id("new_tariff_menu"), false);
+    }
+
+    @Test(groups = {"admin"})
+    public void addOption() {
+        proxy.newHar();
+        clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[3]/a")), By.id("new_option_menu"), true).click();
+        waitJquery();
+        assertEquals("Add new option", driver.findElement(By.xpath("//*[@id=\"piece_new_option\"]/div/div/h1")).getText());
+
+        int harsBeforeSend = proxy.getHar().getLog().getEntries().size();
+        WebElement form = driver.findElement(By.id("add_option_form"));
+        form.submit();
+
+        // Check no request
+        assertEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
+        form.findElement(By.id("name")).sendKeys("Selenium");
+        WebElement costInput = form.findElement(By.id("cost"));
+        costInput.sendKeys("abc");
+        form.submit();
+
+        // Check no request
+        assertEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
+        costInput.clear();
+        costInput.sendKeys("100");
+        form.findElement(By.id("connect_cost")).sendKeys("100");
+
+        WebElement forTariffs = driver.findElement(By.id("forTariffs"));
+        assertTrue(forTariffs.findElements(By.xpath(".//*")).size() > 0);
+        WebElement require = driver.findElement(By.id("requiredFrom"));
+        assertTrue(require.findElements(By.xpath(".//*")).size() == 0);
+        WebElement forbidden = driver.findElement(By.id("forbiddenWith"));
+        assertTrue(forbidden.findElements(By.xpath(".//*")).size() == 0);
+
+        Actions actions = new Actions(driver);
+
+        WebElement smsUser = form.findElement(By.id("possibleTariffsOfOption[][id]1"));
+        actions.moveToElement(smsUser).click().perform();
+        waitJquery();
+        assertTrue(require.findElements(By.xpath(".//*")).size() > 0);
+        assertTrue(forbidden.findElements(By.xpath(".//*")).size() > 0);
+
+        WebElement sms20 = form.findElement(By.id("requiredFrom[][id]2"));
+        actions.moveToElement(sms20).click().perform();
+        waitJquery();
+
+        assertTrue(require.findElement(By.id("requiredFrom[][id]0")).isSelected());
+        assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"requiredFrom\"]/div[2]")), "no", "checkbox-danger"));
+        assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"requiredFrom\"]/div[4]")), "no", "checkbox-danger"));
+        assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"forbiddenWith\"]/div[1]")), "no", "checkbox-danger"));
+        assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"forbiddenWith\"]/div[3]")), "no", "checkbox-danger"));
+
+        actions.moveToElement(sms20).click().perform();
+        waitJquery();
+
+        assertFalse(require.findElement(By.id("requiredFrom[][id]0")).isSelected());
+        assert(hasAllClass(driver.findElement(By.xpath("//*[@id=\"requiredFrom\"]/div[2]")), "checkbox-primary"));
+        assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"requiredFrom\"]/div[4]")), "checkbox-primary"));
+        assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"forbiddenWith\"]/div[1]")), "checkbox-primary"));
+        assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"forbiddenWith\"]/div[3]")), "checkbox-primary"));
+
+        actions.moveToElement(form.findElement(By.id("possibleTariffsOfOption[][id]2"))).click().perform();
+        waitJquery();
+
+        assertTrue(require.findElements(By.xpath(".//*")).size() < forbidden.findElements(By.xpath(".//*")).size());
+
+        form.submit();
+
+        assertNotEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
+        HarEntry har = catchHar();
+        assertEquals(har.getResponse().getStatusText(), "Created");
+        assertEquals(har.getResponse().getStatus(), 201);
+
+        form.findElement(By.id("name")).sendKeys("Selenium");
+        costInput.sendKeys("100");
+        form.findElement(By.id("connect_cost")).sendKeys("100");
+        form.submit();
+
+        HarEntry har2 = catchHar();
+        assertEquals("Conflict", har2.getResponse().getStatusText());
+        assertEquals(409, har2.getResponse().getStatus());
+
+        deleteEntity(har);
+        clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[3]/a")), By.id("new_option_menu"), false);
     }
 
 
@@ -269,5 +354,14 @@ public class Selenium {
                 assertEquals(200, catchHar().getResponse().getStatus());
             }
         }
+    }
+
+    private boolean hasAllClass(WebElement element, String... active) {
+        for (String classActive : active){
+            if (!element.getAttribute("class").contains(classActive)){
+                return false;
+            }
+        }
+        return true;
     }
 }
