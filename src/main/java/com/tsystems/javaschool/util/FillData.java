@@ -232,8 +232,7 @@ public class FillData {
             emails.put(name+"@"+surname+".de", Arrays.asList(name, surname));
         }
          while (passNumbers.size() < COUNT_OF_CUSTOMERS) {
-             PassGen pg = new PassGen(10);
-             passNumbers.add(pg.nextPassword().toUpperCase());
+             passNumbers.add(RandomStringUtils.random(10, true, true).toUpperCase());
          }
          while (numbers.size() < COUNT_OF_CUSTOMERS*3) {
              String number = RandomStringUtils.random(10, false, true);

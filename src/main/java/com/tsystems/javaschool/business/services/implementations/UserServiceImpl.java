@@ -4,7 +4,7 @@ import com.tsystems.javaschool.business.services.interfaces.UserService;
 import com.tsystems.javaschool.db.entities.User;
 import com.tsystems.javaschool.db.repository.UserRepository;
 import com.tsystems.javaschool.util.EmailHelper;
-import com.tsystems.javaschool.util.PassGen;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return false;
         }
 
-        String tmpPass = new PassGen(8).nextPassword();
+        String tmpPass = RandomStringUtils.random(8, true, true);
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setTmpPassword(passwordEncoder.encode(tmpPass));
