@@ -75,4 +75,11 @@ public class CustomerRest {
         }
         service.remove(id);
     }
+
+    @DeleteMapping("/{id}/contracts/{contractId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_USER")
+    public void deleteContract(@PathVariable Integer id, @PathVariable Integer contractId) {
+        service.removeContract(id, contractId);
+    }
 }

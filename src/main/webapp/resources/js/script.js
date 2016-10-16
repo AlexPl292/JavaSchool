@@ -421,7 +421,6 @@ var prepare = {
                 dataSrc: ''
             },
             order: [[0, 'asc']],
-            stateSave: true,
             pagingType: "full_numbers",
             columns: [
                 {
@@ -478,7 +477,6 @@ var prepare = {
                 dataSrc: ''
             },
             order: [[0, 'asc']],
-            stateSave: true,
             pagingType: "full_numbers",
             columns: [
                 {
@@ -513,7 +511,6 @@ var prepare = {
                 dataSrc: ''
             },
             order: [[0, 'asc']],
-            stateSave: true,
             pagingType: "full_numbers",
             columns: [
                 {
@@ -543,7 +540,6 @@ var prepare = {
                 dataSrc: ''
             },
             order: [[1, 'asc']],
-            stateSave: true,
             pagingType: "full_numbers",
             columns: [
                 {
@@ -811,7 +807,7 @@ var prepare = {
 
                 if (href === "/delete") {
                     $.ajax({
-                        url: window.contextPath + "/rest/contracts/" + id,
+                        url: window.contextPath + "/rest/customers/"+customerId+"/contracts/" + id,
                         type: "DELETE",
                         success: function (data) {
                             $panel.remove();

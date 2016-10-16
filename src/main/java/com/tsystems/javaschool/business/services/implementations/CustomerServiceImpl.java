@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -80,5 +81,18 @@ public class CustomerServiceImpl implements CustomerService {
                 .stream()
                 .map(CustomerDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeContract(Integer customerId, Integer contractId) {
+        Customer customer = repository.findOne(customerId);
+        if (customer == null)
+            return;
+        Iterator<Contract> iterator = customer.getContracts().iterator();
+        while (iterator.hasNext()) {
+            Contract contract = iterator.next();
+            if (contract.getId().equals(contractId))
+                iterator.remove();
+        }
     }
 }
