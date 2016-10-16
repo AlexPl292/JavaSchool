@@ -816,13 +816,13 @@ var prepare = {
                 } else if (href === "/block") {
                     $.post(window.contextPath + "/rest/contracts/" + id + "/block", {}, function (data) {
                         $panel.removeClass("panel-default").addClass("panel-red");
-                        $obj.attr("href", "/unblock").text("Unblock");
+                        $obj.attr("href", "/unblock").html("<p>Unblock</p>");
                         $panel.find('.menuEdit a').attr('href', '').find('p').addClass('text-muted');
                     })
                 } else if (href === "/unblock") {
                     $.post(window.contextPath + "/rest/contracts/" + id + "/unblock", {}, function (data) {
                         $panel.removeClass("panel-red").addClass("panel-default");
-                        $obj.attr("href", "/block").text("Block");
+                        $obj.attr("href", "/block").html("<p>Block</p>");
                         $panel.find('.menuEdit a').attr('href', '/edit').find('p').removeClass('text-muted');
                     })
                 } else if (href === "/edit") {

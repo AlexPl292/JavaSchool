@@ -7,8 +7,10 @@ import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.core.har.HarEntry;
 import net.lightbody.bmp.core.har.HarNameValuePair;
 import net.lightbody.bmp.proxy.CaptureType;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -62,6 +64,7 @@ public class Selenium {
         capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
 
         driver = new ChromeDriver(capabilities);
+        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, 5);
 
         driver.get("http://localhost:8080/JavaSchool/");
@@ -92,6 +95,7 @@ public class Selenium {
         System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
 
         commonDriver = new ChromeDriver();
+        commonDriver.manage().window().maximize();
     }
 
     @Test(groups = {"common"})
@@ -111,7 +115,7 @@ public class Selenium {
         assertEquals("eCare", commonDriver.getTitle());
     }
 
-    @Test(groups = {"admin"}, enabled = false)
+    @Test(groups = {"admin"})
     public void customerTable() {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[1]/a")), By.xpath("//*[@id=\"customers_menu\"]"), true).click();
         waitJquery();
@@ -122,7 +126,7 @@ public class Selenium {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[1]/a")), By.xpath("//*[@id=\"customers_menu\"]"), false);
     }
 
-    @Test(groups = {"admin"}, enabled = false)
+    @Test(groups = {"admin"})
     public void optionsTable() {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[3]/a")), By.xpath("//*[@id=\"options_menu\"]"), true).click();
         waitJquery();
@@ -133,7 +137,7 @@ public class Selenium {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[3]/a")), By.xpath("//*[@id=\"options_menu\"]"), false);
     }
 
-    @Test(groups = {"admin"}, enabled = false)
+    @Test(groups = {"admin"})
     public void contractsTable() {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[4]/a")), By.xpath("//*[@id=\"contracts_menu\"]"), true).click();
         waitJquery();
@@ -144,7 +148,7 @@ public class Selenium {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[4]/a")), By.xpath("//*[@id=\"contracts_menu\"]"), false);
     }
 
-    @Test(groups = {"admin"}, enabled = false)
+    @Test(groups = {"admin"})
     public void tariffsTable() {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[2]/a")), By.xpath("//*[@id=\"tariffs_menu\"]"), true).click();
         waitJquery();
@@ -156,7 +160,7 @@ public class Selenium {
     }
 
 
-    @Test(groups = {"admin"}, enabled = false)
+    @Test(groups = {"admin"})
     public void addTariff() {
         proxy.newHar();
 
@@ -225,6 +229,7 @@ public class Selenium {
 
         // Check no request
         assertEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
+
         form.findElement(By.id("name")).sendKeys("Selenium");
         WebElement costInput = form.findElement(By.id("cost"));
         costInput.sendKeys("abc");
@@ -232,6 +237,7 @@ public class Selenium {
 
         // Check no request
         assertEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
+
         costInput.clear();
         costInput.sendKeys("100");
         form.findElement(By.id("connect_cost")).sendKeys("100");
@@ -277,22 +283,133 @@ public class Selenium {
 
         form.submit();
 
+        WebElement form2 = driver.findElement(By.id("add_option_form"));
         assertNotEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
         HarEntry har = catchHar();
         assertEquals(har.getResponse().getStatusText(), "Created");
         assertEquals(har.getResponse().getStatus(), 201);
-
-        form.findElement(By.id("name")).sendKeys("Selenium");
-        costInput.sendKeys("100");
-        form.findElement(By.id("connect_cost")).sendKeys("100");
-        form.submit();
-
-        HarEntry har2 = catchHar();
-        assertEquals("Conflict", har2.getResponse().getStatusText());
-        assertEquals(409, har2.getResponse().getStatus());
+        waitJquery();
 
         deleteEntity(har);
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[3]/a")), By.id("new_option_menu"), false);
+    }
+
+
+    @Test(groups = {"admin"})
+    public void addCustomer() {
+        proxy.newHar();
+        clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[1]/a")), By.id("new_customer_menu"), true).click();
+        waitJquery();
+        assertEquals("Add new customer", driver.findElement(By.xpath("//*[@id=\"piece_new_customer\"]/div/div/h1")).getText());
+
+        int harsBeforeSend = proxy.getHar().getLog().getEntries().size();
+
+        WebElement form = driver.findElement(By.id("add_customer_form"));
+        form.submit();
+
+        // Check no request
+        assertEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
+
+        form.findElement(By.id("name")).sendKeys("Selenium");
+        form.findElement(By.id("surname")).sendKeys("Selenium");
+        form.findElement(By.id("passport_number")).sendKeys("ZZZZZZZZZ");
+        form.findElement(By.id("birthday")).sendKeys("19191991");
+        form.findElement(By.id("email")).sendKeys("selenium@selenium.ru");
+        form.findElement(By.id("number")).sendKeys("5555555555");
+        form.submit();
+        HarEntry har = catchHar();
+        assertEquals(409, har.getResponse().getStatus());
+        assertTrue(har.getResponse().getContent().getText().contains("Resource with 'PassportNumber' == 'ZZZZZZZZZ' already exists."));
+
+        form.findElement(By.id("passport_number")).sendKeys(RandomStringUtils.random(11, true, true));
+        form.submit();
+
+        HarEntry har2 = catchHar();
+        assertEquals(har2.getResponse().getStatusText(), "Created");
+        assertEquals(har2.getResponse().getStatus(), 201);
+        deleteEntity(har2);
+        clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[1]/a")), By.id("new_customer_menu"), false);
+    }
+
+    @Test(groups = {"admin"})
+    public void testCustomer() {
+        proxy.newHar();
+        clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[1]/a")), By.xpath("//*[@id=\"customers_menu\"]"), true).click();
+        waitJquery();
+        driver.findElement(By.xpath("//*[@id=\"content_table_filter\"]/label/input")).sendKeys("Testname Testsurname");
+
+        int harsBeforeSend = proxy.getHar().getLog().getEntries().size();
+
+        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
+        assertTrue(tableBody.findElements(By.tagName("tr")).size() == 1);
+
+        WebElement row = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody/tr/td[contains(text(), 'Testsurname Testname')]"));
+        row.findElement(By.xpath("//button[contains(.,'Show')]")).click();
+        assertEquals("Testsurname Testname", driver.findElement(By.id("customerName")).getText());
+        assertEquals("ZZZZZZZZZ", driver.findElement(By.id("customerPassportNumber")).getText());
+
+        wv(By.linkText("+7 (000) 000-0000")).click();
+        WebElement name = wv(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//h3"));
+        assertEquals("Simple", name.getText());
+        WebElement menu1 = wv(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//button"));
+        menu1.click();
+        wv(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//a/p[contains(text(),'Edit')]/..")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//a/p[contains(text(),'Unblock')]/.."))).click();
+        waitJquery();
+        assertEquals(catchHar().getResponse().getStatus(), 200);
+        assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..")), "panel-default"));
+        menu1.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//a/p[contains(text(),'Block')]/.."))).click();
+        waitJquery();
+        assertEquals(catchHar().getResponse().getStatus(), 200);
+        assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..")), "panel-red"));
+    }
+
+    @Test(groups = {"admin"})
+    public void testCustomerContracts() {
+        proxy.newHar();
+        clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[1]/a")), By.xpath("//*[@id=\"customers_menu\"]"), true).click();
+        waitJquery();
+        driver.findElement(By.xpath("//*[@id=\"content_table_filter\"]/label/input")).sendKeys("Testname Testsurname");
+
+        WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
+        assertTrue(tableBody.findElements(By.tagName("tr")).size() == 1);
+
+        WebElement row = wv(By.xpath("//*[@id=\"content_table\"]/tbody/tr/td[contains(text(), 'Testsurname Testname')]"));
+        row.findElement(By.xpath("//button[contains(.,'Show')]")).click();
+        waitJquery();
+        WebElement name = wv(By.id("customerName"));
+        assertEquals("Testsurname Testname", name.getText());
+        assertEquals("ZZZZZZZZZ", driver.findElement(By.id("customerPassportNumber")).getText());
+
+        WebElement accordion = wv(By.id("accordion"));
+        Integer accordionSize = accordion.findElements(By.cssSelector("#accordion > div")).size();
+
+        wv(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//button")).click();
+        wv(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//a/p[contains(text(),'Delete')]")).click();
+        waitJquery();
+
+        assertTrue(accordion.findElements(By.cssSelector("#accordion > div")).size() == accordionSize-1);
+
+        WebElement newContract = driver.findElement(By.className("panel-info"));
+        newContract.findElement(By.linkText("Add new contract")).click();
+        WebElement form = wv(By.id("add_contract_form"));
+        WebElement number = wv(By.id("number"));
+        number.sendKeys("1111111111");
+
+        form.submit();
+        HarEntry har = catchHar();
+        assertEquals(har.getResponse().getStatus(), 409);
+        assertTrue(har.getResponse().getContent().getText().contains("Resource with 'Number' == '+7 (111) 111-1111' already exists."));
+        number.clear();
+        number.sendKeys("0000000000");
+        number.submit();
+        waitJquery();
+        WebElement newContractElement = wv(By.linkText("+7 (000) 000-0000"));
+        newContractElement.click();
+        wv(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//button")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//a/p[contains(text(),'Block')]/.."))).click();
+        waitJquery();
     }
 
 
@@ -323,7 +440,8 @@ public class Selenium {
         if(isJqueryUsed){
             while (true){
                 // JavaScript test to verify jQuery is active or not
-                Boolean ajaxIsComplete = (Boolean)(((JavascriptExecutor)driver).executeScript("return jQuery.active == 0"));
+                Boolean ajaxIsComplete = (Boolean)(((JavascriptExecutor)driver).executeScript("return jQuery.active == 0")) &&
+                        (Boolean)(((JavascriptExecutor)driver).executeScript("return document.readyState").toString().equals("complete"));
                 if (ajaxIsComplete) break;
                 try{
                     Thread.sleep(100);
@@ -363,5 +481,13 @@ public class Selenium {
             }
         }
         return true;
+    }
+
+    private WebElement wv(By by) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+    }
+
+    private void wi(By by) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
 }
