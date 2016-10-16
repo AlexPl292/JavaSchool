@@ -88,21 +88,21 @@ public class FillData {
         Map<Tariff, List<Set<Option>>> combinations = new HashMap<>();
         combinations.put(simple, Collections.singletonList(new HashSet<>()));
         combinations.put(smsUser, Arrays.asList(Collections.singleton(smsBasic),
-                new HashSet<Option>(Arrays.asList(smsBasic, free10)),
-                new HashSet<Option>(Arrays.asList(smsBasic, free20)),
-                new HashSet<Option>(Arrays.asList(smsBasic, free50)),
+                new HashSet<>(Arrays.asList(smsBasic, free10)),
+                new HashSet<>(Arrays.asList(smsBasic, free20)),
+                new HashSet<>(Arrays.asList(smsBasic, free50)),
                 Collections.singleton(smsUnlim)
                 ));
         combinations.put(mmsActive, Arrays.asList(Collections.singleton(mmsBasic),
-                new HashSet<Option>(Arrays.asList(mmsBasic, free5mms)),
-                new HashSet<Option>(Arrays.asList(mmsBasic, free10mms)),
-                new HashSet<Option>(Arrays.asList(mmsBasic, free30mms)),
+                new HashSet<>(Arrays.asList(mmsBasic, free5mms)),
+                new HashSet<>(Arrays.asList(mmsBasic, free10mms)),
+                new HashSet<>(Arrays.asList(mmsBasic, free30mms)),
                 Collections.singleton(mmsUnlim)
                 ));
         combinations.put(internet, Arrays.asList(Collections.singleton(internetBasic),
-                new HashSet<Option>(Arrays.asList(internetBasic, internet1gb)),
-                new HashSet<Option>(Arrays.asList(internetBasic, internet2gb)),
-                new HashSet<Option>(Arrays.asList(internetBasic, internet5gb)),
+                new HashSet<>(Arrays.asList(internetBasic, internet1gb)),
+                new HashSet<>(Arrays.asList(internetBasic, internet2gb)),
+                new HashSet<>(Arrays.asList(internetBasic, internet5gb)),
                 Collections.singleton(internetUnlim)
                 ));
         combinations.put(business, Arrays.asList(Collections.singleton(smsUnlim),
@@ -234,9 +234,10 @@ public class FillData {
          while (passNumbers.size() < COUNT_OF_CUSTOMERS) {
              passNumbers.add(RandomStringUtils.random(10, true, true).toUpperCase());
          }
+         List<String> usedNumbers = Arrays.asList("0000000000", "1111111111", "2222222222", "4444444444", "5555555555");
          while (numbers.size() < COUNT_OF_CUSTOMERS*3) {
              String number = RandomStringUtils.random(10, false, true);
-             if (Arrays.asList("0000000000", "1111111111", "2222222222").contains(number))
+             if (usedNumbers.contains(number))
                  continue;
              number = "+7 ("+number.substring(0,3)+") "+number.substring(3, 6)+"-"+number.substring(6);
              numbers.add(number);
@@ -258,7 +259,7 @@ public class FillData {
         Random rnd = new Random();
         StringBuilder ips = new StringBuilder();
         for (int i = 1; i < j*4; i++) {
-            ips.append(ipsum[rnd.nextInt(ipsum.length)]+" ");
+            ips.append(ipsum[rnd.nextInt(ipsum.length)]).append(" ");
             if (i%4 == 0)
                 ips.append("\n");
         }

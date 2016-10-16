@@ -8,6 +8,7 @@ import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ public class ContractRest {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_USER")
     public List<ContractDto> loadAll(@RequestParam(value = "tariff", required = false) String tariff) {
         if (tariff != null)
             return service.findByTariffName(tariff);
@@ -38,6 +40,7 @@ public class ContractRest {
     }
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity addNew(@Valid @RequestBody ContractDto contract) throws JSException {
         contract = service.addNew(contract);
         ContractDto newContract = service.loadByKey(contract.getId());
@@ -45,6 +48,7 @@ public class ContractRest {
     }
 
     @DeleteMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     public void delete(@PathVariable Integer id) throws ResourceNotFoundException {
         ContractDto entity = service.loadByKey(id);
         if (entity.getId() == null) {
@@ -54,6 +58,7 @@ public class ContractRest {
     }
 
     @PostMapping("/{id}/block")
+    @Secured("ROLE_USER")
     public void block(@PathVariable Integer id, HttpServletRequest request) throws ResourceNotFoundException {
         int blockLevel;
         if (request.isUserInRole("ROLE_ADMIN")) {
@@ -68,6 +73,7 @@ public class ContractRest {
     }
 
     @PostMapping("/{id}/unblock")
+    @Secured("ROLE_USER")
     public void unblock(@PathVariable Integer id, HttpServletRequest request) throws ResourceNotFoundException {
         ContractDto entity = service.setBlock(id, 0);
         if (entity.getId() == null) {
@@ -76,6 +82,7 @@ public class ContractRest {
     }
 
     @PutMapping("/{id}")
+    @Secured("ROLE_USER")
     public ContractDto modify(@RequestParam("tariff") Integer tariffId,
                               @RequestParam(value = "usedOptions", required = false) List<Integer> options,
                               @PathVariable Integer id) throws JSException {

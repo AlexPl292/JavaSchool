@@ -9,6 +9,7 @@ import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class CustomerRest {
     }
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) throws JSException {
         CustomerDto newCustomer = service.addNew(customer);
         return ResponseEntity.created(URI.create("/rest/customers/" + newCustomer.getId())).body(newCustomer);
@@ -43,12 +45,14 @@ public class CustomerRest {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_ADMIN")
     public List<CustomerDto> loadAll() {
         return service.loadAll();
     }
 
     @GetMapping("/{customerId}")
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_USER")
     public CustomerDto loadCustomer(@PathVariable Integer customerId, Principal principal, HttpServletRequest request) throws ResourceNotFoundException {
         if (!request.isUserInRole("ROLE_ADMIN") &&
                 !Objects.equals(((User)((UsernamePasswordAuthenticationToken)principal).getPrincipal()).getId(), customerId)) {
@@ -63,6 +67,7 @@ public class CustomerRest {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_ADMIN")
     public void deleteCustomer(@PathVariable Integer id) throws ResourceNotFoundException {
         CustomerDto entity = service.loadByKey(id);
         if (entity.getId() == null) {

@@ -7,6 +7,7 @@ import com.tsystems.javaschool.util.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class UserRest {
     }
 
     @PutMapping("/{id}")
+    @Secured("ROLE_USER")
     public ResponseEntity changePassword(@PathVariable("id") Integer id,
                                          @RequestParam("oldPassword") String oldPassword,
                                          @RequestParam("newPassword") String newPassword,
@@ -104,6 +106,7 @@ public class UserRest {
     }
 
     @GetMapping("/me")
+    @Secured("ROLE_USER")
     public ResponseEntity getMe(Principal principal) {
         User user = (User)((UsernamePasswordAuthenticationToken)principal).getPrincipal();
         return ResponseEntity.ok().body(new UserDto(user));

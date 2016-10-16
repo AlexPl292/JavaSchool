@@ -8,6 +8,7 @@ import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ public class OptionRest {
     }
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity addOption(@Valid @RequestBody OptionDto optionDto) throws JSException {
         OptionDto newOption = service.addNew(optionDto);
         return ResponseEntity.created(URI.create("/rest/options/" + newOption.getId())).body(newOption);
@@ -38,12 +40,14 @@ public class OptionRest {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_USER")
     public List<OptionDto> loadAdd() {
         return service.loadAll();
     }
 
     @GetMapping("/{optionId}")
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_USER")
     public OptionDto loadOption(@PathVariable Integer optionId) throws ResourceNotFoundException {
         OptionDto entity = service.loadByKey(optionId);
         if (entity.getId() == null) {
@@ -54,6 +58,7 @@ public class OptionRest {
 
     @DeleteMapping("/{optionId}")
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_ADMIN")
     public void deleteOption(@PathVariable Integer optionId) throws ResourceNotFoundException {
         OptionDto entity = service.loadByKey(optionId);
         if (entity.getId() == null) {

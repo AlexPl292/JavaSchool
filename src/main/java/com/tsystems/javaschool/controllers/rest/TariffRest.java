@@ -9,6 +9,7 @@ import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,6 +34,7 @@ public class TariffRest {
     }
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity addNewTariff(@Valid @RequestBody TariffDto tariff) throws JSException {
         TariffDto newTariff = service.addNew(tariff);
         return ResponseEntity.created(URI.create("/rest/tariffs/" + newTariff.getId())).body(newTariff);
@@ -40,12 +42,14 @@ public class TariffRest {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_USER")
     public List<TariffDto> loadAll() {
         return service.loadAll();
     }
 
     @GetMapping("/{tariffId}")
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_USER")
     public TariffDto loadTariff(@PathVariable Integer tariffId) throws ResourceNotFoundException {
         TariffDto entity = service.loadByKey(tariffId);
         if (entity.getId() == null) {
@@ -56,6 +60,7 @@ public class TariffRest {
 
     @GetMapping("/{tariffId}/options")
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_USER")
     public Set<OptionDto> loadOptions(@PathVariable Integer tariffId) throws ResourceNotFoundException {
         TariffDto entity = service.loadByKey(tariffId);
         if (entity.getId() == null) {
@@ -66,6 +71,7 @@ public class TariffRest {
 
     @DeleteMapping("/{tariffId}")
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_ADMIN")
     public void deleteTariff(@PathVariable Integer tariffId) throws ResourceNotFoundException {
         TariffDto entity = service.loadByKey(tariffId);
         if (entity.getId() == null) {
