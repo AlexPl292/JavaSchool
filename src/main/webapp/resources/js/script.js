@@ -602,11 +602,11 @@ var prepare = {
                     required: true,
                     no_spaces: true
                 },
-                passport_number: {
+                passportNumber: {
                     required: true,
                     no_spaces: true
                 },
-                birthday: {
+                dayOfBirth: {
                     required: true,
                     date: true,
                     dateAb18: true
@@ -615,11 +615,10 @@ var prepare = {
                     required: true,
                     email: true
                 },
-                number: {
+                "contracts[number]": {
                     required: true,
                     phone: true
-                },
-                options: "required"
+                }
             },
             messages: {
                 name: {
@@ -630,11 +629,11 @@ var prepare = {
                     required: 'Please enter surname',
                     no_spaces: 'Surname should not contain spaces'
                 },
-                passport_number: {
+                passportNumber: {
                     required: 'Please enter passport number',
                     no_spaces: "Passport number shouldn't contain spaces"
                 },
-                birthday: {
+                dayOfBirth: {
                     required: "Please enter date of birth",
                     dateAb18: "New customer should be 18 years of age or older"
                 },
@@ -642,11 +641,10 @@ var prepare = {
                     required: "Please enter email",
                     email: "Email is invalid"
                 },
-                number: {
+                "contracts[number]": {
                     required: "Please enter phone number",
                     phone: "Wrong phone number format"
-                },
-                options: "Choose options"
+                }
             },
             submitHandler: submitting(function () {
                 $('#options').empty();
@@ -684,11 +682,11 @@ var prepare = {
                     required: true,
                     money: true
                 },
-                connect_cost: {
+                connectCost: {
                     required: true,
                     money: true
                 },
-                forTariffs: "required"
+                "possibleTariffsOfOption[][id]": "required"
             },
             messages: {
                 name: 'Please enter name',
@@ -696,11 +694,11 @@ var prepare = {
                     required: 'Please enter cost',
                     money: "Wrong money format"
                 },
-                connect_cost: {
+                connectCost: {
                     required: 'Please enter connection cost',
                     money: "Wrong money format"
                 },
-                forTariffs: "You need to choose at least one tariff"
+                "possibleTariffsOfOption[][id]": "You need to choose at least one tariff"
             },
             submitHandler: submitting(function () {
                 requiredFrom.empty();
@@ -878,7 +876,7 @@ var prepare = {
         $form.validate({
             rules: {
                 oldPassword: {
-                    required: true,
+                    required: true
                 },
                 newPassword: {
                     required: true,
