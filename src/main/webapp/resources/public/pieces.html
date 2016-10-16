@@ -381,9 +381,9 @@
 <div id="piece_accordion_node">
     <div class="panel contractNode">
         <div class="panel-heading">
-            <h4 class="panel-title" id="nodeTitle">
-                <a data-toggle="collapse" data-parent="#accordion" id="contractNumber"></a>
-                <small id="contractBalance"></small>
+            <h4 class="panel-title nodeTitle">
+                <a data-toggle="collapse" data-parent="#accordion" class="contractNumber"></a>
+                <small class="contractBalance"></small>
             </h4>
         </div>
         <div id="collapse" class="panel-collapse collapse"
@@ -391,9 +391,9 @@
             <div class="panel-body">
                 <input type="hidden" name="contractId"/>
                 <div class="col-lg-6">
-                    <h3 id="tariffName"></h3>
+                    <h3 class="tariffName"></h3>
                     <hr>
-                    <div id="tariffDescription"></div>
+                    <div class="tariffDescription"></div>
                 </div>
                 <div class="col-lg-6">
                     <div class="well">
@@ -401,7 +401,7 @@
                             <small>Used options</small>
                         </h4>
                         <hr>
-                        <ul id="usedOptions">
+                        <ul class="usedOptions">
                         </ul>
                     </div>
                 </div>
@@ -416,8 +416,8 @@
             <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
                     aria-expanded="false"> Actions <span class="caret"></span></button>
             <ul class="dropdown-menu pull-right" role="menu">
-                <li id="menuEdit"><a href="/edit"><p>Edit</p></a></li>
-                <li id="menuBlock"></li>
+                <li class="menuEdit"><a href="/edit"><p>Edit</p></a></li>
+                <li class="menuBlock"></li>
                 <li class="divider"></li>
                 <li><a href="/delete"><p class="text-danger">Delete</p></a>
                 </li>

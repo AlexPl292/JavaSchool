@@ -311,9 +311,9 @@ function create_panel_menu(data) {
         ' <span class="caret"></span>' +
         '</button>' +
         '<ul class="dropdown-menu pull-right" role="menu">' +
-        '<li id="menuEdit"><a href="/edit"><p ' + (disable_edit ? 'class="text-muted"' : '') + '>Edit</p></a>' +
+        '<li class="menuEdit"><a href="/edit"><p ' + (disable_edit ? 'class="text-muted"' : '') + '>Edit</p></a>' +
         '</li>' +
-        '<li id="menuBlock"><a href=\"/block\"><p>Block</p></a>' +
+        '<li class="menuBlock"><a href=\"/block\"><p>Block</p></a>' +
         '</li>' +
         '<li class="divider"></li>' +
         '<li><a href="/delete"><p class="text-danger">Delete</p></a>' +
@@ -752,33 +752,33 @@ var prepare = {
 
             $(data.contracts).each(function (j, contract) {
                 var nodes = link.import.querySelector('#piece_accordion_node').cloneNode(true);
-                $(nodes).find('#contractNumber')
+                $(nodes).find('.contractNumber')
                     .html(contract.number)
                     .attr('href', '#collapse' + contract.id);
                 $(nodes).find('input[name=contractId]').val(contract.id);
 
                 if (window.userRole !== 1 || contract.isBlocked !== 2) {
                     var menu = link.import.querySelector('#piece_node_menu').cloneNode(true);
-                    $(menu).find('#menuBlock')
+                    $(menu).find('.menuBlock')
                         .append('<a href=' + (contract.isBlocked === 0 ? '"/block"' : '"/unblock"')
                             + '><p>' + (contract.isBlocked === 0 ? 'Block' : 'Unblock') + '</p></a>');
 
                     if (contract.isBlocked !== 0 || contract.balance < 0) {
-                        $(menu).find('#menuEdit a').attr('href', '').find('p').addClass('text-muted');
+                        $(menu).find('.menuEdit a').attr('href', '').find('p').addClass('text-muted');
                     }
-                    $(nodes).find('#nodeTitle').append($(menu).contents());
+                    $(nodes).find('.nodeTitle').append($(menu).contents());
                 }
                 // }
 
-                $(nodes).find('#contractBalance')
+                $(nodes).find('.contractBalance')
                     .html(contract.balance.toFixed(2) + ' <i class="fa fa-rub"></i>')
                     .data('balance', contract.balance);
                 $(nodes).find('.contractNode').addClass(contract.isBlocked === 0 ? 'panel-default' : 'panel-red');
                 $(nodes).find('#collapse').attr('id', 'collapse' + contract.id);
-                $(nodes).find('#tariffName').html(contract.tariff.name).data('tariffId', contract.tariff.id);
-                $(nodes).find('#tariffDescription').html(contract.tariff.description);
+                $(nodes).find('.tariffName').html(contract.tariff.name).data('tariffId', contract.tariff.id);
+                $(nodes).find('.tariffDescription').html(contract.tariff.description);
                 // var opts = '';
-                var $usedOptions = $(nodes).find('#usedOptions');
+                var $usedOptions = $(nodes).find('.usedOptions');
                 for (var i = 0; i < contract.usedOptions.length; i++) {
                     var $opts = $('<li>');
                     $opts.html(contract.usedOptions[i].name).data('id', contract.usedOptions[i].id);
@@ -821,13 +821,13 @@ var prepare = {
                     $.post(window.contextPath + "/rest/contracts/" + id + "/block", {}, function (data) {
                         $panel.removeClass("panel-default").addClass("panel-red");
                         $obj.attr("href", "/unblock").text("Unblock");
-                        $panel.find('#menuEdit a').attr('href', '').find('p').addClass('text-muted');
+                        $panel.find('.menuEdit a').attr('href', '').find('p').addClass('text-muted');
                     })
                 } else if (href === "/unblock") {
                     $.post(window.contextPath + "/rest/contracts/" + id + "/unblock", {}, function (data) {
                         $panel.removeClass("panel-red").addClass("panel-default");
                         $obj.attr("href", "/block").text("Block");
-                        $panel.find('#menuEdit a').attr('href', '/edit').find('p').removeClass('text-muted');
+                        $panel.find('.menuEdit a').attr('href', '/edit').find('p').removeClass('text-muted');
                     })
                 } else if (href === "/edit") {
                     edit_tariff($panel);
@@ -940,7 +940,7 @@ function edit_tariff(panel) {
     if (basket["contractId"] !== undefined) {
         usedOptions = basket["usedOptions"];
     } else {
-        usedOptions = $(panel).find('#usedOptions > li').map(function () {
+        usedOptions = $(panel).find('.usedOptions > li').map(function () {
             return $(this).data('id');
         });
     }
@@ -948,7 +948,7 @@ function edit_tariff(panel) {
     if (basket["contractId"] !== undefined)
         usedTariff = basket["usedTariff"];
     else
-        usedTariff = $(panel).find('#tariffName').data('tariffId');
+        usedTariff = $(panel).find('.tariffName').data('tariffId');
 
     var tariff = $('<div class="control-group">' +
         '<label class="control-label" for="tariffEdit'+id+'">Tariff</label>' +
@@ -1009,7 +1009,7 @@ function edit_tariff(panel) {
         basket["usedTariff"] = usedTariff;
         basket["contractId"] = id;
         basket["userName"] = $('#customerName').text();
-        basket["contractNumber"] = $(panel).find('#contractNumber').text();
+        basket["contractNumber"] = $(panel).find('.contractNumber').text();
         basket["usedOptions"] = usedOptions;
         storeToBasket(basket);
     }
@@ -1140,7 +1140,7 @@ function edit_handler(e) {
             $(panel).find(".panel-body").append(filling[2]);
             $(panel).find(".panel-title .pull-right").empty();
             $(panel).find(".panel-title .pull-right").append(create_panel_menu(data));
-            $(panel).find("#contractBalance").html(data.balance.toFixed(2) + ' <i class="fa fa-rub"></i>');
+            $(panel).find(".contractBalance").html(data.balance.toFixed(2) + ' <i class="fa fa-rub"></i>');
         }
     });
     $(form).find(":input").prop("disabled", true);
