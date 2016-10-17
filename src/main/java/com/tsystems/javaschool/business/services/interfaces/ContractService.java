@@ -15,7 +15,7 @@ public interface ContractService extends GenericService<ContractDto, Integer> {
      * Set block level to contract
      * 0 - unblocked
      * 1 - blocked by customer
-     * 2 - blocked by staff
+     * 2 - blocked by eCare
      *
      * @param id         id of contract
      * @param blockLevel new block level
@@ -23,7 +23,7 @@ public interface ContractService extends GenericService<ContractDto, Integer> {
     ContractDto setBlock(Integer id, Integer blockLevel);
 
     /**
-     * Update contract by id.
+     * Update contract by id with new tariff and options
      *
      * @param contractId id of contract
      * @param tariffId   id of new tariff
@@ -35,9 +35,14 @@ public interface ContractService extends GenericService<ContractDto, Integer> {
     /**
      * Finding contract by number
      * @param number number to search
-     * @return
+     * @return found contract DTO object
      */
     ContractDto findByNumber(String number);
 
+    /**
+     * Finding contracts by tariff
+     * @param name tariff name to search
+     * @return list of contracts with tariff
+     */
     List<ContractDto> findByTariffName(String name);
 }

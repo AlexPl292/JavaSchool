@@ -10,5 +10,10 @@ import java.util.List;
  * Interface for customer service
  */
 public interface CustomerService extends GenericService<CustomerDto, Integer> {
+    /**
+     * Remove contract of customer
+     * @param customerId  id of customer
+     * @param contractId id of contract
+     */
     void removeContract(Integer customerId, Integer contractId);
 }

@@ -21,6 +21,8 @@ public interface GenericService<T, PK extends Serializable> {
     T addNew(T entity) throws JSException;
 
     /**
+     * Find entity by id
+     *
      * @param key id of entity
      * @return loaded entity
      */
@@ -34,7 +36,7 @@ public interface GenericService<T, PK extends Serializable> {
     void remove(PK key);
 
     /**
-     * Load all entryes
+     * Load all entries
      *
      * @return all entries
      */

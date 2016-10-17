@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * Created by alex on 21.08.16.
+ *
+ * Interface for tariff service
  */
 public interface TariffService extends GenericService<TariffDto, Integer> {
 }

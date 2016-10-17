@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 24.08.16.
+ *
+ * Contract service
  */
 @Service
 @Transactional
