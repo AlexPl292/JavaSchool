@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +44,9 @@ public abstract class User implements UserDetails {
 
     @Basic
     private String tmpPassword;
+
+    @Basic
+    private Date tmpPasswordExpire;
 
     public Integer getId() {
         return id;
@@ -125,6 +129,14 @@ public abstract class User implements UserDetails {
 
     public void setTmpPassword(String tmpPassword) {
         this.tmpPassword = tmpPassword;
+    }
+
+    public Date getTmpPasswordExpire() {
+        return tmpPasswordExpire;
+    }
+
+    public void setTmpPasswordExpire(Date tmpPasswordExpire) {
+        this.tmpPasswordExpire = tmpPasswordExpire;
     }
 
     @Override

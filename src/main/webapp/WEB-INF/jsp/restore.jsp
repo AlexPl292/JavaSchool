@@ -24,6 +24,10 @@
             form.submit(function (e) {
                 e.preventDefault();
                 var action = form.attr("action");
+                var loginButton = $('#toLogin');
+                var submit = $('#submit');
+                $(loginButton).addClass("disabled");
+                $(submit).addClass("disabled");
                 $.ajax({
                     url: action,
                     type: "POST",
@@ -41,11 +45,16 @@
                                 window.location = "login";
                             });
                         }
+
+                        $(loginButton).removeClass("disabled");
+                        $(submit).removeClass("disabled");
                     },
                     error: function (jqXHR) {
                         $.each(jqXHR.responseJSON.errors, function (prop, val) {
                             $.notify("Error:" + prop + "\n" + val, {position: "top right", className: "error"});
                         });
+                        $(loginButton).removeClass("disabled");
+                        $(submit).removeClass("disabled");
                     }
                 });
             });

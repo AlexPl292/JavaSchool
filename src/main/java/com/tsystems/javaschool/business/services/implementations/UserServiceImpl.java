@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by alex on 04.10.16.
  */
@@ -50,6 +53,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user == null)
             return null;
 
+        Date now = new Date();
+        if (user.getTmpPasswordExpire().before(now))
+            return false;
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if (!passwordEncoder.matches(code, user.getTmpPassword())) {
             return false;
@@ -62,6 +69,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Boolean generateTempPassword(String email) {
+        long ONE_MINUTE_IN_MILLIS=60000;//millisecs
+        Calendar date = Calendar.getInstance();
+        long t= date.getTimeInMillis();
+        Date afterAddingTenMins=new Date(t + (10 * ONE_MINUTE_IN_MILLIS));
+
         User user = repository.findByEmail(email);
 
         if (user == null) {
@@ -72,7 +84,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setTmpPassword(passwordEncoder.encode(tmpPass));
-        EmailHelper.Send(user.getEmail(), "Reset password", "Code: " + tmpPass + "\nUse this code to change password or ignore it.");
+        user.setTmpPasswordExpire(afterAddingTenMins);
+        EmailHelper.Send(user.getEmail(), "Reset password", "Code: " + tmpPass + "\nUse this code to change password or ignore it.\nPassword expires in 10 minutes ");
         return true;
     }
 
