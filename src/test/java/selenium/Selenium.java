@@ -7,6 +7,7 @@ import net.lightbody.bmp.core.har.HarEntry;
 import net.lightbody.bmp.core.har.HarNameValuePair;
 import net.lightbody.bmp.proxy.CaptureType;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -51,7 +52,11 @@ public class Selenium {
     // Group for testing as admin user
     @BeforeGroups(groups = "admin")
     public void adminTests() {
-        System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
+        if (SystemUtils.IS_OS_LINUX) {
+            System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
+        } else {
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\Alexp\\JS\\chromedriver.exe");
+        }
         // start the proxy
         proxy = new BrowserMobProxyServer();
         proxy.start(0);
@@ -95,7 +100,11 @@ public class Selenium {
 
     @BeforeGroups(groups = "common")
     public void beforeCommon() {
-        System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
+        if (SystemUtils.IS_OS_LINUX) {
+            System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
+        } else {
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\Alexp\\JS\\chromedriver.exe");
+        }
 
         commonDriver = new ChromeDriver();
         commonDriver.manage().window().maximize();
@@ -231,7 +240,7 @@ public class Selenium {
         form.submit();
 
         assertNotEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
-        HarEntry har = catchHar();
+        HarEntry har = catchHarPost();
         assertEquals(har.getResponse().getStatusText(), "Created");
         assertEquals(har.getResponse().getStatus(), 201);
 
@@ -317,7 +326,8 @@ public class Selenium {
 
         WebElement form2 = driver.findElement(By.id("add_option_form"));
         assertNotEquals(harsBeforeSend, proxy.getHar().getLog().getEntries().size());
-        HarEntry har = catchHar();
+        HarEntry har = catchHarPost();
+        waitJquery();
         assertEquals(har.getResponse().getStatusText(), "Created");
         assertEquals(har.getResponse().getStatus(), 201);
         waitJquery();
@@ -356,7 +366,8 @@ public class Selenium {
         form.findElement(By.id("passport_number")).sendKeys(RandomStringUtils.random(11, true, true));
         form.submit();
 
-        HarEntry har2 = catchHar();
+        waitJquery();
+        HarEntry har2 = catchHarPost();
         assertEquals(har2.getResponse().getStatusText(), "Created");
         assertEquals(har2.getResponse().getStatus(), 201);
         deleteEntity(har2);
@@ -486,6 +497,11 @@ public class Selenium {
     }
 
     private HarEntry catchHar() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            //nothing
+        }
         List<HarEntry> har = proxy.getHar().getLog().getEntries();
         while (true) {
             if (har.get(har.size() - 1).getResponse().getBodySize() != -1) {
@@ -494,6 +510,24 @@ public class Selenium {
         }
     }
 
+    private HarEntry catchHarPost() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            //nothing
+        }
+        List<HarEntry> har = proxy.getHar().getLog().getEntries();
+        while (true) {
+            if (har.get(har.size() - 1).getResponse().getBodySize() != -1) {
+                break;
+            }
+        }
+        for (Integer i = har.size()-1; i >=0; i--) {
+            if (har.get(i).getRequest().getMethod().equals("POST"))
+                return har.get(i);
+        }
+        return null;
+    }
     private void deleteEntity(HarEntry har) {
         proxy.newHar("Delete");
         List<HarNameValuePair> headers = har.getResponse().getHeaders();
