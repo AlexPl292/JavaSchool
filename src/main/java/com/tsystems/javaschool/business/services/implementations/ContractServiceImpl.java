@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Created by alex on 24.08.16.
  *
- * Contract service
+ * Contract service implementation
  */
 @Service
 @Transactional
@@ -36,8 +36,10 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public ContractDto addNew(ContractDto contractDto) throws JSException {
+        // Validate new contract data
         DataBaseValidator.check(contractDto);
 
+        // Create new contract. Default balance on new contract == 100 and non blocked
         Contract contract = contractDto.convertToEntity();
         contract.setBalance(new BigDecimal("100.00"));
         contract.setIsBlocked(0);
@@ -48,6 +50,8 @@ public class ContractServiceImpl implements ContractService {
     @Transactional(readOnly = true)
     public ContractDto loadByKey(Integer key) {
         Contract contract = repository.findOne(key);
+
+        // Return contract DTO object with dependencies
         return new ContractDto(contract).addDependencies(contract);
     }
 
@@ -59,6 +63,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     @Transactional(readOnly = true)
     public List<ContractDto> loadAll() {
+        // Get all contracts. Translate to DTO objects with dependencies
         return repository
                 .findAll()
                 .stream()
@@ -75,20 +80,25 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public ContractDto updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds) throws JSException {
+        // Validate data for new contract
         DataBaseValidator.checkAllOptions(tariffId, optionIds);
 
         Contract contract = repository.findOne(contractId);
+        // Check is contract exists
         if (contract == null) {
             return new ContractDto();
         }
 
+        // Init lazy data
         contract.getUsedOptions().size();
         Set<Option> oldOptions = contract.getUsedOptions();
 
+        // Create new tariff
         Tariff tariff = new Tariff();
         tariff.setId(tariffId);
         contract.setTariff(tariff);
 
+        // Set options for new tariff
         Set<Option> options = new HashSet<>();
         if (optionIds != null) {
             for (Integer id : optionIds) {
@@ -98,14 +108,16 @@ public class ContractServiceImpl implements ContractService {
             }
         }
         contract.setUsedOptions(options);
+
+        // Save new contract
         contract = repository.saveAndFlush(contract);
 
+        // Calculate new contract balance
         Set<Option> newOptions = contract.getUsedOptions();
         BigDecimal summ = newOptions.stream()
                 .filter(e -> !oldOptions.contains(e))
                 .map(Option::getConnectCost)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         contract.setBalance(contract.getBalance().subtract(summ));
 
         return new ContractDto(contract).addDependencies(contract);
@@ -120,6 +132,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     @Transactional(readOnly = true)
     public List<ContractDto> findByTariffName(String name) {
+        // Get all contract with tariff. Translate to DTO with dependencies
         return repository
                 .findByTariff_Name(name)
                 .stream()

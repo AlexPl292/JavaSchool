@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 21.08.16.
+ *
+ *  Tariff service implementation
  */
 @Service
 @Transactional
@@ -29,6 +31,7 @@ public class TariffServiceImpl implements TariffService {
 
     @Override
     public TariffDto addNew(TariffDto tariffDto) throws JSException {
+        // Validate new tariff data
         DataBaseValidator.check(tariffDto);
 
         return new TariffDto(repository.saveAndFlush(tariffDto.convertToEntity()));
@@ -49,6 +52,7 @@ public class TariffServiceImpl implements TariffService {
     @Override
     @Transactional(readOnly = true)
     public List<TariffDto> loadAll() {
+        // Get all options. Translate to DTO objects with dependencies
         return repository
                 .findAll()
                 .stream()

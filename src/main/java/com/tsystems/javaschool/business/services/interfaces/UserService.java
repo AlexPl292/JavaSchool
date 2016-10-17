@@ -5,7 +5,7 @@ import com.tsystems.javaschool.db.entities.User;
 /**
  * Created by alex on 04.10.16.
  *
- * Interface for user srvice
+ * Interface for user service
  */
 public interface UserService {
     /**
@@ -28,6 +28,7 @@ public interface UserService {
 
     /**
      * Generate temporary code for user
+     * Password expires in 10 minutes
      * @param email email of user
      * @return is code created or not
      */

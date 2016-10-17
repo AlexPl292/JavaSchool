@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 27.08.16.
+ *
+ *  Option service implementation
  */
 @Service
 @Transactional
@@ -32,16 +34,20 @@ public class OptionServiceImpl implements OptionService {
 
     @Override
     public OptionDto addNew(OptionDto entity) throws JSException {
+        // Validate new option data
         DataBaseValidator.check(entity);
 
         Option option = entity.convertToEntity();
 
+        // Collect all required and forbidden options
         Set<Option> requireds = option.getRequired().stream().map(e -> repository.findOne(e.getId())).collect(Collectors.toSet());
         Set<Option> forbiddens = option.getForbidden().stream().map(e -> repository.findOne(e.getId())).collect(Collectors.toSet());
 
         option.setRequired(new HashSet<>());
         option.setForbidden(new HashSet<>());
 
+        // Validating and adding required options
+        // Check WrongOptionConfigurationException docs for codes
         for (Option req : requireds) {
             option.addRequiredFromOptions(req);
             option.addRequiredFromOptions(req.getRequired());
@@ -55,6 +61,7 @@ public class OptionServiceImpl implements OptionService {
                 throw new WrongOptionConfigurationException(3);
         }
 
+        // Validating and adding forbidden options
         for (Option forb : forbiddens) {
             option.addForbiddenWithOptions(forb);
             option.addForbiddenWithOptions(forb.getRequiredMe());
@@ -83,6 +90,7 @@ public class OptionServiceImpl implements OptionService {
     @Override
     @Transactional(readOnly = true)
     public List<OptionDto> loadAll() {
+        // Get all option. Translate to DTO objects with dependencies
         return repository
                 .findAll()
                 .stream()

@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 17.08.16.
+ *
+ *  Customer service implementation
  */
 @Service
 @Transactional
@@ -34,18 +36,22 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto addNew(CustomerDto customerDto) throws JSException {
+        // Validate new customer data
         DataBaseValidator.check(customerDto);
 
+        // Convert DTO to entity. New contract balance = 100, non blocked
         Customer customer = customerDto.convertToEntity();
         Contract contract = customerDto.getContracts().first().convertToEntity();
         contract.setCustomer(customer);
         contract.setBalance(new BigDecimal("100.00"));
         contract.setIsBlocked(0);
 
+        // Add contracts to customer
         Set<Contract> contracts = new HashSet<>();
         contracts.add(contract);
         customer.setContracts(contracts);
 
+        // NO PASSWORD. Password is created by user with first login
         customer.setPassword("no pass");
 
         return new CustomerDto(repository.saveAndFlush(customer));
@@ -66,6 +72,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(readOnly = true)
     public List<CustomerDto> loadAll() {
+        // Get all customers. Translate to DTO objects with dependencies
         return repository
                 .findAll()
                 .stream().map(e -> new CustomerDto(e).addDependencies(e))
@@ -74,9 +81,15 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void removeContract(Integer customerId, Integer contractId) {
+        // All contracts are full controlled by customer
+        // To delete contract, it must be removed from customer.contracts list
+
+        // Search for customer
         Customer customer = repository.findOne(customerId);
         if (customer == null)
             return;
+
+        // Remove contract from customer entity
         Iterator<Contract> iterator = customer.getContracts().iterator();
         while (iterator.hasNext()) {
             Contract contract = iterator.next();
