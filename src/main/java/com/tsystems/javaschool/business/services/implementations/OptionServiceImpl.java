@@ -89,15 +89,4 @@ public class OptionServiceImpl implements OptionService {
                 .map(e -> new OptionDto(e).addDependencies(e))
                 .collect(Collectors.toList());
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<OptionDto> findByName(String name) {
-        return repository
-                .findByName(name)
-                .stream()
-                .map(OptionDto::new)
-                .collect(Collectors.toList());
-    }
-
 }

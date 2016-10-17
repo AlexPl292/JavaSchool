@@ -73,16 +73,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<CustomerDto> findByPassportNumberOrEmail(String passportNumber, String email) {
-        return repository
-                .findByPassportNumberOrEmail(passportNumber, email)
-                .stream()
-                .map(CustomerDto::new)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public void removeContract(Integer customerId, Integer contractId) {
         Customer customer = repository.findOne(customerId);
         if (customer == null)
