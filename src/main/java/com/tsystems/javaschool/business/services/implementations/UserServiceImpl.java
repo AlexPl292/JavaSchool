@@ -28,12 +28,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public User findByEmail(String email) {
-        return repository.findByEmail(email);
-    }
-
-    @Override
     public Boolean changePassword(Integer id, String oldPassword, String newPassword) {
         User user = repository.findOne(id);
 
