@@ -9,26 +9,26 @@ package com.tsystems.javaschool.exceptions;
  * Codes:
  * <p>
  * Code 1:
- * new
- * /#
+ * .,new
+ * ./#
  * v#
  * 1
  * <p>
  * Code 2:
  * <p>
- * new
- * /   \
+ * ..new
+ * ./   \
  * v     v
  * 1 ### 2
  * <p>
  * <p>
  * Code 3:
- * new
- * /   #
+ * ..new
+ * ./   #
  * v     #
  * 1 ---> 2
  */
-public class WrongOptionConfigurationException extends RuntimeException {
+public class WrongOptionConfigurationException extends JSException {
     private Integer errorCode;
 
     public WrongOptionConfigurationException(Integer errorCode) {

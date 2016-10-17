@@ -15,6 +15,9 @@ public class UniqueFieldDuplicateException extends JSException {
     }
 
     public UniqueFieldDuplicateException(String duplicatedField, String duplicatedValue, String path) {
+        super("Resource with '" +
+                        duplicatedField + "' == '" + duplicatedValue +
+                        "' already exists. This field must be unique. Path: "+path);
         this.duplicatedField = duplicatedField;
         this.duplicatedValue = duplicatedValue;
         this.pathToDuplicatedEntity = URI.create(path);

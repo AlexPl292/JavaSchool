@@ -169,4 +169,15 @@ public class OptionDto implements DtoMapper<Option>, Comparable<OptionDto> {
     public int compareTo(OptionDto o) {
         return ObjectUtils.compare(this.id, o.getId());
     }
+
+    @Override
+    public String toString() {
+        return "OptionDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cost=" + cost +
+                ", connectCost=" + connectCost +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

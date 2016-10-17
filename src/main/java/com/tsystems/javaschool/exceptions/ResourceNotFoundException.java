@@ -8,6 +8,8 @@ public class ResourceNotFoundException extends JSException {
     private Integer resourceId;
 
     public ResourceNotFoundException(String resourceName, Integer resourceId) {
+        super("Resource '" +
+                resourceName + "' with id " + resourceId + " does not exist");
         this.resourceName = resourceName;
         this.resourceId = resourceId;
     }

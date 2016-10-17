@@ -145,4 +145,16 @@ public class ContractDto implements DtoMapper<Contract>, Comparable<ContractDto>
     public int compareTo(ContractDto o) {
         return ObjectUtils.compare(this.id, o.getId());
     }
+
+    @Override
+    public String toString() {
+        return "ContractDto{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", isBlocked=" + isBlocked +
+                ", customer=" + customer +
+                ", tariff=" + tariff +
+                ", balance=" + balance +
+                '}';
+    }
 }

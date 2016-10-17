@@ -106,4 +106,14 @@ public class TariffDto implements DtoMapper<Tariff>, Comparable<TariffDto> {
     public int compareTo(TariffDto o) {
         return ObjectUtils.compare(this.id, o.getId());
     }
+
+    @Override
+    public String toString() {
+        return "TariffDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cost=" + cost +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

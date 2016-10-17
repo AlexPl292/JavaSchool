@@ -39,8 +39,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return new ErrorResponse("Message", "Resource '" +
-                ex.getResourceName() + "' with id " + ex.getResourceId() + " does not exist");
+        return new ErrorResponse("Message", ex.getMessage());
     }
 
 

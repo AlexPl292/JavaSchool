@@ -177,4 +177,19 @@ public class CustomerDto implements DtoMapper<Customer>, Comparable<CustomerDto>
     public int compareTo(CustomerDto o) {
         return ObjectUtils.compare(this.id, o.getId());
     }
+
+    @Override
+    public String toString() {
+        return "CustomerDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", passportNumber='" + passportNumber + '\'' +
+                ", passportData='" + passportData + '\'' +
+                ", address='" + address + '\'' +
+                ", email='" + email + '\'' +
+                ", isBlocked=" + isBlocked +
+                '}';
+    }
 }
