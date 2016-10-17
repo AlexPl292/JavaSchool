@@ -43,9 +43,9 @@ public class DataBaseValidator {
     }
 
     static public void check(TariffDto tariff) throws JSException {
-        List<Tariff> existings = tariffRepository.findByName(tariff.getName());
-        if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", tariff.getName(), "/rest/tariffs/" + existings.get(0).getId());
+        Tariff existings = tariffRepository.findByName(tariff.getName());
+        if (existings != null) {
+            throw new UniqueFieldDuplicateException("Name", tariff.getName(), "/rest/tariffs/" + existings.getId());
         }
         checkAllOptions(tariff.getPossibleOptions());
     }

@@ -9,5 +9,5 @@ import java.util.List;
  * Created by alex on 27.09.16.
  */
 public interface TariffRepository extends JpaRepository<Tariff, Integer> {
-    List<Tariff> findByName(String name);
+    Tariff findByName(String name);
 }

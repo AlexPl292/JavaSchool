@@ -55,14 +55,4 @@ public class TariffServiceImpl implements TariffService {
                 .map(e -> new TariffDto(e).addDependencies(e))
                 .collect(Collectors.toList());
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<TariffDto> findByName(String name) {
-        return repository
-                .findByName(name)
-                .stream()
-                .map(TariffDto::new)
-                .collect(Collectors.toList());
-    }
 }
