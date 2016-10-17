@@ -13,9 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Created by alex on 04.10.16.
  */
@@ -81,7 +78,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setTmpPassword(passwordEncoder.encode(tmpPass));
-        EmailHelper.Send(user.getEmail(), "Reset password", "Code: "+tmpPass+"\nUse this code to change password or ignore it.");
+        EmailHelper.Send(user.getEmail(), "Reset password", "Code: " + tmpPass + "\nUse this code to change password or ignore it.");
         return true;
     }
 
@@ -89,7 +86,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = repository.findByEmail(s);
         if (user == null)
-            throw new UsernameNotFoundException("User "+s+" not found");
+            throw new UsernameNotFoundException("User " + s + " not found");
         return user;
     }
 }

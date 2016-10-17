@@ -5,11 +5,12 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
-import java.util.*;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * Created by alex on 10.10.16.
- *
+ * <p>
  * Send email using GMail SMTP server.
  */
 public class EmailHelper {
@@ -20,8 +21,8 @@ public class EmailHelper {
      * Username and password are in properties file
      *
      * @param recipientEmail TO recipient
-     * @param title title of the message
-     * @param message message to be sent
+     * @param title          title of the message
+     * @param message        message to be sent
      */
     public static void Send(String recipientEmail, String title, String message) {
         try {
@@ -37,11 +38,11 @@ public class EmailHelper {
     /**
      * Send email using GMail SMTP server.
      *
-     * @param username GMail username
-     * @param password GMail password
+     * @param username       GMail username
+     * @param password       GMail password
      * @param recipientEmail TO recipient
-     * @param title title of the message
-     * @param message message to be sent
+     * @param title          title of the message
+     * @param message        message to be sent
      */
     public static void Send(final String username, final String password, String recipientEmail, String title, String message) throws EmailException {
         Email email = new SimpleEmail();
@@ -49,7 +50,7 @@ public class EmailHelper {
         email.setSmtpPort(465);
         email.setAuthenticator(new DefaultAuthenticator(username, password));
         email.setSSLOnConnect(true);
-        email.setFrom(username+"@gmail.com");
+        email.setFrom(username + "@gmail.com");
         email.setSubject(title);
         email.setMsg(message);
         email.addTo(recipientEmail);

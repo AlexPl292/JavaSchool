@@ -1,21 +1,15 @@
 package com.tsystems.javaschool.util;
 
-import java.util.Arrays;
-import java.util.Enumeration;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Enumeration;
 
 @Aspect
 @Component
@@ -28,7 +22,7 @@ public class LoggingHandler {
     public void controller() {
     }*/
 
-//    @Pointcut("execution(* *.*(..))")
+    //    @Pointcut("execution(* *.*(..))")
     @Pointcut("execution(* com.tsystems.javaschool.controllers.rest..*(..))")
     protected void controller() {
     }
@@ -74,6 +68,7 @@ public class LoggingHandler {
         }
         log.debug("-------------------------------------------------");
     }
+
     //After -> All method within resource annotated with @Controller annotation
     // and return a  value
     @AfterReturning(pointcut = "controller() ", returning = "result")
@@ -82,6 +77,7 @@ public class LoggingHandler {
         log.debug("Method Return value : " + returnValue);
         log.debug("-------------------------------------------------");
     }
+
     //After -> Any method within resource annotated with @Controller annotation
     // throws an exception ...Log it
     @AfterThrowing(pointcut = "controller() ", throwing = "exception")
@@ -91,6 +87,7 @@ public class LoggingHandler {
         log.error("Message : " + exception.getMessage());
         log.error("-------------------------------------------------");
     }
+
     //Around -> Any method within resource annotated with @Controller annotation
     @Around("controller()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -113,6 +110,7 @@ public class LoggingHandler {
             throw e;
         }
     }
+
     private String getValue(Object result) {
         String returnValue = null;
         if (null != result) {

@@ -73,11 +73,13 @@
                                 <input id="remember_me" name="remember-me" type="checkbox">
                                 <label for="remember_me">Remember me</label>
                             </div>
-                            <input id="login" type="submit" class="btn btn-lg btn-success btn-block" title="Login" value="Login"/>
+                            <input id="login" type="submit" class="btn btn-lg btn-success btn-block" title="Login"
+                                   value="Login"/>
                         </fieldset>
                     </form>
                     <div class="form-group" style="margin-top: 5%">
-                        <input id="forgot" class="btn btn-lg btn-primary btn-block" value="First time/forgot password?" type="button">
+                        <input id="forgot" class="btn btn-lg btn-primary btn-block" value="First time/forgot password?"
+                               type="button">
                     </div>
                 </div>
             </div>

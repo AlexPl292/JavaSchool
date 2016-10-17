@@ -1,84 +1,98 @@
 CREATE TABLE Contracts
 (
-  id INT(11) PRIMARY KEY NOT NULL,
-  number VARCHAR(20),
-  tariff INT(11),
-  customer INT(11),
+  id         INT(11) PRIMARY KEY NOT NULL,
+  number     VARCHAR(20),
+  tariff     INT(11),
+  customer   INT(11),
   is_blocked INT(11),
-  balance DECIMAL(8,2)
+  balance    DECIMAL(8, 2)
 );
-CREATE INDEX fk_Contacts_1_idx ON Contracts (tariff);
-CREATE INDEX fk_Contacts_2_idx ON Contracts (customer);
-CREATE UNIQUE INDEX number_UNIQUE ON Contracts (number);
+CREATE INDEX fk_Contacts_1_idx
+  ON Contracts (tariff);
+CREATE INDEX fk_Contacts_2_idx
+  ON Contracts (customer);
+CREATE UNIQUE INDEX number_UNIQUE
+  ON Contracts (number);
 CREATE TABLE Customers
 (
-  id INT(11) PRIMARY KEY NOT NULL,
-  name VARCHAR(45),
-  surname VARCHAR(45),
-  date_of_birth DATE,
-  passport_number VARCHAR(45) NOT NULL,
-  passport_data VARCHAR(255),
-  address VARCHAR(255),
-  email VARCHAR(45) NOT NULL,
-  password CHAR(64),
-  salt CHAR(12),
-  is_blocked INT(11)
+  id              INT(11) PRIMARY KEY NOT NULL,
+  name            VARCHAR(45),
+  surname         VARCHAR(45),
+  date_of_birth   DATE,
+  passport_number VARCHAR(45)         NOT NULL,
+  passport_data   VARCHAR(255),
+  address         VARCHAR(255),
+  email           VARCHAR(45)         NOT NULL,
+  password        CHAR(64),
+  salt            CHAR(12),
+  is_blocked      INT(11)
 );
-CREATE UNIQUE INDEX Customers_email_uindex ON Customers (email);
-CREATE UNIQUE INDEX Customers_passport_number_uindex ON Customers (passport_number);
+CREATE UNIQUE INDEX Customers_email_uindex
+  ON Customers (email);
+CREATE UNIQUE INDEX Customers_passport_number_uindex
+  ON Customers (passport_number);
 CREATE TABLE Forbidden_option_relationships
 (
-  id_first INT(11) NOT NULL,
+  id_first  INT(11) NOT NULL,
   id_second INT(11) NOT NULL
 );
-CREATE INDEX fk_Forbidden_option_relationships_1_idx ON Forbidden_option_relationships (id_first);
-CREATE INDEX fk_Forbidden_option_relationships_2_idx ON Forbidden_option_relationships (id_second);
+CREATE INDEX fk_Forbidden_option_relationships_1_idx
+  ON Forbidden_option_relationships (id_first);
+CREATE INDEX fk_Forbidden_option_relationships_2_idx
+  ON Forbidden_option_relationships (id_second);
 CREATE TABLE Options
 (
-  id INT(11) PRIMARY KEY NOT NULL,
-  name VARCHAR(45),
-  cost DECIMAL(8,2),
-  connect_cost DECIMAL(8,2),
-  description VARCHAR(255)
+  id           INT(11) PRIMARY KEY NOT NULL,
+  name         VARCHAR(45),
+  cost         DECIMAL(8, 2),
+  connect_cost DECIMAL(8, 2),
+  description  VARCHAR(255)
 );
 CREATE TABLE Possible_options_of_tariffs
 (
   tariff_id INT(11) NOT NULL,
   option_id INT(11) NOT NULL
 );
-CREATE INDEX FK5091f2q2higyor4yquh4e0rv0 ON Possible_options_of_tariffs (option_id);
-CREATE INDEX FKlcgds2iqll3cxgfmsis6w25wj ON Possible_options_of_tariffs (tariff_id);
+CREATE INDEX FK5091f2q2higyor4yquh4e0rv0
+  ON Possible_options_of_tariffs (option_id);
+CREATE INDEX FKlcgds2iqll3cxgfmsis6w25wj
+  ON Possible_options_of_tariffs (tariff_id);
 CREATE TABLE Required_option_relationships
 (
-  id_first INT(11) NOT NULL,
+  id_first  INT(11) NOT NULL,
   id_second INT(11) NOT NULL
 );
-CREATE INDEX fk_Required_option_relationships_1_idx ON Required_option_relationships (id_first);
-CREATE INDEX fk_Required_option_relationships_2_idx ON Required_option_relationships (id_second);
+CREATE INDEX fk_Required_option_relationships_1_idx
+  ON Required_option_relationships (id_first);
+CREATE INDEX fk_Required_option_relationships_2_idx
+  ON Required_option_relationships (id_second);
 CREATE TABLE Staff
 (
-  id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  name VARCHAR(45),
-  surname VARCHAR(45),
-  email VARCHAR(45),
+  id       INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  name     VARCHAR(45),
+  surname  VARCHAR(45),
+  email    VARCHAR(45),
   password VARCHAR(64),
-  salt VARCHAR(45) NOT NULL
+  salt     VARCHAR(45)         NOT NULL
 );
 CREATE TABLE Tariffs
 (
-  id INT(11) PRIMARY KEY NOT NULL,
-  name VARCHAR(45) NOT NULL,
-  cost DECIMAL(8,2),
+  id          INT(11) PRIMARY KEY NOT NULL,
+  name        VARCHAR(45)         NOT NULL,
+  cost        DECIMAL(8, 2),
   description VARCHAR(255)
 );
-CREATE UNIQUE INDEX Tariffs_name_uindex ON Tariffs (name);
+CREATE UNIQUE INDEX Tariffs_name_uindex
+  ON Tariffs (name);
 CREATE TABLE Used_options_of_tariff
 (
   contract_id INT(11) NOT NULL,
-  option_id INT(11) NOT NULL
+  option_id   INT(11) NOT NULL
 );
-CREATE INDEX fk_Used_options_of_tariffs_1_idx ON Used_options_of_tariff (option_id);
-CREATE INDEX fk_Used_options_of_tariffs_2_idx ON Used_options_of_tariff (contract_id);
+CREATE INDEX fk_Used_options_of_tariffs_1_idx
+  ON Used_options_of_tariff (option_id);
+CREATE INDEX fk_Used_options_of_tariffs_2_idx
+  ON Used_options_of_tariff (contract_id);
 
 /* -- first version backup
 CREATE TABLE IF NOT EXISTS `eCare`.`Tariffs` (

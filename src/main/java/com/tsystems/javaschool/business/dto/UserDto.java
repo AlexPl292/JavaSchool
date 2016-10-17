@@ -21,7 +21,8 @@ public class UserDto {
 
     private List<String> roles = new ArrayList<>();
 
-    public UserDto() {}
+    public UserDto() {
+    }
 
     public UserDto(User user) {
         convertToDto(user);
@@ -32,7 +33,7 @@ public class UserDto {
         this.name = entity.getName();
         this.surname = entity.getSurname();
         this.email = entity.getEmail();
-        for (GrantedAuthority auth : entity.getAuthorities()){
+        for (GrantedAuthority auth : entity.getAuthorities()) {
             roles.add(auth.getAuthority());
         }
     }

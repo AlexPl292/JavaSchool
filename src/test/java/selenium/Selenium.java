@@ -3,18 +3,15 @@ package selenium;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
-import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.core.har.HarEntry;
 import net.lightbody.bmp.core.har.HarNameValuePair;
 import net.lightbody.bmp.proxy.CaptureType;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
@@ -90,6 +87,7 @@ public class Selenium {
     public void commonAfter() {
         commonDriver.quit();
     }
+
     @BeforeGroups(groups = "common")
     public void beforeCommon() {
         System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
@@ -271,7 +269,7 @@ public class Selenium {
         waitJquery();
 
         assertFalse(require.findElement(By.id("requiredFrom[][id]0")).isSelected());
-        assert(hasAllClass(driver.findElement(By.xpath("//*[@id=\"requiredFrom\"]/div[2]")), "checkbox-primary"));
+        assert (hasAllClass(driver.findElement(By.xpath("//*[@id=\"requiredFrom\"]/div[2]")), "checkbox-primary"));
         assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"requiredFrom\"]/div[4]")), "checkbox-primary"));
         assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"forbiddenWith\"]/div[1]")), "checkbox-primary"));
         assertTrue(hasAllClass(driver.findElement(By.xpath("//*[@id=\"forbiddenWith\"]/div[3]")), "checkbox-primary"));
@@ -345,6 +343,7 @@ public class Selenium {
 
         WebElement row = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody/tr/td[contains(text(), 'Testsurname Testname')]"));
         row.findElement(By.xpath("//button[contains(.,'Show')]")).click();
+        waitJquery();
         assertEquals("Testsurname Testname", driver.findElement(By.id("customerName")).getText());
         assertEquals("ZZZZZZZZZ", driver.findElement(By.id("customerPassportNumber")).getText());
 
@@ -389,7 +388,7 @@ public class Selenium {
         wv(By.xpath("//*[@id=\"accordion\"]//a[contains(text(),\"00\")]/../../..//a/p[contains(text(),'Delete')]")).click();
         waitJquery();
 
-        assertTrue(accordion.findElements(By.cssSelector("#accordion > div")).size() == accordionSize-1);
+        assertTrue(accordion.findElements(By.cssSelector("#accordion > div")).size() == accordionSize - 1);
 
         WebElement newContract = driver.findElement(By.className("panel-info"));
         newContract.findElement(By.linkText("Add new contract")).click();
@@ -415,7 +414,7 @@ public class Selenium {
 
     private WebElement clickMenu(WebElement menuGroup, By selector, Boolean visibility) {
         WebElement webElement = null;
-        while(true) {
+        while (true) {
             menuGroup.click();
             if (visibility) {
                 try {
@@ -436,16 +435,16 @@ public class Selenium {
     }
 
     private void waitJquery() {
-        Boolean isJqueryUsed = (Boolean)((JavascriptExecutor)driver).executeScript("return (typeof(jQuery) != 'undefined')");
-        if(isJqueryUsed){
-            while (true){
+        Boolean isJqueryUsed = (Boolean) ((JavascriptExecutor) driver).executeScript("return (typeof(jQuery) != 'undefined')");
+        if (isJqueryUsed) {
+            while (true) {
                 // JavaScript test to verify jQuery is active or not
-                Boolean ajaxIsComplete = (Boolean)(((JavascriptExecutor)driver).executeScript("return jQuery.active == 0")) &&
-                        (Boolean)(((JavascriptExecutor)driver).executeScript("return document.readyState").toString().equals("complete"));
+                Boolean ajaxIsComplete = (Boolean) (((JavascriptExecutor) driver).executeScript("return jQuery.active == 0")) &&
+                        (Boolean) (((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete"));
                 if (ajaxIsComplete) break;
-                try{
+                try {
                     Thread.sleep(100);
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     // nothing
                 }
             }
@@ -455,8 +454,8 @@ public class Selenium {
     private HarEntry catchHar() {
         List<HarEntry> har = proxy.getHar().getLog().getEntries();
         while (true) {
-            if (har.get(har.size()-1).getResponse().getBodySize() != -1){
-                return har.get(har.size()-1);
+            if (har.get(har.size() - 1).getResponse().getBodySize() != -1) {
+                return har.get(har.size() - 1);
             }
         }
     }
@@ -468,15 +467,15 @@ public class Selenium {
         baseUrl = baseUrl.substring(0, baseUrl.indexOf("/rest"));
         for (HarNameValuePair header : headers) {
             if (header.getName().equals("Location")) {
-                ((JavascriptExecutor)driver).executeScript("jQuery.ajax({type:'DELETE',url:'"+baseUrl+header.getValue()+"'})");
+                ((JavascriptExecutor) driver).executeScript("jQuery.ajax({type:'DELETE',url:'" + baseUrl + header.getValue() + "'})");
                 assertEquals(200, catchHar().getResponse().getStatus());
             }
         }
     }
 
     private boolean hasAllClass(WebElement element, String... active) {
-        for (String classActive : active){
-            if (!element.getAttribute("class").contains(classActive)){
+        for (String classActive : active) {
+            if (!element.getAttribute("class").contains(classActive)) {
                 return false;
             }
         }

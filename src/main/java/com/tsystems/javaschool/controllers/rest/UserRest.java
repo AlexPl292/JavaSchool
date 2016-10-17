@@ -76,9 +76,9 @@ public class UserRest {
                                          @RequestParam(required = false) String code,
                                          @RequestParam(required = false) String newPassword,
                                          @RequestParam(required = false) String repeatPassword) {
-        if (email == null || email.equals("")||
-                code == null || code.equals("")||
-                newPassword == null || newPassword.equals("")||
+        if (email == null || email.equals("") ||
+                code == null || code.equals("") ||
+                newPassword == null || newPassword.equals("") ||
                 repeatPassword == null || repeatPassword.equals("")) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -108,7 +108,7 @@ public class UserRest {
     @GetMapping("/me")
     @Secured("ROLE_USER")
     public ResponseEntity getMe(Principal principal) {
-        User user = (User)((UsernamePasswordAuthenticationToken)principal).getPrincipal();
+        User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         return ResponseEntity.ok().body(new UserDto(user));
     }
 }

@@ -17,7 +17,6 @@ import org.testng.annotations.Test;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -31,7 +30,7 @@ import static org.testng.Assert.assertTrue;
  * Created by alex on 07.10.16.
  */
 @PrepareForTest(DataBaseValidator.class)
-public class OptionServiceImplTest extends PowerMockTestCase{
+public class OptionServiceImplTest extends PowerMockTestCase {
 
     private OptionService service;
 

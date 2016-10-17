@@ -56,6 +56,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     public ErrorResponse handleJSException(JSException ex) {
         return new ErrorResponse("Message", ex.getMessage());
     }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return ResponseEntity

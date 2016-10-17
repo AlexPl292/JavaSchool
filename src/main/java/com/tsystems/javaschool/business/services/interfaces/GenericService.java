@@ -1,7 +1,6 @@
 package com.tsystems.javaschool.business.services.interfaces;
 
 import com.tsystems.javaschool.exceptions.JSException;
-import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 
 import java.io.Serializable;
 import java.util.List;

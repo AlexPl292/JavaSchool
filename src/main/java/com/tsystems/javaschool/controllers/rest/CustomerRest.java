@@ -5,7 +5,6 @@ import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.User;
 import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
-import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +54,7 @@ public class CustomerRest {
     @Secured("ROLE_USER")
     public CustomerDto loadCustomer(@PathVariable Integer customerId, Principal principal, HttpServletRequest request) throws ResourceNotFoundException {
         if (!request.isUserInRole("ROLE_ADMIN") &&
-                !Objects.equals(((User)((UsernamePasswordAuthenticationToken)principal).getPrincipal()).getId(), customerId)) {
+                !Objects.equals(((User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getId(), customerId)) {
             return null;
         }
         CustomerDto entity = service.loadByKey(customerId);

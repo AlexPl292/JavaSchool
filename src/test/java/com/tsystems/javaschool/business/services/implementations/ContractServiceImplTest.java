@@ -12,7 +12,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-//import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -25,12 +24,14 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.testng.Assert.assertEquals;
 
+//import org.powermock.modules.junit4.PowerMockRunner;
+
 /**
  * Created by alex on 14.10.16.
  */
 //@RunWith(PowerMockRunner.class)
 @PrepareForTest(DataBaseValidator.class)
-public class ContractServiceImplTest extends PowerMockTestCase{
+public class ContractServiceImplTest extends PowerMockTestCase {
 
     private ContractService service;
 

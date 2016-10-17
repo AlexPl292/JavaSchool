@@ -10,5 +10,6 @@ import java.util.List;
  */
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
     List<Contract> findByNumber(String number);
+
     List<Contract> findByTariff_Name(String name);
 }

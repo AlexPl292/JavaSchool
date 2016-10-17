@@ -4,7 +4,7 @@
 <suite name="JSSuite">
     <test name="FrontEnd">
         <classes>
-            <class name="selenium.Selenium" />
+            <class name="selenium.Selenium"/>
         </classes>
 
     </test>

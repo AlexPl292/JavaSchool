@@ -24,7 +24,7 @@ function create_boxes(selobj, checkboxs_name, checked) {
         });
         if (checked !== undefined) {
             $(checked).each(function () {
-                var opt = $(selobj).find("input[value="+this+"]");
+                var opt = $(selobj).find("input[value=" + this + "]");
                 if (!$(opt).is(':disabled')) {
                     $(opt).prop('checked', true).change();
                 }
@@ -231,8 +231,8 @@ function optionCheckedNewTariff(e) {
                 uncheck = $.merge(uncheck, maybeEnable);
         });
         $(uncheck).prop('checked', false).prop('disabled', false).change().closest('.checkbox')
-                .addClass("checkbox-primary")
-                .removeClass("checkbox-success");
+            .addClass("checkbox-primary")
+            .removeClass("checkbox-success");
     }
 }
 
@@ -787,8 +787,8 @@ var prepare = {
                 }
 
                 if (fadeOutContract == contract.id) {
-                    $page_wrapper.find('#accordion .panel:last .panel-heading').stop().animate({opacity: 0.25},600,function(){
-                        $(this).animate({opacity: 1},600);
+                    $page_wrapper.find('#accordion .panel:last .panel-heading').stop().animate({opacity: 0.25}, 600, function () {
+                        $(this).animate({opacity: 1}, 600);
                     });
 
                 }
@@ -807,7 +807,7 @@ var prepare = {
 
                 if (href === "/delete") {
                     $.ajax({
-                        url: window.contextPath + "/rest/customers/"+customerId+"/contracts/" + id,
+                        url: window.contextPath + "/rest/customers/" + customerId + "/contracts/" + id,
                         type: "DELETE",
                         success: function (data) {
                             $panel.remove();
@@ -947,16 +947,16 @@ function edit_tariff(panel) {
         usedTariff = $(panel).find('.tariffName').data('tariffId');
 
     var tariff = $('<div class="control-group">' +
-        '<label class="control-label" for="tariffEdit'+id+'">Tariff</label>' +
+        '<label class="control-label" for="tariffEdit' + id + '">Tariff</label>' +
         '<div class="controls">' +
-        '<select id="tariffEdit'+id+'" name="tariff" class="form-control"></select>' +
+        '<select id="tariffEdit' + id + '" name="tariff" class="form-control"></select>' +
         "</div>" +
         '</div>');
 
     var options = $('<div class="control-group">' +
-        '<label class="control-label" for="optionsEdit'+id+'">Options</label>' +
+        '<label class="control-label" for="optionsEdit' + id + '">Options</label>' +
         '<div class="controls">' +
-        '<div id="optionsEdit'+id+'" class="boxes"></div>' +
+        '<div id="optionsEdit' + id + '" class="boxes"></div>' +
         '</div>' +
         '</div>');
 
@@ -964,9 +964,9 @@ function edit_tariff(panel) {
     var rightPanel = $(panel).find('.col-lg-6:last .well');
     leftPanel.html(tariff);
     rightPanel.html(options);
-    var optionDiv = $('#optionsEdit'+id);
-    var tariffList = $('#tariffEdit'+id);
-    prepare_tariff_list($('#tariffEdit'+id), optionDiv, usedTariff, "usedOptions", usedOptions);
+    var optionDiv = $('#optionsEdit' + id);
+    var tariffList = $('#tariffEdit' + id);
+    prepare_tariff_list($('#tariffEdit' + id), optionDiv, usedTariff, "usedOptions", usedOptions);
 
     optionDiv.on('change', 'input[type=checkbox]', function () {
         var saved = basket["usedOptions"];
@@ -999,7 +999,7 @@ function edit_tariff(panel) {
     panel.find('.panel-body').append('<div class="col-lg-12"><div class="controls"><input type="submit" class="btn btn-success"/></div></div>');
     panel.find('.panel-body').wrapInner('<form class="form-horizontal" action="edit_contract" method="POST"></form>');
 
-    panel.find('form').submit({contractId:id, panel: panel, usedOptions: usedOptions}, edit_handler);
+    panel.find('form').submit({contractId: id, panel: panel, usedOptions: usedOptions}, edit_handler);
     if (basket["contractId"] === undefined) {
         basket["customerId"] = customerId;
         basket["usedTariff"] = usedTariff;
@@ -1155,7 +1155,7 @@ function updateBasketIcon() {
     var $basket = $('#basket');
 
     var list = $basket.find('#basket_list').empty();
-    for (var i = 0; i<basket.length; i++) {
+    for (var i = 0; i < basket.length; i++) {
         var basket_item = content.cloneNode(true);
         $(basket_item).find('.basketName').html(basket[i]['userName']);
         $(basket_item).find('.basketText').html(basket[i]['contractNumber']);

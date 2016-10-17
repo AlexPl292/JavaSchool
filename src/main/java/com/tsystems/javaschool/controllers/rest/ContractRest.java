@@ -4,7 +4,6 @@ import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.exceptions.JSException;
 import com.tsystems.javaschool.exceptions.ResourceNotFoundException;
-import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

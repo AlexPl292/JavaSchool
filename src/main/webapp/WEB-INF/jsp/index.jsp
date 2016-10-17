@@ -170,7 +170,7 @@
 
         window.userRole = 1;
         <security:authorize access="hasRole('ROLE_ADMIN')">
-            window.userRole = 2;
+        window.userRole = 2;
         </security:authorize>
 
         window.userId = <security:authentication property="principal.id" />;

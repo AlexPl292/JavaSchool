@@ -65,12 +65,15 @@
                         <p>You can get your password here.</p>
                         <div class="panel-body">
 
-                            <form id="reset-form" role="form" autocomplete="off" class="form" method="post" action="<%=application.getContextPath() %>/rest/users/reset">
+                            <form id="reset-form" role="form" autocomplete="off" class="form" method="post"
+                                  action="<%=application.getContextPath() %>/rest/users/reset">
 
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope color-blue"></i></span>
-                                        <input id="email" name="email" placeholder="email address" class="form-control"  type="email">
+                                        <span class="input-group-addon"><i
+                                                class="glyphicon glyphicon-envelope color-blue"></i></span>
+                                        <input id="email" name="email" placeholder="email address" class="form-control"
+                                               type="email">
                                     </div>
 
                                 </div>
@@ -80,21 +83,25 @@
                                         <input id="code" name="code" placeholder="Code" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" id="newPassword" name="newPassword" placeholder="Password" class="form-control">
+                                        <input type="password" id="newPassword" name="newPassword"
+                                               placeholder="Password" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" id="repeatPassword" name="repeatPassword" placeholder="Repeat password" class="form-control">
+                                        <input type="password" id="repeatPassword" name="repeatPassword"
+                                               placeholder="Repeat password" class="form-control">
                                     </div>
                                 </div>
 
 
                                 <div class="form-group">
-                                    <input id="submit" name="recover-submit" class="btn btn-lg btn-primary btn-block" value="Get code" type="submit">
+                                    <input id="submit" name="recover-submit" class="btn btn-lg btn-primary btn-block"
+                                           value="Get code" type="submit">
                                 </div>
                             </form>
 
                             <div class="form-group" id="toLoginDiv" style="display: none;">
-                                <input id="toLogin" class="btn btn-lg btn-success btn-block" value="Go to login page" type="button">
+                                <input id="toLogin" class="btn btn-lg btn-success btn-block" value="Go to login page"
+                                       type="button">
                             </div>
 
                         </div>

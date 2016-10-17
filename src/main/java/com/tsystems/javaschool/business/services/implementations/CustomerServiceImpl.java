@@ -1,6 +1,5 @@
 package com.tsystems.javaschool.business.services.implementations;
 
-import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.dto.CustomerDto;
 import com.tsystems.javaschool.business.services.interfaces.CustomerService;
 import com.tsystems.javaschool.db.entities.Contract;

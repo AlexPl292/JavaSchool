@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
@@ -92,23 +91,23 @@ public class FillData {
                 new HashSet<>(Arrays.asList(smsBasic, free20)),
                 new HashSet<>(Arrays.asList(smsBasic, free50)),
                 Collections.singleton(smsUnlim)
-                ));
+        ));
         combinations.put(mmsActive, Arrays.asList(Collections.singleton(mmsBasic),
                 new HashSet<>(Arrays.asList(mmsBasic, free5mms)),
                 new HashSet<>(Arrays.asList(mmsBasic, free10mms)),
                 new HashSet<>(Arrays.asList(mmsBasic, free30mms)),
                 Collections.singleton(mmsUnlim)
-                ));
+        ));
         combinations.put(internet, Arrays.asList(Collections.singleton(internetBasic),
                 new HashSet<>(Arrays.asList(internetBasic, internet1gb)),
                 new HashSet<>(Arrays.asList(internetBasic, internet2gb)),
                 new HashSet<>(Arrays.asList(internetBasic, internet5gb)),
                 Collections.singleton(internetUnlim)
-                ));
+        ));
         combinations.put(business, Arrays.asList(Collections.singleton(smsUnlim),
                 Collections.singleton(mmsUnlim),
                 Collections.singleton(internetUnlim)
-                ));
+        ));
 
         Iterator<String> iter = passNumbers.iterator();
         Iterator<String> numberIter = numbers.iterator();
@@ -120,7 +119,7 @@ public class FillData {
         alex.setEmail("alexpl292@gmail.com");
         alex.setPassword(coder.encode("adminadmin"));
         alex.setTmpPassword("");
-        alex.setAddress("Die Stadt: " + getRandomCity()+"\n"+getStub(5));
+        alex.setAddress("Die Stadt: " + getRandomCity() + "\n" + getStub(5));
         alex.setPassportData(getStub(3));
         alex.setIsBlocked(0);
         alex.setDateOfBirth(getDate());
@@ -177,7 +176,7 @@ public class FillData {
                 c.setPassportNumber(iter.next());
                 c.setPassword(coder.encode("adminadmin"));
                 c.setTmpPassword("");
-                c.setAddress("Die Stadt: "+getRandomCity() + "\n" + getStub(5));
+                c.setAddress("Die Stadt: " + getRandomCity() + "\n" + getStub(5));
                 c.setDateOfBirth(getDate());
                 c.setIsBlocked(0);
                 c.setPassportData(getStub(3));
@@ -229,19 +228,19 @@ public class FillData {
             Random rnd = new Random();
             String name = names.get(rnd.nextInt(names.size()));
             String surname = surnames.get(rnd.nextInt(surnames.size()));
-            emails.put(name+"@"+surname+".de", Arrays.asList(name, surname));
+            emails.put(name + "@" + surname + ".de", Arrays.asList(name, surname));
         }
-         while (passNumbers.size() < COUNT_OF_CUSTOMERS) {
-             passNumbers.add(RandomStringUtils.random(10, true, true).toUpperCase());
-         }
-         List<String> usedNumbers = Arrays.asList("0000000000", "1111111111", "2222222222", "4444444444", "5555555555");
-         while (numbers.size() < COUNT_OF_CUSTOMERS*3) {
-             String number = RandomStringUtils.random(10, false, true);
-             if (usedNumbers.contains(number))
-                 continue;
-             number = "+7 ("+number.substring(0,3)+") "+number.substring(3, 6)+"-"+number.substring(6);
-             numbers.add(number);
-         }
+        while (passNumbers.size() < COUNT_OF_CUSTOMERS) {
+            passNumbers.add(RandomStringUtils.random(10, true, true).toUpperCase());
+        }
+        List<String> usedNumbers = Arrays.asList("0000000000", "1111111111", "2222222222", "4444444444", "5555555555");
+        while (numbers.size() < COUNT_OF_CUSTOMERS * 3) {
+            String number = RandomStringUtils.random(10, false, true);
+            if (usedNumbers.contains(number))
+                continue;
+            number = "+7 (" + number.substring(0, 3) + ") " + number.substring(3, 6) + "-" + number.substring(6);
+            numbers.add(number);
+        }
     }
 
     private String getRandomCity() {
@@ -258,9 +257,9 @@ public class FillData {
     private String getStub(int j) {
         Random rnd = new Random();
         StringBuilder ips = new StringBuilder();
-        for (int i = 1; i < j*4; i++) {
+        for (int i = 1; i < j * 4; i++) {
             ips.append(ipsum[rnd.nextInt(ipsum.length)]).append(" ");
-            if (i%4 == 0)
+            if (i % 4 == 0)
                 ips.append("\n");
         }
         String s = ips.toString();
@@ -271,7 +270,7 @@ public class FillData {
         List<Tariff> tariffs = new ArrayList<>(combinations.keySet());
         Random rnd = new Random();
         Set<Contract> contracts = new HashSet<>();
-        for (int i = 0; i < 1+rnd.nextInt(3); i++) {
+        for (int i = 0; i < 1 + rnd.nextInt(3); i++) {
             if (numberIter.hasNext()) {
                 Integer tariff = rnd.nextInt(tariffs.size());
                 Contract contract = new Contract();
@@ -294,7 +293,7 @@ public class FillData {
         int x = rnd.nextInt(100);
         if (x >= 30)
             return 0;
-        else if (x < 30 && x > 15 )
+        else if (x < 30 && x > 15)
             return 1;
         else
             return 2;
@@ -327,7 +326,7 @@ public class FillData {
             "Bonn", "Munster", "Karlsruhe", "Mannheim", "Augsburg", "Wiesbaden", "Gelsenkirchen", "Monchengladbach", "Braunschweig",
             "Chemnitz", "Kiel", "Aachen", "Halle", "Magdeburg", "Freiburg", "Krefeld", "Lubeck", "Oberhausen",
             "Erfurt", "Mainz", "Rostock", "Kassel", "Hagen", "Hamm", "Saarbrucken", "Mulheim an der Ruhr", "Potsdam",
-            "Ludwigshafen am Rhein", "Oldenburg", "Leverkusen", "Osnabruck", "Solingen" );
+            "Ludwigshafen am Rhein", "Oldenburg", "Leverkusen", "Osnabruck", "Solingen");
 
     String[] ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non sapien eget libero tristique ullamcorper. Proin commodo dolor in scelerisque egestas. Vivamus fermentum dui erat, at dapibus lacus sodales at. Maecenas aliquet vel nisl a gravida. Praesent volutpat dapibus purus, et ullamcorper nibh cursus quis. Morbi ullamcorper nec felis quis vehicula. In finibus arcu leo, nec tempor mi elementum id. Nunc suscipit pulvinar velit, at commodo mi commodo nec. Fusce pulvinar, ipsum non cursus luctus, metus nisl porta arcu, at molestie quam lectus et metus. Nulla volutpat, odio dignissim malesuada faucibus, orci tortor laoreet felis, ac malesuada urna nulla non felis. Donec tincidunt tellus a est luctus, commodo suscipit tellus scelerisque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed ullamcorper metus vitae dolor tempor, eget tempus nisi iaculis. Quisque viverra eget ante ultricies faucibus. Morbi mattis, nisi at auctor bibendum, dolor justo lacinia mi, ornare sagittis turpis erat et arcu.".split(" ");
 }

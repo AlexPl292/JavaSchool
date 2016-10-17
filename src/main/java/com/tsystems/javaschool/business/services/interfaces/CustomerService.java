@@ -9,5 +9,6 @@ import java.util.List;
  */
 public interface CustomerService extends GenericService<CustomerDto, Integer> {
     List<CustomerDto> findByPassportNumberOrEmail(String passportNumber, String email);
+
     void removeContract(Integer customerId, Integer contractId);
 }

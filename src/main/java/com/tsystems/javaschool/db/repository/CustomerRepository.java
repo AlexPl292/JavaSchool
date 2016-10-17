@@ -10,5 +10,6 @@ import java.util.List;
  */
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     List<Customer> findByPassportNumberOrEmail(String passportNumber, String email);
+
     Customer findByContracts_Number(String number);
 }

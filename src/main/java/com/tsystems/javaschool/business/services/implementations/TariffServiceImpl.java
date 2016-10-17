@@ -5,7 +5,6 @@ import com.tsystems.javaschool.business.services.interfaces.TariffService;
 import com.tsystems.javaschool.db.entities.Tariff;
 import com.tsystems.javaschool.db.repository.TariffRepository;
 import com.tsystems.javaschool.exceptions.JSException;
-import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import com.tsystems.javaschool.util.DataBaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
