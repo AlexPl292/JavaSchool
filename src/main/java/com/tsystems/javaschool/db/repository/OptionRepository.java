@@ -9,5 +9,5 @@ import java.util.List;
  * Created by alex on 28.09.16.
  */
 public interface OptionRepository extends JpaRepository<Option, Integer> {
-    List<Option> findByName(String name);
+    Option findByName(String name);
 }

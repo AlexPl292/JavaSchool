@@ -51,9 +51,9 @@ public class DataBaseValidator {
     }
 
     static public void check(OptionDto option) throws JSException {
-        List<Option> existings = optionRepository.findByName(option.getName());
-        if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Name", option.getName(), "/rest/options/" + existings.get(0).getId());
+        Option existings = optionRepository.findByName(option.getName());
+        if (existings != null) {
+            throw new UniqueFieldDuplicateException("Name", option.getName(), "/rest/options/" + existings.getId());
         }
 
         Set<TariffDto> possibleTariffs = option.getPossibleTariffsOfOption();
