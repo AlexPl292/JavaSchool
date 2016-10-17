@@ -28,8 +28,9 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * Created by alex on 14.10.16.
+ *
+ * Test contract service
  */
-//@RunWith(PowerMockRunner.class)
 @PrepareForTest(DataBaseValidator.class)
 public class ContractServiceImplTest extends PowerMockTestCase {
 
@@ -43,10 +44,12 @@ public class ContractServiceImplTest extends PowerMockTestCase {
 
         Contract myContract = new Contract();
 
+        // Create test tariff
         Tariff tariff = new Tariff();
         tariff.setId(1);
         myContract.setTariff(tariff);
 
+        // Create test options
         Option option1 = new Option();
         option1.setConnectCost(BigDecimal.valueOf(5));
         option1.setId(1);
@@ -60,6 +63,7 @@ public class ContractServiceImplTest extends PowerMockTestCase {
         options.add(option2);
         myContract.setUsedOptions(options);
 
+        // Create stubs
         when(contractRepository.findOne(1)).thenReturn(myContract);
 
         service = new ContractServiceImpl(contractRepository);
@@ -69,8 +73,14 @@ public class ContractServiceImplTest extends PowerMockTestCase {
         DataBaseValidator.checkAllOptions(anyInt(), anyList());
     }
 
+    /**
+     * Test contract updating with same options
+     * @throws Exception
+     */
     @Test
     public void testUpdateContractSameOptions() throws Exception {
+
+        // Create test contract
         Contract myContract = new Contract();
         myContract.setBalance(BigDecimal.valueOf(1000));
         Option option1 = new Option();
@@ -88,11 +98,19 @@ public class ContractServiceImplTest extends PowerMockTestCase {
         when(contractRepository.saveAndFlush(any(Contract.class))).thenReturn(myContract);
 
         ContractDto contractDto = service.updateContract(1, 1, Arrays.asList(1, 2));
+
+        // Check balance is not changed
         assertEquals(contractDto.getBalance(), BigDecimal.valueOf(1000));
     }
 
+    /**
+     * Test contract updating with one of two contract changed
+     * @throws Exception
+     */
     @Test
     public void testUpdateContractOneChange() throws Exception {
+
+        // Create test contract
         Contract myContract = new Contract();
         myContract.setBalance(BigDecimal.valueOf(1000));
         Option option1 = new Option();
@@ -110,11 +128,19 @@ public class ContractServiceImplTest extends PowerMockTestCase {
         when(contractRepository.saveAndFlush(any(Contract.class))).thenReturn(myContract);
 
         ContractDto contractDto = service.updateContract(1, 1, Arrays.asList(1, 3));
+
+        // Check balance
         assertEquals(contractDto.getBalance(), BigDecimal.valueOf(990));
     }
 
+    /**
+     * Test contract updating with two of two contract changed
+     * @throws Exception
+     */
     @Test
     public void testUpdateContractAllChange() throws Exception {
+
+        // Create test contract
         Contract myContract = new Contract();
         myContract.setBalance(BigDecimal.valueOf(1000));
         Option option1 = new Option();
@@ -132,6 +158,8 @@ public class ContractServiceImplTest extends PowerMockTestCase {
         when(contractRepository.saveAndFlush(any(Contract.class))).thenReturn(myContract);
 
         ContractDto contractDto = service.updateContract(1, 1, Arrays.asList(4, 3));
+
+        // Check balance
         assertEquals(contractDto.getBalance(), BigDecimal.valueOf(985));
     }
 }

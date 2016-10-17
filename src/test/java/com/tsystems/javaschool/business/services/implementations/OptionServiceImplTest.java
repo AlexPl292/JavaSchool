@@ -28,6 +28,8 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Created by alex on 07.10.16.
+ *
+ *  Test option service
  */
 @PrepareForTest(DataBaseValidator.class)
 public class OptionServiceImplTest extends PowerMockTestCase {

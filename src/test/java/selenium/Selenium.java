@@ -22,6 +22,8 @@ import static org.testng.Assert.*;
 
 /**
  * Created by alex on 15.10.16.
+ *
+ * Test frontend with selenium
  */
 public class Selenium {
 
@@ -46,6 +48,7 @@ public class Selenium {
     public void beforeSuite() {
     }
 
+    // Group for testing as admin user
     @BeforeGroups(groups = "admin")
     public void adminTests() {
         System.setProperty("webdriver.chrome.driver", "/opt/chromedriver");
@@ -64,6 +67,7 @@ public class Selenium {
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, 5);
 
+        // Login as admin and close menu
         driver.get("http://localhost:8080/JavaSchool/");
         WebElement form = driver.findElement(By.id("loginForm"));
         form.findElement(By.name("username")).sendKeys("admin@ts.ru");
@@ -83,6 +87,7 @@ public class Selenium {
         driver.quit();
     }
 
+
     @AfterGroups(groups = "common")
     public void commonAfter() {
         commonDriver.quit();
@@ -96,12 +101,18 @@ public class Selenium {
         commonDriver.manage().window().maximize();
     }
 
+    /**
+     * Test website availability
+     */
     @Test(groups = {"common"})
     public void loadTestThisWebsite() {
         commonDriver.get("http://localhost:8080/JavaSchool/");
         assertEquals("Login", commonDriver.getTitle());
     }
 
+    /**
+     * Test login
+     */
     @Test(groups = {"common"})
     public void login() {
         commonDriver.get("http://localhost:8080/JavaSchool/");
@@ -113,39 +124,59 @@ public class Selenium {
         assertEquals("eCare", commonDriver.getTitle());
     }
 
+    /**
+     * Test customer table
+     */
     @Test(groups = {"admin"})
     public void customerTable() {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[1]/a")), By.xpath("//*[@id=\"customers_menu\"]"), true).click();
         waitJquery();
         WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
+
+        // Check table is not empty
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
         assertEquals("Customers", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
 
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[1]/a")), By.xpath("//*[@id=\"customers_menu\"]"), false);
     }
 
+
+    /**
+     * Test options table
+     */
     @Test(groups = {"admin"})
     public void optionsTable() {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[3]/a")), By.xpath("//*[@id=\"options_menu\"]"), true).click();
         waitJquery();
         WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
+
+        // Check table is not empty
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
         assertEquals("Options", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
 
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[3]/a")), By.xpath("//*[@id=\"options_menu\"]"), false);
     }
 
+
+    /**
+     * Test contract table
+     */
     @Test(groups = {"admin"})
     public void contractsTable() {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[4]/a")), By.xpath("//*[@id=\"contracts_menu\"]"), true).click();
         waitJquery();
         WebElement tableBody = driver.findElement(By.xpath("//*[@id=\"content_table\"]/tbody"));
+
+        // Check table is not empty
         assertTrue(tableBody.findElements(By.tagName("tr")).size() > 0);
         assertEquals("Contracts", driver.findElement(By.xpath("//*[@id=\"piece_table\"]/div[1]/div/h1")).getText());
 
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[4]/a")), By.xpath("//*[@id=\"contracts_menu\"]"), false);
     }
 
+    /**
+     * Test tariffs table
+     */
     @Test(groups = {"admin"})
     public void tariffsTable() {
         clickMenu(driver.findElement(By.xpath("//*[@id=\"side-menu\"]/li[2]/a")), By.xpath("//*[@id=\"tariffs_menu\"]"), true).click();
@@ -158,6 +189,9 @@ public class Selenium {
     }
 
 
+    /**
+     * Test tariff adding
+     */
     @Test(groups = {"admin"})
     public void addTariff() {
         proxy.newHar();
