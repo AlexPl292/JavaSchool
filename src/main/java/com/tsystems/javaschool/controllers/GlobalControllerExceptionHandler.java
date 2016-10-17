@@ -21,10 +21,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 /**
  * Created by alex on 29.09.16.
+ *
+ * Handle exceptions
+ *
+ * Almost all exceptions are handled by {@link #handleExceptionInternal(Exception, Object, HttpHeaders, HttpStatus, WebRequest)}
+ *
  */
 @ControllerAdvice
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
+    /**
+     * Handle UniqueFieldDuplicateException
+     * @param ex UniqueFieldDuplicateException
+     * @return reponse entity with location header
+     */
     @ExceptionHandler(UniqueFieldDuplicateException.class)
     public ResponseEntity<ErrorResponse> handleUniqueFieldDuplicateException(UniqueFieldDuplicateException ex) {
         return ResponseEntity
@@ -35,6 +45,11 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
                         "' already exists. This field must be unique."));
     }
 
+    /**
+     * Handle ResourceNotFoundException
+     * @param ex ResourceNotFoundException
+     * @return response entity
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
