@@ -21,8 +21,8 @@ import java.util.Objects;
 
 /**
  * Created by alex on 19.08.16.
- * Add new customer
- * Returns json with either success:true, or success:false and object with errors
+ *
+ * Rest controller for customers
  */
 @RestController
 @RequestMapping("/rest/customers")
@@ -35,13 +35,25 @@ public class CustomerRest {
         this.service = service;
     }
 
+    /**
+     * Create new customer
+     * @param customer new customer DTO
+     * @return response entity
+     * @throws JSException validation fail
+     */
     @PostMapping
     @Secured("ROLE_ADMIN")
     public ResponseEntity addNewCustomer(@Valid @RequestBody CustomerDto customer) throws JSException {
         CustomerDto newCustomer = service.addNew(customer);
+
+        // Response entity with Located header
         return ResponseEntity.created(URI.create("/rest/customers/" + newCustomer.getId())).body(newCustomer);
     }
 
+    /**
+     * load oll customers
+     * @return all customers as DTO
+     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Secured("ROLE_ADMIN")
@@ -49,14 +61,25 @@ public class CustomerRest {
         return service.loadAll();
     }
 
+    /**
+     * Get customer by id
+     * @param customerId customer id
+     * @param principal principal to detect user
+     * @param request principal to detect user
+     * @return customer DTO
+     * @throws ResourceNotFoundException resource not found
+     */
     @GetMapping("/{customerId}")
     @ResponseStatus(HttpStatus.OK)
     @Secured("ROLE_USER")
     public CustomerDto loadCustomer(@PathVariable Integer customerId, Principal principal, HttpServletRequest request) throws ResourceNotFoundException {
+
+        // CHeck if user CAN get this user
         if (!request.isUserInRole("ROLE_ADMIN") &&
                 !Objects.equals(((User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getId(), customerId)) {
             return null;
         }
+        // Load user by id
         CustomerDto entity = service.loadByKey(customerId);
         if (entity.getId() == null) {
             throw new ResourceNotFoundException("customer", customerId);
@@ -64,6 +87,11 @@ public class CustomerRest {
         return entity;
     }
 
+    /**
+     * Delete user resource by id
+     * @param id id of user
+     * @throws ResourceNotFoundException resource not found
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Secured("ROLE_ADMIN")
@@ -75,6 +103,11 @@ public class CustomerRest {
         service.remove(id);
     }
 
+    /**
+     * Delete contract of user
+     * @param id customer id
+     * @param contractId contract id
+     */
     @DeleteMapping("/{id}/contracts/{contractId}")
     @ResponseStatus(HttpStatus.OK)
     @Secured("ROLE_USER")

@@ -18,8 +18,8 @@ import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
- * Add new tariff
- * Returns json with either success:true, or success:false and object with errors
+ *
+ * Rest controller for tariffs
  */
 @RestController
 @RequestMapping("/rest/tariffs")
@@ -32,13 +32,25 @@ public class TariffRest {
         this.service = service;
     }
 
+    /**
+     * Create new tariff
+     * @param tariff new tariff data
+     * @return response entity
+     * @throws JSException validation fail
+     */
     @PostMapping
     @Secured("ROLE_ADMIN")
     public ResponseEntity addNewTariff(@Valid @RequestBody TariffDto tariff) throws JSException {
         TariffDto newTariff = service.addNew(tariff);
+
+        // Create new response entity wity location header
         return ResponseEntity.created(URI.create("/rest/tariffs/" + newTariff.getId())).body(newTariff);
     }
 
+    /**
+     * Load oll tariffs
+     * @return load of tariff data
+     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Secured("ROLE_USER")
@@ -46,6 +58,12 @@ public class TariffRest {
         return service.loadAll();
     }
 
+    /**
+     * Load one tariff
+     * @param tariffId tariff id
+     * @return tariff DTo
+     * @throws ResourceNotFoundException resource not found
+     */
     @GetMapping("/{tariffId}")
     @ResponseStatus(HttpStatus.OK)
     @Secured("ROLE_USER")
@@ -57,6 +75,12 @@ public class TariffRest {
         return entity;
     }
 
+    /**
+     * Load all options of tariff
+     * @param tariffId tariff id
+     * @return list of opions DTO
+     * @throws ResourceNotFoundException resource not found
+     */
     @GetMapping("/{tariffId}/options")
     @ResponseStatus(HttpStatus.OK)
     @Secured("ROLE_USER")
@@ -68,6 +92,11 @@ public class TariffRest {
         return entity.getPossibleOptions();
     }
 
+    /**
+     * Delete tariff by id
+     * @param tariffId id of tariff
+     * @throws ResourceNotFoundException resource not found
+     */
     @DeleteMapping("/{tariffId}")
     @ResponseStatus(HttpStatus.OK)
     @Secured("ROLE_ADMIN")
