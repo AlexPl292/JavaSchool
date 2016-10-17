@@ -116,4 +116,27 @@ public class TariffDto implements DtoMapper<Tariff>, Comparable<TariffDto> {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TariffDto tariffDto = (TariffDto) o;
+
+        if (id != null ? !id.equals(tariffDto.id) : tariffDto.id != null) return false;
+        if (name != null ? !name.equals(tariffDto.name) : tariffDto.name != null) return false;
+        if (cost != null ? !cost.equals(tariffDto.cost) : tariffDto.cost != null) return false;
+        return description != null ? description.equals(tariffDto.description) : tariffDto.description == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (cost != null ? cost.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
+    }
 }

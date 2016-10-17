@@ -88,4 +88,29 @@ public class UserDto {
                 ", roles=" + roles +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserDto userDto = (UserDto) o;
+
+        if (id != null ? !id.equals(userDto.id) : userDto.id != null) return false;
+        if (name != null ? !name.equals(userDto.name) : userDto.name != null) return false;
+        if (surname != null ? !surname.equals(userDto.surname) : userDto.surname != null) return false;
+        if (email != null ? !email.equals(userDto.email) : userDto.email != null) return false;
+        return roles != null ? roles.equals(userDto.roles) : userDto.roles == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (surname != null ? surname.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
+        return result;
+    }
 }

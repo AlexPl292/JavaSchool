@@ -29,7 +29,7 @@ public class EmailHelper {
             ResourceBundle rb = ResourceBundle.getBundle("email");
             Send(rb.getString("username"), rb.getString("password"), recipientEmail, title, message);
         } catch (EmailException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Please check 'Caused by' section and write to alexpl292@gmail.com if you need resource file", e);
         } catch (MissingResourceException e) {
             throw new RuntimeException("Please check 'Caused by' section and write to alexpl292@gmail.com if you need resource file", e);
         }

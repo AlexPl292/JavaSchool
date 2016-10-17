@@ -157,4 +157,31 @@ public class ContractDto implements DtoMapper<Contract>, Comparable<ContractDto>
                 ", balance=" + balance +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ContractDto that = (ContractDto) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (number != null ? !number.equals(that.number) : that.number != null) return false;
+        if (isBlocked != null ? !isBlocked.equals(that.isBlocked) : that.isBlocked != null) return false;
+        if (customer != null ? !customer.equals(that.customer) : that.customer != null) return false;
+        if (tariff != null ? !tariff.equals(that.tariff) : that.tariff != null) return false;
+        return balance != null ? balance.equals(that.balance) : that.balance == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (isBlocked != null ? isBlocked.hashCode() : 0);
+        result = 31 * result + (customer != null ? customer.hashCode() : 0);
+        result = 31 * result + (tariff != null ? tariff.hashCode() : 0);
+        result = 31 * result + (balance != null ? balance.hashCode() : 0);
+        return result;
+    }
 }
