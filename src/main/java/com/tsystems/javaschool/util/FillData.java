@@ -14,6 +14,9 @@ import java.util.*;
 
 /**
  * Created by alex on 15.10.16.
+ *
+ * Fill database with test data
+ * This works only if database is empty
  */
 @Component
 public class FillData {
@@ -39,18 +42,25 @@ public class FillData {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Fill database
+     */
     @PostConstruct
     public void fill() {
+        // Create numbers and email
         constractUqies();
 
+        // Check if database is empty
         if (tariffRepository.findAll().size() != 0 ||
                 userRepository.findAll().size() != 0 ||
                 contractRepository.findAll().size() != 0 ||
                 optionRepository.findAll().size() != 0)
             return;
 
+        // Init bcrypt encoder
         BCryptPasswordEncoder coder = new BCryptPasswordEncoder();
 
+        // Create admin user
         Staff admin = new Staff();
         admin.setName("Admin");
         admin.setSurname("Admin");
@@ -60,12 +70,14 @@ public class FillData {
         userRepository.saveAndFlush(admin);
 
 
+        // Create tariffs
         Tariff simple = addTariff("Simple", 0d, "Simple tariff without additional options");
         Tariff smsUser = addTariff("Sms user", 10d, "Additional options for sms!");
         Tariff mmsActive = addTariff("Mms active", 10d, "Additional options for sms!");
         Tariff internet = addTariff("Internet monster", 10d, "Stay online!");
         Tariff business = addTariff("Business", 200d, "Only unlimited options!");
 
+        // Create options
         Option smsBasic = addOption("Sms basic", 0d, 1d, "Just use sms", new HashSet<>(Arrays.asList(smsUser, mmsActive)), null, null);
         Option free10 = addOption("Sms 10 pack", 5d, 0d, "Pack with 10 sms", Collections.singleton(smsUser), Collections.singleton(smsBasic), null);
         Option free20 = addOption("Sms 20 pack", 10d, 0d, "Pack with 20 sms", Collections.singleton(smsUser), Collections.singleton(smsBasic), Collections.singleton(free10));
@@ -84,6 +96,7 @@ public class FillData {
         Option internet5gb = addOption("Internet 5Gb/m", 100d, 0d, "5 of internet for one month!", Collections.singleton(internet), Collections.singleton(internetBasic), new HashSet<>(Arrays.asList(internet1gb, internet2gb)));
         Option internetUnlim = addOption("Internet unlimited", 500d, 0d, "Unlimited internet!", new HashSet<>(Arrays.asList(business, internet)), null, new HashSet<>(Arrays.asList(internet1gb, internet2gb, internet5gb)));
 
+        // Create combinations of tariff with options
         Map<Tariff, List<Set<Option>>> combinations = new HashMap<>();
         combinations.put(simple, Collections.singletonList(new HashSet<>()));
         combinations.put(smsUser, Arrays.asList(Collections.singleton(smsBasic),
@@ -109,9 +122,11 @@ public class FillData {
                 Collections.singleton(internetUnlim)
         ));
 
+        // Get iterators of password numbers and phone numbers
         Iterator<String> iter = passNumbers.iterator();
         Iterator<String> numberIter = numbers.iterator();
 
+        // Create alex customer
         Customer alex = new Customer();
         alex.setName("Alex");
         alex.setSurname("Plate");
@@ -128,6 +143,7 @@ public class FillData {
         List<Contract> contracts = new ArrayList<>();
         contracts.addAll(getContracts(combinations, numberIter, alex));
 
+        // Create test customer
         Customer test = new Customer();
         test.setName("Testname");
         test.setSurname("Testsurname");
@@ -141,6 +157,7 @@ public class FillData {
         test.setDateOfBirth(getDate());
         test = customerRepository.saveAndFlush(test);
 
+        // Add contracts to test customer
         Contract contractTest1 = new Contract();
         contractTest1.setBalance(BigDecimal.valueOf(100));
         contractTest1.setIsBlocked(2);
@@ -167,6 +184,7 @@ public class FillData {
         contractTest3.setCustomer(test);
         contractRepository.saveAndFlush(contractTest3);
 
+        // Create random customers
         for (Map.Entry<String, List<String>> user : emails.entrySet()) {
             if (iter.hasNext()) {
                 Customer c = new Customer();
@@ -189,6 +207,7 @@ public class FillData {
         contractRepository.save(contracts);
     }
 
+    // Add tariff to database
     private Tariff addTariff(String name, Double cost, String description) {
         Tariff tariff = new Tariff();
         tariff.setName(name);
@@ -197,6 +216,7 @@ public class FillData {
         return tariffRepository.saveAndFlush(tariff);
     }
 
+    // Add option to database
     private Option addOption(String name,
                              Double connectCost,
                              Double cost,
@@ -219,6 +239,8 @@ public class FillData {
         return optionRepository.saveAndFlush(option);
     }
 
+    // Init random unique data
+    // Create passportNumbers, Phone numbers and emails
     private void constractUqies() {
         emails = new HashMap<>();
         passNumbers = new HashSet<>();
@@ -243,10 +265,12 @@ public class FillData {
         }
     }
 
+    // get random city
     private String getRandomCity() {
         return cities.get(new Random().nextInt(cities.size()));
     }
 
+    // Get random date for birthday
     private Date getDate() {
         long beginTime = Timestamp.valueOf("1940-01-01 00:00:00").getTime();
         long endTime = Timestamp.valueOf("1995-12-31 00:00:00").getTime();
@@ -254,6 +278,7 @@ public class FillData {
         return new Date(beginTime + (long) (Math.random() * diff));
     }
 
+    // Get text stub with j lines
     private String getStub(int j) {
         Random rnd = new Random();
         StringBuilder ips = new StringBuilder();
@@ -266,10 +291,14 @@ public class FillData {
         return s.substring(0, Math.min(s.length(), 254));
     }
 
+    // Create contracts for customer
     private Set<Contract> getContracts(Map<Tariff, List<Set<Option>>> combinations, Iterator<String> numberIter, Customer customer) {
+        // Get list of tariffs
         List<Tariff> tariffs = new ArrayList<>(combinations.keySet());
         Random rnd = new Random();
         Set<Contract> contracts = new HashSet<>();
+
+        // Create up to 4 contract for customer
         for (int i = 0; i < 1 + rnd.nextInt(3); i++) {
             if (numberIter.hasNext()) {
                 Integer tariff = rnd.nextInt(tariffs.size());
@@ -288,6 +317,11 @@ public class FillData {
         return contracts;
     }
 
+    // Random blocked
+    // User block probability:
+    // 0.7 is not blocked
+    // 0.15 blocked by customer
+    // 0.15 blocked by eCare
     private Integer getBlocked() {
         Random rnd = new Random();
         int x = rnd.nextInt(100);
@@ -299,7 +333,7 @@ public class FillData {
             return 2;
     }
 
-    List<String> names = Arrays.asList(
+    private List<String> names = Arrays.asList(
             "Lea", "Julia", "Laura", "Anna", "Lisa", "Lena", "Sarah", "Katharina", "Johanna", "Sophie", "Marie",
             "Leonie", "Vanessa", "Alina", "Lara", "Jana", "Hannah", "Jessica", "Annika", "Luisa", "Michelle", "Melanie",
             "Jasmin", "Sabrina", "Linda", "Sandra", "Anja", "Christina", "Nina", "Nadine", "Maria", "Anne", "Carina",
@@ -310,7 +344,7 @@ public class FillData {
             "Patrick", "Thomas", "Christopher", "Moritz", "Nick", "Chris", "Paul", "Jonathan", "Tobias", "Jakob", "Christian",
             "Adrian", "Matthias", "Dominik", "Stefan", "René", "Ali", "Marco", "Vincent", "Mohamed", "Kai", "Erik",
             "Ludwig");
-    List<String> surnames = Arrays.asList(
+    private List<String> surnames = Arrays.asList(
             "Schmidt", "Schneider", "Fischer", "Weber", "Meyer", "Wagner", "Becker", "Bauer", "Hoffmann", "Schulz",
             "Koch", "Richter", "Klein", "Wolf", "Neuman", "Braun", "Werner", "Schwarz", "Hofmann", "Zimmermann",
             "Schmitt", "Hartmann", "Schmid", "Schmitz", "Lange", "Meier", "Walter", "Maier", "Beck", "Krause",
@@ -320,7 +354,7 @@ public class FillData {
             "Kraus", "Schulte", "Albrecht", "Franke", "Winter", "Schumacher", "Vogt", "Haas", "Sommer", "Schreiber",
             "Engel", "Ziegler", "Dietrich", "Brandt", "Seidel", "Kuhn", "Busch", "Horn", "Arnold", "Bergmann",
             "Pohl", "Pfeiffer", "Wolff", "Voigt", "Sauer");
-    List<String> cities = Arrays.asList(
+    private List<String> cities = Arrays.asList(
             "Berlin", "Hamburg", "Munich", "Cologne", "Frankfurt", "Stuttgart", "Dusseldorf", "Dortmund", "Essen",
             "Leipzig", "Bremen", "Dresden", "Hanover", "Nuremberg", "Duisburg", "Bochum", "Wuppertal", "Bielefeld",
             "Bonn", "Munster", "Karlsruhe", "Mannheim", "Augsburg", "Wiesbaden", "Gelsenkirchen", "Monchengladbach", "Braunschweig",
@@ -328,5 +362,5 @@ public class FillData {
             "Erfurt", "Mainz", "Rostock", "Kassel", "Hagen", "Hamm", "Saarbrucken", "Mulheim an der Ruhr", "Potsdam",
             "Ludwigshafen am Rhein", "Oldenburg", "Leverkusen", "Osnabruck", "Solingen");
 
-    String[] ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non sapien eget libero tristique ullamcorper. Proin commodo dolor in scelerisque egestas. Vivamus fermentum dui erat, at dapibus lacus sodales at. Maecenas aliquet vel nisl a gravida. Praesent volutpat dapibus purus, et ullamcorper nibh cursus quis. Morbi ullamcorper nec felis quis vehicula. In finibus arcu leo, nec tempor mi elementum id. Nunc suscipit pulvinar velit, at commodo mi commodo nec. Fusce pulvinar, ipsum non cursus luctus, metus nisl porta arcu, at molestie quam lectus et metus. Nulla volutpat, odio dignissim malesuada faucibus, orci tortor laoreet felis, ac malesuada urna nulla non felis. Donec tincidunt tellus a est luctus, commodo suscipit tellus scelerisque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed ullamcorper metus vitae dolor tempor, eget tempus nisi iaculis. Quisque viverra eget ante ultricies faucibus. Morbi mattis, nisi at auctor bibendum, dolor justo lacinia mi, ornare sagittis turpis erat et arcu.".split(" ");
+    private String[] ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non sapien eget libero tristique ullamcorper. Proin commodo dolor in scelerisque egestas. Vivamus fermentum dui erat, at dapibus lacus sodales at. Maecenas aliquet vel nisl a gravida. Praesent volutpat dapibus purus, et ullamcorper nibh cursus quis. Morbi ullamcorper nec felis quis vehicula. In finibus arcu leo, nec tempor mi elementum id. Nunc suscipit pulvinar velit, at commodo mi commodo nec. Fusce pulvinar, ipsum non cursus luctus, metus nisl porta arcu, at molestie quam lectus et metus. Nulla volutpat, odio dignissim malesuada faucibus, orci tortor laoreet felis, ac malesuada urna nulla non felis. Donec tincidunt tellus a est luctus, commodo suscipit tellus scelerisque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed ullamcorper metus vitae dolor tempor, eget tempus nisi iaculis. Quisque viverra eget ante ultricies faucibus. Morbi mattis, nisi at auctor bibendum, dolor justo lacinia mi, ornare sagittis turpis erat et arcu.".split(" ");
 }
