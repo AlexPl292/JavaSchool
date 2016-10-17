@@ -19,12 +19,15 @@ import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  * Created by alex on 14.10.16.
+ *
+ * Validation entities with database queries
  */
 @Component
 public class DataBaseValidator {
@@ -42,20 +45,35 @@ public class DataBaseValidator {
         DataBaseValidator.contractRepository = contractRepository;
     }
 
+    /**
+     * Validate tariff
+     * @param tariff tariff DTO
+     * @throws JSException validation fail
+     */
     static public void check(TariffDto tariff) throws JSException {
+        // Check if tariff name already exists
         Tariff existings = tariffRepository.findByName(tariff.getName());
         if (existings != null) {
             throw new UniqueFieldDuplicateException("Name", tariff.getName(), "/rest/tariffs/" + existings.getId());
         }
+
+        // Validate options
         checkAllOptions(tariff.getPossibleOptions());
     }
 
+    /**
+     * Validate option
+     * @param option option DTO
+     * @throws JSException validation fail
+     */
     static public void check(OptionDto option) throws JSException {
+        // Check if option name already exists
         Option existings = optionRepository.findByName(option.getName());
         if (existings != null) {
             throw new UniqueFieldDuplicateException("Name", option.getName(), "/rest/options/" + existings.getId());
         }
 
+        // Validate options and tariffs
         Set<TariffDto> possibleTariffs = option.getPossibleTariffsOfOption();
         checkAllTariffs(possibleTariffs);
         checkAllOptions(option.getRequiredFrom(), possibleTariffs);
@@ -63,7 +81,13 @@ public class DataBaseValidator {
         checkAllOptions(option.getForbiddenWith());
     }
 
+    /**
+     * Validate customer
+     * @param customer customer DTo
+     * @throws JSException validation fail
+     */
     static public void check(CustomerDto customer) throws JSException {
+        // Check if customer email or password number already exists
         List<Customer> existings = customerRepository.findByPassportNumberOrEmail(customer.getPassportNumber(), customer.getEmail());
         if (existings != null && existings.size() > 0) {
             if (existings.get(0).getEmail().equalsIgnoreCase(customer.getEmail()))
@@ -72,6 +96,7 @@ public class DataBaseValidator {
                 throw new UniqueFieldDuplicateException("PassportNumber", customer.getPassportNumber(), "/rest/options/" + existings.get(0).getId());
         }
 
+        // Check if contract number already exists
         if (customer.getContracts() != null) {
             for (ContractDto contract : customer.getContracts()) {
                 Contract existingsContracts = contractRepository.findByNumber(contract.getNumber());
@@ -81,6 +106,7 @@ public class DataBaseValidator {
             }
         }
 
+        // Check all tariffs and options in contract
         if (customer.getContracts() != null && customer.getContracts().size() > 0) {
             for (ContractDto contract : customer.getContracts()) {
                 checkAllTariffs(contract.getTariff());
@@ -89,22 +115,36 @@ public class DataBaseValidator {
         }
     }
 
+    /**
+     * Validate contract
+     * @param contract contract dto
+     * @throws JSException validation fail
+     */
     static public void check(ContractDto contract) throws JSException {
+        // Check if contract number already exists
         Contract existings = contractRepository.findByNumber(contract.getNumber());
         if (existings != null) {
             throw new UniqueFieldDuplicateException("Number", contract.getNumber(), "/rest/contracts/" + existings.getId());
         }
 
+        // Check customer existing
         if (contract.getCustomer() == null || customerRepository.findOne(contract.getCustomer().getId()) == null) {
             throw new NoEntityInDB("No customer with id = " + contract.getCustomer().getId() + " in database");
         }
 
+        // Check all tariffs and options
         checkAllTariffs(contract.getTariff());
         checkAllOptions(contract.getUsedOptions(), contract.getTariff());
     }
 
+    /**
+     * Validate all tariff for existing
+     * @param tariffs tariff DTO set
+     * @throws NoEntityInDB one of tariffs dont exists
+     */
     private static void checkAllTariffs(Set<TariffDto> tariffs) throws NoEntityInDB {
         if (tariffs != null && tariffs.size() > 0) {
+            // Iterate over tariffs
             for (TariffDto tariffDto : tariffs) {
                 if (tariffRepository.findOne(tariffDto.getId()) == null)
                     throw new NoEntityInDB("No tariff with id = " + tariffDto.getId() + " in database");
@@ -112,20 +152,28 @@ public class DataBaseValidator {
         }
     }
 
+    /**
+     * Validate one tariff for existing
+     * @param tariff tariff DTO
+     * @throws NoEntityInDB tariff dont exists
+     */
     private static void checkAllTariffs(TariffDto tariff) throws NoEntityInDB {
-        Set<TariffDto> tariffs = new HashSet<>();
-        tariffs.add(tariff);
-        checkAllTariffs(tariffs);
+        // Create set of tariff and call check all tariffs
+        checkAllTariffs(Collections.singleton(tariff));
     }
 
     private static void checkAllOptionsAbstract(Set<OptionDto> options, Set<TariffDto> possibleTariff) throws JSException {
         if (options != null && options.size() > 0) {
+            // Iterate over options
             for (OptionDto option : options) {
+                // If option dont exists
                 Option oneOption = optionRepository.findOne(option.getId());
                 if (oneOption == null)
                     throw new NoEntityInDB("No option with id = " + option.getId() + " in database");
                 else {
+                    // If option exists
                     if (possibleTariff != null) {
+                        // Check if option is available for ALL there tariffs
                         for (TariffDto tariffCheck : possibleTariff) {
                             if (!oneOption.getPossibleTariffsOfOption().stream().anyMatch(e -> e.getId().equals(tariffCheck.getId()))) {
                                 throw new OptionNotAvailableForTariff("Option with id = " + oneOption.getId() +
@@ -138,20 +186,41 @@ public class DataBaseValidator {
         }
     }
 
+    /**
+     * Check options existing and availability for tariff
+     * @param options set of options
+     * @param possibleTariff tariff
+     * @throws JSException validation fail
+     */
     private static void checkAllOptions(Set<OptionDto> options, TariffDto possibleTariff) throws JSException {
-        Set<TariffDto> tariffs = new HashSet<>();
-        tariffs.add(possibleTariff);
-        checkAllOptionsAbstract(options, tariffs);
+        checkAllOptionsAbstract(options, Collections.singleton(possibleTariff));
     }
 
+    /**
+     * Check options existing
+     * @param options set of options
+     * @throws JSException validation fail
+     */
     private static void checkAllOptions(Set<OptionDto> options) throws JSException {
         checkAllOptionsAbstract(options, null);
     }
 
+    /**
+     * Check options existing and availability for all tariffs
+     * @param options set of options
+     * @param possibleTariff tariff
+     * @throws JSException validation fail
+     */
     private static void checkAllOptions(Set<OptionDto> options, Set<TariffDto> possibleTariff) throws JSException {
         checkAllOptionsAbstract(options, possibleTariff);
     }
 
+    /**
+     * Check options existing and availability for tariff by id
+     * @param tariff set of options
+     * @param options tariff
+     * @throws JSException validation fail
+     */
     public static void checkAllOptions(Integer tariff, List<Integer> options) throws JSException {
         TariffDto tariffDto = new TariffDto();
         tariffDto.setId(tariff);

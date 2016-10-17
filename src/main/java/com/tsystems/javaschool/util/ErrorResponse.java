@@ -8,11 +8,8 @@ import java.util.Map;
 
 /**
  * Created by alex on 22.09.16.
- * Class for status returning for post requests.
- * Default success == true. It changes to false on:
- * - addBingingResult with errors
- * - Add error
- * - Set errors (not null)
+ *
+ * Class for errors returning for post requests.
  */
 public class ErrorResponse {
     private Map<String, String> errors = new HashMap<>();
@@ -20,14 +17,27 @@ public class ErrorResponse {
     public ErrorResponse() {
     }
 
+    /**
+     * Create object from BindingResult
+     * @param result bindingResult
+     */
     public ErrorResponse(BindingResult result) {
         addBindingResult(result);
     }
 
+    /**
+     * Create object with one error
+     * @param name name of error
+     * @param message message
+     */
     public ErrorResponse(String name, String message) {
         errors.put(name, message);
     }
 
+    /**
+     * Fill errors from BindingResult
+     * @param result bingindResulg
+     */
     public void addBindingResult(BindingResult result) {
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
@@ -36,6 +46,11 @@ public class ErrorResponse {
         }
     }
 
+    /**
+     * Add error to list
+     * @param name error name
+     * @param message error message
+     */
     public void addError(String name, String message) {
         errors.put(name, message);
     }
