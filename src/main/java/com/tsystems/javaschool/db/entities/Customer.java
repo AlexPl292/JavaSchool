@@ -3,6 +3,7 @@ package com.tsystems.javaschool.db.entities;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -99,7 +100,7 @@ public class Customer extends User {
 
         Customer customer = (Customer) o;
 
-        if (isBlocked != customer.isBlocked)
+        if (!Objects.equals(isBlocked, customer.isBlocked))
             return false;
         if (dateOfBirth != null ? !dateOfBirth.equals(customer.dateOfBirth) : customer.dateOfBirth != null)
             return false;

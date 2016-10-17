@@ -7,7 +7,14 @@ import java.util.List;
 
 /**
  * Created by alex on 27.09.16.
+ *
+ * Repository for tariffs
  */
 public interface TariffRepository extends JpaRepository<Tariff, Integer> {
+    /**
+     * Search for tariff by name
+     * @param name name
+     * @return tariff with name
+     */
     Tariff findByName(String name);
 }

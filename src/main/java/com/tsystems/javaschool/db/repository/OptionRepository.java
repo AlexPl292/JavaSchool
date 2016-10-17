@@ -7,7 +7,14 @@ import java.util.List;
 
 /**
  * Created by alex on 28.09.16.
+ *
+ * Repository for options
  */
 public interface OptionRepository extends JpaRepository<Option, Integer> {
+    /**
+     * Search for option by name
+     * @param name name
+     * @return option with name
+     */
     Option findByName(String name);
 }
