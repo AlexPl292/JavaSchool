@@ -4,17 +4,22 @@ import java.net.URI;
 
 /**
  * Created by alex on 30.09.16.
+ *
+ * Entity with specified field already exists
  */
 public class UniqueFieldDuplicateException extends JSException {
 
     private String duplicatedField;
     private String duplicatedValue;
+
+    // Rest path to entity. Could be set in location header
     private URI pathToDuplicatedEntity;
 
     public UniqueFieldDuplicateException() {
     }
 
     public UniqueFieldDuplicateException(String duplicatedField, String duplicatedValue, String path) {
+        // Create exceptions with message
         super("Resource with '" +
                 duplicatedField + "' == '" + duplicatedValue +
                 "' already exists. This field must be unique. Path: " + path);

@@ -2,6 +2,9 @@ package com.tsystems.javaschool.exceptions;
 
 /**
  * Created by alex on 07.10.16.
+ *
+ * Wrong option configuration
+ *
  * <p>
  * "#" (forbidden)
  * -> (required)

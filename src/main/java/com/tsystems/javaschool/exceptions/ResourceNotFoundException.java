@@ -2,12 +2,22 @@ package com.tsystems.javaschool.exceptions;
 
 /**
  * Created by alex on 30.09.16.
+ *
+ * Resource is not found
  */
 public class ResourceNotFoundException extends JSException {
+    /**
+     * Name of resource
+     */
     private String resourceName;
+
+    /**
+     * Id of resource
+     */
     private Integer resourceId;
 
     public ResourceNotFoundException(String resourceName, Integer resourceId) {
+        // Create exception with message, name and id
         super("Resource '" +
                 resourceName + "' with id " + resourceId + " does not exist");
         this.resourceName = resourceName;
