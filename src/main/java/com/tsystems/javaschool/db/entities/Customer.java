@@ -31,7 +31,7 @@ public class Customer extends User {
     private Integer isBlocked;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private transient Set<Contract> contracts;
+    private Set<Contract> contracts;
 
     /**
      * Empty constructor

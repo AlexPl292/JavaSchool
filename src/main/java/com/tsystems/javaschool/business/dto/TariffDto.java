@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 22.09.16.
+ *
+ * Data transfer object for Tariff entity
  */
 public class TariffDto implements DtoMapper<Tariff>, Comparable<TariffDto> {
     private Integer id;
@@ -31,6 +33,10 @@ public class TariffDto implements DtoMapper<Tariff>, Comparable<TariffDto> {
     public TariffDto() {
     }
 
+    /**
+     * Create dto object from entity
+     * @param tariff entity to convert
+     */
     public TariffDto(Tariff tariff) {
         convertToDto(tariff);
     }

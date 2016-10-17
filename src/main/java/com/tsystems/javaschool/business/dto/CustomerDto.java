@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 08.09.16.
+ *
+ * Data transfer object for Customer entity
  */
 public class CustomerDto implements DtoMapper<Customer>, Comparable<CustomerDto> {
 
@@ -46,8 +48,13 @@ public class CustomerDto implements DtoMapper<Customer>, Comparable<CustomerDto>
     private TreeSet<ContractDto> contracts = new TreeSet<>();
 
     public CustomerDto() {
+        // Empty
     }
 
+    /**
+     * Create dto object from entity
+     * @param customer entity to convert
+     */
     public CustomerDto(Customer customer) {
         convertToDto(customer);
     }

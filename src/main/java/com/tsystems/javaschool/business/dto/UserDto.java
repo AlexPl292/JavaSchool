@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * Created by alex on 12.10.16.
+ *
+ * Data transfer object for abstract User entity
  */
 public class UserDto {
 
@@ -24,10 +26,18 @@ public class UserDto {
     public UserDto() {
     }
 
+    /**
+     * Create dto object from entity
+     * @param user entity to convert
+     */
     public UserDto(User user) {
         convertToDto(user);
     }
 
+    /**
+     * Fill this DTO object from User entity
+     * @param entity entity to convert
+     */
     private void convertToDto(User entity) {
         this.id = entity.getId();
         this.name = entity.getName();

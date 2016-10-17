@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 08.09.16.
+ *
+ * Data transfer object for Option entity
  */
 public class OptionDto implements DtoMapper<Option>, Comparable<OptionDto> {
 
@@ -39,6 +41,10 @@ public class OptionDto implements DtoMapper<Option>, Comparable<OptionDto> {
     public OptionDto() {
     }
 
+    /**
+     * Create dto object from entity
+     * @param option entity to convert
+     */
     public OptionDto(Option option) {
         convertToDto(option);
     }

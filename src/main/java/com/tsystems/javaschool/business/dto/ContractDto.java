@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by alex on 08.09.16.
+ *
+ * Data transfer object for Contract entity
  */
 public class ContractDto implements DtoMapper<Contract>, Comparable<ContractDto> {
     private Integer id;
@@ -31,9 +33,13 @@ public class ContractDto implements DtoMapper<Contract>, Comparable<ContractDto>
     private TreeSet<OptionDto> usedOptions = new TreeSet<>();
 
     public ContractDto() {
-
+        // Empty
     }
 
+    /**
+     * Create dto object from entity
+     * @param contract entity to convert
+     */
     public ContractDto(Contract contract) {
         this.id = contract.getId();
         this.number = contract.getNumber();
