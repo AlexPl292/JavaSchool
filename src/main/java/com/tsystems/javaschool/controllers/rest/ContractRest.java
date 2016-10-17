@@ -74,6 +74,15 @@ public class ContractRest {
     @PostMapping("/{id}/unblock")
     @Secured("ROLE_USER")
     public void unblock(@PathVariable Integer id, HttpServletRequest request) throws ResourceNotFoundException {
+        // Check if user can unblock contract
+        ContractDto contractDto = service.loadByKey(id);
+        if (contractDto == null) {
+            throw new ResourceNotFoundException("contract", id);
+        }
+
+        if (!request.isUserInRole("ROLE_ADMIN") && contractDto.getIsBlocked() == 2)
+            return;
+
         ContractDto entity = service.setBlock(id, 0);
         if (entity.getId() == null) {
             throw new ResourceNotFoundException("contract", id);
