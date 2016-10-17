@@ -111,12 +111,8 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ContractDto> findByNumber(String number) {
-        return repository
-                .findByNumber(number)
-                .stream()
-                .map(ContractDto::new)
-                .collect(Collectors.toList());
+    public ContractDto findByNumber(String number) {
+        return new ContractDto(repository.findByNumber(number));
     }
 
     @Override

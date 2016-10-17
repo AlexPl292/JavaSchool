@@ -9,7 +9,7 @@ import java.util.List;
  * Created by alex on 28.09.16.
  */
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
-    List<Contract> findByNumber(String number);
+    Contract findByNumber(String number);
 
     List<Contract> findByTariff_Name(String name);
 }

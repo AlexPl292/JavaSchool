@@ -32,7 +32,12 @@ public interface ContractService extends GenericService<ContractDto, Integer> {
      */
     ContractDto updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds) throws JSException;
 
-    List<ContractDto> findByNumber(String number);
+    /**
+     * Finding contract by number
+     * @param number number to search
+     * @return
+     */
+    ContractDto findByNumber(String number);
 
     List<ContractDto> findByTariffName(String name);
 }

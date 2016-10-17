@@ -74,9 +74,9 @@ public class DataBaseValidator {
 
         if (customer.getContracts() != null) {
             for (ContractDto contract : customer.getContracts()) {
-                List<Contract> existingsContracts = contractRepository.findByNumber(contract.getNumber());
-                if (existingsContracts != null && existingsContracts.size() > 0) {
-                    throw new UniqueFieldDuplicateException("Number", contract.getNumber(), "/rest/contracts/" + existingsContracts.get(0).getId());
+                Contract existingsContracts = contractRepository.findByNumber(contract.getNumber());
+                if (existingsContracts != null) {
+                    throw new UniqueFieldDuplicateException("Number", contract.getNumber(), "/rest/contracts/" + existingsContracts.getId());
                 }
             }
         }
@@ -90,9 +90,9 @@ public class DataBaseValidator {
     }
 
     static public void check(ContractDto contract) throws JSException {
-        List<Contract> existings = contractRepository.findByNumber(contract.getNumber());
-        if (existings != null && existings.size() > 0) {
-            throw new UniqueFieldDuplicateException("Number", contract.getNumber(), "/rest/contracts/" + existings.get(0).getId());
+        Contract existings = contractRepository.findByNumber(contract.getNumber());
+        if (existings != null) {
+            throw new UniqueFieldDuplicateException("Number", contract.getNumber(), "/rest/contracts/" + existings.getId());
         }
 
         if (contract.getCustomer() == null || customerRepository.findOne(contract.getCustomer().getId()) == null) {
