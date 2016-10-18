@@ -120,6 +120,7 @@ public class TariffDto implements DtoMapper<Tariff>, Comparable<TariffDto> {
                 ", name='" + name + '\'' +
                 ", cost=" + cost +
                 ", description='" + description + '\'' +
+                ", possibleOptions=" + possibleOptions.stream().map(OptionDto::getId).collect(Collectors.toList()) +
                 '}';
     }
 

@@ -18,12 +18,6 @@ public class LoggingHandler {
 
     private Logger log = Logger.getLogger("jslog");
 
-//    @Pointcut("within(@org.springframework.stereotype.Controller *)")
-/*    @Pointcut("within(com.tsystems.javaschool.controllers.*)")
-    public void controller() {
-    }*/
-
-    //    @Pointcut("execution(* *.*(..))")
     @Pointcut("execution(* com.tsystems.javaschool.controllers.rest..*(..))")
     protected void controller() {
     }
@@ -101,6 +95,9 @@ public class LoggingHandler {
             long elapsedTime = System.currentTimeMillis() - start;
             log.debug("Method " + className + "." + methodName + " ()" + " execution time : "
                     + elapsedTime + " ms");
+            Object[] parameterList = joinPoint.getArgs();
+
+            log.debug(Arrays.toString(parameterList));
 
             log.debug("-------------------------------------------------");
             return result;

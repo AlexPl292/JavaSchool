@@ -161,6 +161,7 @@ public class ContractDto implements DtoMapper<Contract>, Comparable<ContractDto>
                 ", customer=" + customer +
                 ", tariff=" + tariff +
                 ", balance=" + balance +
+                ", usedOptions=" + usedOptions.stream().map(OptionDto::getId).collect(Collectors.toList())+
                 '}';
     }
 

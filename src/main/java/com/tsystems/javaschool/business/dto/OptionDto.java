@@ -184,6 +184,10 @@ public class OptionDto implements DtoMapper<Option>, Comparable<OptionDto> {
                 ", cost=" + cost +
                 ", connectCost=" + connectCost +
                 ", description='" + description + '\'' +
+                ", requiredFrom=" + requiredFrom.stream().map(OptionDto::getId).collect(Collectors.toList()) +
+                ", requiredMe=" + requiredMe.stream().map(OptionDto::getId).collect(Collectors.toList()) +
+                ", forbiddenWith=" + forbiddenWith.stream().map(OptionDto::getId).collect(Collectors.toList()) +
+                ", possibleTariffsOfOption=" + possibleTariffsOfOption.stream().map(TariffDto::getId).collect(Collectors.toList()) +
                 '}';
     }
 

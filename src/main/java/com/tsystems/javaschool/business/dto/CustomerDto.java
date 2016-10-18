@@ -197,6 +197,7 @@ public class CustomerDto implements DtoMapper<Customer>, Comparable<CustomerDto>
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
                 ", isBlocked=" + isBlocked +
+                ", contracts=" + contracts.stream().map(ContractDto::getId).collect(Collectors.toList()) +
                 '}';
     }
 
