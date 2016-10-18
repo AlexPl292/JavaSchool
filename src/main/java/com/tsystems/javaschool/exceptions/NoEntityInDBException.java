@@ -5,11 +5,11 @@ package com.tsystems.javaschool.exceptions;
  *
  * Database don't contains entity
  */
-public class NoEntityInDB extends JSException {
-    public NoEntityInDB() {
+public class NoEntityInDBException extends JSException {
+    public NoEntityInDBException() {
     }
 
-    public NoEntityInDB(String m) {
+    public NoEntityInDBException(String m) {
         super(m);
     }
 }

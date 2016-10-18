@@ -13,8 +13,8 @@ import com.tsystems.javaschool.db.repository.CustomerRepository;
 import com.tsystems.javaschool.db.repository.OptionRepository;
 import com.tsystems.javaschool.db.repository.TariffRepository;
 import com.tsystems.javaschool.exceptions.JSException;
-import com.tsystems.javaschool.exceptions.NoEntityInDB;
-import com.tsystems.javaschool.exceptions.OptionNotAvailableForTariff;
+import com.tsystems.javaschool.exceptions.NoEntityInDBException;
+import com.tsystems.javaschool.exceptions.OptionNotAvailableForTariffException;
 import com.tsystems.javaschool.exceptions.UniqueFieldDuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -129,7 +129,7 @@ public class DataBaseValidator {
 
         // Check customer existing
         if (contract.getCustomer() == null || customerRepository.findOne(contract.getCustomer().getId()) == null) {
-            throw new NoEntityInDB("No customer with id = " + contract.getCustomer().getId() + " in database");
+            throw new NoEntityInDBException("No customer with id = " + contract.getCustomer().getId() + " in database");
         }
 
         // Check all tariffs and options
@@ -140,14 +140,14 @@ public class DataBaseValidator {
     /**
      * Validate all tariff for existing
      * @param tariffs tariff DTO set
-     * @throws NoEntityInDB one of tariffs dont exists
+     * @throws NoEntityInDBException one of tariffs dont exists
      */
-    private static void checkAllTariffs(Set<TariffDto> tariffs) throws NoEntityInDB {
+    private static void checkAllTariffs(Set<TariffDto> tariffs) throws NoEntityInDBException {
         if (tariffs != null && tariffs.size() > 0) {
             // Iterate over tariffs
             for (TariffDto tariffDto : tariffs) {
                 if (tariffRepository.findOne(tariffDto.getId()) == null)
-                    throw new NoEntityInDB("No tariff with id = " + tariffDto.getId() + " in database");
+                    throw new NoEntityInDBException("No tariff with id = " + tariffDto.getId() + " in database");
             }
         }
     }
@@ -155,9 +155,9 @@ public class DataBaseValidator {
     /**
      * Validate one tariff for existing
      * @param tariff tariff DTO
-     * @throws NoEntityInDB tariff dont exists
+     * @throws NoEntityInDBException tariff dont exists
      */
-    private static void checkAllTariffs(TariffDto tariff) throws NoEntityInDB {
+    private static void checkAllTariffs(TariffDto tariff) throws NoEntityInDBException {
         // Create set of tariff and call check all tariffs
         checkAllTariffs(Collections.singleton(tariff));
     }
@@ -169,14 +169,14 @@ public class DataBaseValidator {
                 // If option dont exists
                 Option oneOption = optionRepository.findOne(option.getId());
                 if (oneOption == null)
-                    throw new NoEntityInDB("No option with id = " + option.getId() + " in database");
+                    throw new NoEntityInDBException("No option with id = " + option.getId() + " in database");
                 else {
                     // If option exists
                     if (possibleTariff != null) {
                         // Check if option is available for ALL there tariffs
                         for (TariffDto tariffCheck : possibleTariff) {
                             if (!oneOption.getPossibleTariffsOfOption().stream().anyMatch(e -> e.getId().equals(tariffCheck.getId()))) {
-                                throw new OptionNotAvailableForTariff("Option with id = " + oneOption.getId() +
+                                throw new OptionNotAvailableForTariffException("Option with id = " + oneOption.getId() +
                                         " is not available for there tariffs");
                             }
                         }
