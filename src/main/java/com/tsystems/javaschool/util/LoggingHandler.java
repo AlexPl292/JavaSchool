@@ -97,7 +97,7 @@ public class LoggingHandler {
                     + elapsedTime + " ms");
             Object[] parameterList = joinPoint.getArgs();
 
-            log.debug(Arrays.toString(parameterList));
+            log.debug("Args: " + Arrays.toString(parameterList));
 
             log.debug("-------------------------------------------------");
             return result;
