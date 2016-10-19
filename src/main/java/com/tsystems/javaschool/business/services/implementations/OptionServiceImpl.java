@@ -1,172 +1,100 @@
 package com.tsystems.javaschool.business.services.implementations;
 
+import com.tsystems.javaschool.business.dto.OptionDto;
 import com.tsystems.javaschool.business.services.interfaces.OptionService;
 import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.db.entities.Tariff;
-import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
-import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
-import com.tsystems.javaschool.db.interfaces.OptionDao;
-import com.tsystems.javaschool.util.EMU;
-import org.apache.log4j.Logger;
+import com.tsystems.javaschool.db.repository.OptionRepository;
+import com.tsystems.javaschool.exceptions.JSException;
+import com.tsystems.javaschool.exceptions.WrongOptionConfigurationException;
+import com.tsystems.javaschool.util.DataBaseValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityGraph;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Created by alex on 27.08.16.
+ *
+ *  Option service implementation
  */
-public class OptionServiceImpl implements OptionService{
+@Service
+@Transactional
+public class OptionServiceImpl implements OptionService {
 
-    private static final Logger logger = Logger.getLogger(OptionServiceImpl.class);
-    private OptionDao optionDao = OptionDaoImpl.getInstance();
+    private final OptionRepository repository;
 
-    private OptionServiceImpl() {}
-
-    private static class OptionServiceHolder {
-        private static final OptionServiceImpl instance = new OptionServiceImpl();
-        private OptionServiceHolder() {}
-    }
-
-    public static OptionServiceImpl getInstance() {
-        return OptionServiceHolder.instance;
+    @Autowired
+    public OptionServiceImpl(OptionRepository optionRepository) {
+        this.repository = optionRepository;
     }
 
     @Override
-    public void addNew(Option entity) {
-        try {
-            EMU.beginTransaction();
-            optionDao.create(entity);
-            EMU.commit();
-            logger.info("New option is created. Id = "+entity.getId());
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
+    public OptionDto addNew(OptionDto entity) throws JSException {
+        // Validate new option data
+        DataBaseValidator.check(entity);
+
+        Option option = entity.convertToEntity();
+
+        // Collect all required and forbidden options
+        Set<Option> requireds = option.getRequired().stream().map(e -> repository.findOne(e.getId())).collect(Collectors.toSet());
+        Set<Option> forbiddens = option.getForbidden().stream().map(e -> repository.findOne(e.getId())).collect(Collectors.toSet());
+
+        option.setRequired(new HashSet<>());
+        option.setForbidden(new HashSet<>());
+
+        // Validating and adding required options
+        // Check WrongOptionConfigurationException docs for codes
+        for (Option req : requireds) {
+            option.addRequiredFromOptions(req);
+            option.addRequiredFromOptions(req.getRequired());
+            option.addForbiddenWithOptions(req.getForbidden());
+
+            if (forbiddens.contains(req))
+                throw new WrongOptionConfigurationException(1);
+            if (req.getForbidden().stream().anyMatch(requireds::contains))
+                throw new WrongOptionConfigurationException(2);
+            if (req.getRequired().stream().anyMatch(forbiddens::contains))
+                throw new WrongOptionConfigurationException(3);
         }
+
+        // Validating and adding forbidden options
+        for (Option forb : forbiddens) {
+            option.addForbiddenWithOptions(forb);
+            option.addForbiddenWithOptions(forb.getRequiredMe());
+
+            // This case exists already in required for block, but let it be
+            if (forb.getRequiredMe().stream().anyMatch(requireds::contains))
+                throw new WrongOptionConfigurationException(3);
+        }
+
+        Option saved = repository.saveAndFlush(option);
+        return new OptionDto(saved).addDependencies(saved);
     }
 
     @Override
-    public Option loadByKey(Integer key) {
-        Option option = optionDao.read(key);
-        EMU.closeEntityManager();
-        return option;
-    }
-
-    @Override
-    public EntityGraph getEntityGraph() {
-        return optionDao.getEntityGraph();
+    @Transactional(readOnly = true)
+    public OptionDto loadByKey(Integer key) {
+        Option option = repository.findOne(key);
+        return new OptionDto(option).addDependencies(option);
     }
 
     @Override
     public void remove(Integer key) {
-        try {
-            EMU.beginTransaction();
-            optionDao.delete(key);
-            EMU.commit();
-            logger.info("Option is removed. Id = "+key);
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
+        repository.delete(key);
     }
 
     @Override
-    public Option loadByKey(Integer key, Map<String, Object> hints) {
-        Option option = optionDao.read(key, hints);
-        EMU.closeEntityManager();
-        return option;
-    }
-
-    @Override
-    public Option addNew(Option option, Map<String, String[]> dependencies) {
-        try {
-            EMU.beginTransaction();
-            Set<Tariff> tariffs = Arrays.stream(dependencies.get("forTariffs")) // Convert array of tariff ids to set of tariffs
-                    .map(s -> TariffDaoImpl.getInstance().read(Integer.parseInt(s)))
-                    .collect(Collectors.toSet());
-            option.setPossibleTariffsOfOption(tariffs);
-
-            String[] requiredFrom = dependencies.get("requiredFrom");
-            String[] forbiddenWith = dependencies.get("forbiddenWith");
-
-            EntityGraph<Option> graph = getEntityGraph();
-            graph.addAttributeNodes("required", "forbidden");  //Fetch this fields
-            Map<String, Object> hints = new HashMap<>();
-            hints.put("javax.persistence.loadgraph", graph);
-
-            for (String reqF : requiredFrom) {
-                Integer reqFId = Integer.parseInt(reqF);
-
-                Option reqFOpt = optionDao.read(reqFId, hints);
-                option.addRequiredFromOptions(reqFOpt);
-                option.addRequiredFromOptions(reqFOpt.getRequired());
-                option.addForbiddenWithOptions(reqFOpt.getForbidden());
-            }
-
-            graph = getEntityGraph();
-            graph.addAttributeNodes("required", "forbidden", "requiredMe");
-            hints.put("javax.persistence.loadgraph", graph);
-            for (String reqM : forbiddenWith) {
-                Integer forbId = Integer.parseInt(reqM);
-
-                Option forbOpt = optionDao.read(forbId, hints);
-                option.addForbiddenWithOptions(forbOpt);
-                option.addForbiddenWithOptions(forbOpt.getRequired());
-                option.addForbiddenWithOptions(forbOpt.getRequiredMe());
-            }
-
-            optionDao.create(option);
-            EMU.commit();
-            logger.info("New option is created. Id = "+option.getId());
-            return option;
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
-    }
-
-    @Override
-    public List<Option> loadOptionsByTariffs(List<Integer> tariffs) {
-        try {
-            EMU.beginTransaction();
-            List<Option> options = optionDao.getOptionsOfTariffs(tariffs);
-            EMU.commit();
-            return options;
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
-    }
-
-
-    @Override
-    public List<Option> load(Map<String, Object> kwargs) {
-        List<Option> options = optionDao.read(kwargs);
-        EMU.closeEntityManager();
-        return options;
-    }
-
-    @Override
-    public long count(Map<String, Object> kwargs) {
-        long count = optionDao.count(kwargs);
-        EMU.closeEntityManager();
-        return count;
-    }
-
-    @Override
-    public List<Option> loadAll() {
-        return load(new HashMap<>());
+    @Transactional(readOnly = true)
+    public List<OptionDto> loadAll() {
+        // Get all option. Translate to DTO objects with dependencies
+        return repository
+                .findAll()
+                .stream()
+                .map(e -> new OptionDto(e).addDependencies(e))
+                .collect(Collectors.toList());
     }
 }

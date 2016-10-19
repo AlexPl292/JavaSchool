@@ -1,64 +1,38 @@
 package com.tsystems.javaschool.db.entities;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * Created by alex on 17.08.16.
- *
+ * <p>
  * Entity for access customer table
  */
 
 @Entity
 @Table(name = "Customers")
-public class Customer extends User{
+public class Customer extends User {
 
     @Column(name = "date_of_birth")
-    @Expose
     private Date dateOfBirth;
 
     @Column(name = "passport_number")
-    @Expose
     private String passportNumber;
 
     @Column(name = "passport_data")
-    @Expose
     private String passportData;
 
     @Column(name = "address")
-    @Expose
     private String address;
 
     @Column(name = "is_blocked")
-    @Expose
-    private int isBlocked;
+    private Integer isBlocked;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Contract> contracts;
-
-    /**
-     * Constructor with only important data
-     * Used in Dao select queries
-     * @param id id of new entity
-     * @param name name of new entity
-     * @param surname surname of new entity
-     * @param email email of new entity
-     * @param isBlocked is this customer blocked or not
-     * @param passportNumber number of passport of new customer. Must be unique for every customer
-     */
-    public Customer(Integer id, String name, String surname, String email, int isBlocked, String passportNumber) {
-        this.setId(id);
-        this.setName(name);
-        this.setSurname(surname);
-        this.setEmail(email);
-        this.isBlocked = isBlocked;
-        this.passportNumber = passportNumber;
-    }
-
 
     /**
      * Empty constructor
@@ -91,11 +65,11 @@ public class Customer extends User{
         this.address = address;
     }
 
-    public int getIsBlocked() {
+    public Integer getIsBlocked() {
         return isBlocked;
     }
 
-    public void setIsBlocked(int isBlocked) {
+    public void setIsBlocked(Integer isBlocked) {
         this.isBlocked = isBlocked;
     }
 
@@ -116,21 +90,6 @@ public class Customer extends User{
     }
 
     @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + getId() +
-                ", name='" + getName() + '\'' +
-                ", surname='" + getSurname() + '\'' +
-                ", day_of_birth=" + dateOfBirth +
-                ", passport_data='" + passportData + '\'' +
-                ", passport_number='" + passportNumber + '\'' +
-                ", address='" + address + '\'' +
-                ", email='" + getEmail() + '\'' +
-                ", is_blocked=" + isBlocked +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -141,7 +100,7 @@ public class Customer extends User{
 
         Customer customer = (Customer) o;
 
-        if (isBlocked != customer.isBlocked)
+        if (!Objects.equals(isBlocked, customer.isBlocked))
             return false;
         if (dateOfBirth != null ? !dateOfBirth.equals(customer.dateOfBirth) : customer.dateOfBirth != null)
             return false;

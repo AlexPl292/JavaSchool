@@ -1,177 +1,142 @@
 package com.tsystems.javaschool.business.services.implementations;
 
+import com.tsystems.javaschool.business.dto.ContractDto;
 import com.tsystems.javaschool.business.services.interfaces.ContractService;
 import com.tsystems.javaschool.db.entities.Contract;
 import com.tsystems.javaschool.db.entities.Option;
-import com.tsystems.javaschool.db.implemetations.ContractDaoImpl;
-import com.tsystems.javaschool.db.implemetations.OptionDaoImpl;
-import com.tsystems.javaschool.db.implemetations.TariffDaoImpl;
-import com.tsystems.javaschool.db.interfaces.ContractDao;
-import com.tsystems.javaschool.util.EMU;
-import org.apache.log4j.Logger;
+import com.tsystems.javaschool.db.entities.Tariff;
+import com.tsystems.javaschool.db.repository.ContractRepository;
+import com.tsystems.javaschool.exceptions.JSException;
+import com.tsystems.javaschool.util.DataBaseValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityGraph;
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by alex on 24.08.16.
+ *
+ * Contract service implementation
  */
-public class ContractServiceImpl implements ContractService{
+@Service
+@Transactional
+public class ContractServiceImpl implements ContractService {
 
-    private ContractDao contractDao = ContractDaoImpl.getInstance();
-    private static final Logger logger = Logger.getLogger(ContractServiceImpl.class);
+    private final ContractRepository repository;
 
-
-    private ContractServiceImpl() {}
-
-    private static class ContractServiceHolder {
-        private static final ContractServiceImpl instance = new ContractServiceImpl();
-        private ContractServiceHolder() {}
-    }
-
-    public static ContractServiceImpl getInstance() {
-        return ContractServiceHolder.instance;
+    @Autowired
+    public ContractServiceImpl(ContractRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public void addNew(Contract contract) {
-        try {
-            EMU.beginTransaction();
-            contractDao.create(contract);
-            EMU.commit();
-            logger.info("New contract is created. Id = "+contract.getId());
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
+    public ContractDto addNew(ContractDto contractDto) throws JSException {
+        // Validate new contract data
+        DataBaseValidator.check(contractDto);
+
+        // Create new contract. Default balance on new contract == 100 and non blocked
+        Contract contract = contractDto.convertToEntity();
+        contract.setBalance(new BigDecimal("100.00"));
+        contract.setIsBlocked(0);
+        return new ContractDto(repository.saveAndFlush(contract));
     }
 
     @Override
-    public Contract loadByKey(Integer key) {
-        Contract contract = contractDao.read(key);
-        EMU.closeEntityManager();
-        return contract;
-    }
+    @Transactional(readOnly = true)
+    public ContractDto loadByKey(Integer key) {
+        Contract contract = repository.findOne(key);
 
-    @Override
-    public EntityGraph getEntityGraph() {
-        return contractDao.getEntityGraph();
+        // Return contract DTO object with dependencies
+        return new ContractDto(contract).addDependencies(contract);
     }
 
     @Override
     public void remove(Integer key) {
-        try {
-            EMU.beginTransaction();
-            contractDao.delete(key);
-            EMU.commit();
-            logger.info("Contract is removed. Id = "+key);
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
+        repository.delete(key);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ContractDto> loadAll() {
+        // Get all contracts. Translate to DTO objects with dependencies
+        return repository
+                .findAll()
+                .stream()
+                .map(e -> new ContractDto(e).addDependencies(e))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ContractDto setBlock(Integer id, Integer blockLevel) {
+        Contract contract = repository.findOne(id);
+        contract.setIsBlocked(blockLevel);
+        return new ContractDto(contract);
+    }
+
+    @Override
+    public ContractDto updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds) throws JSException {
+        // Validate data for new contract
+        DataBaseValidator.checkAllOptions(tariffId, optionIds);
+
+        Contract contract = repository.findOne(contractId);
+        // Check is contract exists
+        if (contract == null) {
+            return new ContractDto();
         }
-    }
 
-    @Override
-    public Contract addNew(Contract contract, List<Integer> optionsIds) {
-        try {
-            EMU.beginTransaction();
-            contract.setUsedOptions(OptionDaoImpl.getInstance().loadOptionsByIds(optionsIds));
-            contractDao.create(contract);
-            EMU.commit();
-            logger.info("New contract is created. Id = "+contract.getId());
-            return contract;
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
+        // Init lazy data
+        contract.getUsedOptions().size();
+        Set<Option> oldOptions = contract.getUsedOptions();
+
+        // Create new tariff
+        Tariff tariff = new Tariff();
+        tariff.setId(tariffId);
+        contract.setTariff(tariff);
+
+        // Set options for new tariff
+        Set<Option> options = new HashSet<>();
+        if (optionIds != null) {
+            for (Integer id : optionIds) {
+                Option opt = new Option();
+                opt.setId(id);
+                options.add(opt);
+            }
         }
+        contract.setUsedOptions(options);
+
+        // Save new contract
+        contract = repository.saveAndFlush(contract);
+
+        // Calculate new contract balance
+        Set<Option> newOptions = contract.getUsedOptions();
+        BigDecimal summ = newOptions.stream()
+                .filter(e -> !oldOptions.contains(e))
+                .map(Option::getConnectCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        contract.setBalance(contract.getBalance().subtract(summ));
+
+        return new ContractDto(contract).addDependencies(contract);
     }
 
     @Override
-    public Contract loadByKey(Integer key, Map<String, Object> hints) {
-        Contract contract = contractDao.read(key, hints);
-        EMU.closeEntityManager();
-        return contract;
+    @Transactional(readOnly = true)
+    public ContractDto findByNumber(String number) {
+        return new ContractDto(repository.findByNumber(number));
     }
 
     @Override
-    public void setBlock(Integer id, Integer blockLevel) {
-        try {
-            EMU.beginTransaction();
-            Contract contract = contractDao.read(id);
-            Integer oldBlock = contract.getIsBlocked();
-            contract.setIsBlocked(blockLevel);
-            EMU.commit();
-            logger.info("Set block level for id = "+contract.getId()+". Old block level = "+oldBlock+". New level = "+blockLevel);
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
-    }
-
-    @Override
-    public Contract updateContract(Integer contractId, Integer tariffId, List<Integer> optionIds) {
-        EntityGraph<Contract> graph = getEntityGraph();
-        graph.addAttributeNodes("usedOptions");
-
-        Map<String, Object> hints = new HashMap<>();
-        hints.put("javax.persistence.loadgraph", graph);
-        try {
-            EMU.beginTransaction();
-            Set<Option> options = OptionDaoImpl.getInstance().loadOptionsByIds(optionIds);
-            Contract contract = contractDao.read(contractId, hints);
-            String oldContractData = contract.toString();
-
-            BigDecimal cost = options.stream().filter(e -> !contract.getUsedOptions().contains(e)).map(Option::getConnectCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            BigDecimal res = contract.getBalance().subtract(cost);
-            contract.setBalance(res);
-
-            contract.setTariff(TariffDaoImpl.getInstance().read(tariffId));
-            contract.setUsedOptions(options);
-            EMU.commit();
-            logger.info("Contract updated. Old contract: "+oldContractData+". New contract: "+contract.toString());
-            return contract;
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            throw re;
-        } finally {
-            EMU.closeEntityManager();
-        }
-    }
-
-    @Override
-    public List<Contract> load(Map<String, Object> kwargs) {
-        List<Contract> contracts = contractDao.read(kwargs);
-        EMU.closeEntityManager();
-        return contracts;
-    }
-
-    @Override
-    public long count(Map<String, Object> kwargs) {
-        long count = contractDao.count(kwargs);
-        EMU.closeEntityManager();
-        return count;
-    }
-
-    @Override
-    public List<Contract> loadAll() {
-        return load(new HashMap<>());
+    @Transactional(readOnly = true)
+    public List<ContractDto> findByTariffName(String name) {
+        // Get all contract with tariff. Translate to DTO with dependencies
+        return repository
+                .findByTariff_Name(name)
+                .stream()
+                .map(e -> new ContractDto(e).addDependencies(e))
+                .collect(Collectors.toList());
     }
 }

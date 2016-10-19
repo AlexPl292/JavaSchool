@@ -1,53 +1,58 @@
 package com.tsystems.javaschool.db.entities;
 
-import com.google.gson.annotations.Expose;
-import com.tsystems.javaschool.util.EMU;
-import com.tsystems.javaschool.util.PassGen;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by alex on 10.09.16.
- *
+ * <p>
  * Define a default user
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class User {
-    private static final Logger logger = Logger.getLogger(User.class);
+public abstract class User implements UserDetails {
 
+    @TableGenerator(
+            name = "empGen",
+            table = "ID_GEN",
+            pkColumnName = "GEN_KEY",
+            valueColumnName = "GEN_VALUE",
+            pkColumnValue = "EMP_ID",
+            allocationSize = 1)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Expose
-    private int id;
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "empGen")
+    private Integer id;
 
     @Basic
-    @Expose
     private String name;
 
     @Basic
-    @Expose
     private String surname;
 
     @Basic
-    @Expose
     private String email;
 
     @Basic
-    @Expose
     private String password;
 
     @Basic
-    @Expose
-    private String salt;
+    private String tmpPassword;
 
-    public int getId() {
+    @Basic
+    private Date tmpPasswordExpire;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -75,118 +80,89 @@ public abstract class User {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> grantedAuths = new ArrayList<>();
+        grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if (this instanceof Staff) {
+            grantedAuths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+        return grantedAuths;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getSalt() {
-        return salt;
+    public String getTmpPassword() {
+        return tmpPassword;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setTmpPassword(String tmpPassword) {
+        this.tmpPassword = tmpPassword;
+    }
+
+    public Date getTmpPasswordExpire() {
+        return tmpPasswordExpire;
+    }
+
+    public void setTmpPasswordExpire(Date tmpPasswordExpire) {
+        this.tmpPasswordExpire = tmpPasswordExpire;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        User that = (User) o;
+        User user = (User) o;
 
-        if (id != that.id)
-            return false;
-        if (name != null ? !name.equals(that.name) : that.name != null)
-            return false;
-        if (surname != null ? !surname.equals(that.surname) : that.surname != null)
-            return false;
-        if (email != null ? !email.equals(that.email) : that.email != null)
-            return false;
-        if (password != null ? !password.equals(that.password) : that.password != null)
-            return false;
-        return salt != null ? salt.equals(that.salt) : that.salt == null;
+        if (id != null ? !id.equals(user.id) : user.id != null) return false;
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        return tmpPassword != null ? tmpPassword.equals(user.tmpPassword) : user.tmpPassword == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (salt != null ? salt.hashCode() : 0);
+        result = 31 * result + (tmpPassword != null ? tmpPassword.hashCode() : 0);
         return result;
-    }
-
-    /**
-     * Log in new user by email and password
-     * @param email email of user
-     * @param password password of user
-     * @return logged user if positive, null if negative
-     */
-    public static User login(String email, String password) {
-
-        if (email != null && password != null) {
-            User user = EMU.getEntityManager().createQuery("SELECT u FROM User u WHERE u.email = :first", User.class)
-                    .setParameter("first", email)
-                    .getSingleResult();
-            if (user != null) {
-                String passwordHash = DigestUtils.sha256Hex(password);
-                passwordHash = DigestUtils.sha256Hex(passwordHash + user.getSalt());
-                if (passwordHash.equals(user.getPassword())) {
-                    EMU.closeEntityManager();
-                    logger.info(email+": positive login");
-                    return user;
-                }
-            }
-        }
-        EMU.closeEntityManager();
-        logger.info(email+": negative login");
-        return null;
-    }
-
-    /**
-     * Update password of user
-     * @param id id of user
-     * @param oldPassword old password to change
-     * @param newPassword new password
-     * @return "Success!" if positive, error message if negative
-     */
-    public static String updatePassword(Integer id, String oldPassword, String newPassword) {
-        try {
-            User user = EMU.getEntityManager().find(User.class, id);
-
-            String hashed = DigestUtils.sha256Hex(oldPassword);
-            String usedSalt = user.getSalt();
-            String usedPassword = DigestUtils.sha256Hex(hashed + usedSalt);
-
-            if (usedPassword.equals(user.getPassword())) {
-                String newHashedPassword = DigestUtils.sha256Hex(newPassword);
-                String newSalt = new PassGen(8).nextPassword();
-                EMU.beginTransaction();
-                user.setPassword(DigestUtils.sha256Hex(newHashedPassword + newSalt));
-                user.setSalt(newSalt);
-                EMU.commit();
-                logger.info("User with id = "+id+": password change!");
-                return "Success!";
-            } else {
-                logger.info("User with id = "+id+": try to change password. Wrong old password!");
-                return "You entered wrong current password";
-            }
-        } catch (RuntimeException re) {
-            if (EMU.getEntityManager() != null && EMU.getEntityManager().isOpen())
-                EMU.rollback();
-            logger.error("User with id = "+id+": try to change password. Exception!", re);
-            return "Error while transaction!";
-        } finally {
-            EMU.closeEntityManager();
-        }
     }
 }

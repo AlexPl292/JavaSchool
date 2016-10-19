@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="JSSuite">
+    <test name="FrontEnd">
+        <classes>
+            <class name="selenium.Selenium"/>
+        </classes>
+
+    </test>
+    <test name="BackEnd">
+        <packages>
+            <package name="com.tsystems.javaschool.business.services.implementations"/>
+        </packages>
+    </test>
+</suite>

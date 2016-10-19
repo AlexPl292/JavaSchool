@@ -5,75 +5,58 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
-<!--    <display-name>Archetype Created Web Application</display-name>
-    <mime-mapping>
-        <extension>css</extension>
-        <mime-type>text/css</mime-type>
-    </mime-mapping>-->
 
-<!--    <servlet>
-        <servlet-name>Customer</servlet-name>
-        <jsp-file>/WEB-INF/jsp/customer.jsp</jsp-file>
-    </servlet>
 
-    <servlet-mapping>
-        <servlet-name>Customer</servlet-name>
-        <url-pattern>/admin/customer</url-pattern>
-    </servlet-mapping>-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/applicationContext.xml
+            /WEB-INF/javaschool-servlet.xml
+            /WEB-INF/javaschool-security.xml
+        </param-value>
+    </context-param>
 
-    <servlet>
-        <servlet-name>Show customers</servlet-name>
-        <jsp-file>/WEB-INF/jsp/show_customers.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>Show customers</servlet-name>
-        <url-pattern>/admin/customers</url-pattern>
-    </servlet-mapping>
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
 
     <servlet>
-        <servlet-name>Show tariffs</servlet-name>
-        <jsp-file>/WEB-INF/jsp/show_tariffs.jsp</jsp-file>
+        <servlet-name>javaschool</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>throwExceptionIfNoHandlerFound</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Show tariffs</servlet-name>
-        <url-pattern>/tariffs</url-pattern>
+        <servlet-name>javaschool</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>Show options</servlet-name>
-        <jsp-file>/WEB-INF/jsp/show_options.jsp</jsp-file>
-    </servlet>
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>
+            org.springframework.web.filter.DelegatingFilterProxy
+        </filter-class>
+    </filter>
 
-    <servlet-mapping>
-        <servlet-name>Show options</servlet-name>
-        <url-pattern>/options</url-pattern>
-    </servlet-mapping>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
-    <servlet>
-        <servlet-name>Show contracts</servlet-name>
-        <jsp-file>/WEB-INF/jsp/show_contracts.jsp</jsp-file>
-    </servlet>
+    <filter>
+        <filter-name>httpPutFormContentFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+    </filter>
 
-    <servlet-mapping>
-        <servlet-name>Show contracts</servlet-name>
-        <url-pattern>/admin/contracts</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Error</servlet-name>
-        <jsp-file>/WEB-INF/error.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>Error</servlet-name>
-        <url-pattern>/error</url-pattern>
-    </servlet-mapping>
-
-    <error-page>
-        <location>/error</location>
-    </error-page>
-
+    <filter-mapping>
+        <filter-name>httpPutFormContentFilter</filter-name>
+        <servlet-name>javaschool</servlet-name>
+    </filter-mapping>
 </web-app>
 

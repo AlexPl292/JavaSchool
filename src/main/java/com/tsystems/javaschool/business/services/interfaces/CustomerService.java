@@ -1,18 +1,19 @@
 package com.tsystems.javaschool.business.services.interfaces;
 
-import com.tsystems.javaschool.db.entities.Customer;
+import com.tsystems.javaschool.business.dto.CustomerDto;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by alex on 19.08.16.
+ *
+ * Interface for customer service
  */
-public interface CustomerService extends GenericService<Customer, Integer> {
+public interface CustomerService extends GenericService<CustomerDto, Integer> {
     /**
-     * Load customer by key with dependencies
-     * @param key id of customer
-     * @param hints dependencies
-     * @return customer with id = key
+     * Remove contract of customer
+     * @param customerId  id of customer
+     * @param contractId id of contract
      */
-    Customer loadByKey(Integer key, Map<String, Object> hints);
+    void removeContract(Integer customerId, Integer contractId);
 }

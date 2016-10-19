@@ -1,15 +1,12 @@
 package com.tsystems.javaschool.db.entities;
 
-import com.google.gson.annotations.Expose;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.Set;
 
 /**
  * Created by alex on 21.08.16.
- *
+ * <p>
  * Entity for tariff table access
  */
 @Entity
@@ -18,23 +15,19 @@ public class Tariff {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Expose
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Basic
-    @Column(name = "name", nullable = true, length = 45)
-    @Expose
+    @Column(name = "name")
     private String name;
 
     @Basic
-    @Column(name = "cost", nullable = true, precision = 2)
-    @Expose
+    @Column(name = "cost")
     private BigDecimal cost;
 
     @Basic
-    @Column(name = "description", nullable = true, length = 255)
-    @Expose
+    @Column(name = "description")
     private String description;
 
     @JoinTable(name = "Possible_options_of_tariffs", joinColumns = {
@@ -52,9 +45,10 @@ public class Tariff {
     /**
      * Constructor with only important data
      * Used in Dao select queries
-     * @param id id of new entity
-     * @param name name of new entity
-     * @param cost cost of new entity
+     *
+     * @param id          id of new entity
+     * @param name        name of new entity
+     * @param cost        cost of new entity
      * @param description description of new entity
      */
     public Tariff(Integer id, String name, BigDecimal cost, String description) {
@@ -106,26 +100,21 @@ public class Tariff {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Tariff that = (Tariff) o;
+        Tariff tariff = (Tariff) o;
 
-        if (!Objects.equals(id, that.id))
-            return false;
-        if (name != null ? !name.equals(that.name) : that.name != null)
-            return false;
-        if (cost != null ? !cost.equals(that.cost) : that.cost != null)
-            return false;
-        return description != null ? description.equals(that.description) : that.description == null;
+        if (id != null ? !id.equals(tariff.id) : tariff.id != null) return false;
+        if (name != null ? !name.equals(tariff.name) : tariff.name != null) return false;
+        if (cost != null ? !cost.equals(tariff.cost) : tariff.cost != null) return false;
+        return description != null ? description.equals(tariff.description) : tariff.description == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (cost != null ? cost.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);

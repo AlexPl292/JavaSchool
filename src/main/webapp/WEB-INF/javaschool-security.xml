@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/security
+             http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <http security="none" pattern="/resources/**"/>
+    <http auto-config="true">
+        <intercept-url pattern="/login" access="isAnonymous()"/>
+        <intercept-url pattern="/restore" access="isAnonymous()"/>
+        <intercept-url pattern="/temp" access="isAnonymous()"/>
+        <intercept-url pattern="/rest/users/reset" access="isAnonymous()"/>
+        <intercept-url pattern="/rest/users/password" access="isAnonymous()"/>
+
+        <intercept-url pattern="/rest/customers" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/rest/contracts" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/rest/tariffs" access="hasRole('ROLE_ADMIN')" method="POST"/>
+        <intercept-url pattern="/rest/options" access="hasRole('ROLE_ADMIN')" method="POST"/>
+
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
+
+        <form-login login-page="/login" login-processing-url="/login"/>
+        <logout logout-url="/logout" invalidate-session="true"/>
+        <csrf disabled="true"/>
+        <remember-me remember-me-parameter="remember-me" key="JS" token-validity-seconds="2419200"/>
+    </http>
+
+    <authentication-manager>
+        <authentication-provider user-service-ref="userServiceImpl">
+            <password-encoder ref="bcryptEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+</beans:beans>
